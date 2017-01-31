@@ -11,3 +11,5 @@
 |
 */
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login.get');
+Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register.get');
+Route::get('forgot', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('forgot.get');

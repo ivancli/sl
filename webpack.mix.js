@@ -13,10 +13,13 @@ const {mix} = require('laravel-mix');
 mix
     .js('resources/assets/js/app.js', 'public/js')
     .js('resources/assets/js/auth/login.js', 'public/js')
+    .js('resources/assets/js/auth/register.js', 'public/js')
+    .js('resources/assets/js/auth/forgot.js', 'public/js')
     .sass('resources/assets/sass/app.scss', 'public/css')
-    .sass('resources/assets/sass/login.scss', 'public/css')
+    .sass('resources/assets/sass/auth.scss', 'public/css')
 
 
     .copy('node_modules/font-awesome/fonts', 'public/fonts')
+    .copy('vendor/almasaeed2010/adminlte/bootstrap/fonts', 'public/fonts')
 
     .version();

@@ -5,7 +5,7 @@
         </div>
         <div class="login-box-body">
             <slot>
-                This is fake slot
+                Login, Register or Forgot Password
             </slot>
         </div>
     </div>

@@ -7,11 +7,11 @@
 @section('body')
     <div id="sl">
         <auth>
-            <login></login>
+            <register></register>
         </auth>
     </div>
 @stop
 
 @section('scripts')
-    <script src="{{mix('/js/login.js')}}"></script>
+    <script src="{{mix('/js/register.js')}}"></script>
 @stop

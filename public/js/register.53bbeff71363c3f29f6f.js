@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "./";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 50);
+/******/ 	return __webpack_require__(__webpack_require__.s = 53);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -952,7 +952,59 @@ module.exports = g;
 
 
 /***/ }),
-/* 9 */,
+/* 9 */
+/***/ (function(module, exports) {
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  scopeId,
+  cssModules
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  // inject cssModules
+  if (cssModules) {
+    var computed = options.computed || (options.computed = {})
+    Object.keys(cssModules).forEach(function (key) {
+      var module = cssModules[key]
+      computed[key] = function () { return module }
+    })
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -27530,62 +27582,434 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 32 */,
-/* 33 */,
-/* 34 */,
-/* 35 */
+/* 32 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = {
+    mounted: function mounted() {
+        console.log('Auth component mounted.');
+    }
+};
+
+/***/ }),
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var Component = __webpack_require__(9)(
+  /* script */
+  __webpack_require__(32),
+  /* template */
+  __webpack_require__(34),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\xampp\\htdocs\\sl\\resources\\assets\\js\\components\\Auth.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Auth.vue: functional components are not supported with templates, they should use render functions.")}
 
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-58d78d40", Component.options)
+  } else {
+    hotAPI.reload("data-v-58d78d40", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "login-box"
+  }, [_vm._m(0), _vm._v(" "), _c('div', {
+    staticClass: "login-box-body"
+  }, [_vm._t("default", [_vm._v("\n            Login, Register or Forgot Password\n        ")])], 2)])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "login-logo"
+  }, [_c('a', {
+    attrs: {
+      "href": "/"
+    }
+  }, [_c('b', [_vm._v("Admin")]), _vm._v("LTE")])])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-58d78d40", module.exports)
+  }
+}
+
+/***/ }),
+/* 35 */,
+/* 36 */,
+/* 37 */,
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(28);
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+Vue.component('auth', __webpack_require__(33));
+Vue.component('register', __webpack_require__(46));
 
-var app = new Vue({
-  el: '#app'
+var sl = new Vue({
+    el: '#sl'
 });
 
 /***/ }),
-/* 36 */,
-/* 37 */,
-/* 38 */,
-/* 39 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 40 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
+/* 39 */,
+/* 40 */,
 /* 41 */,
 /* 42 */,
-/* 43 */,
+/* 43 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = {
+    mounted: function mounted() {
+        console.log('Register component mounted.');
+    }
+};
+
+/***/ }),
 /* 44 */,
 /* 45 */,
-/* 46 */,
-/* 47 */,
-/* 48 */,
-/* 49 */,
-/* 50 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(35);
-__webpack_require__(39);
-module.exports = __webpack_require__(40);
+var Component = __webpack_require__(9)(
+  /* script */
+  __webpack_require__(43),
+  /* template */
+  __webpack_require__(48),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\xampp\\htdocs\\sl\\resources\\assets\\js\\components\\auth\\Register.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Register.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6bee36a2", Component.options)
+  } else {
+    hotAPI.reload("data-v-6bee36a2", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 47 */,
+/* 48 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _vm._m(0)
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', [_c('div', {
+    staticClass: "registration-form"
+  }, [_c('p', {
+    staticClass: "register-box-msg"
+  }, [_vm._v("Sign up now")]), _vm._v(" "), _c('ul', {
+    staticClass: "text-danger errors-container"
+  }), _vm._v(" "), _c('form', {
+    attrs: {
+      "method": "POST",
+      "action": "http://login.spotlite.com.au/register",
+      "accept-charset": "UTF-8",
+      "id": "frm-register",
+      "onsubmit": "return validateRegistrationForm();"
+    }
+  }, [_c('input', {
+    attrs: {
+      "name": "_token",
+      "type": "hidden",
+      "value": "3i7c4iYsz2Huf5ayxH60fmJl1iLS6F6otURhOKYM"
+    }
+  }), _vm._v(" "), _c('div', {
+    staticClass: "form-group has-feedback"
+  }, [_c('select', {
+    staticClass: "form-control",
+    attrs: {
+      "name": "title"
+    }
+  }, [_c('option', {
+    attrs: {
+      "selected": "selected",
+      "value": ""
+    }
+  }, [_vm._v("Title")]), _c('option', {
+    attrs: {
+      "value": "Ms"
+    }
+  }, [_vm._v("Ms")]), _c('option', {
+    attrs: {
+      "value": "Mrs"
+    }
+  }, [_vm._v("Mrs")]), _c('option', {
+    attrs: {
+      "value": "Miss"
+    }
+  }, [_vm._v("Miss")]), _c('option', {
+    attrs: {
+      "value": "Mr"
+    }
+  }, [_vm._v("Mr")])])]), _vm._v(" "), _c('div', {
+    staticClass: "form-group required"
+  }, [_c('input', {
+    staticClass: "form-control",
+    attrs: {
+      "placeholder": "First name",
+      "name": "first_name",
+      "type": "text"
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "form-group required"
+  }, [_c('input', {
+    staticClass: "form-control",
+    attrs: {
+      "placeholder": "Last name",
+      "name": "last_name",
+      "type": "text"
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "form-group has-feedback required"
+  }, [_c('input', {
+    staticClass: "form-control",
+    attrs: {
+      "placeholder": "Email",
+      "name": "email",
+      "type": "email"
+    }
+  }), _vm._v(" "), _c('span', {
+    staticClass: "glyphicon glyphicon-envelope form-control-feedback"
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "form-group has-feedback required"
+  }, [_c('input', {
+    staticClass: "form-control",
+    attrs: {
+      "placeholder": "Password",
+      "name": "password",
+      "type": "password",
+      "value": ""
+    }
+  }), _vm._v(" "), _c('span', {
+    staticClass: "glyphicon glyphicon-lock form-control-feedback"
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "form-group has-feedback required"
+  }, [_c('input', {
+    staticClass: "form-control",
+    attrs: {
+      "placeholder": "Confirm password",
+      "name": "password_confirmation",
+      "type": "password",
+      "value": ""
+    }
+  }), _vm._v(" "), _c('span', {
+    staticClass: "glyphicon glyphicon-lock form-control-feedback"
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "form-group"
+  }, [_c('input', {
+    staticClass: "form-control",
+    attrs: {
+      "placeholder": "Coupon code",
+      "name": "coupon_code",
+      "type": "text"
+    }
+  })]), _vm._v(" "), _c('input', {
+    attrs: {
+      "type": "hidden",
+      "name": "signup_link",
+      "id": "txt-signup-link",
+      "value": "https://spotlite.chargify.com/subscribe/wymrvs7y6gt4/professional"
+    }
+  }), _vm._v(" "), _c('input', {
+    attrs: {
+      "type": "hidden",
+      "name": "api_product_id",
+      "id": "txt-api-product-id",
+      "value": "4155068"
+    }
+  }), _vm._v(" "), _c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "col-sm-7"
+  }, [_c('div', {
+    staticClass: "checkbox icheck"
+  }, [_c('label', [_c('div', {
+    staticClass: "icheckbox_square-blue",
+    staticStyle: {
+      "position": "relative"
+    },
+    attrs: {
+      "aria-checked": "false",
+      "aria-disabled": "false"
+    }
+  }, [_c('input', {
+    staticStyle: {
+      "position": "absolute",
+      "top": "-20%",
+      "left": "-20%",
+      "display": "block",
+      "width": "140%",
+      "height": "140%",
+      "margin": "0px",
+      "padding": "0px",
+      "background": "rgb(255, 255, 255)",
+      "border": "0px",
+      "opacity": "0"
+    },
+    attrs: {
+      "type": "checkbox",
+      "value": "y",
+      "name": "agree_terms",
+      "id": "chk-agree-terms"
+    }
+  }), _c('ins', {
+    staticClass: "iCheck-helper",
+    staticStyle: {
+      "position": "absolute",
+      "top": "-20%",
+      "left": "-20%",
+      "display": "block",
+      "width": "140%",
+      "height": "140%",
+      "margin": "0px",
+      "padding": "0px",
+      "background": "rgb(255, 255, 255)",
+      "border": "0px",
+      "opacity": "0"
+    }
+  })]), _vm._v("   I agree\n                            to the "), _c('a', {
+    attrs: {
+      "href": "#",
+      "onclick": "showTerms(); return false;"
+    }
+  }, [_vm._v("terms")])])])]), _vm._v(" "), _c('div', {
+    staticClass: "col-sm-5"
+  }, [_c('input', {
+    staticClass: "btn btn-primary btn-block btn-flat",
+    attrs: {
+      "id": "btn-register",
+      "type": "submit",
+      "value": "SIGN UP NOW"
+    }
+  })])])]), _vm._v(" "), _c('a', {
+    staticClass: "text-center",
+    attrs: {
+      "href": "http://login.spotlite.com.au/login"
+    }
+  }, [_vm._v("I already have a subscription")])])])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-6bee36a2", module.exports)
+  }
+}
+
+/***/ }),
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */,
+/* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(38);
 
 
 /***/ })

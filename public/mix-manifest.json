@@ -1,6 +1,8 @@
 {
-  "/js/login.js": "/js/login.19a93b722edc17acaf73.js",
+  "/js/register.js": "/js/register.53bbeff71363c3f29f6f.js",
+  "/js/login.js": "/js/login.285ae3ea3c0a7202f512.js",
+  "/js/forgot.js": "/js/forgot.d7afff33918eef037f04.js",
   "/js/app.js": "/js/app.454145733f47c854ccdc.js",
-  "/css/app.css": "/css/app.6ed2f79ee0fad0f40270.css",
-  "/css/login.css": "/css/login.6ed2f79ee0fad0f40270.css"
+  "/css/app.css": "/css/app.ec9e229a6a8bb9260144.css",
+  "/css/auth.css": "/css/auth.ec9e229a6a8bb9260144.css"
 }
