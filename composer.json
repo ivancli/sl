@@ -1,0 +1,74 @@
+{
+  "name": "laravel/laravel",
+  "description": "The Laravel Framework.",
+  "keywords": [
+    "framework",
+    "laravel"
+  ],
+  "license": "MIT",
+  "type": "project",
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@bitbucket.org:invigorgroup/invigor-user-management.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@bitbucket.org:invigorgroup/spotlite-crawler.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@bitbucket.org:invigorgroup/spotlite-chargify.git"
+    }
+  ],
+  "require": {
+    "php": ">=5.6.4",
+    "campaignmonitor/createsend-php": "^5.0",
+    "laravel/framework": "5.4.*",
+    "laravel/tinker": "~1.0",
+    "maatwebsite/excel": "^2.1",
+    "mpdf/mpdf": "^6.1",
+    "predis/predis": "^1.1",
+    "invigor/crawler": "1.*",
+    "invigor/chargify": "dev-master"
+  },
+  "require-dev": {
+    "almasaeed2010/adminlte": "^2.3",
+    "fzaninotto/faker": "~1.4",
+    "mockery/mockery": "0.9.*",
+    "phpunit/phpunit": "~5.0"
+  },
+  "autoload": {
+    "classmap": [
+      "database"
+    ],
+    "psr-4": {
+      "App\\": "app/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "post-root-package-install": [
+      "php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    ],
+    "post-create-project-cmd": [
+      "php artisan key:generate"
+    ],
+    "post-install-cmd": [
+      "Illuminate\\Foundation\\ComposerScripts::postInstall",
+      "php artisan optimize"
+    ],
+    "post-update-cmd": [
+      "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+      "php artisan optimize"
+    ]
+  },
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true
+  }
+}
