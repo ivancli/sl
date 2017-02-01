@@ -1,7 +1,9 @@
 <template>
     <div class="login-box">
         <div class="login-logo">
-            <a href="/"><b>Admin</b>LTE</a>
+            <a href="/">
+                <img src="/images/logo_transparent_white_text.png" alt="SpotLite Logo" width="360">
+            </a>
         </div>
         <div class="login-box-body">
             <slot>

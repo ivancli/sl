@@ -34,7 +34,7 @@
                 </div>
                 <div class="col-sm-6 col-sm-pull-6">
                     <div style="padding-top: 5px; padding-bottom: 5px;">
-                        <a href="http://login.spotlite.com.au/login">Back to login page</a>
+                        <a href="/login">Back to login page</a>
                     </div>
                 </div>
             </div>

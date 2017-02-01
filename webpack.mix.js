@@ -18,8 +18,12 @@ mix
     .sass('resources/assets/sass/app.scss', 'public/css')
     .sass('resources/assets/sass/auth.scss', 'public/css')
 
-
+    /* copy fonts */
     .copy('node_modules/font-awesome/fonts', 'public/fonts')
     .copy('vendor/almasaeed2010/adminlte/bootstrap/fonts', 'public/fonts')
+    .copy('resources/assets/fonts', 'public/fonts')
+
+    /* copy images */
+    .copy('resources/assets/images', 'public/images')
 
     .version();

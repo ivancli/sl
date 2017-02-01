@@ -1,4 +1,4 @@
-@extends('layouts.default')
+@extends('layouts.auth')
 
 @section('links')
     <link rel="stylesheet" href="{{mix('/css/auth.css')}}">

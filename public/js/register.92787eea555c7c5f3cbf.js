@@ -27600,6 +27600,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = {
     mounted: function mounted() {
@@ -27658,7 +27660,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "href": "/"
     }
-  }, [_c('b', [_vm._v("Admin")]), _vm._v("LTE")])])
+  }, [_c('img', {
+    attrs: {
+      "src": "/images/logo_transparent_white_text.png",
+      "alt": "SpotLite Logo",
+      "width": "360"
+    }
+  })])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -27694,6 +27702,13 @@ var sl = new Vue({
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -27807,18 +27822,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }), _vm._v(" "), _c('form', {
     attrs: {
       "method": "POST",
-      "action": "http://login.spotlite.com.au/register",
-      "accept-charset": "UTF-8",
-      "id": "frm-register",
-      "onsubmit": "return validateRegistrationForm();"
+      "action": "/register",
+      "id": "frm-register"
     }
-  }, [_c('input', {
-    attrs: {
-      "name": "_token",
-      "type": "hidden",
-      "value": "3i7c4iYsz2Huf5ayxH60fmJl1iLS6F6otURhOKYM"
-    }
-  }), _vm._v(" "), _c('div', {
+  }, [_c('div', {
     staticClass: "form-group has-feedback"
   }, [_c('select', {
     staticClass: "form-control",
@@ -27830,19 +27837,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "selected": "selected",
       "value": ""
     }
-  }, [_vm._v("Title")]), _c('option', {
+  }, [_vm._v("Title")]), _vm._v(" "), _c('option', {
     attrs: {
       "value": "Ms"
     }
-  }, [_vm._v("Ms")]), _c('option', {
+  }, [_vm._v("Ms")]), _vm._v(" "), _c('option', {
     attrs: {
       "value": "Mrs"
     }
-  }, [_vm._v("Mrs")]), _c('option', {
+  }, [_vm._v("Mrs")]), _vm._v(" "), _c('option', {
     attrs: {
       "value": "Miss"
     }
-  }, [_vm._v("Miss")]), _c('option', {
+  }, [_vm._v("Miss")]), _vm._v(" "), _c('option', {
     attrs: {
       "value": "Mr"
     }
@@ -27908,74 +27915,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "name": "coupon_code",
       "type": "text"
     }
-  })]), _vm._v(" "), _c('input', {
-    attrs: {
-      "type": "hidden",
-      "name": "signup_link",
-      "id": "txt-signup-link",
-      "value": "https://spotlite.chargify.com/subscribe/wymrvs7y6gt4/professional"
-    }
-  }), _vm._v(" "), _c('input', {
-    attrs: {
-      "type": "hidden",
-      "name": "api_product_id",
-      "id": "txt-api-product-id",
-      "value": "4155068"
-    }
-  }), _vm._v(" "), _c('div', {
+  })]), _vm._v(" "), _c('div', {
     staticClass: "row"
   }, [_c('div', {
     staticClass: "col-sm-7"
   }, [_c('div', {
-    staticClass: "checkbox icheck"
-  }, [_c('label', [_c('div', {
-    staticClass: "icheckbox_square-blue",
-    staticStyle: {
-      "position": "relative"
-    },
-    attrs: {
-      "aria-checked": "false",
-      "aria-disabled": "false"
-    }
-  }, [_c('input', {
-    staticStyle: {
-      "position": "absolute",
-      "top": "-20%",
-      "left": "-20%",
-      "display": "block",
-      "width": "140%",
-      "height": "140%",
-      "margin": "0px",
-      "padding": "0px",
-      "background": "rgb(255, 255, 255)",
-      "border": "0px",
-      "opacity": "0"
-    },
+    staticClass: "checkbox"
+  }, [_c('label', [_c('input', {
     attrs: {
       "type": "checkbox",
       "value": "y",
       "name": "agree_terms",
       "id": "chk-agree-terms"
     }
-  }), _c('ins', {
-    staticClass: "iCheck-helper",
-    staticStyle: {
-      "position": "absolute",
-      "top": "-20%",
-      "left": "-20%",
-      "display": "block",
-      "width": "140%",
-      "height": "140%",
-      "margin": "0px",
-      "padding": "0px",
-      "background": "rgb(255, 255, 255)",
-      "border": "0px",
-      "opacity": "0"
-    }
-  })]), _vm._v("   I agree\n                            to the "), _c('a', {
+  }), _vm._v("\n                              I agree to the "), _c('a', {
     attrs: {
-      "href": "#",
-      "onclick": "showTerms(); return false;"
+      "href": "#"
     }
   }, [_vm._v("terms")])])])]), _vm._v(" "), _c('div', {
     staticClass: "col-sm-5"
@@ -27989,7 +27944,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   })])])]), _vm._v(" "), _c('a', {
     staticClass: "text-center",
     attrs: {
-      "href": "http://login.spotlite.com.au/login"
+      "href": "/login"
     }
   }, [_vm._v("I already have a subscription")])])])
 }]}
