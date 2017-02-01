@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <div class="col-xs-6 text-right">
-                    <button class="btn btn-primary btn-flat" :disabled="isLoggingIn" v-text="isLoggingIn ? 'LOGGING IN' : 'SIGN IN'"></button>
+                    <button type="submit" class="btn btn-primary btn-flat" :disabled="isLoggingIn" v-text="isLoggingIn ? 'LOGGING IN' : 'SIGN IN'"></button>
                 </div>
             </div>
         </form>

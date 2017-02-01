@@ -27623,7 +27623,7 @@ var Component = __webpack_require__(9)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\xampp\\htdocs\\sl\\resources\\assets\\js\\components\\Auth.vue"
+Component.options.__file = "E:\\localhost\\sl\\resources\\assets\\js\\components\\Auth.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Auth.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -27634,10 +27634,16 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-58d78d40", Component.options)
+    hotAPI.createRecord("data-v-69c49c28", Component.options)
   } else {
-    hotAPI.reload("data-v-58d78d40", Component.options)
+    if (module.hot.data.cssModules && JSON.stringify(module.hot.data.cssModules) !== JSON.stringify(cssModules)) {
+      delete Component.options._Ctor
+    }
+    hotAPI.reload("data-v-69c49c28", Component.options)
   }
+  module.hot.dispose(function (data) {
+    data.cssModules = cssModules
+  })
 })()}
 
 module.exports = Component.exports
@@ -27672,7 +27678,7 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-58d78d40", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-69c49c28", module.exports)
   }
 }
 
@@ -27788,7 +27794,7 @@ var Component = __webpack_require__(9)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\xampp\\htdocs\\sl\\resources\\assets\\js\\components\\auth\\Login.vue"
+Component.options.__file = "E:\\localhost\\sl\\resources\\assets\\js\\components\\auth\\Login.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Login.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -27799,10 +27805,16 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-b55e05e6", Component.options)
+    hotAPI.createRecord("data-v-93c81e8e", Component.options)
   } else {
-    hotAPI.reload("data-v-b55e05e6", Component.options)
+    if (module.hot.data.cssModules && JSON.stringify(module.hot.data.cssModules) !== JSON.stringify(cssModules)) {
+      delete Component.options._Ctor
+    }
+    hotAPI.reload("data-v-93c81e8e", Component.options)
   }
+  module.hot.dispose(function (data) {
+    data.cssModules = cssModules
+  })
 })()}
 
 module.exports = Component.exports
@@ -27914,6 +27926,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('button', {
     staticClass: "btn btn-primary btn-flat",
     attrs: {
+      "type": "submit",
       "disabled": _vm.isLoggingIn
     },
     domProps: {
@@ -27938,7 +27951,7 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-b55e05e6", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-93c81e8e", module.exports)
   }
 }
 

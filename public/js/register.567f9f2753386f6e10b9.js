@@ -27623,7 +27623,7 @@ var Component = __webpack_require__(9)(
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\xampp\\htdocs\\sl\\resources\\assets\\js\\components\\Auth.vue"
+Component.options.__file = "E:\\localhost\\sl\\resources\\assets\\js\\components\\Auth.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Auth.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -27634,10 +27634,16 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-58d78d40", Component.options)
+    hotAPI.createRecord("data-v-69c49c28", Component.options)
   } else {
-    hotAPI.reload("data-v-58d78d40", Component.options)
+    if (module.hot.data.cssModules && JSON.stringify(module.hot.data.cssModules) !== JSON.stringify(cssModules)) {
+      delete Component.options._Ctor
+    }
+    hotAPI.reload("data-v-69c49c28", Component.options)
   }
+  module.hot.dispose(function (data) {
+    data.cssModules = cssModules
+  })
 })()}
 
 module.exports = Component.exports
@@ -27672,7 +27678,7 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-58d78d40", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-69c49c28", module.exports)
   }
 }
 
@@ -27762,8 +27768,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = {
+    data: function data() {
+        return {
+            title: '',
+            first_name: '',
+            last_name: '',
+            email: '',
+            password: '',
+            password_confirmation: '',
+            coupon_code: '',
+            agree_terms: null
+        };
+    },
+    methods: {
+        submitRegister: function submitRegister() {}
+    },
     mounted: function mounted() {
         console.log('Register component mounted.');
     }
@@ -27779,13 +27802,13 @@ var Component = __webpack_require__(9)(
   /* script */
   __webpack_require__(43),
   /* template */
-  __webpack_require__(48),
+  __webpack_require__(47),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\xampp\\htdocs\\sl\\resources\\assets\\js\\components\\auth\\Register.vue"
+Component.options.__file = "E:\\localhost\\sl\\resources\\assets\\js\\components\\auth\\Register.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Register.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -27796,167 +27819,35 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6bee36a2", Component.options)
+    hotAPI.createRecord("data-v-08797cfa", Component.options)
   } else {
-    hotAPI.reload("data-v-6bee36a2", Component.options)
+    if (module.hot.data.cssModules && JSON.stringify(module.hot.data.cssModules) !== JSON.stringify(cssModules)) {
+      delete Component.options._Ctor
+    }
+    hotAPI.reload("data-v-08797cfa", Component.options)
   }
+  module.hot.dispose(function (data) {
+    data.cssModules = cssModules
+  })
 })()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 47 */,
-/* 48 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _vm._m(0)
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('div', {
-    staticClass: "registration-form"
-  }, [_c('p', {
-    staticClass: "register-box-msg"
-  }, [_vm._v("Sign up now")]), _vm._v(" "), _c('ul', {
-    staticClass: "text-danger errors-container"
-  }), _vm._v(" "), _c('form', {
-    attrs: {
-      "method": "POST",
-      "action": "/register",
-      "id": "frm-register"
-    }
-  }, [_c('div', {
-    staticClass: "form-group has-feedback"
-  }, [_c('select', {
-    staticClass: "form-control",
-    attrs: {
-      "name": "title"
-    }
-  }, [_c('option', {
-    attrs: {
-      "selected": "selected",
-      "value": ""
-    }
-  }, [_vm._v("Title")]), _vm._v(" "), _c('option', {
-    attrs: {
-      "value": "Ms"
-    }
-  }, [_vm._v("Ms")]), _vm._v(" "), _c('option', {
-    attrs: {
-      "value": "Mrs"
-    }
-  }, [_vm._v("Mrs")]), _vm._v(" "), _c('option', {
-    attrs: {
-      "value": "Miss"
-    }
-  }, [_vm._v("Miss")]), _vm._v(" "), _c('option', {
-    attrs: {
-      "value": "Mr"
-    }
-  }, [_vm._v("Mr")])])]), _vm._v(" "), _c('div', {
-    staticClass: "form-group required"
-  }, [_c('input', {
-    staticClass: "form-control",
-    attrs: {
-      "placeholder": "First name",
-      "name": "first_name",
-      "type": "text"
-    }
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "form-group required"
-  }, [_c('input', {
-    staticClass: "form-control",
-    attrs: {
-      "placeholder": "Last name",
-      "name": "last_name",
-      "type": "text"
-    }
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "form-group has-feedback required"
-  }, [_c('input', {
-    staticClass: "form-control",
-    attrs: {
-      "placeholder": "Email",
-      "name": "email",
-      "type": "email"
-    }
-  }), _vm._v(" "), _c('span', {
-    staticClass: "glyphicon glyphicon-envelope form-control-feedback"
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "form-group has-feedback required"
-  }, [_c('input', {
-    staticClass: "form-control",
-    attrs: {
-      "placeholder": "Password",
-      "name": "password",
-      "type": "password",
-      "value": ""
-    }
-  }), _vm._v(" "), _c('span', {
-    staticClass: "glyphicon glyphicon-lock form-control-feedback"
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "form-group has-feedback required"
-  }, [_c('input', {
-    staticClass: "form-control",
-    attrs: {
-      "placeholder": "Confirm password",
-      "name": "password_confirmation",
-      "type": "password",
-      "value": ""
-    }
-  }), _vm._v(" "), _c('span', {
-    staticClass: "glyphicon glyphicon-lock form-control-feedback"
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "form-group"
-  }, [_c('input', {
-    staticClass: "form-control",
-    attrs: {
-      "placeholder": "Coupon code",
-      "name": "coupon_code",
-      "type": "text"
-    }
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "row"
-  }, [_c('div', {
-    staticClass: "col-sm-7"
-  }, [_c('div', {
-    staticClass: "checkbox"
-  }, [_c('label', [_c('input', {
-    attrs: {
-      "type": "checkbox",
-      "value": "y",
-      "name": "agree_terms",
-      "id": "chk-agree-terms"
-    }
-  }), _vm._v("\n                              I agree to the "), _c('a', {
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v("terms")])])])]), _vm._v(" "), _c('div', {
-    staticClass: "col-sm-5"
-  }, [_c('input', {
-    staticClass: "btn btn-primary btn-block btn-flat",
-    attrs: {
-      "id": "btn-register",
-      "type": "submit",
-      "value": "SIGN UP NOW"
-    }
-  })])])]), _vm._v(" "), _c('a', {
-    staticClass: "text-center",
-    attrs: {
-      "href": "/login"
-    }
-  }, [_vm._v("I already have a subscription")])])])
-}]}
-module.exports.render._withStripped = true
+module.exports={render:function(){},staticRenderFns:[]}
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-6bee36a2", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-08797cfa", module.exports)
   }
 }
 
 /***/ }),
+/* 48 */,
 /* 49 */,
 /* 50 */,
 /* 51 */,
