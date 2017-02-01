@@ -1,7 +1,7 @@
 <template>
     <div>
         <p class="login-box-msg">Sign in to start your session</p>
-        <ul class="text-danger errors-container" v-if="errors">
+        <ul class="text-danger errors-container p-b-10" v-if="errors">
             <li v-for="error in errors">
                 <div v-for="message in error" v-text="message"></div>
             </li>
@@ -52,9 +52,10 @@
                     email: this.email,
                     password: this.password,
                 }).then(response=> {
-                    alert("called1");
+                    this.isLoggingIn = false;
                     console.info('response', response)
                 }).catch(error=> {
+                    this.isLoggingIn = false;
                     if (error.response && error.response.status == 422 && error.response.data) {
                         this.errors = error.response.data;
                     }

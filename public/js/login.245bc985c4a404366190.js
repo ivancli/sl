@@ -27757,9 +27757,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 email: this.email,
                 password: this.password
             }).then(function (response) {
-                alert("called1");
+                _this.isLoggingIn = false;
                 console.info('response', response);
             }).catch(function (error) {
+                _this.isLoggingIn = false;
                 if (error.response && error.response.status == 422 && error.response.data) {
                     _this.errors = error.response.data;
                 }
@@ -27818,7 +27819,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', [_c('p', {
     staticClass: "login-box-msg"
   }, [_vm._v("Sign in to start your session")]), _vm._v(" "), (_vm.errors) ? _c('ul', {
-    staticClass: "text-danger errors-container"
+    staticClass: "text-danger errors-container p-b-10"
   }, _vm._l((_vm.errors), function(error) {
     return _c('li', _vm._l((error), function(message) {
       return _c('div', {
