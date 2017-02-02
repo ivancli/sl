@@ -1,4 +1,15 @@
-@import "variables";
-@import 'node_modules/font-awesome/css/font-awesome';
-@import 'vendor/almasaeed2010/adminlte/dist/css/AdminLTE.min';
-@import 'vendor/almasaeed2010/adminlte/dist/css/skins/_all-skins';
+@import "_variables.scss";
+@import "node_modules/font-awesome/css/font-awesome";
+@import "vendor/almasaeed2010/adminlte/bootstrap/css/bootstrap";
+@import "vendor/almasaeed2010/adminlte/dist/css/AdminLTE";
+@import "vendor/almasaeed2010/adminlte/dist/css/skins/_all-skins";
+@import "resources/assets/sass/fonts/flama";
+@import "helpers.scss";
+
+body.login-page {
+  background-color: $tiffany-green;
+}
+
+body, h1, h2, h3, h4, h5, a, .main-header .header-label, div {
+  font-family: 'Flama', sans-serif;
+}

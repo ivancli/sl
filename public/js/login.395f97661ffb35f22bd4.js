@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "./";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 53);
+/******/ 	return __webpack_require__(__webpack_require__.s = 55);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -952,7 +952,59 @@ module.exports = g;
 
 
 /***/ }),
-/* 9 */,
+/* 9 */
+/***/ (function(module, exports) {
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  scopeId,
+  cssModules
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  // inject cssModules
+  if (cssModules) {
+    var computed = options.computed || (options.computed = {})
+    Object.keys(cssModules).forEach(function (key) {
+      var module = cssModules[key]
+      computed[key] = function () { return module }
+    })
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -27530,65 +27582,392 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 32 */,
-/* 33 */,
-/* 34 */,
-/* 35 */
+/* 32 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = {
+    mounted: function mounted() {
+        console.log('Auth component mounted.');
+    }
+};
+
+/***/ }),
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var Component = __webpack_require__(9)(
+  /* script */
+  __webpack_require__(32),
+  /* template */
+  __webpack_require__(34),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\xampp\\htdocs\\sl\\resources\\assets\\js\\components\\Auth.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Auth.vue: functional components are not supported with templates, they should use render functions.")}
 
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-58d78d40", Component.options)
+  } else {
+    hotAPI.reload("data-v-58d78d40", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "login-box"
+  }, [_vm._m(0), _vm._v(" "), _c('div', {
+    staticClass: "pre-box-body"
+  }, [_vm._t("pre-box-body")], 2), _vm._v(" "), _c('div', {
+    staticClass: "login-box-body"
+  }, [_vm._t("login-box-body", [_vm._v("Login, Register or Forgot Password")])], 2)])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "login-logo"
+  }, [_c('a', {
+    attrs: {
+      "href": "/"
+    }
+  }, [_c('img', {
+    attrs: {
+      "src": "/images/logo_transparent_white_text.png",
+      "alt": "SpotLite Logo",
+      "width": "360"
+    }
+  })])])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-58d78d40", module.exports)
+  }
+}
+
+/***/ }),
+/* 35 */,
+/* 36 */,
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(28);
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+Vue.component('auth', __webpack_require__(33));
+Vue.component('login', __webpack_require__(46));
 
-var app = new Vue({
-  el: '#app'
+var sl = new Vue({
+    el: '#sl'
 });
 
 /***/ }),
-/* 36 */,
-/* 37 */,
 /* 38 */,
-/* 39 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 40 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
+/* 39 */,
+/* 40 */,
 /* 41 */,
-/* 42 */,
+/* 42 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = {
+    data: function data() {
+        return {
+            isLoggingIn: false,
+            email: '',
+            password: '',
+            errors: {}
+        };
+    },
+    computed: {
+        loginData: function loginData() {
+            return {
+                email: this.email,
+                password: this.password
+            };
+        }
+    },
+    methods: {
+        submitLogin: function submitLogin() {
+            var _this = this;
+
+            this.isLoggingIn = true;
+            this.errors = {};
+            axios.post('/login', this.loginData).then(function (response) {
+                _this.isLoggingIn = false;
+                console.info('response', response);
+            }).catch(function (error) {
+                _this.isLoggingIn = false;
+                if (error.response && error.response.status == 422 && error.response.data) {
+                    console.info(error.response);
+                    _this.errors = error.response.data;
+                }
+            });
+        }
+    },
+    mounted: function mounted() {
+        console.log('Login component mounted.');
+    }
+};
+
+/***/ }),
 /* 43 */,
 /* 44 */,
 /* 45 */,
-/* 46 */,
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(9)(
+  /* script */
+  __webpack_require__(42),
+  /* template */
+  __webpack_require__(52),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\xampp\\htdocs\\sl\\resources\\assets\\js\\components\\auth\\Login.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Login.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-b55e05e6", Component.options)
+  } else {
+    hotAPI.reload("data-v-b55e05e6", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
 /* 47 */,
 /* 48 */,
 /* 49 */,
 /* 50 */,
 /* 51 */,
-/* 52 */,
-/* 53 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(35);
-__webpack_require__(39);
-module.exports = __webpack_require__(40);
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', [_c('p', {
+    staticClass: "login-box-msg"
+  }, [_vm._v("Sign in to start your session")]), _vm._v(" "), (Object.keys(_vm.errors).length > 0) ? _c('ul', {
+    staticClass: "text-danger errors-container p-b-10 p-l-20"
+  }, _vm._l((_vm.errors), function(error) {
+    return _c('li', [(error.constructor != Array) ? _c('div', {
+      domProps: {
+        "textContent": _vm._s(error)
+      }
+    }) : _vm._l((error), function(message) {
+      return _c('div', {
+        domProps: {
+          "textContent": _vm._s(message)
+        }
+      })
+    })], 2)
+  })) : _vm._e(), _vm._v(" "), _c('form', {
+    attrs: {
+      "method": "POST",
+      "action": "/login",
+      "id": "frm-login"
+    },
+    on: {
+      "submit": function($event) {
+        $event.preventDefault();
+        _vm.submitLogin($event)
+      }
+    }
+  }, [_c('div', {
+    staticClass: "form-group has-feedback"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.email),
+      expression: "email"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "placeholder": "Email",
+      "autocomplete": "off",
+      "name": "email",
+      "type": "email",
+      "disabled": _vm.isLoggingIn
+    },
+    domProps: {
+      "value": _vm._s(_vm.email)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.email = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('span', {
+    staticClass: "glyphicon glyphicon-envelope form-control-feedback"
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "form-group has-feedback"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.password),
+      expression: "password"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "placeholder": "Password",
+      "name": "password",
+      "type": "password",
+      "disabled": _vm.isLoggingIn
+    },
+    domProps: {
+      "value": _vm._s(_vm.password)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.password = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('span', {
+    staticClass: "glyphicon glyphicon-lock form-control-feedback"
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "col-xs-6"
+  }, [_c('div', {
+    staticClass: "checkbox"
+  }, [_c('label', [_c('input', {
+    attrs: {
+      "type": "checkbox",
+      "value": "1",
+      "name": "remember",
+      "id": "remember",
+      "disabled": _vm.isLoggingIn
+    }
+  }), _vm._v("   Remember Me\n                    ")])])]), _vm._v(" "), _c('div', {
+    staticClass: "col-xs-6 text-right"
+  }, [_c('button', {
+    staticClass: "btn btn-primary btn-flat",
+    attrs: {
+      "type": "submit",
+      "disabled": _vm.isLoggingIn
+    },
+    domProps: {
+      "textContent": _vm._s(_vm.isLoggingIn ? 'LOGGING IN' : 'SIGN IN')
+    }
+  })])])]), _vm._v(" "), _c('div', {
+    staticStyle: {
+      "margin-bottom": "10px"
+    }
+  }), _vm._v(" "), _c('a', {
+    attrs: {
+      "href": "/forgot"
+    }
+  }, [_vm._v("I forgot my password")]), _c('br'), _vm._v(" "), _c('a', {
+    staticClass: "text-center",
+    attrs: {
+      "href": "/register"
+    }
+  }, [_vm._v("New to SpotLite? Sign up now!")])])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-b55e05e6", module.exports)
+  }
+}
+
+/***/ }),
+/* 53 */,
+/* 54 */,
+/* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(37);
 
 
 /***/ })

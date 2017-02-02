@@ -7,7 +7,8 @@
 @section('body')
     <div id="sl">
         <auth>
-            <register></register>
+            <pricing-table slot="pre-box-body"></pricing-table>
+            <register slot="login-box-body"></register>
         </auth>
     </div>
 @stop

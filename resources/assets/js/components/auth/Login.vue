@@ -1,9 +1,10 @@
 <template>
     <div>
         <p class="login-box-msg">Sign in to start your session</p>
-        <ul class="text-danger errors-container p-b-10" v-if="errors">
+        <ul class="text-danger errors-container p-b-10 p-l-20" v-if="Object.keys(errors).length > 0">
             <li v-for="error in errors">
-                <div v-for="message in error" v-text="message"></div>
+                <div v-if="error.constructor != Array" v-text="error"></div>
+                <div v-else v-for="message in error" v-text="message"></div>
             </li>
         </ul>
         <form method="POST" action="/login" id="frm-login" @submit.prevent="submitLogin">
@@ -45,18 +46,25 @@
                 errors: {}
             }
         },
+        computed: {
+            loginData: function () {
+                return {
+                    email: this.email,
+                    password: this.password,
+                }
+            }
+        },
         methods: {
             submitLogin: function () {
                 this.isLoggingIn = true;
-                axios.post('/login', {
-                    email: this.email,
-                    password: this.password,
-                }).then(response=> {
+                this.errors = {};
+                axios.post('/login', this.loginData).then(response=> {
                     this.isLoggingIn = false;
                     console.info('response', response)
                 }).catch(error=> {
                     this.isLoggingIn = false;
                     if (error.response && error.response.status == 422 && error.response.data) {
+                        console.info(error.response)
                         this.errors = error.response.data;
                     }
                 })

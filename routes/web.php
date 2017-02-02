@@ -13,4 +13,8 @@
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login.get');
 Route::post('login', 'Auth\LoginController@login')->name('login.post');
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register.get');
+Route::post('register', 'Auth\RegisterController@register')->name('register.post');
 Route::get('forgot', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('forgot.get');
+Route::post('forgot', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('forgot.post');
+
+Route::get('subscription/product', 'Subscription\ProductController@index')->name('subscription.product.index');
