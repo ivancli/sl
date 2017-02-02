@@ -45,10 +45,12 @@
                             </li>
                             <li>
                                 <!--TODO not yet finished-->
-                                <strong v-if="historic_pricing">1 Month</strong>
+                                <strong v-if="productFamily.product.criteria.historic_pricing == 1">1 Month</strong>
+                                <strong v-else-if="productFamily.product.criteria.historic_pricing == 0">Lifetime</strong>
+                                <strong v-else>{{productFamily.product.criteria.historic_pricing}} Months</strong>
                                 Historic Pricing
                             </li>
-                            <li style="visibility: hidden">
+                            <li v-if="productFamily.product.criteria.my_price == true">
                                 <strong>"My Price" Nomination</strong>
                             </li>
                         </ul>
