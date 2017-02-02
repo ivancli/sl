@@ -5,7 +5,12 @@
 @import "vendor/almasaeed2010/adminlte/dist/css/skins/_all-skins";
 @import "resources/assets/sass/fonts/flama";
 @import "helpers.scss";
+@import "pricing-table.scss";
 @import "form.scss";
+
+html, body {
+  height: auto;
+}
 
 body.login-page {
   background-color: $tiffany-green;

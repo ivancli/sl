@@ -27603,6 +27603,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = {
     mounted: function mounted() {
@@ -27655,15 +27659,17 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "login-box"
-  }, [_vm._m(0), _vm._v(" "), _c('div', {
+  return _c('div', [_vm._m(0), _vm._v(" "), _c('div', {
     staticClass: "pre-box-body"
   }, [_vm._t("pre-box-body")], 2), _vm._v(" "), _c('div', {
+    staticClass: "login-box m-t-0"
+  }, [_c('div', {
     staticClass: "login-box-body"
-  }, [_vm._t("login-box-body", [_vm._v("Login, Register or Forgot Password")])], 2)])
+  }, [_vm._t("login-box-body", [_vm._v("Login, Register or Forgot Password")])], 2)])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
+    staticClass: "login-box m-b-0 m-t-50"
+  }, [_c('div', {
     staticClass: "login-logo"
   }, [_c('a', {
     attrs: {
@@ -27675,7 +27681,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "alt": "SpotLite Logo",
       "width": "360"
     }
-  })])])
+  })])])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -27830,65 +27836,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -28394,45 +28341,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }), _vm._v(" "), _c('p', {
       staticClass: "price-month"
-    }, [_vm._v(_vm._s(productFamily.preview.next_billing_manifest.total_in_cents)), _c('span', [_vm._v("/" + _vm._s(productFamily.product.interval_unit))])])]), _vm._v(" "), _c('div', {
+    }, [_vm._v("$" + _vm._s(productFamily.preview.next_billing_manifest.total_in_cents / 100)), _c('span', [_vm._v("/" + _vm._s(productFamily.product.interval_unit))])])]), _vm._v(" "), _c('div', {
       staticClass: "pricing-body"
     }, [_c('ul', [(productFamily.product.criteria.recommended > 0) ? _c('li', [_vm._v("\n                            Up to "), _c('strong', [_vm._v(_vm._s(productFamily.product.criteria.product) + " Products")])]) : _c('li', [_c('strong', [_vm._v("Unlimited Products")])]), _vm._v(" "), (productFamily.product.criteria.site > 0) ? _c('li', [_vm._v("\n                            Up to "), _c('strong', [_vm._v(_vm._s(productFamily.product.criteria.site) + " Competitors")]), _vm._v(" per product\n                        ")]) : _c('li', [_c('strong', [_vm._v("Unlimited Competitors")]), _vm._v(" Tracking\n                        ")]), _vm._v(" "), (productFamily.product.criteria.dashboard) ? _c('li', [_vm._v("\n                            Customisable Dashboard\n                        ")]) : _vm._e(), _vm._v(" "), _c('li', [_c('strong', {
       domProps: {
         "textContent": _vm._s(productFamily.product.criteria.alert_report == 'basic' ? 'Basic' : 'Advanced')
       }
-    }), _vm._v("\n                            Alerts and Reports\n                        ")]), _vm._v(" "), _c('li', [_vm._v("\n                            Updates\n                            "), (productFamily.product.criteria.frequency == 24) ? _c('strong', [_vm._v("Every Day")]) : (productFamily.product.criteria.frequency == 1) ? _c('strong', [_vm._v("Every Hour")]) : _c('strong', [_vm._v("Every " + _vm._s(productFamily.product.criteria.frequency) + " Hours")])]), _vm._v(" "), _c('li', [(productFamily.product.criteria.historic_pricing == 1) ? _c('strong', [_vm._v("1 Month")]) : (productFamily.product.criteria.historic_pricing == 0) ? _c('strong', [_vm._v("Lifetime")]) : _c('strong', [_vm._v(_vm._s(productFamily.product.criteria.historic_pricing) + " Months")]), _vm._v("\n                            Historic Pricing\n                        ")]), _vm._v(" "), (productFamily.product.criteria.my_price == true) ? _c('li', [_c('strong', [_vm._v("\"My Price\" Nomination")])]) : _vm._e()])]), _vm._v(" "), _vm._m(0, true)])]), _vm._v(" "), _vm._m(1, true)])
+    }), _vm._v("\n                            Alerts and Reports\n                        ")]), _vm._v(" "), _c('li', [_vm._v("\n                            Updates\n                            "), (productFamily.product.criteria.frequency == 24) ? _c('strong', [_vm._v("Every Day")]) : (productFamily.product.criteria.frequency == 1) ? _c('strong', [_vm._v("Every Hour")]) : _c('strong', [_vm._v("Every " + _vm._s(productFamily.product.criteria.frequency) + " Hours")])]), _vm._v(" "), _c('li', [(productFamily.product.criteria.historic_pricing == 1) ? _c('strong', [_vm._v("1 Month")]) : (productFamily.product.criteria.historic_pricing == 0) ? _c('strong', [_vm._v("Lifetime")]) : _c('strong', [_vm._v(_vm._s(productFamily.product.criteria.historic_pricing) + " Months")]), _vm._v("\n                            Historic Pricing\n                        ")]), _vm._v(" "), (productFamily.product.criteria.my_price == true) ? _c('li', [_c('strong', [_vm._v("\"My Price\" Nomination")])]) : _vm._e()])]), _vm._v(" "), _c('footer', [_c('p', {
+      staticClass: "text-center"
+    }, [_c('a', {
+      staticClass: "button button-blue ",
+      attrs: {
+        "href": "#"
+      }
+    }, [_vm._v("\n                        Get " + _vm._s(productFamily.product.name) + " plan\n                    ")])])])])])])
   }))
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('footer', [_c('p', {
-    staticClass: "text-center"
-  }, [_c('a', {
-    staticClass: "button button-blue ",
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v("\n                        Get Starter plan\n                    ")])])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('div', {
-    staticClass: "recommend-outer"
-  }, [_c('div', {
-    staticClass: "trapezoid"
-  }, [_c('span', [_vm._v("Recommended")])]), _vm._v(" "), _c('div', {
-    staticClass: "pricing-level\n                                                                     recommended\n                                                                                                            "
-  }, [_c('header', [_c('p', {
-    staticClass: "lead-text"
-  }, [_vm._v("Professional")]), _vm._v(" "), _c('p', {
-    staticClass: "price-month"
-  }, [_vm._v("\n                            $99.00"), _c('span', [_vm._v("/month")])])]), _vm._v(" "), _c('div', {
-    staticClass: "pricing-body"
-  }, [_c('ul', [_c('li', [_vm._v("\n                                Up to\n                                "), _c('strong', [_vm._v("100 Products")])]), _vm._v(" "), _c('li', [_vm._v("\n                                Up to\n                                "), _c('strong', [_vm._v("10 Competitors")]), _vm._v("\n                                per product\n                                "), _c('span', [_vm._v("per Product")])]), _vm._v(" "), _c('li', [_vm._v("\n                                Customisable Dashboard\n                            ")]), _vm._v(" "), _c('li', [_c('strong', [_vm._v("Advanced")]), _vm._v(" Alerts and Reports\n                            ")]), _vm._v(" "), _c('li', [_vm._v("\n                                Updates\n                                "), _c('strong', [_vm._v("Every 12 Hours")])]), _vm._v(" "), _c('li', [_c('strong', [_vm._v("12 Months")]), _vm._v("\n                                Historic Pricing\n                            ")]), _vm._v(" "), _c('li', [_c('strong', [_vm._v("\"My Price\" Nomination")])])])]), _vm._v(" "), _c('footer', [_c('p', {
-    staticClass: "text-center"
-  }, [_c('a', {
-    staticClass: "button button-blue ",
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v("\n                            Get Professional plan\n                        ")])])])])])])
-}]}
+},staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()

@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "./";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 55);
+/******/ 	return __webpack_require__(__webpack_require__.s = 54);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -27603,6 +27603,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = {
     mounted: function mounted() {
@@ -27655,15 +27659,17 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "login-box"
-  }, [_vm._m(0), _vm._v(" "), _c('div', {
+  return _c('div', [_vm._m(0), _vm._v(" "), _c('div', {
     staticClass: "pre-box-body"
   }, [_vm._t("pre-box-body")], 2), _vm._v(" "), _c('div', {
+    staticClass: "login-box m-t-0"
+  }, [_c('div', {
     staticClass: "login-box-body"
-  }, [_vm._t("login-box-body", [_vm._v("Login, Register or Forgot Password")])], 2)])
+  }, [_vm._t("login-box-body", [_vm._v("Login, Register or Forgot Password")])], 2)])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
+    staticClass: "login-box m-b-0 m-t-50"
+  }, [_c('div', {
     staticClass: "login-logo"
   }, [_c('a', {
     attrs: {
@@ -27675,7 +27681,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "alt": "SpotLite Logo",
       "width": "360"
     }
-  })])])
+  })])])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -27687,25 +27693,24 @@ if (false) {
 
 /***/ }),
 /* 35 */,
-/* 36 */,
-/* 37 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(28);
 
 Vue.component('auth', __webpack_require__(33));
-Vue.component('login', __webpack_require__(46));
+Vue.component('forgot', __webpack_require__(45));
 
 var sl = new Vue({
     el: '#sl'
 });
 
 /***/ }),
+/* 37 */,
 /* 38 */,
 /* 39 */,
 /* 40 */,
-/* 41 */,
-/* 42 */
+/* 41 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27748,67 +27753,39 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = {
-    data: function data() {
-        return {
-            isLoggingIn: false,
-            email: '',
-            password: '',
-            errors: {}
-        };
-    },
-    computed: {
-        loginData: function loginData() {
-            return {
-                email: this.email,
-                password: this.password
-            };
-        }
-    },
-    methods: {
-        submitLogin: function submitLogin() {
-            var _this = this;
-
-            this.isLoggingIn = true;
-            this.errors = {};
-            axios.post('/login', this.loginData).then(function (response) {
-                _this.isLoggingIn = false;
-                console.info('response', response);
-            }).catch(function (error) {
-                _this.isLoggingIn = false;
-                if (error.response && error.response.status == 422 && error.response.data) {
-                    console.info(error.response);
-                    _this.errors = error.response.data;
-                }
-            });
-        }
-    },
     mounted: function mounted() {
-        console.log('Login component mounted.');
+        console.log('Forgot component mounted.');
     }
 };
 
 /***/ }),
+/* 42 */,
 /* 43 */,
 /* 44 */,
-/* 45 */,
-/* 46 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(9)(
   /* script */
-  __webpack_require__(42),
+  __webpack_require__(41),
   /* template */
-  __webpack_require__(51),
+  __webpack_require__(50),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "E:\\localhost\\sl\\resources\\assets\\js\\components\\auth\\Login.vue"
+Component.options.__file = "E:\\localhost\\sl\\resources\\assets\\js\\components\\auth\\Forgot.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] Login.vue: functional components are not supported with templates, they should use render functions.")}
+if (Component.options.functional) {console.error("[vue-loader] Forgot.vue: functional components are not supported with templates, they should use render functions.")}
 
 /* hot reload */
 if (false) {(function () {
@@ -27817,12 +27794,12 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-93c81e8e", Component.options)
+    hotAPI.createRecord("data-v-65f88803", Component.options)
   } else {
     if (module.hot.data.cssModules && JSON.stringify(module.hot.data.cssModules) !== JSON.stringify(cssModules)) {
       delete Component.options._Ctor
     }
-    hotAPI.reload("data-v-93c81e8e", Component.options)
+    hotAPI.reload("data-v-65f88803", Component.options)
   }
   module.hot.dispose(function (data) {
     data.cssModules = cssModules
@@ -27833,153 +27810,129 @@ module.exports = Component.exports
 
 
 /***/ }),
+/* 46 */,
 /* 47 */,
 /* 48 */,
 /* 49 */,
-/* 50 */,
-/* 51 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', [_c('p', {
     staticClass: "login-box-msg"
-  }, [_vm._v("Sign in to start your session")]), _vm._v(" "), (Object.keys(_vm.errors).length > 0) ? _c('ul', {
-    staticClass: "text-danger errors-container p-b-10 p-l-20"
-  }, _vm._l((_vm.errors), function(error) {
-    return _c('li', [(error.constructor != Array) ? _c('div', {
-      domProps: {
-        "textContent": _vm._s(error)
-      }
-    }) : _vm._l((error), function(message) {
-      return _c('div', {
-        domProps: {
-          "textContent": _vm._s(message)
-        }
-      })
-    })], 2)
-  })) : _vm._e(), _vm._v(" "), _c('form', {
+  }, [_vm._v("Enter your email to reset password")]), _vm._v(" "), _c('ul', {
+    staticClass: "text-danger"
+  }), _vm._v(" "), _c('ul', {
+    staticClass: "text-danger errors-container"
+  }), _vm._v(" "), _c('form', {
     attrs: {
       "method": "POST",
-      "action": "/login",
-      "id": "frm-login"
-    },
-    on: {
-      "submit": function($event) {
-        $event.preventDefault();
-        _vm.submitLogin($event)
-      }
+      "action": "http://login.spotlite.com.au/password",
+      "accept-charset": "UTF-8",
+      "id": "frm-password",
+      "onsubmit": "submitForgotPassword(); return false;"
+    }
+  }, [_c('input', {
+    attrs: {
+      "name": "_token",
+      "type": "hidden",
+      "value": "3i7c4iYsz2Huf5ayxH60fmJl1iLS6F6otURhOKYM"
+    }
+  }), _vm._v(" "), _vm._m(0), _vm._v(" "), _c('div', {
+    staticClass: "row m-b-20"
+  }, [_c('div', {
+    staticClass: "col-sm-12"
+  }, [_c('div', {
+    staticClass: "g-recaptcha",
+    attrs: {
+      "data-sitekey": "6Ldtpg0UAAAAAEoU05qyVM0Mt6oJUYGLPewBwGDa"
     }
   }, [_c('div', {
+    staticStyle: {
+      "width": "304px",
+      "height": "78px"
+    }
+  }, [_c('div', [_c('iframe', {
+    attrs: {
+      "src": "https://www.google.com/recaptcha/api2/anchor?k=6Ldtpg0UAAAAAEoU05qyVM0Mt6oJUYGLPewBwGDa&co=aHR0cDovL2xvZ2luLnNwb3RsaXRlLmNvbS5hdTo4MA..&hl=en&v=r20170126104253&size=normal&cb=59pyus3z920",
+      "title": "recaptcha widget",
+      "width": "304",
+      "height": "78",
+      "frameborder": "0",
+      "scrolling": "no",
+      "name": "undefined"
+    }
+  })], 1), _vm._v(" "), _c('textarea', {
+    staticClass: "g-recaptcha-response",
+    staticStyle: {
+      "width": "250px",
+      "height": "40px",
+      "border": "1px solid #c1c1c1",
+      "margin": "10px 25px",
+      "padding": "0px",
+      "resize": "none",
+      "display": "none"
+    },
+    attrs: {
+      "id": "g-recaptcha-response",
+      "name": "g-recaptcha-response"
+    }
+  })])])])]), _vm._v(" "), _vm._m(1)])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
     staticClass: "form-group has-feedback"
   }, [_c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.email),
-      expression: "email"
-    }],
     staticClass: "form-control",
     attrs: {
       "placeholder": "Email",
       "autocomplete": "off",
       "name": "email",
-      "type": "email",
-      "disabled": _vm.isLoggingIn
-    },
-    domProps: {
-      "value": _vm._s(_vm.email)
-    },
-    on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.email = $event.target.value
-      }
+      "type": "email"
     }
   }), _vm._v(" "), _c('span', {
     staticClass: "glyphicon glyphicon-envelope form-control-feedback"
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "form-group has-feedback"
-  }, [_c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.password),
-      expression: "password"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "placeholder": "Password",
-      "name": "password",
-      "type": "password",
-      "disabled": _vm.isLoggingIn
-    },
-    domProps: {
-      "value": _vm._s(_vm.password)
-    },
-    on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.password = $event.target.value
-      }
-    }
-  }), _vm._v(" "), _c('span', {
-    staticClass: "glyphicon glyphicon-lock form-control-feedback"
-  })]), _vm._v(" "), _c('div', {
+  })])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
     staticClass: "row"
   }, [_c('div', {
-    staticClass: "col-xs-6"
-  }, [_c('div', {
-    staticClass: "checkbox"
-  }, [_c('label', [_c('input', {
+    staticClass: "col-sm-6 col-sm-push-6 text-right"
+  }, [_c('input', {
+    staticClass: "btn btn-default btn-block btn-flat",
     attrs: {
-      "type": "checkbox",
-      "value": "1",
-      "name": "remember",
-      "id": "remember",
-      "disabled": _vm.isLoggingIn
-    }
-  }), _vm._v("   Remember Me\n                    ")])])]), _vm._v(" "), _c('div', {
-    staticClass: "col-xs-6 text-right"
-  }, [_c('button', {
-    staticClass: "btn btn-primary btn-flat",
-    attrs: {
+      "href": "#",
       "type": "submit",
-      "disabled": _vm.isLoggingIn
-    },
-    domProps: {
-      "textContent": _vm._s(_vm.isLoggingIn ? 'LOGGING IN' : 'SIGN IN')
+      "value": "RESET"
     }
-  })])])]), _vm._v(" "), _c('div', {
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "col-sm-6 col-sm-pull-6"
+  }, [_c('div', {
     staticStyle: {
-      "margin-bottom": "10px"
+      "padding-top": "5px",
+      "padding-bottom": "5px"
     }
-  }), _vm._v(" "), _c('a', {
+  }, [_c('a', {
     attrs: {
-      "href": "/forgot"
+      "href": "/login"
     }
-  }, [_vm._v("I forgot my password")]), _c('br'), _vm._v(" "), _c('a', {
-    staticClass: "text-center",
-    attrs: {
-      "href": "/register"
-    }
-  }, [_vm._v("New to SpotLite? Sign up now!")])])
-},staticRenderFns: []}
+  }, [_vm._v("Back to login page")])])])])
+}]}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-93c81e8e", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-65f88803", module.exports)
   }
 }
 
 /***/ }),
+/* 51 */,
 /* 52 */,
 /* 53 */,
-/* 54 */,
-/* 55 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(37);
+module.exports = __webpack_require__(36);
 
 
 /***/ })

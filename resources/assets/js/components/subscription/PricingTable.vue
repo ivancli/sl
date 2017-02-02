@@ -11,7 +11,7 @@
                 <div class="pricing-level">
                     <header>
                         <p class="lead-text" v-text="productFamily.product.name"></p>
-                        <p class="price-month">{{productFamily.preview.next_billing_manifest.total_in_cents}}<span>/{{productFamily.product.interval_unit}}</span></p>
+                        <p class="price-month">${{productFamily.preview.next_billing_manifest.total_in_cents/100}}<span>/{{productFamily.product.interval_unit}}</span></p>
                     </header>
                     <div class="pricing-body">
                         <ul>
@@ -57,71 +57,12 @@
                     </div>
                     <footer><p class="text-center">
                         <a href="#" class="button button-blue ">
-                            Get Starter plan
+                            Get {{productFamily.product.name}} plan
                         </a>
                     </p>
                     </footer>
                 </div>
             </div>
-
-            <div>
-                <div class="recommend-outer">
-                    <div class="trapezoid">
-                        <span>Recommended</span>
-                    </div>
-                    <div class="pricing-level
-                                                                         recommended
-                                                                                                                ">
-                        <header><p class="lead-text">Professional</p>
-                            <p class="price-month">
-                                $99.00<span>/month</span>
-                            </p>
-                        </header>
-                        <div class="pricing-body">
-                            <ul>
-                                <li>
-                                    Up to
-                                    <strong>100 Products</strong>
-                                </li>
-
-                                <li>
-                                    Up to
-                                    <strong>10 Competitors</strong>
-                                    per product
-                                    <span>per Product</span>
-                                </li>
-
-                                <li>
-                                    Customisable Dashboard
-                                </li>
-
-                                <li>
-                                    <strong>Advanced</strong> Alerts and Reports
-                                </li>
-                                <li>
-                                    Updates
-                                    <strong>Every 12 Hours</strong>
-                                </li>
-                                <li>
-                                    <strong>12 Months</strong>
-                                    Historic Pricing
-                                </li>
-                                <li>
-                                    <strong>"My Price" Nomination</strong>
-                                </li>
-                            </ul>
-                        </div>
-                        <footer><p class="text-center">
-                            <a href="#" class="button button-blue ">
-                                Get Professional plan
-                            </a>
-                        </p>
-                        </footer>
-                    </div>
-                </div>
-            </div>
-
-
         </div>
     </div>
 </template>
