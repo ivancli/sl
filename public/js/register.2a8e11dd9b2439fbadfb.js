@@ -27628,7 +27628,7 @@ var Component = __webpack_require__(9)(
   /* cssModules */
   null
 )
-Component.options.__file = "E:\\localhost\\sl\\resources\\assets\\js\\components\\Auth.vue"
+Component.options.__file = "C:\\xampp\\htdocs\\sl\\resources\\assets\\js\\components\\Auth.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Auth.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -27639,16 +27639,10 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-69c49c28", Component.options)
+    hotAPI.createRecord("data-v-58d78d40", Component.options)
   } else {
-    if (module.hot.data.cssModules && JSON.stringify(module.hot.data.cssModules) !== JSON.stringify(cssModules)) {
-      delete Component.options._Ctor
-    }
-    hotAPI.reload("data-v-69c49c28", Component.options)
+    hotAPI.reload("data-v-58d78d40", Component.options)
   }
-  module.hot.dispose(function (data) {
-    data.cssModules = cssModules
-  })
 })()}
 
 module.exports = Component.exports
@@ -27687,7 +27681,7 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-69c49c28", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-58d78d40", module.exports)
   }
 }
 
@@ -27943,13 +27937,13 @@ var Component = __webpack_require__(9)(
   /* script */
   __webpack_require__(43),
   /* template */
-  __webpack_require__(49),
+  __webpack_require__(50),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "E:\\localhost\\sl\\resources\\assets\\js\\components\\auth\\Register.vue"
+Component.options.__file = "C:\\xampp\\htdocs\\sl\\resources\\assets\\js\\components\\auth\\Register.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Register.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -27960,16 +27954,10 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-08797cfa", Component.options)
+    hotAPI.createRecord("data-v-6bee36a2", Component.options)
   } else {
-    if (module.hot.data.cssModules && JSON.stringify(module.hot.data.cssModules) !== JSON.stringify(cssModules)) {
-      delete Component.options._Ctor
-    }
-    hotAPI.reload("data-v-08797cfa", Component.options)
+    hotAPI.reload("data-v-6bee36a2", Component.options)
   }
-  module.hot.dispose(function (data) {
-    data.cssModules = cssModules
-  })
 })()}
 
 module.exports = Component.exports
@@ -27983,13 +27971,13 @@ var Component = __webpack_require__(9)(
   /* script */
   __webpack_require__(44),
   /* template */
-  __webpack_require__(52),
+  __webpack_require__(51),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "E:\\localhost\\sl\\resources\\assets\\js\\components\\subscription\\PricingTable.vue"
+Component.options.__file = "C:\\xampp\\htdocs\\sl\\resources\\assets\\js\\components\\subscription\\PricingTable.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] PricingTable.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -28000,23 +27988,18 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-9c8ef59a", Component.options)
+    hotAPI.createRecord("data-v-a7b27342", Component.options)
   } else {
-    if (module.hot.data.cssModules && JSON.stringify(module.hot.data.cssModules) !== JSON.stringify(cssModules)) {
-      delete Component.options._Ctor
-    }
-    hotAPI.reload("data-v-9c8ef59a", Component.options)
+    hotAPI.reload("data-v-a7b27342", Component.options)
   }
-  module.hot.dispose(function (data) {
-    data.cssModules = cssModules
-  })
 })()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 49 */
+/* 49 */,
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -28309,19 +28292,17 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-08797cfa", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-6bee36a2", module.exports)
   }
 }
 
 /***/ }),
-/* 50 */,
-/* 51 */,
-/* 52 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "row"
+    staticClass: "row p-t-50"
   }, _vm._l((_vm.productFamilies), function(productFamily) {
     return _c('div', {
       staticClass: "col-lg-3 col-md-6 plan",
@@ -28330,10 +28311,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "data-id": productFamily.product.id,
         "data-price": productFamily.preview.next_billing_manifest.total_in_cents
       }
-    }, [_c('div', [(productFamily.product.criteria.recommended) ? _c('div', {
+    }, [_c('div', {
+      class: productFamily.product.criteria.recommended ? 'recommend-outer' : ''
+    }, [(productFamily.product.criteria.recommended) ? _c('div', {
       staticClass: "trapezoid"
     }, [_c('span', [_vm._v("Recommended")])]) : _vm._e(), _vm._v(" "), _c('div', {
-      staticClass: "pricing-level"
+      staticClass: "pricing-level",
+      class: productFamily.product.criteria.recommended ? 'recommended' : ''
     }, [_c('header', [_c('p', {
       staticClass: "lead-text",
       domProps: {
@@ -28361,11 +28345,12 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-9c8ef59a", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-a7b27342", module.exports)
   }
 }
 
 /***/ }),
+/* 52 */,
 /* 53 */,
 /* 54 */,
 /* 55 */,

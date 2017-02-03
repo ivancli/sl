@@ -1,14 +1,14 @@
 <template>
-    <div class=row>
+    <div class="row p-t-50">
         <div class="col-lg-3 col-md-6 plan" v-for="productFamily in productFamilies" :data-link="productFamily.product.public_signup_pages[0].url" :data-id="productFamily.product.id"
              :data-price="productFamily.preview.next_billing_manifest.total_in_cents">
 
 
-            <div>
+            <div :class="productFamily.product.criteria.recommended ? 'recommend-outer' : ''">
                 <div class="trapezoid" v-if="productFamily.product.criteria.recommended">
                     <span>Recommended</span>
                 </div>
-                <div class="pricing-level">
+                <div class="pricing-level" :class="productFamily.product.criteria.recommended ? 'recommended' : ''">
                     <header>
                         <p class="lead-text" v-text="productFamily.product.name"></p>
                         <p class="price-month">${{productFamily.preview.next_billing_manifest.total_in_cents/100}}<span>/{{productFamily.product.interval_unit}}</span></p>

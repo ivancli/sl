@@ -1,3 +1,7 @@
+.pre-box-body {
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
 .section-pricing {
   padding: 115px 0;
@@ -87,7 +91,7 @@
 }
 
 .trapezoid {
-  border-bottom: 40px solid #78d0be;
+  border-bottom: 40px solid #72bbdb;
   border-left: 30px solid transparent;
   border-right: 30px solid transparent;
   height: 0;
@@ -114,4 +118,74 @@
 
 .underline {
   text-decoration: underline;
+}
+
+/* button */
+
+a.button {
+  display: inline-block;
+}
+
+.button {
+  text-transform: uppercase;
+  text-align: center;
+  color: #fff;
+  padding: 15px 25px;
+  transition: all 0.5s ease;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+.button:focus, .button:active {
+  color: #fff;
+}
+
+.button-orange {
+  background-color: #F8A66F;
+  border-bottom: 4px solid #f2710d;
+}
+
+.button-orange:hover {
+  background-color: #78d0be;
+  border-bottom: 4px solid #599488;
+  color: #fff;
+}
+
+.button-orange:disabled {
+  background-color: #d3d3d3;
+  border-bottom-color: #808080;
+}
+
+.button-orange:disabled:hover {
+  background-color: #d3d3d3;
+  border-bottom-color: #808080;
+}
+
+.button-green {
+  background-color: #78d0be;
+  border-bottom: 4px solid #599488;
+}
+
+.button-green:hover {
+  background-color: #F8A66F;
+  border-bottom: 4px solid #f2710d;
+  color: #fff;
+}
+
+.button-blue {
+  background-color: #72bbdb;
+  border-bottom: 4px solid #0098c7;
+}
+
+.button-blue:hover {
+  background-color: #78d0be;
+  border-bottom: 4px solid #599488;
+  color: #fff;
+}
+
+a.button.disabled, a.button.disabled:hover, a.button.disabled:focus, a.button.disabled:active {
+  background-color: #F8A66F !important;
+  border-bottom: 4px solid #f2710d !important;
+  cursor: default;
 }
