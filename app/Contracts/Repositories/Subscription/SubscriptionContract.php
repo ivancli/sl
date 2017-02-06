@@ -15,4 +15,11 @@ interface SubscriptionContract
      * @return mixed
      */
     public function previewSubscription($data);
+
+    /**
+     * Generate verification token in subscription table
+     *
+     * @return mixed
+     */
+    public function generateToken();
 }

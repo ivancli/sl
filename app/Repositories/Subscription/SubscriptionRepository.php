@@ -22,4 +22,14 @@ class SubscriptionRepository implements SubscriptionContract
     {
         return Chargify::subscription()->preview($data);
     }
+
+    /**
+     * Generate verification code in subscription table
+     *
+     * @return mixed
+     */
+    public function generateToken()
+    {
+        return str_random(10);
+    }
 }

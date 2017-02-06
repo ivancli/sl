@@ -9,12 +9,16 @@
 namespace App\Contracts\Repositories\Subscription;
 
 
+use App\Exceptions\Subscription\ProductFamilyNotFoundException;
+
 interface ProductFamilyContract
 {
     /**
      * Load all product families
      *
+     * @param bool $throw
      * @return mixed
+     * @throws ProductFamilyNotFoundException
      */
-    public function getProductFamilies();
+    public function getProductFamilies($throw = false);
 }

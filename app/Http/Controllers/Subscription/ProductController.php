@@ -2,6 +2,9 @@
 namespace App\Http\Controllers\Subscription;
 
 use App\Contracts\Repositories\Subscription\SubscriptionManagementContract;
+use App\Exceptions\Subscription\ProductFamilyNotFoundException;
+use App\Exceptions\Subscription\ProductNoFoundException;
+use App\Exceptions\Subscription\ProductNotFoundException;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 

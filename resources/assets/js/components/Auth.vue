@@ -10,10 +10,8 @@
         <div class="pre-box-body">
             <slot name="pre-box-body"></slot>
         </div>
-        <div class="login-box m-t-0">
-            <div class="login-box-body">
-                <slot name="login-box-body">Login, Register or Forgot Password</slot>
-            </div>
+        <div>
+            <slot name="box-body"></slot>
         </div>
     </div>
 </template>

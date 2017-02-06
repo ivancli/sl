@@ -8,7 +8,7 @@
     <div id="sl">
         <auth>
             <pricing-table slot="pre-box-body"></pricing-table>
-            <register slot="login-box-body"></register>
+            <register slot="box-body"></register>
         </auth>
     </div>
 @stop

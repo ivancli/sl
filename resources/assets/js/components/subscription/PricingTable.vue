@@ -1,6 +1,7 @@
 <template>
     <div class="row p-t-50">
-        <div class="col-lg-3 col-md-6 plan" v-for="productFamily in productFamilies" :data-link="productFamily.product.public_signup_pages[0].url" :data-id="productFamily.product.id"
+        <div class="col-lg-3 col-md-6 plan" v-for="productFamily in productFamilies"
+             :data-link="productFamily.product.public_signup_pages[0].url" :data-id="productFamily.product.id"
              :data-price="productFamily.preview.next_billing_manifest.total_in_cents">
 
 
@@ -11,7 +12,8 @@
                 <div class="pricing-level" :class="productFamily.product.criteria.recommended ? 'recommended' : ''">
                     <header>
                         <p class="lead-text" v-text="productFamily.product.name"></p>
-                        <p class="price-month">${{productFamily.preview.next_billing_manifest.total_in_cents/100}}<span>/{{productFamily.product.interval_unit}}</span></p>
+                        <p class="price-month">${{productFamily.preview.next_billing_manifest.total_in_cents/100}}<span>/{{productFamily.product.interval_unit}}</span>
+                        </p>
                     </header>
                     <div class="pricing-body">
                         <ul>
@@ -56,9 +58,12 @@
                         </ul>
                     </div>
                     <footer><p class="text-center">
-                        <a href="#" class="button button-blue ">
-                            Get {{productFamily.product.name}} plan
-                        </a>
+                        <a href="#" class="button button-blue"
+                           :disabled="selectedSubscriptionPlanId == productFamily.product.id"
+                           :class="selectedSubscriptionPlanId == productFamily.product.id ? 'disabled' : ''"
+                           @click.prevent="selectSubscriptionPlan(productFamily.product.id)"
+                           v-text="selectedSubscriptionPlanId == productFamily.product.id ? 'Selected' : ('Get ' + productFamily.product.name + ' plan')"
+                        ></a>
                     </p>
                     </footer>
                 </div>
@@ -68,6 +73,10 @@
 </template>
 
 <script>
+    import {
+            SET_SUBSCRIPTION_PLAN_ID
+    } from '../../actions/mutation-types';
+
     export default {
         data: ()=> {
             return {
@@ -85,6 +94,14 @@
                         this.errors = error.response.data;
                     }
                 })
+            },
+            selectSubscriptionPlan: function (selectedSubscriptionPlanId) {
+                this.$store.commit([SET_SUBSCRIPTION_PLAN_ID], selectedSubscriptionPlanId);
+            }
+        },
+        computed: {
+            selectedSubscriptionPlanId(){
+                return this.$store.state.selectedSubscriptionPlanId;
             }
         },
         mounted() {

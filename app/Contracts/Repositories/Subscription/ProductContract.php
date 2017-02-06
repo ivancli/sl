@@ -9,13 +9,27 @@
 namespace App\Contracts\Repositories\Subscription;
 
 
+use App\Exceptions\Subscription\ProductNotFoundException;
+
 interface ProductContract
 {
     /**
-     * Load all product within a product family
+     * Load product by product ID
      *
      * @param $product_family_id
+     * @param bool $throw
      * @return mixed
+     * @throws ProductNotFoundException
      */
-    public function getProductsByProductFamilyID($product_family_id);
+    public function getProductsByProductFamilyID($product_family_id, $throw = false);
+
+    /**
+     * Load product by product ID
+     *
+     * @param $product_id
+     * @param bool $throw
+     * @return mixed
+     * @throws ProductNotFoundException
+     */
+    public function getProductByProductId($product_id, $throw = false);
 }

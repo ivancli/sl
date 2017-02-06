@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Subscription;
+use App\Models\User;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +15,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        User::created(function ($user) {
+            /* create blank subscription record */
+            $user->subscription()->save(new Subscription);
+        });
     }
 
     /**

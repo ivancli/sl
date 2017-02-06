@@ -10,6 +10,7 @@ namespace App\Repositories\Subscription;
 
 
 use App\Contracts\Repositories\Subscription\ProductFamilyContract;
+use App\Exceptions\Subscription\ProductFamilyNotFoundException;
 use Invigor\Chargify\Chargify;
 
 class ProductFamilyRepository implements ProductFamilyContract
@@ -17,10 +18,16 @@ class ProductFamilyRepository implements ProductFamilyContract
     /**
      * Load all product families
      *
+     * @param bool $throw
      * @return mixed
+     * @throws ProductFamilyNotFoundException
      */
-    public function getProductFamilies()
+    public function getProductFamilies($throw = false)
     {
-        return Chargify::productFamily()->all();
+        $productFamilies = Chargify::productFamily()->all();
+        if ($throw && empty($productFamilies)) {
+            throw new ProductFamilyNotFoundException();
+        }
+        return $productFamilies;
     }
 }
