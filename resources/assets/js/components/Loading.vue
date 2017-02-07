@@ -29,19 +29,16 @@
     }
 
     .loading .loading-core {
-        width: 400px;
-        height: 300px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        margin-left: -50px;
+        margin-top: -50px;
+        width: 100px;
+        height: 100px;
         background-image: url('../../images/spinner.png');
-        -webkit-animation: loading-h 1s steps(9) infinite, loading-v 1s steps(21) infinite;
-    }
-
-    @keyframes loading-h {
-        0% {
-            background-position-x: 0;
-        }
-        100% {
-            background-position-x: -3600px;
-        }
+        background-size: 100px 3600px;
+        -webkit-animation: loading-v 1s steps(36) infinite;
     }
 
     @keyframes loading-v {
@@ -49,7 +46,7 @@
             background-position-y: 0;
         }
         100% {
-            background-position-y: -6300px;
+            background-position-y: -3600px;
         }
     }
 </style>
