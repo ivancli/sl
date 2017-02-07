@@ -1,5 +1,9 @@
 <?php
 namespace App\Contracts\Repositories\Subscription;
+
+use App\Exceptions\Subscription\CannotCreateSubscriptionException;
+use App\Exceptions\Subscription\SubscriptionNotFoundException;
+
 /**
  * Created by PhpStorm.
  * User: ivan.li
@@ -22,4 +26,22 @@ interface SubscriptionContract
      * @return mixed
      */
     public function generateToken();
+
+    /**
+     * Create new subscription
+     *
+     * @param $data
+     * @return mixed
+     * @throws CannotCreateSubscriptionException
+     */
+    public function createSubscription($data);
+
+    /**
+     * Get subscription by Subscription ID
+     *
+     * @param $subscription_id
+     * @return mixed
+     * * @throws SubscriptionNotFoundException
+     */
+    public function get($subscription_id);
 }

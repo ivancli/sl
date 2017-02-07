@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Contracts\Repositories\Subscription\ProductContract as SubscriptionPlanContract;
 use App\Contracts\Repositories\Subscription\SubscriptionContract;
+use App\Exceptions\Subscription\SubscriptionNotFoundException;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -75,6 +76,7 @@ class RegisterController extends Controller
      *
      * @param  array $data
      * @return User
+     * @throws SubscriptionNotFoundException
      */
     protected function create(array $data)
     {
@@ -88,26 +90,29 @@ class RegisterController extends Controller
             'password' => bcrypt($data['password']),
         ]);
 
+        $couponCode = isset($couponCode) ? $couponCode : '';
+
         if ($subscriptionPlan->require_credit_card) {
-            $subscription = $user->subscription;
-
-            /* set verification code */
-            $subscription->setToken($this->subscriptionRepo->generateToken());
-
-            $signUpPage = count($subscriptionPlan->public_signup_pages) > 0 ? array_first($subscriptionPlan->public_signup_pages)->url : null;
-
-            /*redirect to payment gateway*/
-            $reference = array(
-                "user_id" => $user->getKey(),
-                "verification_code" => $subscription->token,
-            );
-            $couponCode = isset($couponCode) ? $couponCode : '';
-            $encryptedReference = rawurlencode(json_encode($reference));
-            $this->redirectTo = $signUpPage . "?reference=$encryptedReference&first_name={$user->first_name}&last_name={$user->last_name}&email={$user->email}&coupon_code={$couponCode}";
+            /* subscription requires credit card, send new user to sign up page*/
+            $this->redirectTo = $this->subscriptionPlanRepo->generateSignUpPageLink($subscriptionPlan->id, $user, $couponCode);
         } else {
-
+            /*subscription does not require credit card, create subscription via API*/
+            $result = $this->subscriptionRepo->createSubscription([
+                "product_id" => $subscriptionPlan->id,
+                "customer_attributes" => array(
+                    "first_name" => $user->first_name,
+                    "last_name" => $user->last_name,
+                    "email" => $user->email,
+                ),
+                "coupon_code" => $couponCode
+            ]);
+            $subscription = $user->subscription;
+            if (is_null($subscription)) {
+                throw new SubscriptionNotFoundException();
+            }
+            $subscription->api_subscription_id = $result->id;
+            $subscription->save();
         }
-
         return $user;
     }
 

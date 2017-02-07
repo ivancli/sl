@@ -1,17 +1,18 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Ivan
- * Date: 4/02/2017
- * Time: 3:41 PM
+ * User: ivan.li
+ * Date: 2/7/2017
+ * Time: 4:32 PM
  */
 
 namespace App\Exceptions;
 
+
 use Exception;
 use Illuminate\Http\JsonResponse;
 
-class NotFoundException extends Exception
+class RequestException extends Exception
 {
     public $response;
     protected $errors;

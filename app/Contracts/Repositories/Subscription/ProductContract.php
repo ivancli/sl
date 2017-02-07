@@ -10,6 +10,9 @@ namespace App\Contracts\Repositories\Subscription;
 
 
 use App\Exceptions\Subscription\ProductNotFoundException;
+use App\Exceptions\Subscription\ProductSignUpPageNotFoundException;
+use App\Exceptions\Subscription\SubscriptionNotFoundException;
+use App\Models\User;
 
 interface ProductContract
 {
@@ -32,4 +35,16 @@ interface ProductContract
      * @throws ProductNotFoundException
      */
     public function getProductByProductId($product_id, $throw = false);
+
+    /**
+     * Retrieve sign up page link of a product
+     *
+     * @param $product_id
+     * @param User $user
+     * @param string $coupon_code
+     * @return mixed
+     * @throws ProductSignUpPageNotFoundException
+     * @throws SubscriptionNotFoundException
+     */
+    public function generateSignUpPageLink($product_id, User $user, $coupon_code = '');
 }

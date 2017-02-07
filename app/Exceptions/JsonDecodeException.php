@@ -1,25 +1,31 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Ivan
- * Date: 4/02/2017
- * Time: 3:41 PM
+ * User: ivan.li
+ * Date: 2/7/2017
+ * Time: 5:18 PM
  */
 
 namespace App\Exceptions;
 
+
 use Exception;
 use Illuminate\Http\JsonResponse;
 
-class NotFoundException extends Exception
+class JsonDecodeException extends Exception
 {
     public $response;
     protected $errors;
     protected $redirectUrl;
 
-    public function __construct($message = null, $code = 0, Exception $previous = null)
+    public function __construct($message = null)
     {
-        parent::__construct($message, $code, $previous);
+        if (!is_null($message)) {
+            $this->setErrors($message);
+        } else {
+            $this->setErrors(__('exceptions.Subscription.JsonDecodeException'));
+        }
+        parent::__construct();
         $this->response = $this->buildFailedResponse($this->getErrors());
     }
 

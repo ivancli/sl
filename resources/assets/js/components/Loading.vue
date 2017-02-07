@@ -27,4 +27,29 @@
         -khtml-opacity: 0.5;
         opacity: 0.5;
     }
+
+    .loading .loading-core {
+        width: 400px;
+        height: 300px;
+        background-image: url('../../images/spinner.png');
+        -webkit-animation: loading-h 1s steps(9) infinite, loading-v 1s steps(21) infinite;
+    }
+
+    @keyframes loading-h {
+        0% {
+            background-position-x: 0;
+        }
+        100% {
+            background-position-x: -3600px;
+        }
+    }
+
+    @keyframes loading-v {
+        0% {
+            background-position-y: 0;
+        }
+        100% {
+            background-position-y: -6300px;
+        }
+    }
 </style>

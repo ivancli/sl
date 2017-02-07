@@ -96,7 +96,7 @@
                 })
             },
             selectSubscriptionPlan: function (selectedSubscriptionPlanId) {
-                this.$store.commit([SET_SUBSCRIPTION_PLAN_ID], selectedSubscriptionPlanId);
+                this.$store.commit(SET_SUBSCRIPTION_PLAN_ID, selectedSubscriptionPlanId);
             }
         },
         computed: {
