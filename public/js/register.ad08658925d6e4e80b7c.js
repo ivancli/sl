@@ -28541,6 +28541,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = {
     mounted: function mounted() {}
@@ -28554,7 +28557,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
 //
 //
 //
@@ -28848,7 +28850,7 @@ exports = module.exports = __webpack_require__(50)();
 
 
 // module
-exports.push([module.i, "\n.loading-backdrop {\n    position: fixed;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    left: 0;\n    background-color: #000;\n    -ms-filter: \"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)\";\n    filter: alpha(opacity=50);\n    -moz-opacity: 0.5;\n    -khtml-opacity: 0.5;\n    opacity: 0.5;\n}\n.loading .loading-core {\n    width: 400px;\n    height: 300px;\n    background-image: url(" + __webpack_require__(51) + ");\n    -webkit-animation: loading-h 1s steps(9) infinite, loading-v 1s steps(21) infinite;\n}\n@-webkit-keyframes loading-h {\n0% {\n        background-position-x: 0;\n}\n100% {\n        background-position-x: -3600px;\n}\n}\n@keyframes loading-h {\n0% {\n        background-position-x: 0;\n}\n100% {\n        background-position-x: -3600px;\n}\n}\n@-webkit-keyframes loading-v {\n0% {\n        background-position-y: 0;\n}\n100% {\n        background-position-y: -6300px;\n}\n}\n@keyframes loading-v {\n0% {\n        background-position-y: 0;\n}\n100% {\n        background-position-y: -6300px;\n}\n}\n", ""]);
+exports.push([module.i, "\n.loading-backdrop {\n    position: fixed;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    left: 0;\n    background-color: #000;\n    -ms-filter: \"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)\";\n    filter: alpha(opacity=50);\n    -moz-opacity: 0.5;\n    -khtml-opacity: 0.5;\n    opacity: 0.5;\n    z-index: 999;\n}\n.loading .loading-core {\n    position: fixed;\n    top: 50%;\n    left: 50%;\n    margin-left: -50px;\n    margin-top: -50px;\n    width: 100px;\n    height: 100px;\n    background-image: url(" + __webpack_require__(51) + ");\n    background-size: 100px 3600px;\n    -webkit-animation: loading-v 1s steps(36) infinite;\n    z-index: 1000;\n}\n.loading .loading-text{\n    z-index: 1000;\n    position: fixed;\n    top: 50%;\n    text-align: center;\n    margin-top: 50px;\n    color: #fff;\n    font-size: 20px;\n    font-weight: bold;\n    width: 100%;\n}\n@-webkit-keyframes loading-v {\n0% {\n        background-position-y: 0;\n}\n100% {\n        background-position-y: -3600px;\n}\n}\n@keyframes loading-v {\n0% {\n        background-position-y: 0;\n}\n100% {\n        background-position-y: -3600px;\n}\n}\n", ""]);
 
 // exports
 
@@ -28913,7 +28915,7 @@ module.exports = function() {
 /* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "spinner.png?989122b765cd6f56e87013c156159026";
+module.exports = __webpack_require__.p + "spinner.png?8ba676c43b9d1e88960ba285f09af039";
 
 /***/ }),
 /* 52 */
@@ -29028,16 +29030,16 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _vm._m(0)
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "loading"
   }, [_c('div', {
     staticClass: "loading-backdrop"
   }), _vm._v(" "), _c('div', {
     staticClass: "loading-core"
-  })])
-}]}
+  }), _vm._v(" "), _c('div', {
+    staticClass: "loading-text"
+  }, [_vm._t("default")], 2)])
+},staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
@@ -29339,7 +29341,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "href": "/login"
     }
-  }, [_vm._v("I already have a subscription")])])])]), _vm._v(" "), _c('loading')], 1) : _vm._e()
+  }, [_vm._v("I already have a subscription")])])])]), _vm._v(" "), (_vm.isRegistering) ? _c('loading') : _vm._e()], 1) : _vm._e()
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

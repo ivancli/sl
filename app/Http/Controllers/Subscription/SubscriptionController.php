@@ -37,7 +37,14 @@ class SubscriptionController extends Controller
         $this->userRepo = $userContract;
     }
 
-    public function store()
+    /**
+     * Accept subscription update from Chargify
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws JsonDecodeException
+     * @throws SubscriptionNotFoundException
+     */
+    public function create()
     {
         $data = $this->request->all();
         /* TODO validation here */
@@ -45,10 +52,6 @@ class SubscriptionController extends Controller
             abort(403);
         }
 
-        $subscriptionPlanId = $this->request->get('subscription_plan_id');
-        $subscriptionPlan = $this->productRepo->getProductByProductId($subscriptionPlanId);
-
-        /*TODO get product from chargify*/
         $data = $this->request->all();
         $reference = json_decode($data['ref']);
         if (is_null($reference) && json_last_error() != JSON_ERROR_NONE) {
@@ -73,5 +76,9 @@ class SubscriptionController extends Controller
 
         $apiSubscription = $this->subscriptionRepo->get($data['id']);
         $userSubscription->api_subscription_id = $apiSubscription->id;
+        $userSubscription->token = null;
+        $userSubscription->save();
+
+        return redirect()->route('home.get');
     }
 }

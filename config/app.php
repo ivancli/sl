@@ -179,6 +179,7 @@ return [
 
         \Invigor\Chargify\ChargifyServiceProvider::class,
         App\Providers\SubscriptionServiceProvider::class,
+        App\Providers\UserServiceProvider::class,
     ],
 
     /*

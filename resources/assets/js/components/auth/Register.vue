@@ -68,8 +68,7 @@
                 </div>
             </div>
         </div>
-        <!--<loading v-if="isRegistering"></loading>-->
-        <loading></loading>
+        <loading v-if="isRegistering"></loading>
     </div>
 </template>
 
