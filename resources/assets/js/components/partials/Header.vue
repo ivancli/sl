@@ -15,136 +15,44 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
-
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <!-- Messages: style can be found in dropdown.less-->
-                    <li class="dropdown messages-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-envelope-o"></i>
-                            <span class="label label-success">4</span>
+                    <li :class="dropdownToggle['need_help'] == true ? 'open' : ''">
+                        <a href="#" class="dropdown-toggle lnk-drop-down-need-help"
+                           @click.prevent="toggleDropdown('need_help')">
+                            <i class="fa fa-question-circle"></i>
+                            &nbsp;NEED HELP ?
+                            &nbsp;&nbsp;&nbsp;
+                            <i class="fa fa-caret-down"></i>
                         </a>
                         <ul class="dropdown-menu">
-                            <li class="header">You have 4 messages</li>
+                            <li><a href="#">
+                                SpotLite Tour
+                            </a>
+                            </li>
                             <li>
-                                <!-- inner menu: contains the actual data -->
-                                <ul class="menu">
-                                    <li><!-- start message -->
-                                        <a href="#">
-                                            <div class="pull-left">
-                                                <img src="" class="img-circle" alt="User Image">
-                                            </div>
-                                            <h4>
-                                                Support Team
-                                                <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                                            </h4>
-                                            <p>Why not buy a new awesome theme?</p>
-                                        </a>
-                                    </li>
-                                    <!-- end message -->
-                                </ul>
-                            </li>
-                            <li class="footer"><a href="#">See All Messages</a></li>
-                        </ul>
-                    </li>
-                    <!-- Notifications: style can be found in dropdown.less -->
-                    <li class="dropdown notifications-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-bell-o"></i>
-                            <span class="label label-warning">10</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="header">You have 10 notifications</li>
+                                <a href="#" target="_blank">Video
+                                    Tutorials</a></li>
+                            <li><a href="#" target="_blank">FAQ</a></li>
                             <li>
-                                <!-- inner menu: contains the actual data -->
-                                <ul class="menu">
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                                        </a>
-                                    </li>
-                                </ul>
+                                <a href="#" target="_blank">Step by Step Guide</a>
                             </li>
-                            <li class="footer"><a href="#">View all</a></li>
+                            <li><a href="#">Contact us</a></li>
                         </ul>
                     </li>
-                    <!-- Tasks: style can be found in dropdown.less -->
-                    <li class="dropdown tasks-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-flag-o"></i>
-                            <span class="label label-danger">9</span>
+                    <li class="spotlite-user-menu">
+                        <a href="#">
+                            <i class="fa fa-wrench"></i>&nbsp;
+                            <span class="hidden-xs">
+                                ACCOUNT SETTINGS
+                            </span>&nbsp;
                         </a>
-                        <ul class="dropdown-menu">
-                            <li class="header">You have 9 tasks</li>
-                            <li>
-                                <!-- inner menu: contains the actual data -->
-                                <ul class="menu">
-                                    <li><!-- Task item -->
-                                        <a href="#">
-                                            <h3>
-                                                Design some buttons
-                                                <small class="pull-right">20%</small>
-                                            </h3>
-                                            <div class="progress xs">
-                                                <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                                                    <span class="sr-only">20% Complete</span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <!-- end task item -->
-                                </ul>
-                            </li>
-                            <li class="footer">
-                                <a href="#">View all tasks</a>
-                            </li>
-                        </ul>
                     </li>
-                    <!-- User Account: style can be found in dropdown.less -->
-                    <li class="dropdown user user-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="" class="user-image" alt="User Image">
-                            <span class="hidden-xs">Alexander Pierce</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <!-- User image -->
-                            <li class="user-header">
-                                <img src="" class="img-circle" alt="User Image">
-
-                                <p>
-                                    Alexander Pierce - Web Developer
-                                    <small>Member since Nov. 2012</small>
-                                </p>
-                            </li>
-                            <!-- Menu Body -->
-                            <li class="user-body">
-                                <div class="row">
-                                    <div class="col-xs-4 text-center">
-                                        <a href="#">Followers</a>
-                                    </div>
-                                    <div class="col-xs-4 text-center">
-                                        <a href="#">Sales</a>
-                                    </div>
-                                    <div class="col-xs-4 text-center">
-                                        <a href="#">Friends</a>
-                                    </div>
-                                </div>
-                                <!-- /.row -->
-                            </li>
-                            <!-- Menu Footer-->
-                            <li class="user-footer">
-                                <div class="pull-left">
-                                    <a href="#" class="btn btn-default btn-flat">Profile</a>
-                                </div>
-                                <div class="pull-right">
-                                    <a href="#" class="btn btn-default btn-flat">Sign out</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                    <!-- Control Sidebar Toggle Button -->
                     <li>
-                        <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                        <a href="/logout">
+                            <i class="fa fa-sign-in"></i>&nbsp;
+                            SIGN OUT
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -156,13 +64,40 @@
     export default {
         mounted() {
             console.log('Header component mounted.')
+        },
+        data: ()=> {
+            return {
+                dropdownToggle: {
+                    'need_help': false,
+                }
+            }
+        },
+        methods: {
+            toggleDropdown: function (current_index) {
+                for (var index in this.dropdownToggle) {
+                    if (index != current_index && this.dropdownToggle.hasOwnProperty(index)) {
+                        this.dropdownToggle[index] = false;
+                    }
+                }
+                this.dropdownToggle[current_index] = !this.dropdownToggle[current_index];
+            }
         }
     }
 </script>
 
 <style>
+    .skin-black-light .main-header {
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+    }
+
     header.main-header a.logo {
         height: 100px;
+    }
+
+    .main-header {
+        max-height: none;
     }
 
     header.main-header a.logo img {
@@ -186,7 +121,49 @@
         border-right: 1px solid #7ed0c0;
     }
 
+    .skin-black-light .main-header .navbar > .sidebar-toggle,
+    .skin-black-light .main-header .navbar .sidebar-toggle:hover {
+        background: #7ed0c0;
+        color: #fff;
+    }
+
+    .skin-black-light .main-header .navbar > .sidebar-toggle {
+        border-right: none;
+    }
+
     .skin-black-light .wrapper, .skin-black-light .main-sidebar, .skin-black-light .left-side {
         background-color: #7ed0c0;
+    }
+
+    .skin-black-light .main-header .navbar .nav > li > a {
+        color: #fff;
+    }
+
+    .skin-black-light .main-header .navbar .navbar-custom-menu .navbar-nav > li:first-child > a {
+        border-left: none;
+    }
+
+    .skin-black-light .main-header .navbar .nav > li > a:hover, .skin-black-light .main-header .navbar .nav > li > a:active, .skin-black-light .main-header .navbar .nav > li > a:focus, .skin-black-light .main-header .navbar .nav .open > a, .skin-black-light .main-header .navbar .nav .open > a:hover, .skin-black-light .main-header .navbar .nav .open > a:focus, .skin-black-light .main-header .navbar .nav > .active > a {
+        background: #7ed0c0;
+        color: #fff;
+    }
+
+    @media (min-width: 991px) {
+        .navbar-custom-menu {
+            padding-top: 35px;
+            padding-bottom: 35px;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .navbar-nav > li > a {
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+
+        .skin-black-light .main-header .navbar > .sidebar-toggle {
+            padding-top: 40px;
+            padding-bottom: 40px;
+        }
     }
 </style>
