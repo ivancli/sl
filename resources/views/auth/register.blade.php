@@ -14,5 +14,5 @@
 @stop
 
 @section('scripts')
-    <script src="{{mix('/js/register.js')}}"></script>
+    <script src="{{mix('/js/auth/register.js')}}"></script>
 @stop

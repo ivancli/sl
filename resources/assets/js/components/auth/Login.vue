@@ -1,4 +1,4 @@
-<template>
+|<template>
     <div>
         <div class="login-box m-t-0 m-b-50">
             <div class="login-box-body">
@@ -41,10 +41,13 @@
                 <a href="/register" class="text-center">New to SpotLite? Sign up now!</a>
             </div>
         </div>
+        <loading v-if="isLoggingIn"></loading>
     </div>
 </template>
 
 <script>
+    Vue.component('loading', require('../Loading.vue'));
+
     export default {
         data: ()=> {
             return {
@@ -68,7 +71,9 @@
                 this.errors = {};
                 axios.post('/login', this.loginData).then(response=> {
                     this.isLoggingIn = false;
-                    console.info('response', response)
+                    if (response.data.redirect_path) {
+                        window.location.href = response.data.redirect_path;
+                    }
                 }).catch(error=> {
                     this.isLoggingIn = false;
                     if (error.response && error.response.status == 422 && error.response.data) {

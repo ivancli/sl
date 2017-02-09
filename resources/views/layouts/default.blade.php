@@ -12,7 +12,7 @@
     @component('components.csrf_token_script')
     @endcomponent
 </head>
-<body>
+<body class="skin-black-light">
 @yield('body')
 @yield('scripts')
 </body>

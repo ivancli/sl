@@ -7,11 +7,11 @@
 @section('body')
     <div id="sl">
         <auth>
-            <forgot></forgot>
+            <forgot slot="box-body"></forgot>
         </auth>
     </div>
 @stop
 
 @section('scripts')
-    <script src="{{mix('/js/forgot.js')}}"></script>
+    <script src="{{mix('/js/auth/forgot.js')}}"></script>
 @stop

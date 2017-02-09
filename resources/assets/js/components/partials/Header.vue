@@ -1,12 +1,11 @@
 <template>
     <header class="main-header">
         <!-- Logo -->
-        <a href="#" class="logo">
-            <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>A</b>LT</span>
-            <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>Admin</b>LTE</span>
-        </a>
+        <span class="logo-lg">
+            <a href="#" class="logo">
+                <img src="../../../images/logos/logo_transparent_white_text.png" alt="SpotLite Logo">
+            </a>
+        </span>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
             <!-- Sidebar toggle button-->
@@ -160,3 +159,34 @@
         }
     }
 </script>
+
+<style>
+    header.main-header a.logo {
+        height: 100px;
+    }
+
+    header.main-header a.logo img {
+        max-width: 100%;
+        max-height: 100%;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .skin-black-light .main-header .navbar {
+        background-color: #7ed0c0;
+    }
+
+    .skin-black-light .main-header > .logo {
+        background-color: #7ed0c0;
+        border-right: 1px solid #7ed0c0;
+    }
+
+    .skin-black-light .main-header > .logo:hover {
+        background-color: #7ed0c0;
+        border-right: 1px solid #7ed0c0;
+    }
+
+    .skin-black-light .wrapper, .skin-black-light .main-sidebar, .skin-black-light .left-side {
+        background-color: #7ed0c0;
+    }
+</style>

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -35,5 +37,19 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest', ['except' => 'logout']);
+    }
+
+
+    protected function authenticated(Request $request, $user)
+    {
+        /* TODO redirect admin users to administration page */
+        /* TODO redirect normal users to home page which is '/' */
+        $redirect_path = $this->redirectTo;
+        if ($request->ajax()) {
+            $redirect_path = redirect($redirect_path)->getTargetUrl();
+            return new JsonResponse(compact(['redirect_path']));
+        } else {
+            return redirect($redirect_path);
+        }
     }
 }
