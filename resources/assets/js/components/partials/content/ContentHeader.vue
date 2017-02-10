@@ -1,21 +1,17 @@
 <template>
     <section class="content-header">
         <h1>
-            Blank page
-            <small>it all starts here</small>
+            <slot name="content-header-title"></slot>
+            <slot name="small-content-header-title"></slot>
         </h1>
-        <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#">Examples</a></li>
-            <li class="active">Blank page</li>
-        </ol>
+        <slot name="content-header-breadcrumb"></slot>
     </section>
 </template>
 
 <script>
     export default {
         mounted() {
-            console.log('component mounted.')
+            console.log('content-header component mounted.')
         }
     }
 </script>

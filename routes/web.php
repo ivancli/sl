@@ -21,8 +21,13 @@ Route::get('logout', 'Auth\LoginController@logout')->name('logout.get');
 Route::get('subscription/product', 'Subscription\ProductController@index')->name('subscription.product.index');
 Route::resource('subscription/subscription', 'Subscription\SubscriptionController');
 
+
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/', function () {
         return view('app.product.index');
     })->name('home.get');
+
+    Route::resource('category', 'Product\CategoryController');
+    Route::resource('product', 'Product\ProductController');
+    Route::resource('site', 'Product\SiteController');
 });

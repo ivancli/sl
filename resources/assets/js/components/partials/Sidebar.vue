@@ -13,7 +13,7 @@
                     </a>
                     <ul class="treeview-menu">
                         <li class="">
-                            <a href="http://login.spotlite.com.au/dashboard/104" class="lnk-dashboard">
+                            <a href="#" class="lnk-dashboard">
                                 <i class="fa fa-circle-o"></i>
                                 <span class="lnk-dashboard-104">
                                     Default Dashboard
@@ -23,30 +23,30 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#" onclick="showAddDashboardForm(this); return false;" id="btn-add-new-dashboard">
+                    <a href="#" id="btn-add-new-dashboard">
                         <i class="fa fa-plus"></i>
                         <span>ADD A NEW DASHBOARD</span>
                     </a>
                 </li>
                 <li class="active lnk-product">
-                    <a href="http://login.spotlite.com.au/product">
+                    <a href="#">
                         <i class="fa fa-tag"></i>
                         <span>PRODUCTS</span>
                     </a>
                 </li>
                 <li class=" lnk-alert">
-                    <a href="http://login.spotlite.com.au/alert">
+                    <a href="#">
                         <i class="fa fa-bell-o"></i>
                         <span>ALERTS</span></a>
                 </li>
                 <li class="">
-                    <a href="http://login.spotlite.com.au/report">
+                    <a href="#">
                         <i class="fa fa-envelope-o"></i>
                         <span>REPORTS</span>
                     </a>
                 </li>
                 <li class="">
-                    <a href="http://login.spotlite.com.au/admin/app_preference">
+                    <a href="#">
                         <i class="fa fa-gears"></i>
                         <span>APP PREFERENCES</span>
                     </a>
@@ -61,12 +61,12 @@
                     </a>
                     <ul class="treeview-menu">
                         <li class="">
-                            <a href="http://login.spotlite.com.au/admin/domain">
+                            <a href="#">
                                 <i class="fa fa-circle-o"></i> Domains
                             </a>
                         </li>
                         <li class="">
-                            <a href="http://login.spotlite.com.au/admin/site">
+                            <a href="#">
                                 <i class="fa fa-circle-o"></i> Sites
                             </a>
                         </li>
@@ -82,25 +82,25 @@
                     </a>
                     <ul class="treeview-menu">
                         <li class="">
-                            <a href="http://login.spotlite.com.au/um/user">
+                            <a href="#">
                                 <i class="fa fa-user"></i>
                                 <span>Users</span>
                             </a>
                         </li>
                         <li class="">
-                            <a href="http://login.spotlite.com.au/um/group">
+                            <a href="#">
                                 <i class="fa fa-users"></i>
                                 <span>Groups</span>
                             </a>
                         </li>
                         <li class="">
-                            <a href="http://login.spotlite.com.au/um/role">
+                            <a href="#">
                                 <i class="fa fa-tags"></i>
                                 <span>Roles</span>
                             </a>
                         </li>
                         <li class="">
-                            <a href="http://login.spotlite.com.au/um/permission">
+                            <a href="#">
                                 <i class="fa fa-key"></i>
                                 <span>Permissions</span>
                             </a>
@@ -117,13 +117,13 @@
                     </a>
                     <ul class="treeview-menu">
                         <li class="">
-                            <a href="http://login.spotlite.com.au/log/crawler_activity">
+                            <a href="#">
                                 <i class="fa fa-gear"></i>
                                 <span>Crawler Logs</span>
                             </a>
                         </li>
                         <li class="">
-                            <a href="http://login.spotlite.com.au/log/user_activity">
+                            <a href="#">
                                 <i class="fa fa-map-o"></i>
                                 <span>User Activity Logs</span>
                             </a>
@@ -140,13 +140,13 @@
                     </a>
                     <ul class="treeview-menu">
                         <li class="">
-                            <a href="http://login.spotlite.com.au/term_and_condition">
+                            <a href="#">
                                 <i class="fa fa-square"></i>
                                 <span>Terms and Conditions</span>
                             </a>
                         </li>
                         <li class="">
-                            <a href="http://login.spotlite.com.au/privacy_policy">
+                            <a href="#">
                                 <i class="fa fa-square"></i>
                                 <span>Privacy Policies</span>
                             </a>
