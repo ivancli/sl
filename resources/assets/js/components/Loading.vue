@@ -29,7 +29,7 @@
         -moz-opacity: 0.5;
         -khtml-opacity: 0.5;
         opacity: 0.5;
-        z-index: 999;
+        z-index: 1999;
     }
 
     .loading .loading-core {
@@ -43,11 +43,11 @@
         background-image: url('../../images/spinner.png');
         background-size: 100px 3600px;
         -webkit-animation: loading-v 1s steps(36) infinite;
-        z-index: 1000;
+        z-index: 2000;
     }
 
     .loading .loading-text{
-        z-index: 1000;
+        z-index: 2000;
         position: fixed;
         top: 50%;
         text-align: center;

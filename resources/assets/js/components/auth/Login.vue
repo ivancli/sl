@@ -1,4 +1,5 @@
-|<template>
+|
+<template>
     <div>
         <div class="login-box m-t-0 m-b-50">
             <div class="login-box-body">
@@ -46,9 +47,12 @@
 </template>
 
 <script>
-    Vue.component('loading', require('../Loading.vue'));
+    import loading from '../Loading.vue';
 
     export default {
+        components: {
+            loading
+        },
         data: ()=> {
             return {
                 isLoggingIn: false,
@@ -61,7 +65,7 @@
             loginData: function () {
                 return {
                     email: this.email,
-                    password: this.password,
+                    password: this.password
                 }
             }
         },
@@ -77,7 +81,6 @@
                 }).catch(error=> {
                     this.isLoggingIn = false;
                     if (error.response && error.response.status == 422 && error.response.data) {
-                        console.info(error.response)
                         this.errors = error.response.data;
                     }
                 })

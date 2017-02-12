@@ -20087,11 +20087,6 @@ a.button.disabled:active {
   border-color: #7ed0c0;
 }
 
-html,
-body {
-  height: auto;
-}
-
 body.login-page {
   background-color: #7ed0c0;
 }
@@ -20108,5 +20103,13 @@ div {
   font-family: 'Flama', sans-serif;
 }
 
+#sl {
+  height: 100%;
+}
 
-/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiIvY3NzL2F1dGguNzFiMmQzNTY0ZDViZmRmZmM0OGQuY3NzIiwic291cmNlUm9vdCI6IiJ9*/
+[v-cloak] {
+  display: none;
+}
+
+
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiIvY3NzL2FwcC42YzhkNzk2Y2NmNWE4YjQ4YmZjZS5jc3MiLCJzb3VyY2VSb290IjoiIn0=*/

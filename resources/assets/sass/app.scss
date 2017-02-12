@@ -16,6 +16,10 @@ body, h1, h2, h3, h4, h5, a, .main-header .header-label, div {
   font-family: 'Flama', sans-serif;
 }
 
-#sl{
+#sl {
   height: 100%;
+}
+
+[v-cloak] {
+  display: none;
 }

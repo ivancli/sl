@@ -30,4 +30,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('category', 'Product\CategoryController');
     Route::resource('product', 'Product\ProductController');
     Route::resource('site', 'Product\SiteController');
+
+    Route::resource('alert', 'Alert\AlertController');
+    Route::resource('report', 'Report\ReportController');
 });

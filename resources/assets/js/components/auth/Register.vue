@@ -73,9 +73,13 @@
 </template>
 
 <script>
-    Vue.component('loading', require('../Loading.vue'));
+    //    Vue.component('loading', require('../Loading.vue'));
+    import loading from '../Loading.vue';
 
     export default {
+        components: {
+            loading
+        },
         data: ()=> {
             return {
                 isRegistering: false,

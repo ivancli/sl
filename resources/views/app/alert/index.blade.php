@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title', 'Products - SpotLite')
+@section('title', 'Alerts - SpotLite')
 
 @section('links')
     <link rel="stylesheet" href="{{mix('/css/app.css')}}">
@@ -13,8 +13,7 @@
             <default-sidebar slot="default-sidebar"></default-sidebar>
             <default-content slot="default-content">
                 <content-header slot="content-header">
-                    <span slot="content-header-title">Products</span>
-                    <product-filter slot="content-header-tool"></product-filter>
+                    <span slot="content-header-title">Alerts</span>
                 </content-header>
                 <content-body slot="content-body"></content-body>
             </default-content>
@@ -23,5 +22,5 @@
 @stop
 
 @section('scripts')
-    <script src="{{mix('/js/app/product/index.js')}}"></script>
+    <script src="{{mix('/js/app/alert/index.js')}}"></script>
 @stop

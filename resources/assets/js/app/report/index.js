@@ -7,8 +7,7 @@ import defaultHeader from '../../components/partials/Header.vue';
 import defaultSidebar from '../../components/partials/Sidebar.vue';
 import defaultContent from '../../components/partials/Content.vue';
 import contentHeader from '../../components/partials/content/ContentHeader.vue';
-import contentBody from '../../components/app/product/Index.vue';
-import productFilter from '../../components/app/product/Filter.vue';
+import contentBody from '../../components/app/report/Index.vue';
 
 const sl = new Vue({
     el: '#sl',
@@ -18,7 +17,6 @@ const sl = new Vue({
         defaultSidebar,
         defaultContent,
         contentHeader,
-        contentBody,
-        productFilter
+        contentBody
     }
 });

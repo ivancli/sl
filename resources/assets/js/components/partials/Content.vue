@@ -13,3 +13,11 @@
         }
     }
 </script>
+
+<style>
+    @media (min-width: 768px) {
+        .content-wrapper {
+            padding: 20px;
+        }
+    }
+</style>

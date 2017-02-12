@@ -50,32 +50,32 @@ class AuthenticationEventSubscriber
     {
         $events->listen(
             'Illuminate\Auth\Events\Attempting',
-            'App\Listeners\AuthenticationEventSubscriber@onAuthAttempting'
+            'App\Listeners\Auth\AuthenticationEventSubscriber@onAuthAttempting'
         );
 
         $events->listen(
             'Illuminate\Auth\Events\Authenticated',
-            'App\Listeners\AuthenticationEventSubscriber@onAuthAuthenticated'
+            'App\Listeners\Auth\AuthenticationEventSubscriber@onAuthAuthenticated'
         );
 
         $events->listen(
             'Illuminate\Auth\Events\Failed',
-            'App\Listeners\AuthenticationEventSubscriber@onAuthFailed'
+            'App\Listeners\Auth\AuthenticationEventSubscriber@onAuthFailed'
         );
 
         $events->listen(
             'Illuminate\Auth\Events\Lockout',
-            'App\Listeners\AuthenticationEventSubscriber@onAuthLockout'
+            'App\Listeners\Auth\AuthenticationEventSubscriber@onAuthLockout'
         );
 
         $events->listen(
             'Illuminate\Auth\Events\Login',
-            'App\Listeners\AuthenticationEventSubscriber@onAuthLogin'
+            'App\Listeners\Auth\AuthenticationEventSubscriber@onAuthLogin'
         );
 
         $events->listen(
             'Illuminate\Auth\Events\Logout',
-            'App\Listeners\AuthenticationEventSubscriber@onAuthLogout'
+            'App\Listeners\Auth\AuthenticationEventSubscriber@onAuthLogout'
         );
     }
 }

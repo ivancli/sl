@@ -1,12 +1,18 @@
 require('../bootstrap');
 
-import store from '../stores/auth/register';
+import Vue from 'vue';
 
-Vue.component('auth', require('../components/Auth.vue'));
-Vue.component('register', require('../components/auth/Register.vue'));
-Vue.component('pricing-table', require('../components/subscription/PricingTable.vue'));
+import auth from '../components/Auth.vue';
+import register from '../components/auth/Register.vue';
+import pricingTable from '../components/subscription/PricingTable.vue';
+import store from '../stores/auth/register';
 
 const sl = new Vue({
     el: '#sl',
-    store,
+    components: {
+        auth,
+        register,
+        pricingTable
+    },
+    store
 });

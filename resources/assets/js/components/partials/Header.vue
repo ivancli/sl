@@ -1,15 +1,18 @@
 <template>
     <header class="main-header">
         <!-- Logo -->
-        <span class="logo-lg">
-            <a href="#" class="logo">
+        <a href="#" class="logo">
+            <span class="logo-mini">
+                <img src="../../../images/logos/favicon.png" alt="SpotLite Logo Icon">
+            </span>
+            <span class="logo-lg">
                 <img src="../../../images/logos/logo_transparent_white_text.png" alt="SpotLite Logo">
-            </a>
-        </span>
+            </span>
+        </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
             <!-- Sidebar toggle button-->
-            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <a href="#" class="sidebar-toggle" @click.prevent="toggleSidebar">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -61,6 +64,10 @@
 </template>
 
 <script>
+    import {
+            TOGGLE_SIDEBAR
+    } from '../../actions/mutation-types';
+
     export default {
         mounted() {
             console.log('Header component mounted.')
@@ -80,7 +87,10 @@
                     }
                 }
                 this.dropdownToggle[current_index] = !this.dropdownToggle[current_index];
-            }
+            },
+            toggleSidebar: function () {
+                this.$store.commit(TOGGLE_SIDEBAR);
+            },
         }
     }
 </script>
@@ -103,8 +113,22 @@
     header.main-header a.logo img {
         max-width: 100%;
         max-height: 100%;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    header.main-header a.logo span.logo-lg {
+        height: 100%;
+    }
+
+    header.main-header a.logo span.logo-lg img {
         padding-top: 20px;
         padding-bottom: 20px;
+    }
+
+    header.main-header a.logo span.logo-mini img {
+        padding-top: 30px;
+        padding-bottom: 30px;
     }
 
     .skin-black-light .main-header .navbar {

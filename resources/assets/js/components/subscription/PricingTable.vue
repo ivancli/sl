@@ -12,7 +12,8 @@
                 <div class="pricing-level" :class="productFamily.product.criteria.recommended ? 'recommended' : ''">
                     <header>
                         <p class="lead-text" v-text="productFamily.product.name"></p>
-                        <p class="price-month">${{currency(productFamily.preview.next_billing_manifest.total_in_cents/100)}}<span>/{{productFamily.product.interval_unit}}</span>
+                        <p class="price-month">
+                            ${{currency(productFamily.preview.next_billing_manifest.total_in_cents/100)}}<span>/{{productFamily.product.interval_unit}}</span>
                         </p>
                     </header>
                     <div class="pricing-body">
@@ -99,7 +100,9 @@
                 this.$store.commit(SET_SUBSCRIPTION_PLAN_ID, selectedSubscriptionPlanId);
             },
             currency: function (d, a, b, c) {
-                a = isNaN(a = Math.abs(a)) ? 2 : a; b = void 0 == b ? "." : b; c = void 0 == c ? "," : c;
+                a = isNaN(a = Math.abs(a)) ? 2 : a;
+                b = void 0 == b ? "." : b;
+                c = void 0 == c ? "," : c;
                 var e = d < 0 ? "-" : "", f = String(parseInt(d = Math.abs(Number(d) || 0).toFixed(a))), g = (g = f.length) > 3 ? g % 3 : 0;
                 return e + (g ? f.substr(0, g) + c : "") + f.substr(g).replace(/(\d{3})(?=\d)/g, "$1" + c) + (a ? b + Math.abs(d - f).toFixed(a).slice(2) : "")
             }

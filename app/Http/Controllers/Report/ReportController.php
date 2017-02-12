@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Product;
+namespace App\Http\Controllers\Report;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class ReportController extends Controller
 {
     var $request;
 
@@ -21,7 +21,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view('app.product.index');
+        return view('app.report.index');
     }
 
     /**

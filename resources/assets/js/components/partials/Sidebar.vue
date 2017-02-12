@@ -3,7 +3,7 @@
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
             <ul class="sidebar-menu">
-                <li class="treeview  ">
+                <li class="treeview">
                     <a href="#">
                         <i class="fa fa-dashboard"></i>
                         <span>DASHBOARDS</span>
@@ -28,19 +28,19 @@
                         <span>ADD A NEW DASHBOARD</span>
                     </a>
                 </li>
-                <li class="active lnk-product">
-                    <a href="#">
+                <li :class="topLevelActiveClass('/product')">
+                    <a href="/product">
                         <i class="fa fa-tag"></i>
                         <span>PRODUCTS</span>
                     </a>
                 </li>
-                <li class=" lnk-alert">
-                    <a href="#">
+                <li :class="topLevelActiveClass('/alert')">
+                    <a href="/alert">
                         <i class="fa fa-bell-o"></i>
                         <span>ALERTS</span></a>
                 </li>
-                <li class="">
-                    <a href="#">
+                <li :class="topLevelActiveClass('/report')">
+                    <a href="/report">
                         <i class="fa fa-envelope-o"></i>
                         <span>REPORTS</span>
                     </a>
@@ -54,7 +54,7 @@
                 <li class="treeview  ">
                     <a href="#">
                         <i class="fa fa-files-o"></i>
-                        <span>CRAWLER MANAGEMENT</span>
+                        <span>Manage Crawler</span>
                         <span class="pull-right-container">
                             <i class="fa fa-caret-down pull-right"></i>
                         </span>
@@ -110,7 +110,7 @@
                 <li class="treeview ">
                     <a href="#">
                         <i class="fa fa-file-text-o"></i>
-                        <span>SYSTEM LOG MANAGEMENT</span>
+                        <span>SYSTEM LOG</span>
                         <span class="pull-right-container">
                             <i class="fa fa-caret-down pull-right"></i>
                         </span>
@@ -163,6 +163,11 @@
     export default {
         mounted() {
             console.log('Header component mounted.')
+        },
+        methods: {
+            topLevelActiveClass: (link)=> {
+                return window.location.pathname.startsWith(link) ? 'active' : '';
+            }
         }
     }
 </script>
@@ -179,5 +184,15 @@
     .skin-black-light .sidebar-menu > li:hover > a, .skin-black-light .sidebar-menu > li.active > a {
         color: #fff;
         background: #6dbdad;
+    }
+
+    @media (min-width: 768px) {
+        .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > span:not(.pull-right), .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > .treeview-menu {
+            width: 220px;
+        }
+
+        .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > .pull-right-container {
+            left: 220px !important;
+        }
     }
 </style>
