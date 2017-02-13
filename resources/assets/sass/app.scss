@@ -7,6 +7,7 @@
 @import "helpers.scss";
 @import "pricing-table.scss";
 @import "form.scss";
+@import "bulma-partial.scss";
 
 body.login-page {
   background-color: $tiffany-green;
@@ -22,4 +23,8 @@ body, h1, h2, h3, h4, h5, a, .main-header .header-label, div {
 
 [v-cloak] {
   display: none;
+}
+
+td.shrink, th.shrink {
+  width: 1%;
 }

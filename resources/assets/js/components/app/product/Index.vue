@@ -3,8 +3,8 @@
     <section class="content">
 
         <div class="box box-solid">
-            <div class="box-body">
-                <div class="row">
+            <div class="box-body p-20">
+                <div class="row m-b-10">
                     <div class="col-md-8">
 
                     </div>
@@ -16,6 +16,21 @@
                         </a>
                     </div>
                 </div>
+                <div class="row m-b-10">
+                    <div class="col-sm-12">
+                        <add-category></add-category>
+                    </div>
+                </div>
+                <div class="row m-b-10">
+                    <div class="col-sm-12">
+                        <!--Collapse All-->
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <single-category v-for="single_category in categories" :category="single_category"></single-category>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -23,10 +38,31 @@
 
 <script>
     import addCategory from './AddCategory.vue';
+    import singleCategory from './SingleCategory.vue';
 
     export default {
+        components: {
+            addCategory,
+            singleCategory,
+        },
+        data: ()=> {
+            return {
+                categories: [],
+            }
+        },
         mounted() {
-            console.log('component mounted.')
+            this.loadCategories();
+        },
+        methods: {
+            loadCategories: function () {
+                axios.get('/category').then(response=> {
+                    if (response.data.status == true) {
+                        this.categories = response.data.categories;
+                    }
+                }).catch(error=> {
+                    console.info(error.response);
+                })
+            }
         }
     }
 </script>

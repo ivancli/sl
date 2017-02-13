@@ -23,10 +23,12 @@
                     <li :class="dropdownToggle['need_help'] == true ? 'open' : ''">
                         <a href="#" class="dropdown-toggle lnk-drop-down-need-help"
                            @click.prevent="toggleDropdown('need_help')">
+                            &nbsp;
                             <i class="fa fa-question-circle"></i>
-                            &nbsp;NEED HELP ?
-                            &nbsp;&nbsp;&nbsp;
-                            <i class="fa fa-caret-down"></i>
+                            <span class="hidden-xs">
+                                &nbsp;NEED HELP ?&nbsp;&nbsp;
+                                <i class="fa fa-caret-down"></i>
+                            </span>&nbsp;
                         </a>
                         <ul class="dropdown-menu">
                             <li><a href="#">
@@ -44,17 +46,23 @@
                         </ul>
                     </li>
                     <li class="spotlite-user-menu">
-                        <a href="#">
-                            <i class="fa fa-wrench"></i>&nbsp;
+                        <a href="#">&nbsp;
+                            <i class="fa fa-wrench"></i>
                             <span class="hidden-xs">
+                                &nbsp;
                                 ACCOUNT SETTINGS
+
                             </span>&nbsp;
                         </a>
                     </li>
                     <li>
                         <a href="/logout">
-                            <i class="fa fa-sign-in"></i>&nbsp;
-                            SIGN OUT
+                            &nbsp;<i class="fa fa-sign-in"></i>
+                            <span class="hidden-xs">
+                                &nbsp;
+                                SIGN OUT
+                            </span>
+                            &nbsp;
                         </a>
                     </li>
                 </ul>
@@ -188,6 +196,12 @@
         .skin-black-light .main-header .navbar > .sidebar-toggle {
             padding-top: 40px;
             padding-bottom: 40px;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .skin-black-light .main-header .navbar .navbar-custom-menu .navbar-nav > li > a, .skin-black-light .main-header .navbar .navbar-right > li > a {
+            border: none;
         }
     }
 </style>

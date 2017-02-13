@@ -10,6 +10,10 @@ class Category extends Model
         'name'
     ];
 
+    protected $appends = [
+        'owner', 'numberOfProducts', 'numberOfSites', 'urls',
+    ];
+
     /**
      * relationship with user
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -28,9 +32,45 @@ class Category extends Model
         return $this->hasMany('App\Models\Product', 'category_id', 'id');
     }
 
+    /**
+     * relationship with site
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function sites()
+    {
+        return $this->hasManyThrough('App\Models\Site', 'App\Models\Product', 'category_id', 'product_id', 'id');
+    }
+
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/
+
+    /**
+     * owner of this category
+     * @return User
+     */
+    public function getOwnerAttribute()
+    {
+        return $this->user;
+    }
+
+    /**
+     * total number of products in relationship
+     * @return integer
+     */
+    public function getNumberOfProductsAttribute()
+    {
+        return $this->products()->count();
+    }
+
+    /**
+     * total number of sites in relationship
+     * @return integer
+     */
+    public function getNumberOfSitesAttribute()
+    {
+        return $this->sites()->count();
+    }
 
     /**
      * an attribute with an array of routes related to this object
@@ -41,7 +81,6 @@ class Category extends Model
         return array(
             'index' => route('category.index'),
             'show' => route('category.show', $this->getKey()),
-            'create' => route('category.create'),
             'store' => route('category.store'),
             'edit' => route('category.edit', $this->getKey()),
             'update' => route('category.update', $this->getKey()),

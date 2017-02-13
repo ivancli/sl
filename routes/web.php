@@ -27,7 +27,9 @@ Route::group(['middleware' => ['auth']], function () {
         return view('app.product.index');
     })->name('home.get');
 
-    Route::resource('category', 'Product\CategoryController');
+    Route::resource('category', 'Product\CategoryController', ['except' => [
+        'create'
+    ]]);
     Route::resource('product', 'Product\ProductController');
     Route::resource('site', 'Product\SiteController');
 
