@@ -18,7 +18,7 @@
                 </div>
                 <div class="row m-b-10">
                     <div class="col-sm-12">
-                        <add-category></add-category>
+                        <add-category @addedCategory="loadCategories"></add-category>
                     </div>
                 </div>
                 <div class="row m-b-10">
@@ -28,7 +28,14 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        <single-category v-for="single_category in categories" :category="single_category"></single-category>
+                        <single-category v-for="single_category in categories" :current-category="single_category"></single-category>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12" v-for="category in categories">
+                        <div v-for="product in category.products">
+                            {{product.id}}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -37,20 +44,26 @@
 </template>
 
 <script>
+    //    import store from '../../../stores/app/product/index';
+    //    import {
+    //            LOAD_CATEGORIES
+    //    } from '../../../actions/mutation-types';
+
     import addCategory from './AddCategory.vue';
     import singleCategory from './SingleCategory.vue';
 
     export default {
         components: {
             addCategory,
-            singleCategory,
+            singleCategory
         },
         data: ()=> {
             return {
-                categories: [],
+                categories: []
             }
         },
         mounted() {
+            console.info('Index component is mounted');
             this.loadCategories();
         },
         methods: {
@@ -63,7 +76,9 @@
                     console.info(error.response);
                 })
             }
-        }
+        },
+        computed: {}
+//        store
     }
 </script>
 

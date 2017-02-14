@@ -46,7 +46,7 @@
             errorModal
         },
         mounted() {
-            console.log('Add category component mounted.')
+            console.info('AddCategory component mounted.')
         },
         data: ()=> {
             return {
@@ -75,6 +75,8 @@
                     if (response.data.status == true) {
                         this.addingCategory = false;
                     }
+                    this.newCategoryName = '';
+                    this.$emit('addedCategory');
                 }).catch(error=> {
                     this.isAddingCategory = false;
                     if (error.response && error.response.status == 422 && error.response.data) {

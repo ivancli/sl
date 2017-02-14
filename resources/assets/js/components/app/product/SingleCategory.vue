@@ -6,7 +6,7 @@
                 <a class="btn-collapse" aria-expanded="true"><i class="fa fa-tag "></i></a>
             </th>
             <th class="category-th">
-                <a class="text-muted category-name-link" href="#" v-text="category.name"></a>
+                <a class="text-muted category-name-link" href="#" v-text="currentCategory.name"></a>
                 <!--<div class="input-group sl-input-group">-->
                 <!--<input type="text" placeholder="Category Name" autocomplete="off" class="form-control sl-form-control input-lg category-name">-->
                 <!--<span class="input-group-btn">-->
@@ -24,9 +24,9 @@
                     <i class="fa fa-line-chart"></i>
                 </a>
                 <a href="#" class="btn-action btn-report" title="report">
-                    <i class="fa fa-envelope ico-report-enabled"></i>
+                    <i class="fa fa-envelope-o"></i>
                 </a>
-                <a href="#" data-name="Apple iPad" class="btn-action btn-delete-category" title="delete">
+                <a href="#" class="btn-action btn-delete-category" title="delete">
                     <i class="glyphicon glyphicon-trash"></i>
                 </a>
             </th>
@@ -36,51 +36,37 @@
                 </a>
             </th>
         </tr>
-        <!--<tr>-->
-        <!--<th></th>-->
-        <!--<td colspan="3" class="category-th">-->
-        <!--<div class="text-light">-->
-        <!--Created-->
-        <!--on {{category.created_at}}-->
-        <!--<strong class="text-muted"><i>by {{category.owner.fullName}}</i></strong>-->
-        <!--</div>-->
-        <!--<div class="text-light">-->
-        <!--Product URLs Tracked:-->
-        <!--<strong><span class="lbl-site-usage text-muted" v-text="category.numberOfSites"></span></strong>-->
-        <!--</div>-->
-        <!--</td>-->
-        <!--</tr>-->
-        <!--<tr>-->
-        <!--<th></th>-->
-        <!--<th colspan="3" class="category-th action-cell add-item-cell">-->
-        <!--<div class="add-item-block add-product-container">-->
-        <!--<div class="add-item-label">-->
-        <!--<i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;-->
-        <!--<span class="add-item-text">ADD PRODUCT</span>-->
-        <!--</div>-->
-        <!--<div class="add-item-controls">-->
-        <!--<div class="row">-->
-        <!--<div class="col-lg-8 col-md-7 col-sm-5 col-xs-4">-->
-        <!--<form action="http://login.spotlite.com.au/product" method="post" class="frm-store-product" onsubmit="btnAddProductOnClick(this); return false;">-->
-        <!--<input type="text" name="product_name" autocomplete="off" class="form-control txt-item txt-product-name">-->
-        <!--</form>-->
-        <!--</div>-->
-        <!--<div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">-->
-        <!--<button class="btn btn-primary btn-flat">-->
-        <!--ADD PRODUCT-->
-        <!--</button>-->
-        <!--&nbsp;&nbsp;-->
-        <!--<button class="btn btn-default btn-flat btn-cancel-add-product">-->
-        <!--CANCEL-->
-        <!--</button>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</th>-->
-        <!--</tr>-->
+        <tr>
+            <th></th>
+            <th colspan="3" class="category-th">
+                <div class="text-light">
+                    Created
+                    on {{currentCategory.created_at}}
+                    <strong class="text-muted"><i>by {{currentCategory.owner.fullName}}</i></strong>
+                </div>
+                <div class="text-light">
+                    Product URLs Tracked:
+                    <strong><span class="lbl-site-usage text-muted" v-text="currentCategory.numberOfSites"></span></strong>
+                </div>
+            </th>
+        </tr>
+
+        <tr>
+            <th></th>
+            <th colspan="3" class="category-th action-cell add-item-cell">
+                <add-product :category="currentCategory" @addedProduct="loadProducts"></add-product>
+            </th>
+        </tr>
         </thead>
         <tbody>
+        <tr>
+            <td></td>
+            <td colspan="3" class="table-container">
+                <div class="collapsible-category-div collapse in">
+                    <single-product v-for="product in products" :current-product="product"></single-product>
+                </div>
+            </td>
+        </tr>
         <!--<tr>-->
         <!--<td></td>-->
         <!--<td colspan="3" class="table-container">-->
@@ -100,20 +86,65 @@
 </template>
 
 <script>
+    import addProduct from './AddProduct.vue';
+    import singleProduct from './SingleProduct.vue';
+
     export default {
+        components: {
+            addProduct,
+            singleProduct
+        },
         props: [
-            'category'
+            'current-category'
         ],
         mounted() {
-            console.info(this.category);
-            console.log('Add category component mounted.')
+            console.info('SingleCategory component is mounted');
+            this.loadProducts();
+        },
+        data: ()=> {
+            return {
+                products: []
+            }
+        },
+        methods: {
+            loadProducts: function () {
+                var requestData = {};
+                requestData.category_id = this.category.id;
+                axios.get('/product', {params: requestData}).then(response=> {
+                    if (response.data.status == true) {
+                        this.products = response.data.products;
+                    }
+                }).catch(error=> {
+                    console.info(error.response);
+                })
+
+            }
+        },
+        computed: {
+            category(){
+                return this.currentCategory;
+            },
         }
     }
 </script>
 
 <style>
+    .category-th, .product-th {
+        vertical-align: middle !important;
+        height: 40px !important;
+    }
+
     .tbl-category {
         background-color: #f0f0f0;
+    }
+
+    .tbl-category th, .tbl-category td {
+        border: none !important;
+    }
+
+    .tbl-category.table > thead > tr > th {
+        border-bottom: none;
+        border-top: none;
     }
 
     .btn-collapse .fa-tag {
@@ -128,6 +159,11 @@
     .category-name-link {
         font-size: 18px;
         line-height: 46px;
+    }
+
+    .category-name-link:hover {
+        color: #777;
+        cursor: default;
     }
 
     .btn-edit.btn-edit-category {
@@ -152,5 +188,22 @@
     .category-th {
         vertical-align: middle !important;
         height: 40px !important;
+    }
+
+    th.category-th.action-cell.add-item-cell {
+        padding-right: 20px !important;
+    }
+
+    .collapsible-category-div table.product-wrapper {
+        background-color: #fff;
+        margin-bottom: 10px;
+        -webkit-box-shadow: -5px 4px 10px -5px rgba(219, 219, 219, 1);
+        -moz-box-shadow: -5px 4px 10px -5px rgba(219, 219, 219, 1);
+        box-shadow: -5px 4px 10px -5px rgba(219, 219, 219, 1);
+    }
+
+    table td.table-container {
+        padding-right: 20px !important;
+        padding-left: 0 !important;
     }
 </style>

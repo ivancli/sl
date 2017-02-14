@@ -32,7 +32,6 @@ class Site extends Model
         return array(
             'index' => route('site.index'),
             'show' => route('site.show', $this->getKey()),
-            'create' => route('site.create'),
             'store' => route('site.store'),
             'edit' => route('site.edit', $this->getKey()),
             'update' => route('site.update', $this->getKey()),

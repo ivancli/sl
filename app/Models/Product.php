@@ -11,7 +11,7 @@ class Product extends Model
     ];
 
     protected $appends = [
-        'urls',
+        'owner', 'numberOfSites', 'urls',
     ];
 
     /**
@@ -32,9 +32,36 @@ class Product extends Model
         return $this->belongsTo('App\Models\Category', 'category_id', 'id');
     }
 
+    /**
+     * relationship with site
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function sites()
+    {
+        return $this->hasMany('App\Models\Site', 'product_id', 'id');
+    }
+
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/
+
+    /**
+     * owner of this product
+     * @return User
+     */
+    public function getOwnerAttribute()
+    {
+        return $this->user;
+    }
+
+    /**
+     * get number of sites
+     * @return integer
+     */
+    public function getNumberOfSitesAttribute()
+    {
+        return $this->sites()->count();
+    }
 
     /**
      * an attribute with an array of routes related to this object
@@ -45,7 +72,6 @@ class Product extends Model
         return array(
             'index' => route('product.index'),
             'show' => route('product.show', $this->getKey()),
-            'create' => route('product.create'),
             'store' => route('product.store'),
             'edit' => route('product.edit', $this->getKey()),
             'update' => route('product.update', $this->getKey()),

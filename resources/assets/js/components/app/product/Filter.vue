@@ -20,7 +20,7 @@
 <script>
     export default {
         mounted() {
-            console.log('Filter component mounted.')
+            console.info('Filter component mounted.')
         }
     }
 </script>

@@ -20,5 +20,5 @@ const sl = new Vue({
         contentHeader,
         contentBody,
         productFilter
-    }
+    },
 });

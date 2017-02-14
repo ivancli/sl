@@ -58,6 +58,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Product', 'user_id', 'id');
     }
 
+    public function sites()
+    {
+        return $this->hasManyThrough('App\Models\Site', 'App\Models\Product', 'user_id', 'product_id', 'id');
+    }
+
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/

@@ -30,8 +30,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('category', 'Product\CategoryController', ['except' => [
         'create'
     ]]);
-    Route::resource('product', 'Product\ProductController');
-    Route::resource('site', 'Product\SiteController');
+    Route::resource('product', 'Product\ProductController', ['except' => [
+        'create'
+    ]]);
+    Route::resource('site', 'Product\SiteController', ['except' => [
+        'create'
+    ]]);
 
     Route::resource('alert', 'Alert\AlertController');
     Route::resource('report', 'Report\ReportController');
