@@ -28,7 +28,7 @@ class User extends Authenticatable
     ];
 
     protected $appends = [
-        'fullName',
+        'fullName', 'allPreferences',
     ];
 
     /**
@@ -58,9 +58,18 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Product', 'user_id', 'id');
     }
 
+    /**
+     * relationship with sites
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
     public function sites()
     {
         return $this->hasManyThrough('App\Models\Site', 'App\Models\Product', 'user_id', 'product_id', 'id');
+    }
+
+    public function preferences()
+    {
+        return $this->hasMany('App\Models\UserPreference', 'user_id', 'id');
     }
 
     /*----------------------------------------------------------------------*/
@@ -74,5 +83,51 @@ class User extends Authenticatable
     public function getFullNameAttribute()
     {
         return "{$this->first_name} {$this->last_name}";
+    }
+
+    /**
+     * all user preferences
+     * @return mixed
+     */
+    public function getAllPreferencesAttribute()
+    {
+        $preferences = $this->preferences->pluck('value', 'element')->all();
+        return $preferences;
+    }
+
+    /*----------------------------------------------------------------------*/
+    /* Helpers                                                              */
+    /*----------------------------------------------------------------------*/
+
+    /**
+     * Load user preference
+     * @param $element
+     * @return mixed
+     */
+    public function getPreference($element)
+    {
+        return $this->preferences()->where('element', $element)->first();
+    }
+
+    /**
+     * Update or create preference
+     * @param $element
+     * @param $value
+     * @return UserPreference
+     */
+    public function setPreference($element, $value)
+    {
+        $preference = $this->getPreference($element);
+        if (!is_null($preference)) {
+            $preference->value = $value;
+            $preference->save();
+        } else {
+            $preference = new UserPreference();
+            $preference->element = $element;
+            $preference->value = $value;
+            $preference->save();
+            $this->preferences()->save($preference);
+        }
+        return $preference;
     }
 }

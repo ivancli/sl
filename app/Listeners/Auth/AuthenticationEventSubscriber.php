@@ -42,6 +42,14 @@ class AuthenticationEventSubscriber
 
     }
 
+    public function onAuthRegistered($event)
+    {
+        $user = $event->user;
+        /* set initial preferences */
+        $user->setPreference('DATE_FORMAT', 'Y-m-d');
+        $user->setPreference('TIME_FORMAT', 'g:i:a');
+    }
+
     /**
      * register events for the subscriber
      * @param $events
@@ -76,6 +84,11 @@ class AuthenticationEventSubscriber
         $events->listen(
             'Illuminate\Auth\Events\Logout',
             'App\Listeners\Auth\AuthenticationEventSubscriber@onAuthLogout'
+        );
+
+        $events->listen(
+            'Illuminate\Auth\Events\Registered',
+            'App\Listeners\Auth\AuthenticationEventSubscriber@onAuthRegistered'
         );
     }
 }

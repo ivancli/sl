@@ -1,11 +1,11 @@
 <template>
-    <tr class="site-wrapper" data-site-id="1539" data-site-edit-url="http://login.spotlite.com.au/site/1539/edit" data-site-alert-url="http://login.spotlite.com.au/alert/site/1539/edit"
-        data-site-product-show-url="http://login.spotlite.com.au/product/559" data-site-update-my-price-url="http://login.spotlite.com.au/site/1539/my_price">
+    <tr class="site-wrapper" data-site-id="1539" data-site-edit-url="http://login.spotlite.com.au/site/1539/edit"
+        data-site-alert-url="http://login.spotlite.com.au/alert/site/1539/edit"
+        data-site-product-show-url="http://login.spotlite.com.au/product/559"
+        data-site-update-my-price-url="http://login.spotlite.com.au/site/1539/my_price">
         <td class="site-url vertical-align-middle">
-            <a href="https://www.jbhifi.com.au/computers-tablets/tablets/apple/apple-ipad-mini-2-32gb-wi-fi-silver/484271/" target="_blank" class="text-muted site-url-link" data-toggle="popover"
-               data-container="body" data-trigger="hover" data-content="https://www.jbhifi.com.au/computers-tablets/tablets/apple/apple-ipad-mini-2-32gb-wi-fi-silver/484271/" data-original-title=""
-               title="">
-                www.jbhifi.com.au
+            <a :href="site.url" target="_blank" class="text-muted site-url-link" :title="site.url">
+                {{site.url | domain}}
             </a>
 
             <!--<div class="frm-edit-site-url input-group sl-input-group" style="display: none;">-->
@@ -30,7 +30,7 @@
         </td>
         <td>
             <div class="text-right">
-                $368.00
+                <!--$368.00-->
             </div>
         </td>
         <td>
@@ -60,7 +60,7 @@
         </td>
         <td>
             <div title="2017-01-16 12:16 pm">
-                2017-01-16
+                {{site.created_at}}
             </div>
         </td>
         <td class="text-right action-cell">
@@ -86,6 +86,23 @@
             site(){
                 return this.currentSite;
             }
+        },
+        filters: {
+            domain(url){
+                var domain;
+                //find & remove protocol (http, ftp, etc.) and get domain
+                if (url.indexOf("://") > -1) {
+                    domain = url.split('/')[2];
+                }
+                else {
+                    domain = url.split('/')[0];
+                }
+
+                //find & remove port number
+                domain = domain.split(':')[0];
+
+                return domain;
+            }
         }
     }
 </script>
@@ -95,6 +112,7 @@
         color: #aaa;
         font-size: 12px;
     }
+
     .btn-edit.btn-edit-site {
         position: absolute;
         right: 0;
@@ -112,6 +130,7 @@
         -o-transform: translateY(-50%);
         transform: translateY(-50%);
     }
+
     tr.site-wrapper td.site-url {
         position: relative;
         padding-right: 50px !important;

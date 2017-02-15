@@ -12,6 +12,8 @@
     @yield('links')
     @component('components.csrf_token_script')
     @endcomponent
+    @component('components.variable_setter')
+    @endcomponent
 </head>
 <body class="skin-black-light">
 @yield('body')

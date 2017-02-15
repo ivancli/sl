@@ -53,8 +53,7 @@
         <tr>
             <td></td>
             <td colspan="3" class="table-container">
-                <div id="product-559" class="collapsible-product-div collapse in" aria-expanded="true" data-sites-url="http://login.spotlite.com.au/site/product/559" data-start="2" data-length="10"
-                     data-end="true">
+                <div class="collapsible-product-div collapse in">
                     <table class="table table-striped table-condensed tbl-site">
                         <thead>
                         <tr>
