@@ -4,10 +4,18 @@ namespace App\Http\Controllers\Product;
 
 use App\Contracts\Repositories\Product\CategoryContract;
 use App\Contracts\Repositories\Product\ProductContract;
+use App\Events\Product\Product\AfterDestroy;
+use App\Events\Product\Product\AfterEdit;
 use App\Events\Product\Product\AfterIndex;
+use App\Events\Product\Product\AfterShow;
 use App\Events\Product\Product\AfterStore;
+use App\Events\Product\Product\AfterUpdate;
+use App\Events\Product\Product\BeforeDestroy;
+use App\Events\Product\Product\BeforeEdit;
 use App\Events\Product\Product\BeforeIndex;
+use App\Events\Product\Product\BeforeShow;
 use App\Events\Product\Product\BeforeStore;
+use App\Events\Product\Product\BeforeUpdate;
 use App\Http\Controllers\Controller;
 use App\Validators\Product\Product\StoreValidator;
 use Illuminate\Http\JsonResponse;
@@ -67,7 +75,7 @@ class ProductController extends Controller
         }
         $status = true;
 
-        event(new AfterStore());
+        event(new AfterStore($product));
         if ($this->request->ajax()) {
             return new JsonResponse(compact(['product', 'status']));
         } else {
@@ -83,7 +91,10 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        $product = $this->productRepo->get($id);
+        event(new BeforeShow($product));
+
+        event(new AfterShow($product));
     }
 
     /**
@@ -94,7 +105,10 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        //
+        $product = $this->productRepo->get($id);
+        event(new BeforeEdit($product));
+
+        event(new AfterEdit($product));
     }
 
     /**
@@ -105,7 +119,10 @@ class ProductController extends Controller
      */
     public function update($id)
     {
-        //
+        $product = $this->productRepo->get($id);
+        event(new BeforeUpdate($product));
+
+        event(new AfterUpdate($product));
     }
 
     /**
@@ -116,6 +133,9 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $product = $this->productRepo->get($id);
+        event(new BeforeDestroy($product));
+
+        event(new AfterDestroy());
     }
 }

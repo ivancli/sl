@@ -2,6 +2,7 @@
 
 namespace App\Events\Product\Site;
 
+use App\Models\Site;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -14,14 +15,16 @@ class BeforeDestroy
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $site;
+
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param Site $site
      */
-    public function __construct()
+    public function __construct(Site $site)
     {
-        //
+        $this->site = $site;
     }
 
     /**

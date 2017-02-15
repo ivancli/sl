@@ -108,9 +108,7 @@
         },
         methods: {
             loadProducts: function () {
-                var requestData = {};
-                requestData.category_id = this.category.id;
-                axios.get('/product', {params: requestData}).then(response=> {
+                axios.get('/product', this.loadProductsRequestData).then(response=> {
                     if (response.data.status == true) {
                         this.products = response.data.products;
                     }
@@ -124,6 +122,13 @@
             category(){
                 return this.currentCategory;
             },
+            loadProductsRequestData(){
+                return {
+                    params: {
+                        category_id: this.category.id
+                    }
+                }
+            }
         }
     }
 </script>

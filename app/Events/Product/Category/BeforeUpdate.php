@@ -2,6 +2,7 @@
 
 namespace App\Events\Product\Category;
 
+use App\Models\Category;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -14,14 +15,16 @@ class BeforeUpdate
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $category;
+
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param Category $category
      */
-    public function __construct()
+    public function __construct(Category $category)
     {
-        //
+        $this->category = $category;
     }
 
     /**

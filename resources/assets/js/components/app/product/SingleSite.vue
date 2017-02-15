@@ -91,4 +91,29 @@
 </script>
 
 <style>
+    .btn-edit.btn-edit-site {
+        color: #aaa;
+        font-size: 12px;
+    }
+    .btn-edit.btn-edit-site {
+        position: absolute;
+        right: 0;
+        top: 0;
+        margin: 0 !important;
+        height: 100%;
+    }
+
+    .btn-edit.btn-edit-site .btn-edit-align-middle {
+        position: relative;
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        -moz-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        -o-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+    tr.site-wrapper td.site-url {
+        position: relative;
+        padding-right: 50px !important;
+    }
 </style>

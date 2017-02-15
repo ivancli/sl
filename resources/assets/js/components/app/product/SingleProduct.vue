@@ -73,7 +73,7 @@
                         <single-site v-for="site in sites" :current-site="site"></single-site>
                         <tr class="add-site-row">
                             <td colspan="9" class="add-item-cell">
-                                <add-site :product="product"></add-site>
+                                <add-site :product="product" @addedSite="loadSites"></add-site>
                             </td>
                         </tr>
                         </tbody>
@@ -91,17 +91,41 @@
 
     export default {
         components: {
-            addSite
+            addSite,
+            singleSite
         },
         props: [
             'current-product'
         ],
         mounted() {
-
+            this.loadSites();
+        },
+        data: ()=> {
+            return {
+                sites: []
+            }
+        },
+        methods: {
+            loadSites: function () {
+                axios.get('/site', this.loadSitesRequestData).then(response=> {
+                    if (response.data.status == true) {
+                        this.sites = response.data.sites;
+                    }
+                }).catch(error=> {
+                    console.info(error.response);
+                })
+            }
         },
         computed: {
             product(){
                 return this.currentProduct;
+            },
+            loadSitesRequestData(){
+                return {
+                    params: {
+                        product_id: this.product.id
+                    }
+                }
             }
         }
     }

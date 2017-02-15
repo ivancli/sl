@@ -4,9 +4,20 @@ namespace App\Http\Controllers\Product;
 
 use App\Contracts\Repositories\Product\ProductContract;
 use App\Contracts\Repositories\Product\SiteContract;
+use App\Events\Product\Site\AfterDestroy;
+use App\Events\Product\Site\AfterEdit;
 use App\Events\Product\Site\AfterIndex;
+use App\Events\Product\Site\AfterShow;
+use App\Events\Product\Site\AfterStore;
+use App\Events\Product\Site\AfterUpdate;
+use App\Events\Product\Site\BeforeDestroy;
+use App\Events\Product\Site\BeforeEdit;
 use App\Events\Product\Site\BeforeIndex;
+use App\Events\Product\Site\BeforeShow;
+use App\Events\Product\Site\BeforeStore;
+use App\Events\Product\Site\BeforeUpdate;
 use App\Http\Controllers\Controller;
+use App\Validators\Product\Site\StoreValidator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -44,23 +55,28 @@ class SiteController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @param StoreValidator $storeValidator
+     * @return JsonResponse|\Illuminate\Http\Response
      */
-    public function store()
+    public function store(StoreValidator $storeValidator)
     {
-        //
+        event(new BeforeStore());
+        $storeValidator->validate($this->request->all());
+
+        $site = $this->siteRepo->store($this->request->all());
+        $product = $this->productRepo->get($this->request->get('product_id'));
+        $product->sites()->save($site);
+
+        $status = true;
+
+        event(new AfterStore($site));
+        if ($this->request->ajax()) {
+            return new JsonResponse(compact(['status', 'site']));
+        } else {
+            return redirect()->route('product');
+        }
     }
 
     /**
@@ -71,7 +87,10 @@ class SiteController extends Controller
      */
     public function show($id)
     {
-        //
+        $site = $this->siteRepo->get($id);
+        event(new BeforeShow($site));
+
+        event(new AfterShow($site));
     }
 
     /**
@@ -82,7 +101,10 @@ class SiteController extends Controller
      */
     public function edit($id)
     {
-        //
+        $site = $this->siteRepo->get($id);
+        event(new BeforeEdit($site));
+
+        event(new AfterEdit($site));
     }
 
     /**
@@ -93,7 +115,10 @@ class SiteController extends Controller
      */
     public function update($id)
     {
-        //
+        $site = $this->siteRepo->get($id);
+        event(new BeforeUpdate($site));
+
+        event(new AfterUpdate($site));
     }
 
     /**
@@ -104,6 +129,9 @@ class SiteController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $site = $this->siteRepo->get($id);
+        event(new BeforeDestroy($site));
+
+        event(new AfterDestroy());
     }
 }

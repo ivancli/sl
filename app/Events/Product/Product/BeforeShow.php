@@ -2,6 +2,7 @@
 
 namespace App\Events\Product\Product;
 
+use App\Models\Product;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -14,14 +15,16 @@ class BeforeShow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $product;
+
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param Product $product
      */
-    public function __construct()
+    public function __construct(Product $product)
     {
-        //
+        $this->product = $product;
     }
 
     /**
