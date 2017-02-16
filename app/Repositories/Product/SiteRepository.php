@@ -62,8 +62,7 @@ class SiteRepository implements SiteContract
      */
     public function store(Array $data)
     {
-        $site = new $this->site;
-        $site->url = $data['url'];
+        $site = new $this->site($data);
         $site->save();
         return $site;
     }

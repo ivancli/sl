@@ -39,6 +39,7 @@
                 </div>
             </div>
         </div>
+        <error-modal :modal-errors="errors" @hideErrorModal="clearErrors"></error-modal>
     </div>
 </template>
 
@@ -46,7 +47,7 @@
     import errorModal from '../../fragments/modals/Error.vue';
 
     export default {
-        data: ()=> {
+        data() {
             return {
                 addingSite: false, //determine visibility of panel
                 newSiteURL: '', //site url input value
@@ -72,6 +73,7 @@
             },
             cancelAddSite: function () {
                 this.addingSite = false;
+                this.clearNewSiteURL();
                 this.$refs['txt_new_site'].blur();
             },
             addSite: function () {
@@ -82,7 +84,7 @@
                     if (response.data.status == true) {
                         this.addingSite = false;
                     }
-                    this.newSiteURL = '';
+                    this.clearNewSiteURL();
                     this.$emit('addedSite');
                 }).catch(error=> {
                     this.isAddingSite = false;
@@ -93,12 +95,15 @@
             },
             clearErrors: function () {
                 this.errors = {};
+            },
+            clearNewSiteURL: function () {
+                this.newSiteURL = '';
             }
         },
         computed: {
             addSiteData: function () {
                 return {
-                    url: this.newSiteURL,
+                    full_path: this.newSiteURL,
                     product_id: this.product.id
                 };
             }

@@ -7,10 +7,9 @@
         <div class="add-item-controls" v-show="addingProduct">
             <div class="row">
                 <div class="col-sm-12">
-                    <input type="text" autocomplete="off" class="form-control txt-item txt-product-name" ref="txt_new_product" tabindex="=-1" v-model="newProductName"
-                           placeholder="Enter a product name here">
+                    <input type="text" autocomplete="off" class="form-control txt-item txt-product-name" ref="txt_new_product" tabindex="=-1" v-model="newProductName" placeholder="Enter a product name here">
                     <div class="buttons">
-                        <button class="btn btn-primary btn-flat" @click="addProduct">
+                        <button class="btn btn-primary btn-flat" @click.prevent="addProduct">
                             <span class="hidden-sm hidden-xs">
                                 ADD PRODUCT
                             </span>
@@ -19,7 +18,7 @@
                             </span>
                         </button>
                         &nbsp;&nbsp;
-                        <button class="btn btn-default btn-flat btn-cancel-add-product" @click="cancelAddProduct">
+                        <button class="btn btn-default btn-flat btn-cancel-add-product" @click.prevent="cancelAddProduct">
                             <span class="hidden-sm hidden-xs">
                                 CANCEL
                             </span>
@@ -31,6 +30,7 @@
                 </div>
             </div>
         </div>
+        <error-modal :modal-errors="errors" @hideErrorModal="clearErrors"></error-modal>
     </div>
 </template>
 
@@ -47,7 +47,7 @@
         mounted(){
             console.info('AddProduct component is mounted');
         },
-        data: ()=> {
+        data() {
             return {
                 addingProduct: false, //determine visibility of panel
                 newProductName: '', //product name input value
@@ -64,6 +64,7 @@
             },
             cancelAddProduct: function () {
                 this.addingProduct = false;
+                this.clearNewProductName();
                 this.$refs['txt_new_product'].blur();
             },
             addProduct: function () {
@@ -74,7 +75,7 @@
                     if (response.data.status == true) {
                         this.addingProduct = false;
                     }
-                    this.newProductName = '';
+                    this.clearNewProductName();
                     this.$emit('addedProduct');
                 }).catch(error=> {
                     this.isAddingProduct = false;
@@ -85,6 +86,9 @@
             },
             clearErrors: function () {
                 this.errors = {};
+            },
+            clearNewProductName: function () {
+                this.newProductName = '';
             }
         },
         computed: {

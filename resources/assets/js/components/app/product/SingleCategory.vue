@@ -6,17 +6,9 @@
                 <a class="btn-collapse" aria-expanded="true"><i class="fa fa-tag "></i></a>
             </th>
             <th class="category-th">
-                <a class="text-muted category-name-link" href="#" v-text="currentCategory.name"></a>
-                <!--<div class="input-group sl-input-group">-->
-                <!--<input type="text" placeholder="Category Name" autocomplete="off" class="form-control sl-form-control input-lg category-name">-->
-                <!--<span class="input-group-btn">-->
-                <!--<button type="submit" class="btn btn-default btn-flat btn-lg">-->
-                <!--<i class="fa fa-check"></i>-->
-                <!--</button>-->
-                <!--</span>-->
-                <!--</div>-->
-
-                <span class="btn-edit btn-edit-category">Edit &nbsp; <i class="fa fa-pencil-square-o"></i></span>
+                <a class="text-muted category-name-link" href="#" v-text="currentCategory.name"
+                   v-show="!editingCategoryName"></a>
+                <edit-category :editing-category="category" @edit-category-name="goingToEditCategoryName" @cancel-edit-category-name="cancelEditCategoryName"></edit-category>
             </th>
 
             <th class="text-right action-cell category-th">
@@ -46,7 +38,8 @@
                 </div>
                 <div class="text-light">
                     Product URLs Tracked:
-                    <strong><span class="lbl-site-usage text-muted" v-text="currentCategory.numberOfSites"></span></strong>
+                    <strong><span class="lbl-site-usage text-muted"
+                                  v-text="currentCategory.numberOfSites"></span></strong>
                 </div>
             </th>
         </tr>
@@ -88,11 +81,13 @@
 <script>
     import addProduct from './AddProduct.vue';
     import singleProduct from './SingleProduct.vue';
+    import editCategory from './EditCategory.vue';
 
     export default {
         components: {
             addProduct,
-            singleProduct
+            singleProduct,
+            editCategory,
         },
         props: [
             'current-category'
@@ -101,9 +96,10 @@
             console.info('SingleCategory component is mounted');
             this.loadProducts();
         },
-        data: ()=> {
+        data() {
             return {
-                products: []
+                products: [],
+                editingCategoryName: false
             }
         },
         methods: {
@@ -115,8 +111,14 @@
                 }).catch(error=> {
                     console.info(error.response);
                 })
-
+            },
+            goingToEditCategoryName: function () {
+                this.editingCategoryName = true;
+            },
+            cancelEditCategoryName: function () {
+                this.editingCategoryName = false;
             }
+
         },
         computed: {
             category(){
@@ -169,12 +171,6 @@
     .category-name-link:hover {
         color: #777;
         cursor: default;
-    }
-
-    .btn-edit.btn-edit-category {
-        margin-left: 30px;
-        color: #aaa;
-        font-size: 12px;
     }
 
     .btn-action {

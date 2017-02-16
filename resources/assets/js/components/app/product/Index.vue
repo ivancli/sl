@@ -44,11 +44,6 @@
 </template>
 
 <script>
-    //    import store from '../../../stores/app/product/index';
-    //    import {
-    //            LOAD_CATEGORIES
-    //    } from '../../../actions/mutation-types';
-
     import addCategory from './AddCategory.vue';
     import singleCategory from './SingleCategory.vue';
 
@@ -57,7 +52,7 @@
             addCategory,
             singleCategory
         },
-        data: ()=> {
+        data() {
             return {
                 categories: []
             }

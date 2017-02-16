@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Site extends Model
 {
     protected $fillable = [
-        'url', 'is_active'
+        'is_active'
+    ];
+
+    protected $appends = [
+        'siteUrl', 'urls'
     ];
 
     /**
@@ -19,9 +23,27 @@ class Site extends Model
         return $this->belongsTo('App\Models\Product', 'product_id', 'id');
     }
 
+    /**
+     * relationship with url
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function url()
+    {
+        return $this->belongsTo('App\Models\Url', 'url_id', 'id');
+    }
+
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/
+
+    /**
+     * an attribute of full path URL
+     * @return mixed
+     */
+    public function getSiteUrlAttribute()
+    {
+        return $this->url->full_path;
+    }
 
     /**
      * an attribute with an array of routes related to this object

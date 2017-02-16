@@ -1,11 +1,8 @@
 <template>
-    <tr class="site-wrapper" data-site-id="1539" data-site-edit-url="http://login.spotlite.com.au/site/1539/edit"
-        data-site-alert-url="http://login.spotlite.com.au/alert/site/1539/edit"
-        data-site-product-show-url="http://login.spotlite.com.au/product/559"
-        data-site-update-my-price-url="http://login.spotlite.com.au/site/1539/my_price">
+    <tr class="site-wrapper">
         <td class="site-url vertical-align-middle">
-            <a :href="site.url" target="_blank" class="text-muted site-url-link" :title="site.url">
-                {{site.url | domain}}
+            <a :href="site.siteUrl" target="_blank" class="text-muted site-url-link" :title="site.siteUrl">
+                {{site.siteUrl | domain}}
             </a>
 
             <!--<div class="frm-edit-site-url input-group sl-input-group" style="display: none;">-->
@@ -18,52 +15,52 @@
             <!--</div>-->
             <div class="btn-edit btn-edit-site pull-right">
                 <div class="btn-edit-align-middle">
-                    Edit &nbsp;
+                    <span class="hidden-xs hidden-sm">Edit &nbsp;</span>
                     <i class="fa fa-pencil-square-o"></i>
                 </div>
             </div>
         </td>
-        <td align="center">
+        <td align="center" class="vertical-align-middle hidden-xs">
             <a href="#" class="btn-my-price">
                 <i class="fa fa-check-circle-o text-primary"></i>
             </a>
         </td>
-        <td>
+        <td class="vertical-align-middle">
             <div class="text-right">
                 <!--$368.00-->
             </div>
         </td>
-        <td>
+        <td class="vertical-align-middle">
             <div class="text-right">
                 <div class="p-r-30">
                     <strong><i class="fa fa-minus"></i></strong>
                 </div>
             </div>
         </td>
-        <td class="hidden-xs">
+        <td class="hidden-xs vertical-align-middle">
             <div class="text-right">
                 <div class="p-r-10">
                     <strong><i class="fa fa-minus"></i></strong>
                 </div>
             </div>
         </td>
-        <td class="hidden-xs" style="padding-left: 20px;">
+        <td class="hidden-xs vertical-align-middle" style="padding-left: 20px;">
             <div class="p-l-30">
                 <strong><i class="fa fa-minus"></i></strong>
             </div>
         </td>
-        <td>
+        <td class="vertical-align-middle">
             <span title="2017-02-14 3:10 pm" data-toggle="tooltip">
                 2017-02-14
                 <span class="hidden-xs hidden-sm">3:10 pm</span>
             </span>
         </td>
-        <td>
-            <div title="2017-01-16 12:16 pm">
-                {{site.created_at}}
+        <td class="vertical-align-middle">
+            <div :title="site.created_at | formatDateTime(datetimeFormat)">
+                {{site.created_at | formatDateTime(dateFormat)}}
             </div>
         </td>
-        <td class="text-right action-cell">
+        <td class="text-right action-cell vertical-align-middle">
             <a href="#" class="btn-action" title="chart">
                 <i class="fa fa-line-chart"></i>
             </a>
@@ -75,6 +72,9 @@
 </template>
 
 <script>
+    import formatDateTime from '../../../filters/formatDateTime';
+    import domain from '../../../filters/domain';
+
     export default {
         props: [
             'current-site'
@@ -83,27 +83,19 @@
 
         },
         computed: {
+            dateFormat(){
+                return user.allPreferences.DATE_FORMAT;
+            },
+            timeFormat(){
+                return user.allPreferences.TIME_FORMAT;
+            },
+            datetimeFormat(){
+                return this.dateFormat + ' ' + this.timeFormat;
+            },
             site(){
                 return this.currentSite;
             }
         },
-        filters: {
-            domain(url){
-                var domain;
-                //find & remove protocol (http, ftp, etc.) and get domain
-                if (url.indexOf("://") > -1) {
-                    domain = url.split('/')[2];
-                }
-                else {
-                    domain = url.split('/')[0];
-                }
-
-                //find & remove port number
-                domain = domain.split(':')[0];
-
-                return domain;
-            }
-        }
     }
 </script>
 

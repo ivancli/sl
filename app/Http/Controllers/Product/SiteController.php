@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Product;
 
 use App\Contracts\Repositories\Product\ProductContract;
 use App\Contracts\Repositories\Product\SiteContract;
+use App\Contracts\Repositories\Product\UrlContract;
 use App\Events\Product\Site\AfterDestroy;
 use App\Events\Product\Site\AfterEdit;
 use App\Events\Product\Site\AfterIndex;
@@ -24,13 +25,17 @@ use Illuminate\Http\Request;
 class SiteController extends Controller
 {
     var $request;
-    var $productRepo, $siteRepo;
+    var $productRepo, $siteRepo, $urlRepo;
 
-    public function __construct(Request $request, ProductContract $productContract, SiteContract $siteContract)
+    public function __construct(Request $request,
+                                ProductContract $productContract,
+                                SiteContract $siteContract,
+                                UrlContract $urlContract)
     {
         $this->request = $request;
         $this->productRepo = $productContract;
         $this->siteRepo = $siteContract;
+        $this->urlRepo = $urlContract;
     }
 
     /**
@@ -66,6 +71,9 @@ class SiteController extends Controller
         $storeValidator->validate($this->request->all());
 
         $site = $this->siteRepo->store($this->request->all());
+        $url = $this->urlRepo->getByFullPathOrCreate($this->request->all());
+
+        $url->sites()->save($site);
         $product = $this->productRepo->get($this->request->get('product_id'));
         $product->sites()->save($site);
 

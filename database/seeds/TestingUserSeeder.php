@@ -23,5 +23,17 @@ class TestingUserSeeder extends Seeder
             'user_id' => 1,
             'api_subscription_id' => '16298788',
         ]);
+
+        DB::table('user_preferences')->insert([
+            'user_id' => 1,
+            'element' => 'DATE_FORMAT',
+            'value' => 'Y-m-d',
+        ]);
+
+        DB::table('user_preferences')->insert([
+            'user_id' => 1,
+            'element' => 'TIME_FORMAT',
+            'value' => 'g:ia',
+        ]);
     }
 }

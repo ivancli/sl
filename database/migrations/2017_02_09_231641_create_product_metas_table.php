@@ -18,7 +18,6 @@ class CreateProductMetasTable extends Migration
             $table->integer('product_id')->unsigned();
             $table->foreign('product_id')->references('id')->on('products');
             $table->string('sku')->nullable();
-            $table->string('category')->nullable();
             $table->string('brand')->nullable();
             $table->string('supplier')->nullable();
             $table->timestamps();

@@ -19,7 +19,10 @@
                 <!--</span>-->
                 <!--</div>-->
 
-                <span class="btn-edit btn-edit-product">Edit &nbsp; <i class="fa fa-pencil-square-o"></i></span>
+                <span class="btn-edit btn-edit-product">
+                    <span class="hidden-xs hidden-sm">Edit &nbsp;</span>
+                    <i class="fa fa-pencil-square-o"></i>
+                </span>
             </th>
             <th class="text-right action-cell product-th">
                 <a href="#" class="btn-action" title="chart">
@@ -58,7 +61,7 @@
                         <thead>
                         <tr>
                             <th width="15%">Site</th>
-                            <th class="text-center" width="10%">My Site</th>
+                            <th class="text-center hidden-xs" width="10%">My Site</th>
                             <th width="10%" class="text-right">Current Price</th>
                             <th width="10%" class="text-right">Previous Price</th>
                             <th width="10%" class="hidden-xs text-right">Change</th>
@@ -99,7 +102,7 @@
         mounted() {
             this.loadSites();
         },
-        data: ()=> {
+        data() {
             return {
                 sites: []
             }

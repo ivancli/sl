@@ -1,5 +1,6 @@
 <?php
 namespace App\Validators\Product\Site;
+
 use App\Validators\ValidatorAbstract;
 
 /**
@@ -20,7 +21,7 @@ class StoreValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return [
-            'url' => 'required|url|max:2083'
+            'full_path' => 'required|url|max:2083'
         ];
     }
 }

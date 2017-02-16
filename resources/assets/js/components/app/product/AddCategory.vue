@@ -9,9 +9,11 @@
                 <div class="add-item-controls" v-show="addingCategory">
                     <div class="row">
                         <div class="col-sm-12">
-                            <input type="text" autocomplete="off" class="form-control txt-item" placeholder="Enter a category name here" v-model="newCategoryName" ref="txt_new_category" tabindex="-1">
+                            <input type="text" autocomplete="off" class="form-control txt-item"
+                                   placeholder="Enter a category name here" v-model="newCategoryName"
+                                   ref="txt_new_category" tabindex="-1">
                             <div class="buttons">
-                                <button class="btn btn-primary btn-flat" @click="addCategory">
+                                <button class="btn btn-primary btn-flat" @click.prevent="addCategory">
                                     <span class="hidden-sm hidden-xs">
                                         ADD CATEGORY
                                     </span>
@@ -20,7 +22,7 @@
                                     </span>
                                 </button>
                                 &nbsp;&nbsp;
-                                <button class="btn btn-default btn-flat" @click="cancelAddCategory">
+                                <button class="btn btn-default btn-flat" @click.prevent="cancelAddCategory">
                                     <span class="hidden-sm hidden-xs">
                                         CANCEL
                                     </span>
@@ -48,7 +50,7 @@
         mounted() {
             console.info('AddCategory component mounted.')
         },
-        data: ()=> {
+        data() {
             return {
                 addingCategory: false, //determine visibility of panel
                 newCategoryName: '', //category name input value
@@ -65,6 +67,7 @@
             },
             cancelAddCategory: function () {
                 this.addingCategory = false;
+                this.clearNewCategoryname();
                 this.$refs['txt_new_category'].blur();
             },
             addCategory: function () {
@@ -75,7 +78,7 @@
                     if (response.data.status == true) {
                         this.addingCategory = false;
                     }
-                    this.newCategoryName = '';
+                    this.clearNewCategoryname();
                     this.$emit('addedCategory');
                 }).catch(error=> {
                     this.isAddingCategory = false;
@@ -86,6 +89,9 @@
             },
             clearErrors: function () {
                 this.errors = {};
+            },
+            clearNewCategoryname: function () {
+                this.newCategoryName = '';
             }
         },
         computed: {
