@@ -18,6 +18,7 @@ use App\Events\Product\Product\BeforeStore;
 use App\Events\Product\Product\BeforeUpdate;
 use App\Http\Controllers\Controller;
 use App\Validators\Product\Product\StoreValidator;
+use App\Validators\Product\Product\UpdateValidator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -115,14 +116,25 @@ class ProductController extends Controller
      * Update the specified resource in storage.
      *
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param UpdateValidator $updateValidator
+     * @return JsonResponse|\Illuminate\Http\Response
      */
-    public function update($id)
+    public function update($id, UpdateValidator $updateValidator)
     {
         $product = $this->productRepo->get($id);
         event(new BeforeUpdate($product));
+        $this->request->merge(compact(['id']));
+        $updateValidator->validate($this->request->all());
+
+        $product = $this->productRepo->update($id, $this->request->all());
+        $status = true;
 
         event(new AfterUpdate($product));
+        if ($this->request->ajax()) {
+            return new JsonResponse(compact(['product', 'status']));
+        } else {
+            return redirect()->route('product');
+        }
     }
 
     /**

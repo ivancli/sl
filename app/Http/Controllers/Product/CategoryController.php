@@ -17,6 +17,7 @@ use App\Events\Product\Category\BeforeStore;
 use App\Events\Product\Category\BeforeUpdate;
 use App\Http\Controllers\Controller;
 use App\Validators\Product\Category\StoreValidator;
+use App\Validators\Product\Category\UpdateValidator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -110,14 +111,26 @@ class CategoryController extends Controller
      * Update the specified resource in storage.
      *
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param UpdateValidator $updateValidator
+     * @return JsonResponse|\Illuminate\Http\Response
      */
-    public function update($id)
+    public function update($id, UpdateValidator $updateValidator)
     {
         $category = $this->categoryRepo->get($id);
         event(new BeforeUpdate($category));
 
+        $this->request->merge(compact(['id']));
+        $updateValidator->validate($this->request->all());
+
+        $category = $this->categoryRepo->update($id, $this->request->all());
+        $status = true;
+
         event(new AfterUpdate($category));
+        if ($this->request->ajax()) {
+            return new JsonResponse(compact(['category', 'status']));
+        } else {
+            return redirect()->route('product');
+        }
     }
 
     /**

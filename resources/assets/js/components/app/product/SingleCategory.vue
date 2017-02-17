@@ -6,9 +6,9 @@
                 <a class="btn-collapse" aria-expanded="true"><i class="fa fa-tag "></i></a>
             </th>
             <th class="category-th">
-                <a class="text-muted category-name-link" href="#" v-text="currentCategory.name"
-                   v-show="!editingCategoryName"></a>
-                <edit-category :editing-category="category" @edit-category-name="goingToEditCategoryName" @cancel-edit-category-name="cancelEditCategoryName"></edit-category>
+                <a class="text-muted category-name-link" href="#" v-text="currentCategory.name" v-show="!editingCategoryName"></a>
+                <edit-category :editing-category="category" @edited-category="editedCategory" @edit-category-name="goingToEditCategoryName"
+                               @cancel-edit-category-name="cancelEditCategoryName"></edit-category>
             </th>
 
             <th class="text-right action-cell category-th">
@@ -22,8 +22,8 @@
                     <i class="glyphicon glyphicon-trash"></i>
                 </a>
             </th>
-            <th class="text-center vertical-align-middle" style="background-color: #d3d3d3;" width="70">
-                <a class="text-muted btn-collapse" style="font-size: 35px;">
+            <th class="text-center vertical-align-middle cell-category-collapse" width="70" @click="toggleCategoryCollapse">
+                <a class="text-muted btn-collapse btn-category-collapse" :class="isCollapsed ? 'collapsed' : ''">
                     <i class="fa fa-angle-up"></i>
                 </a>
             </th>
@@ -33,13 +33,12 @@
             <th colspan="3" class="category-th">
                 <div class="text-light">
                     Created
-                    on {{currentCategory.created_at}}
+                    on {{currentCategory.created_at | formatDateTime(dateFormat)}}
                     <strong class="text-muted"><i>by {{currentCategory.owner.fullName}}</i></strong>
                 </div>
                 <div class="text-light">
                     Product URLs Tracked:
-                    <strong><span class="lbl-site-usage text-muted"
-                                  v-text="currentCategory.numberOfSites"></span></strong>
+                    <strong><span class="lbl-site-usage text-muted" v-text="currentCategory.numberOfSites"></span></strong>
                 </div>
             </th>
         </tr>
@@ -47,7 +46,7 @@
         <tr>
             <th></th>
             <th colspan="3" class="category-th action-cell add-item-cell">
-                <add-product :category="currentCategory" @addedProduct="loadProducts"></add-product>
+                <add-product :category="currentCategory" @addedProduct="addedProduct"></add-product>
             </th>
         </tr>
         </thead>
@@ -55,8 +54,8 @@
         <tr>
             <td></td>
             <td colspan="3" class="table-container">
-                <div class="collapsible-category-div collapse in">
-                    <single-product v-for="product in products" :current-product="product"></single-product>
+                <div class="collapsible-category-div collapse" :class="isCollapsed ? '' : 'in'">
+                    <single-product v-for="product in products" :current-product="product" @reload-products="loadProducts"></single-product>
                 </div>
             </td>
         </tr>
@@ -82,18 +81,25 @@
     import addProduct from './AddProduct.vue';
     import singleProduct from './SingleProduct.vue';
     import editCategory from './EditCategory.vue';
+    import formatDateTime from '../../../filters/formatDateTime';
+
+
+    import {
+            SET_CATEGORY_COLLAPSE_STATUS, TOGGLE_COLLAPSE_CATEGORY
+    } from '../../../actions/action-types';
 
     export default {
         components: {
             addProduct,
             singleProduct,
-            editCategory,
+            editCategory
         },
         props: [
             'current-category'
         ],
         mounted() {
             console.info('SingleCategory component is mounted');
+            this.setCategoryCollapseStatus(true);
             this.loadProducts();
         },
         data() {
@@ -112,13 +118,34 @@
                     console.info(error.response);
                 })
             },
+            addedProduct: function () {
+                this.setCategoryCollapseStatus(false);
+                this.loadProducts();
+            },
             goingToEditCategoryName: function () {
                 this.editingCategoryName = true;
             },
             cancelEditCategoryName: function () {
                 this.editingCategoryName = false;
+            },
+            reloadCategories: function () {
+                this.$emit('reload-categories');
+            },
+            editedCategory: function () {
+                this.editingCategoryName = false;
+                this.reloadCategories();
+            },
+            toggleCategoryCollapse: function () {
+                this.$store.dispatch(TOGGLE_COLLAPSE_CATEGORY, {
+                    category_id: this.category.id
+                });
+            },
+            setCategoryCollapseStatus: function (status) {
+                this.$store.dispatch(SET_CATEGORY_COLLAPSE_STATUS, {
+                    category_id: this.category.id,
+                    status: status
+                });
             }
-
         },
         computed: {
             category(){
@@ -130,6 +157,18 @@
                         category_id: this.category.id
                     }
                 }
+            },
+            dateFormat(){
+                return user.allPreferences.DATE_FORMAT;
+            },
+            timeFormat(){
+                return user.allPreferences.TIME_FORMAT;
+            },
+            datetimeFormat(){
+                return this.dateFormat + ' ' + this.timeFormat;
+            },
+            isCollapsed(){
+                return this.$store.getters.categoriesCollapsed[this.category.id];
             }
         }
     }
@@ -206,5 +245,40 @@
     table td.table-container {
         padding-right: 20px !important;
         padding-left: 0 !important;
+    }
+
+    .cell-category-collapse {
+        background-color: #d3d3d3;
+        cursor: pointer;
+    }
+
+    .btn-category-collapse {
+        font-size: 35px;
+    }
+
+    .btn-collapse.collapsed i.fa-angle-up {
+        transform: rotate(-180deg);
+        -moz-transform: rotate(-180deg);
+        -ms-transform: rotate(-180deg);
+        -o-transform: rotate(-180deg);
+        -webkit-transform: rotate(-180deg);
+        transition: transform 550ms ease;
+        -moz-transition: -moz-transform 550ms ease;
+        -ms-transition: -ms-transform 550ms ease;
+        -o-transition: -o-transform 550ms ease;
+        -webkit-transition: -webkit-transform 550ms ease;
+    }
+
+    .btn-collapse i.fa-angle-up {
+        transform: rotate(-360deg);
+        -moz-transform: rotate(-360deg);
+        -ms-transform: rotate(-360deg);
+        -o-transform: rotate(-360deg);
+        -webkit-transform: rotate(-360deg);
+        transition: transform 550ms ease;
+        -moz-transition: -moz-transform 550ms ease;
+        -ms-transition: -ms-transform 550ms ease;
+        -o-transition: -o-transform 550ms ease;
+        -webkit-transition: -webkit-transform 550ms ease;
     }
 </style>

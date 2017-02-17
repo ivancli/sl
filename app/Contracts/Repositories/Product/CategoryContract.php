@@ -37,4 +37,13 @@ interface CategoryContract
      * @return Category
      */
     public function store(Array $data);
+
+    /**
+     * Editing existing category
+     *
+     * @param $id
+     * @param array $data
+     * @return Category
+     */
+    public function update($id, Array $data);
 }

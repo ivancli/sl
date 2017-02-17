@@ -65,4 +65,19 @@ class CategoryRepository implements CategoryContract
         $category->save();
         return $category;
     }
+
+    /**
+     * Editing existing category
+     *
+     * @param $id
+     * @param array $data
+     * @return Category
+     */
+    public function update($id, Array $data)
+    {
+        $category = $this->get($id);
+        $category->name = $data['name'];
+        $category->save();
+        return $category;
+    }
 }

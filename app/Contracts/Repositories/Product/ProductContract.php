@@ -9,6 +9,7 @@
 namespace App\Contracts\Repositories\Product;
 
 
+use App\Models\Product;
 use App\Models\User;
 
 interface ProductContract
@@ -35,7 +36,16 @@ interface ProductContract
      * Creating new product
      *
      * @param array $data
-     * @return mixed
+     * @return Product
      */
     public function store(Array $data);
+
+    /**
+     * Editing existing product
+     *
+     * @param $id
+     * @param array $data
+     * @return Product
+     */
+    public function update($id, Array $data);
 }

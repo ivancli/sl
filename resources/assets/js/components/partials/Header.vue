@@ -74,7 +74,7 @@
 <script>
     import {
             TOGGLE_SIDEBAR
-    } from '../../actions/mutation-types';
+    } from '../../actions/action-types';
 
     export default {
         mounted() {
@@ -97,7 +97,7 @@
                 this.dropdownToggle[current_index] = !this.dropdownToggle[current_index];
             },
             toggleSidebar: function () {
-                this.$store.commit(TOGGLE_SIDEBAR);
+                this.$store.dispatch(TOGGLE_SIDEBAR);
             },
         }
     }

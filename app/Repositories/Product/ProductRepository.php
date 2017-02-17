@@ -67,4 +67,19 @@ class ProductRepository implements ProductContract
         $product->save();
         return $product;
     }
+
+    /**
+     * Editing existing product
+     *
+     * @param $id
+     * @param array $data
+     * @return Product
+     */
+    public function update($id, Array $data)
+    {
+        $product = $this->get($id);
+        $product->name = $data['name'];
+        $product->save();
+        return $product;
+    }
 }

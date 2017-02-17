@@ -8,21 +8,9 @@
                 </a>
             </th>
             <th class="product-th">
-                <a class="text-muted product-name-link" href="#" v-text="product.name"></a>
-                <!--<div class="input-group sl-input-group">-->
-                <!--<input type="text" name="product_name" placeholder="Product Name" autocomplete="off" class="form-control sl-form-control input-lg product-name"-->
-                <!--value="iPad Mini 2 32GB Wi-Fi (Silver)">-->
-                <!--<span class="input-group-btn">-->
-                <!--<button type="submit" class="btn btn-default btn-flat btn-lg">-->
-                <!--<i class="fa fa-check"></i>-->
-                <!--</button>-->
-                <!--</span>-->
-                <!--</div>-->
-
-                <span class="btn-edit btn-edit-product">
-                    <span class="hidden-xs hidden-sm">Edit &nbsp;</span>
-                    <i class="fa fa-pencil-square-o"></i>
-                </span>
+                <a class="text-muted product-name-link" href="#" v-text="product.name" v-show="!editingProductName"></a>
+                <edit-product :editing-product="product" @edited-product="editedProduct" @edit-product-name="goingToEditProductName"
+                              @cancel-edit-product-name="cancelEditProductName"></edit-product>
             </th>
             <th class="text-right action-cell product-th">
                 <a href="#" class="btn-action" title="chart">
@@ -48,7 +36,7 @@
             <td colspan="3">
                 <div class="text-light">
                     Created
-                    on {{product.created_at}}
+                    on {{product.created_at | formatDateTime(dateFormat)}}
                     <strong class="text-muted"><i>by {{product.owner.fullName}}</i></strong>
                 </div>
             </td>
@@ -72,7 +60,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <single-site v-for="site in sites" :current-site="site"></single-site>
+                        <single-site v-for="site in sites" :current-site="site" @reload-sites="loadSites"></single-site>
                         <tr class="add-site-row">
                             <td colspan="9" class="add-item-cell">
                                 <add-site :product="product" @addedSite="loadSites"></add-site>
@@ -90,11 +78,14 @@
 <script>
     import addSite from './AddSite.vue';
     import singleSite from './SingleSite.vue';
+    import editProduct from './EditProduct.vue';
+    import formatDateTime from '../../../filters/formatDateTime';
 
     export default {
         components: {
             addSite,
-            singleSite
+            singleSite,
+            editProduct,
         },
         props: [
             'current-product'
@@ -104,7 +95,8 @@
         },
         data() {
             return {
-                sites: []
+                sites: [],
+                editingProductName: false
             }
         },
         methods: {
@@ -116,6 +108,19 @@
                 }).catch(error=> {
                     console.info(error.response);
                 })
+            },
+            goingToEditProductName: function () {
+                this.editingProductName = true;
+            },
+            cancelEditProductName: function () {
+                this.editingProductName = false;
+            },
+            reloadProducts: function () {
+                this.$emit('reload-products');
+            },
+            editedProduct: function () {
+                this.editingProductName = false;
+                this.reloadProducts();
             }
         },
         computed: {
@@ -128,7 +133,16 @@
                         product_id: this.product.id
                     }
                 }
-            }
+            },
+            dateFormat(){
+                return user.allPreferences.DATE_FORMAT;
+            },
+            timeFormat(){
+                return user.allPreferences.TIME_FORMAT;
+            },
+            datetimeFormat(){
+                return this.dateFormat + ' ' + this.timeFormat;
+            },
         }
     }
 </script>

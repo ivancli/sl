@@ -1,3 +1,4 @@
+\
 <template>
     <!-- Main content -->
     <section class="content">
@@ -21,14 +22,14 @@
                         <add-category @addedCategory="loadCategories"></add-category>
                     </div>
                 </div>
-                <div class="row m-b-10">
-                    <div class="col-sm-12">
-                        <!--Collapse All-->
+                <div class="row m-b-20">
+                    <div class="col-sm-12 text-right">
+                        <a href="#" class="text-muted btn-collapse-all" @click.prevent="toggleAllCategories" v-text="shouldExpandAll ? 'Expand All' : 'Collapse All'"></a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        <single-category v-for="single_category in categories" :current-category="single_category"></single-category>
+                        <single-category v-for="single_category in categories" :current-category="single_category" @reload-categories="loadCategories"></single-category>
                     </div>
                 </div>
                 <div class="row">
@@ -46,6 +47,10 @@
 <script>
     import addCategory from './AddCategory.vue';
     import singleCategory from './SingleCategory.vue';
+
+    import {
+            TOGGLE_ALL_CATEGORIES
+    } from '../../../actions/action-types';
 
     export default {
         components: {
@@ -70,10 +75,26 @@
                 }).catch(error=> {
                     console.info(error.response);
                 })
+            },
+            toggleAllCategories: function () {
+                this.$store.dispatch(TOGGLE_ALL_CATEGORIES);
             }
         },
-        computed: {}
-//        store
+        computed: {
+            allCollapseStatus(){
+                return this.$store.getters.categoriesCollapsed;
+            },
+            shouldExpandAll(){
+                var shouldExpand = true;
+                for (var categoryCollapseStatus in this.allCollapseStatus) {
+                    if (this.allCollapseStatus.hasOwnProperty(categoryCollapseStatus) && this.allCollapseStatus[categoryCollapseStatus] == false) {
+                        shouldExpand = false;
+                        break;
+                    }
+                }
+                return shouldExpand;
+            }
+        }
     }
 </script>
 
@@ -88,5 +109,9 @@
         background-color: #8b74a9;
         border-color: #9c83bf;
         color: #fff;
+    }
+
+    .btn-collapse-all {
+        font-size: 12px;
     }
 </style>

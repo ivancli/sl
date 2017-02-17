@@ -106,6 +106,9 @@ return [
         ],
         'subscription_plan_id' => [
             'required' => 'Please select a subscription plan.'
+        ],
+        'name' => [
+            'unique_per_user' => 'Name needs to be unique'
         ]
     ],
 

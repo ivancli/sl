@@ -7,16 +7,13 @@
 </template>
 
 <script>
-    import store from '../stores/default';
-
     export default {
-        store,
         mounted() {
             console.log('Auth component mounted.')
         },
         computed: {
             sidebarOpened: function () {
-                return this.$store.state.sidebarOpened;
+                return this.$store.getters.sidebarOpened;
             }
         }
     }

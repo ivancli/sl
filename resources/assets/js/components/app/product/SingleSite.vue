@@ -5,20 +5,7 @@
                 {{site.siteUrl | domain}}
             </a>
 
-            <!--<div class="frm-edit-site-url input-group sl-input-group" style="display: none;">-->
-            <!--<input type="text" name="site_url" placeholder="Site URL" autocomplete="off" class="form-control sl-form-control txt-site-url">-->
-            <!--<span class="input-group-btn">-->
-            <!--<button type="submit" class="btn btn-default btn-flat" data-url="http://login.spotlite.com.au/site/1539" >-->
-            <!--<i class="fa fa-check"></i>-->
-            <!--</button>-->
-            <!--</span>-->
-            <!--</div>-->
-            <div class="btn-edit btn-edit-site pull-right">
-                <div class="btn-edit-align-middle">
-                    <span class="hidden-xs hidden-sm">Edit &nbsp;</span>
-                    <i class="fa fa-pencil-square-o"></i>
-                </div>
-            </div>
+            <edit-site :editing-site="site" @edited-site="editedSite" @edit-site-url="goingToEditSiteURL" @cancel-edit-site-url="cancelEditSiteURL"></edit-site>
         </td>
         <td align="center" class="vertical-align-middle hidden-xs">
             <a href="#" class="btn-my-price">
@@ -75,11 +62,37 @@
     import formatDateTime from '../../../filters/formatDateTime';
     import domain from '../../../filters/domain';
 
+    import editSite from './EditSite.vue';
+
     export default {
+        components: {
+            editSite
+        },
         props: [
             'current-site'
         ],
+        data() {
+            return {
+                editingSiteURL: false
+            }
+        },
         mounted() {
+
+        },
+        methods: {
+            goingToEditSiteURL: function () {
+                this.editingSiteURL = true;
+            },
+            editedSite: function () {
+                this.editingSiteURL = false;
+                this.reloadSites();
+            },
+            cancelEditSiteURL: function () {
+                this.editingSiteURL = false;
+            },
+            reloadSites: function () {
+                this.$emit('reload-sites');
+            },
 
         },
         computed: {
@@ -126,5 +139,9 @@
     tr.site-wrapper td.site-url {
         position: relative;
         padding-right: 50px !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        white-space: nowrap;
     }
 </style>
