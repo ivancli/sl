@@ -3,10 +3,10 @@
         <!-- Logo -->
         <a href="#" class="logo">
             <span class="logo-mini">
-                <img src="../../../images/logos/favicon.png" alt="SpotLite Logo Icon">
+                <img src="/images/favicon.png" alt="SpotLite Logo Icon">
             </span>
             <span class="logo-lg">
-                <img src="../../../images/logos/logo_transparent_white_text.png" alt="SpotLite Logo">
+                <img src="/images/logo_transparent_white_text.png" alt="SpotLite Logo">
             </span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->

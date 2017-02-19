@@ -57,22 +57,50 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Product\Site\AfterUpdate' => [],
         'App\Events\Product\Site\BeforeDestroy' => [],
         'App\Events\Product\Site\AfterDestroy' => [],
+
+        /**
+         * User management
+         */
+        /* user */
+        'App\Events\UserManagement\User\BeforeIndex' => [],
+        'App\Events\UserManagement\User\AfterIndex' => [],
+        'App\Events\UserManagement\User\BeforeShow' => [],
+        'App\Events\UserManagement\User\AfterShow' => [],
+        'App\Events\UserManagement\User\BeforeCreate' => [],
+        'App\Events\UserManagement\User\AfterCreate' => [],
+        'App\Events\UserManagement\User\BeforeStore' => [],
+        'App\Events\UserManagement\User\AfterStore' => [],
+        'App\Events\UserManagement\User\BeforeEdit' => [],
+        'App\Events\UserManagement\User\AfterEdit' => [],
+        'App\Events\UserManagement\User\BeforeUpdate' => [],
+        'App\Events\UserManagement\User\AfterUpdate' => [],
+        'App\Events\UserManagement\User\BeforeDestroy' => [],
+        'App\Events\UserManagement\User\AfterDestroy' => [],
     ];
 
     protected $subscribe = [
+        /*todo this part is yet to be finished*/
 //        /*subscription*/
 //        'App\Listeners\Subscription\ProductControllerEventSubscriber',
 //        'App\Listeners\Subscription\SubscriptionControllerEventSubscriber',
+
 //        /*product*/
         'App\Listeners\Product\CategoryControllerEventSubscriber',
         'App\Listeners\Product\ProductControllerEventSubscriber',
         'App\Listeners\Product\SiteControllerEventSubscriber',
-//        /*user*/
+
+//        /*auth*/
         'App\Listeners\Auth\AuthenticationEventSubscriber',
         'App\Listeners\Auth\ForgotPasswordControllerEventSubscriber',
         'App\Listeners\Auth\LoginControllerEventSubscriber',
         'App\Listeners\Auth\RegisterControllerEventSubscriber',
         'App\Listeners\Auth\ResetPasswordControllerEventSubscriber',
+
+        /**
+         * User management
+         */
+        /* user */
+        'App\Listeners\UserManagement\UserControllerEventSubscriber',
     ];
 
     /**

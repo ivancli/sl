@@ -39,4 +39,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('alert', 'Alert\AlertController');
     Route::resource('report', 'Report\ReportController');
+
+    /*user management*/
+    Route::resource('user-management/user', 'UserManagement\UserController');
 });

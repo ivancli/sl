@@ -17,6 +17,9 @@ mix
     .js('resources/assets/js/auth/register.js', 'public/js/auth')
     .js('resources/assets/js/auth/forgot.js', 'public/js/auth')
     .js('resources/assets/js/app/product/index.js', 'public/js/app/product')
+
+    /* user management */
+    .js('resources/assets/js/app/user_management/user/index.js', 'public/js/app/user')
     .js('resources/assets/js/app/alert/index.js', 'public/js/app/alert')
     .js('resources/assets/js/app/report/index.js', 'public/js/app/report')
 

@@ -9,7 +9,8 @@
             </th>
             <th class="product-th">
                 <a class="text-muted product-name-link" href="#" v-text="product.name" v-show="!editingProductName"></a>
-                <edit-product :editing-product="product" @edited-product="editedProduct" @edit-product-name="goingToEditProductName"
+                <edit-product :editing-product="product" @edited-product="editedProduct"
+                              @edit-product-name="goingToEditProductName"
                               @cancel-edit-product-name="cancelEditProductName"></edit-product>
             </th>
             <th class="text-right action-cell product-th">
@@ -48,19 +49,19 @@
                     <table class="table table-striped table-condensed tbl-site">
                         <thead>
                         <tr>
-                            <th width="15%">Site</th>
-                            <th class="text-center hidden-xs" width="10%">My Site</th>
-                            <th width="10%" class="text-right">Current Price</th>
-                            <th width="10%" class="text-right">Previous Price</th>
-                            <th width="10%" class="hidden-xs text-right">Change</th>
-                            <th width="10%" class="hidden-xs" style="padding-left: 20px;">Last Changed</th>
-                            <th>Updated</th>
-                            <th>Tracked Since</th>
-                            <th width="100px"></th>
+                            <th>Site</th>
+                            <th class="text-center hidden-xs hidden-sm" width="10%">My Site</th>
+                            <th class="text-right">Current Price</th>
+                            <th width="10%" class="hidden-xs hidden-sm text-right">Previous Price</th>
+                            <th class="text-right hidden-xs hidden-sm">Change</th>
+                            <th width="10%" class="hidden-xs hidden-sm" style="padding-left: 20px;">Last Changed</th>
+                            <th class="hidden-xs hidden-sm">Updated</th>
+                            <th class="hidden-xs hidden-sm">Tracked Since</th>
+                            <th width="100"></th>
                         </tr>
                         </thead>
-                        <tbody>
                         <single-site v-for="site in sites" :current-site="site" @reload-sites="loadSites"></single-site>
+                        <tbody>
                         <tr class="add-site-row">
                             <td colspan="9" class="add-item-cell">
                                 <add-site :product="product" @addedSite="loadSites"></add-site>
@@ -214,5 +215,9 @@
 
     tr.add-site-row {
         background-color: #fff !important;
+    }
+
+    .table > tbody + tbody {
+        border-top: none;
     }
 </style>

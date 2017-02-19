@@ -10,7 +10,7 @@
   "repositories": [
     {
       "type": "vcs",
-      "url": "git@bitbucket.org:invigorgroup/invigor-user-management.git"
+      "url": "git@github.com:ketchol/um.git"
     },
     {
       "type": "vcs",
@@ -29,6 +29,7 @@
     "maatwebsite/excel": "^2.1",
     "mpdf/mpdf": "^6.1",
     "predis/predis": "^1.1",
+    "ivancli/um": "dev-master",
     "invigor/crawler": "1.*",
     "invigor/chargify": "dev-master"
   },

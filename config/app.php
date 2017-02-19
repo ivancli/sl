@@ -180,6 +180,8 @@ return [
         \Invigor\Chargify\ChargifyServiceProvider::class,
         App\Providers\SubscriptionServiceProvider::class,
         App\Providers\UserServiceProvider::class,
+
+        IvanCLI\UM\UMServiceProvider::class,
     ],
 
     /*
@@ -230,6 +232,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'Chargify' => Invigor\Chargify\ChargifyFacade::class,
+
+        'UM' => IvanCLI\UM\UMFacade::class,
     ],
 
 ];

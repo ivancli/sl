@@ -8,12 +8,13 @@
         </div>
 
         <div class="input-group sl-input-group" v-show="editingSiteURL">
-            <input type="text" placeholder="Product Page URL" v-model="newSiteURL" autocomplete="off" class="form-control sl-form-control txt-site-url" ref="txt_edit_site" tabindex="-1">
-            <span class="input-group-btn">
-                <button class="btn btn-primary btn-flat" @click.prevent="editSite">
+            <input type="text" placeholder="Product Page URL" v-model="newSiteURL" autocomplete="off"
+                   class="form-control sl-form-control txt-site-url input-sm" ref="txt_edit_site" tabindex="-1">
+            <span class="input-group-btn input-group-sm">
+                <button class="btn btn-primary btn-flat btn-sm" @click.prevent="editSite">
                     <i class="fa fa-check"></i>
                 </button>
-                <button class="btn btn-default btn-flat" @click.prevent="cancelEditSiteURL">
+                <button class="btn btn-default btn-flat btn-sm" @click.prevent="cancelEditSiteURL">
                     <i class="fa fa-times"></i>
                 </button>
             </span>
@@ -54,7 +55,7 @@
                 this.$emit('edit-site-url');
             },
             cancelEditSiteURL: function () {
-                this.newSiteURL = this.currentSite.name;
+                this.newSiteURL = this.currentSite.siteUrl;
                 this.editingSiteURL = false;
                 this.$refs['txt_edit_site'].blur();
                 this.$emit('cancel-edit-site-url');
@@ -103,5 +104,11 @@
 </script>
 
 <style>
+    .btn-edit-site {
+        cursor: pointer;
+    }
 
+    input.form-control.txt-site-url {
+        width: 135px;
+    }
 </style>

@@ -4,7 +4,7 @@
         <section class="sidebar">
             <ul class="sidebar-menu">
                 <li class="treeview">
-                    <a href="#">
+                    <a href="#" @click.prevent="toggleDropDownItems('dashboard')">
                         <i class="fa fa-dashboard"></i>
                         <span>DASHBOARDS</span>
                         <span class="pull-right-container">
@@ -51,15 +51,17 @@
                         <span>APP PREFERENCES</span>
                     </a>
                 </li>
-                <li class="treeview  ">
-                    <a href="#">
+                <li class="treeview" :class="topLevelActiveClass('/manage-crawler')">
+                    <a href="#" @click.prevent="toggleDropDownItems('/manage-crawler')">
                         <i class="fa fa-files-o"></i>
                         <span>Manage Crawler</span>
                         <span class="pull-right-container">
                             <i class="fa fa-caret-down pull-right"></i>
                         </span>
                     </a>
-                    <ul class="treeview-menu">
+                    <ul class="treeview-menu"
+                        :class="dropDownItemVisibility['/manage-crawler'] ? 'menu-open' : ''"
+                        v-show="dropDownItemVisibility['/manage-crawler']">
                         <li class="">
                             <a href="#">
                                 <i class="fa fa-circle-o"></i> Domains
@@ -72,35 +74,36 @@
                         </li>
                     </ul>
                 </li>
-                <li class="treeview ">
-                    <a href="#">
+                <li class="treeview" :class="topLevelActiveClass('/user-management')">
+                    <a href="#" @click.prevent="toggleDropDownItems('/user-management')">
                         <i class="fa fa-users"></i>
                         <span>USER MANAGEMENT</span>
                         <span class="pull-right-container">
                             <i class="fa fa-caret-down pull-right"></i>
                         </span>
                     </a>
-                    <ul class="treeview-menu">
+                    <ul class="treeview-menu" :class="dropDownItemVisibility['/user-management'] ? 'menu-open' : ''"
+                        v-show="dropDownItemVisibility['/user-management']">
                         <li class="">
-                            <a href="#">
+                            <a href="/user-management/user">
                                 <i class="fa fa-user"></i>
                                 <span>Users</span>
                             </a>
                         </li>
                         <li class="">
-                            <a href="#">
+                            <a href="/user-management/group">
                                 <i class="fa fa-users"></i>
                                 <span>Groups</span>
                             </a>
                         </li>
                         <li class="">
-                            <a href="#">
+                            <a href="/user-management/role">
                                 <i class="fa fa-tags"></i>
                                 <span>Roles</span>
                             </a>
                         </li>
                         <li class="">
-                            <a href="#">
+                            <a href="/user-management/permission">
                                 <i class="fa fa-key"></i>
                                 <span>Permissions</span>
                             </a>
@@ -161,12 +164,47 @@
 
 <script>
     export default {
+        data(){
+            return {
+                dropDownItemVisibility: {
+                    '/dashboard': false,
+                    '/manage-crawler': false,
+                    '/user-management': false,
+                    '/system-log': false,
+                    '/manage-legal': false,
+                }
+            }
+        },
         mounted() {
             console.log('Header component mounted.')
+            this.initAssignDropDownItemsVisibility();
         },
         methods: {
-            topLevelActiveClass: (link)=> {
-                return window.location.pathname.startsWith(link) ? 'active' : '';
+            initAssignDropDownItemsVisibility(){
+                for (var key in this.dropDownItemVisibility) {
+                    if (this.dropDownItemVisibility.hasOwnProperty(key)) {
+                        if (this.topLevelActiveClass(key) == 'active') {
+                            this.dropDownItemVisibility[key] = true;
+                        }
+                    }
+                }
+            },
+            topLevelActiveClass(link) {
+                return window.location.pathname.startsWith(link) || this.dropDownItemVisibility[link] ? 'active' : '';
+            },
+            toggleDropDownItems(key) {
+                if (this.dropDownItemVisibility.hasOwnProperty(key)) {
+                    if (this.dropDownItemVisibility[key] == true) {
+                        this.dropDownItemVisibility[key] = false;
+                    } else {
+                        for (var dropdownItemKey in this.dropDownItemVisibility) {
+                            if (this.dropDownItemVisibility.hasOwnProperty(dropdownItemKey)) {
+                                this.dropDownItemVisibility[dropdownItemKey] = false;
+                            }
+                        }
+                        this.dropDownItemVisibility[key] = true;
+                    }
+                }
             }
         }
     }
@@ -184,6 +222,18 @@
     .skin-black-light .sidebar-menu > li:hover > a, .skin-black-light .sidebar-menu > li.active > a {
         color: #fff;
         background: #6dbdad;
+    }
+
+    .skin-black-light .sidebar-menu > li > .treeview-menu {
+        background: #6dbdad;
+    }
+
+    .skin-black-light .treeview-menu > li > a {
+        color: #fff
+    }
+
+    .skin-black-light .treeview-menu > li.active > a, .skin-black-light .treeview-menu > li > a:hover {
+        color: #fff;
     }
 
     @media (min-width: 768px) {
