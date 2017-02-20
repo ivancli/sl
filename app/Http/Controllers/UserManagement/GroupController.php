@@ -18,6 +18,8 @@ use App\Events\UserManagement\Group\BeforeShow;
 use App\Events\UserManagement\Group\BeforeStore;
 use App\Events\UserManagement\Group\BeforeUpdate;
 use App\Http\Controllers\Controller;
+use App\Validators\UserManagement\Group\StoreValidator;
+use App\Validators\UserManagement\Group\UpdateValidator;
 use Illuminate\Http\Request;
 
 class GroupController extends Controller
@@ -69,48 +71,70 @@ class GroupController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @param StoreValidator $storeValidator
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(StoreValidator $storeValidator)
     {
         event(new BeforeStore());
-        event(new AfterStore());
+        $storeValidator->validate($this->request->all());
+        $group = $this->groupRepo->store($this->request->all());
+        $status = true;
+        event(new AfterStore($group));
+        return compact(['status', 'group']);
     }
 
     /**
      * Display the specified resource.
      *
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function show($id)
     {
-        event(new BeforeShow());
-        event(new AfterShow());
+        $group = $this->groupRepo->get($id);
+        event(new BeforeShow($group));
+        $status = true;
+        event(new AfterShow($group));
+        if ($this->request->ajax()) {
+            return compact(['status', 'group']);
+        } else {
+            return view('app.user_management.group.show')->with(compact(['status', 'group']));
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function edit($id)
     {
-        event(new BeforeEdit());
-        event(new AfterEdit());
+        $group = $this->groupRepo->get($id);
+        event(new BeforeEdit($group));
+        $status = true;
+        event(new AfterEdit($group));
+        return view('app.user_management.group.edit')->with(compact(['group', 'status']));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  int $id
+     * @param UpdateValidator $updateValidator
      * @return \Illuminate\Http\Response
      */
-    public function update($id)
+    public function update($id, UpdateValidator $updateValidator)
     {
-        event(new BeforeUpdate());
-        event(new AfterUpdate());
+        $group = $this->groupRepo->get($id);
+        event(new BeforeUpdate($group));
+        $this->request->merge(compact(['id']));
+        $updateValidator->validate($this->request->all());
+        $group = $this->groupRepo->update($id, $this->request->all());
+        $status = true;
+        event(new AfterUpdate($group));
+        return compact(['group', 'status']);
     }
 
     /**

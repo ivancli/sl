@@ -27,19 +27,20 @@
                     <div class="form-group">
                         <label for="txt-description" class="col-sm-2 control-label">Description</label>
                         <div class="col-sm-10">
-                            <textarea class="form-control" id="txt-description" v-model="description" rows="7"></textarea>
+                            <textarea class="form-control" id="txt-description" v-model="description"
+                                      rows="7"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12 text-right">
-                            <button class="btn btn-primary btn-sm btn-flat" @click="createGroup">CREATE</button>
+                            <button class="btn btn-primary btn-sm btn-flat" @click="editGroup">UPDATE</button>
                             <a href="/user-management/group" class="btn btn-default btn-sm btn-flat">CANCEL</a>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
-        <loading v-if="isCreatingGroup"></loading>
+        <loading v-if="isEditingGroup || isLoadingGroup"></loading>
     </section>
 </template>
 
@@ -55,23 +56,39 @@
                 name: '',
                 displayName: '',
                 description: '',
-                isCreatingGroup: false,
+                isEditingGroup: false,
+                isLoadingGroup: false,
                 errors: {},
             }
         },
         mounted() {
-            console.info('Create component is mounted.');
+            console.info('Edit component is mounted.');
+            this.loadGroup();
         },
         methods: {
-            createGroup(){
-                this.isCreatingGroup = true;
-                axios.post('/user-management/group', this.createGroupData).then(response=> {
-                    this.isCreatingGroup = false;
+            loadGroup(){
+                this.isLoadingGroup = true;
+                axios.get(editingGroup.urls.show).then(response=> {
+                    this.isLoadingGroup = false;
+                    if (response.data.status == true) {
+                        var group = response.data.group;
+                        this.name = group.name;
+                        this.displayName = group.display_name;
+                        this.description = group.description;
+                    }
+                }).catch(error=> {
+                    this.isLoadingGroup = false;
+                })
+            },
+            editGroup(){
+                this.isEditingGroup = true;
+                axios.put(editingGroup.urls.update, this.editGroupData).then(response=> {
+                    this.isEditingGroup = false;
                     if (response.data.status == true) {
                         window.location.href = '/user-management/group';
                     }
                 }).catch(error=> {
-                    this.isCreatingGroup = false;
+                    this.isEditingGroup = false;
                     if (error.response && error.response.status == 422 && error.response.data) {
                         this.errors = error.response.data;
                     }
@@ -79,13 +96,12 @@
             }
         },
         computed: {
-            createGroupData: function () {
-                var data = {
+            editGroupData: function () {
+                return {
                     name: this.name,
                     display_name: this.displayName,
                     description: this.description,
                 };
-                return data;
             }
         }
     }

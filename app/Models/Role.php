@@ -13,5 +13,7 @@ use IvanCLI\UM\UMRole;
 
 class Role extends UMRole 
 {
-
+    protected $fillable = [
+        'name', 'display_name', 'description'
+    ];
 }

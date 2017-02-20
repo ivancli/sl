@@ -37,6 +37,8 @@ mix
     /* group */
     .js('resources/assets/js/app/user_management/group/index.js', 'public/js/app/group')
     .js('resources/assets/js/app/user_management/group/create.js', 'public/js/app/group')
+    .js('resources/assets/js/app/user_management/group/edit.js', 'public/js/app/group')
+    .js('resources/assets/js/app/user_management/group/show.js', 'public/js/app/group')
 
 
     .sass('resources/assets/sass/app.scss', 'public/css')

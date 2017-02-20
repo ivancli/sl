@@ -13,6 +13,10 @@ use IvanCLI\UM\UMGroup;
 
 class Group extends UMGroup
 {
+    protected $fillable = [
+        'name', 'display_name', 'description'
+    ];
+
     protected $appends = [
         'numberOfUsers', 'urls'
     ];

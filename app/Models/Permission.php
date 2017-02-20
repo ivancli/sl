@@ -13,5 +13,7 @@ use IvanCLI\UM\UMPermission;
 
 class Permission extends UMPermission
 {
-
+    protected $fillable = [
+        'name', 'display_name', 'description'
+    ];
 }
