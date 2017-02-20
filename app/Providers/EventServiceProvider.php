@@ -76,6 +76,54 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\UserManagement\User\AfterUpdate' => [],
         'App\Events\UserManagement\User\BeforeDestroy' => [],
         'App\Events\UserManagement\User\AfterDestroy' => [],
+
+        /* group */
+        'App\Events\UserManagement\Group\BeforeIndex' => [],
+        'App\Events\UserManagement\Group\AfterIndex' => [],
+        'App\Events\UserManagement\Group\BeforeShow' => [],
+        'App\Events\UserManagement\Group\AfterShow' => [],
+        'App\Events\UserManagement\Group\BeforeCreate' => [],
+        'App\Events\UserManagement\Group\AfterCreate' => [],
+        'App\Events\UserManagement\Group\BeforeStore' => [],
+        'App\Events\UserManagement\Group\AfterStore' => [],
+        'App\Events\UserManagement\Group\BeforeEdit' => [],
+        'App\Events\UserManagement\Group\AfterEdit' => [],
+        'App\Events\UserManagement\Group\BeforeUpdate' => [],
+        'App\Events\UserManagement\Group\AfterUpdate' => [],
+        'App\Events\UserManagement\Group\BeforeDestroy' => [],
+        'App\Events\UserManagement\Group\AfterDestroy' => [],
+
+        /* role */
+        'App\Events\UserManagement\Role\BeforeIndex' => [],
+        'App\Events\UserManagement\Role\AfterIndex' => [],
+        'App\Events\UserManagement\Role\BeforeShow' => [],
+        'App\Events\UserManagement\Role\AfterShow' => [],
+        'App\Events\UserManagement\Role\BeforeCreate' => [],
+        'App\Events\UserManagement\Role\AfterCreate' => [],
+        'App\Events\UserManagement\Role\BeforeStore' => [],
+        'App\Events\UserManagement\Role\AfterStore' => [],
+        'App\Events\UserManagement\Role\BeforeEdit' => [],
+        'App\Events\UserManagement\Role\AfterEdit' => [],
+        'App\Events\UserManagement\Role\BeforeUpdate' => [],
+        'App\Events\UserManagement\Role\AfterUpdate' => [],
+        'App\Events\UserManagement\Role\BeforeDestroy' => [],
+        'App\Events\UserManagement\Role\AfterDestroy' => [],
+
+        /* permission */
+        'App\Events\UserManagement\Permission\BeforeIndex' => [],
+        'App\Events\UserManagement\Permission\AfterIndex' => [],
+        'App\Events\UserManagement\Permission\BeforeShow' => [],
+        'App\Events\UserManagement\Permission\AfterShow' => [],
+        'App\Events\UserManagement\Permission\BeforeCreate' => [],
+        'App\Events\UserManagement\Permission\AfterCreate' => [],
+        'App\Events\UserManagement\Permission\BeforeStore' => [],
+        'App\Events\UserManagement\Permission\AfterStore' => [],
+        'App\Events\UserManagement\Permission\BeforeEdit' => [],
+        'App\Events\UserManagement\Permission\AfterEdit' => [],
+        'App\Events\UserManagement\Permission\BeforeUpdate' => [],
+        'App\Events\UserManagement\Permission\AfterUpdate' => [],
+        'App\Events\UserManagement\Permission\BeforeDestroy' => [],
+        'App\Events\UserManagement\Permission\AfterDestroy' => [],
     ];
 
     protected $subscribe = [
@@ -101,6 +149,12 @@ class EventServiceProvider extends ServiceProvider
          */
         /* user */
         'App\Listeners\UserManagement\UserControllerEventSubscriber',
+        /* group */
+        'App\Listeners\UserManagement\GroupControllerEventSubscriber',
+        /* role */
+        'App\Listeners\UserManagement\RoleControllerEventSubscriber',
+        /* permission */
+        'App\Listeners\UserManagement\PermissionControllerEventSubscriber',
     ];
 
     /**

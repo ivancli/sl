@@ -41,6 +41,8 @@ class UserRepository implements UserContract
             $builder->orWhere('first_name', 'LIKE', "%{$key}%");
             $builder->orWhere('last_name', 'LIKE', "%{$key}%");
             $builder->orWhere('email', 'LIKE', "%{$key}%");
+            $builder->orWhere('created_at', 'LIKE', "%{$key}%");
+            $builder->orWhere('updated_at', 'LIKE', "%{$key}%");
         }
         $users = $builder->paginate($length);
         if ($users->count() == 0) {

@@ -29,10 +29,14 @@ mix
     .js('resources/assets/js/app/report/index.js', 'public/js/app/report')
 
     /* user management */
+    /* user */
     .js('resources/assets/js/app/user_management/user/index.js', 'public/js/app/user')
     .js('resources/assets/js/app/user_management/user/create.js', 'public/js/app/user')
     .js('resources/assets/js/app/user_management/user/edit.js', 'public/js/app/user')
     .js('resources/assets/js/app/user_management/user/show.js', 'public/js/app/user')
+    /* group */
+    .js('resources/assets/js/app/user_management/group/index.js', 'public/js/app/group')
+    .js('resources/assets/js/app/user_management/group/create.js', 'public/js/app/group')
 
 
     .sass('resources/assets/sass/app.scss', 'public/css')

@@ -4,7 +4,7 @@
 import Vue from 'vue';
 
 Vue.filter('formatDateTime', function (preformat_date, format) {
-    if (typeof preformat_date == 'undefined' || typeof format == 'undefined') {
+    if (typeof preformat_date == 'undefined' || typeof format == 'undefined' || preformat_date == null) {
         return null;
     }
     var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];

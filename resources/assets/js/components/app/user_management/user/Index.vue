@@ -1,4 +1,3 @@
-\
 <template>
     <!-- Main content -->
     <section class="content">
@@ -33,11 +32,20 @@
                                 <th :class="orderByClass('first_name')" @click="setOrdering('first_name')">First name</th>
                                 <th :class="orderByClass('last_name')" @click="setOrdering('last_name')">Last name</th>
                                 <th :class="orderByClass('email')" @click="setOrdering('email')">Email</th>
+                                <th :class="orderByClass('created_at')" @click="setOrdering('created_at')">Created at</th>
+                                <th :class="orderByClass('updated_at')" @click="setOrdering('updated_at')">Updated at</th>
                                 <th></th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody v-if="users.length > 0">
                             <single-user-row v-for="user in users" :current-user="user" @reloadUsers="loadUsers(currentPageUrl)"></single-user-row>
+                            </tbody>
+                            <tbody v-else>
+                            <tr>
+                                <td colspan="7" class="text-center">
+                                    No user data available
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>

@@ -4,6 +4,8 @@
         <td v-text="user.first_name"></td>
         <td v-text="user.last_name"></td>
         <td v-text="user.email"></td>
+        <td>{{ user.created_at | formatDateTime(datetimeFormat) }}</td>
+        <td>{{ user.updated_at | formatDateTime(datetimeFormat) }}</td>
         <td class="text-center">
             <a :href="user.urls.show" class="text-muted">
                 <i class="glyphicon glyphicon-search"></i>
@@ -25,6 +27,8 @@
 <script>
     import deleteConfirmation from '../../../fragments/modals/DeleteConfirmation.vue';
     import loading from '../../../Loading.vue';
+
+    import formatDateTime from '../../../../filters/formatDateTime';
 
     export default {
         components: {
@@ -57,7 +61,16 @@
         computed: {
             user: function () {
                 return this.currentUser;
-            }
+            },
+            dateFormat(){
+                return user.allPreferences.DATE_FORMAT;
+            },
+            timeFormat(){
+                return user.allPreferences.TIME_FORMAT;
+            },
+            datetimeFormat(){
+                return this.dateFormat + ' ' + this.timeFormat;
+            },
         },
         methods: {
             onClickDeleteUser(){

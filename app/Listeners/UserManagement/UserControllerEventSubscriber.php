@@ -83,65 +83,65 @@ class UserControllerEventSubscriber
     {
         $events->listen(
             'App\Events\UserManagement\User\Index\Before',
-            'App\Listeners\Product\UserControllerEventSubscriber@onBeforeIndex'
+            'App\Listeners\UserManagement\UserControllerEventSubscriber@onBeforeIndex'
         );
         $events->listen(
             'App\Events\UserManagement\User\Index\After',
-            'App\Listeners\Product\UserControllerEventSubscriber@onAfterIndex'
+            'App\Listeners\UserManagement\UserControllerEventSubscriber@onAfterIndex'
         );
 
         $events->listen(
             'App\Events\UserManagement\User\Show\Before',
-            'App\Listeners\Product\UserControllerEventSubscriber@onBeforeShow'
+            'App\Listeners\UserManagement\UserControllerEventSubscriber@onBeforeShow'
         );
         $events->listen(
             'App\Events\UserManagement\User\Show\After',
-            'App\Listeners\Product\UserControllerEventSubscriber@onAfterShow'
+            'App\Listeners\UserManagement\UserControllerEventSubscriber@onAfterShow'
         );
 
         $events->listen(
             'App\Events\UserManagement\User\Create\Before',
-            'App\Listeners\Product\UserControllerEventSubscriber@onBeforeCreate'
+            'App\Listeners\UserManagement\UserControllerEventSubscriber@onBeforeCreate'
         );
         $events->listen(
             'App\Events\UserManagement\User\Create\After',
-            'App\Listeners\Product\UserControllerEventSubscriber@onAfterCreate'
+            'App\Listeners\UserManagement\UserControllerEventSubscriber@onAfterCreate'
         );
 
         $events->listen(
             'App\Events\UserManagement\User\Store\Before',
-            'App\Listeners\Product\UserControllerEventSubscriber@onBeforeStore'
+            'App\Listeners\UserManagement\UserControllerEventSubscriber@onBeforeStore'
         );
         $events->listen(
             'App\Events\UserManagement\User\Store\After',
-            'App\Listeners\Product\UserControllerEventSubscriber@onAfterStore'
+            'App\Listeners\UserManagement\UserControllerEventSubscriber@onAfterStore'
         );
 
         $events->listen(
             'App\Events\UserManagement\User\Edit\Before',
-            'App\Listeners\Product\UserControllerEventSubscriber@onBeforeEdit'
+            'App\Listeners\UserManagement\UserControllerEventSubscriber@onBeforeEdit'
         );
         $events->listen(
             'App\Events\UserManagement\User\Edit\After',
-            'App\Listeners\Product\UserControllerEventSubscriber@onAfterEdit'
+            'App\Listeners\UserManagement\UserControllerEventSubscriber@onAfterEdit'
         );
 
         $events->listen(
             'App\Events\UserManagement\User\Update\Before',
-            'App\Listeners\Product\UserControllerEventSubscriber@onBeforeUpdate'
+            'App\Listeners\UserManagement\UserControllerEventSubscriber@onBeforeUpdate'
         );
         $events->listen(
             'App\Events\UserManagement\User\Update\After',
-            'App\Listeners\Product\UserControllerEventSubscriber@onAfterUpdate'
+            'App\Listeners\UserManagement\UserControllerEventSubscriber@onAfterUpdate'
         );
 
         $events->listen(
             'App\Events\UserManagement\User\Destroy\Before',
-            'App\Listeners\Product\UserControllerEventSubscriber@onBeforeDestroy'
+            'App\Listeners\UserManagement\UserControllerEventSubscriber@onBeforeDestroy'
         );
         $events->listen(
             'App\Events\UserManagement\User\Destroy\After',
-            'App\Listeners\Product\UserControllerEventSubscriber@onAfterDestroy'
+            'App\Listeners\UserManagement\UserControllerEventSubscriber@onAfterDestroy'
         );
     }
 }

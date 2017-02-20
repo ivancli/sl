@@ -34,5 +34,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Contracts\Repositories\Product\UrlContract', 'App\Repositories\Product\UrlRepository');
 
         $this->app->bind('App\Contracts\Repositories\UserManagement\UserContract', 'App\Repositories\UserManagement\UserRepository');
+        $this->app->bind('App\Contracts\Repositories\UserManagement\GroupContract', 'App\Repositories\UserManagement\GroupRepository');
+
     }
 }

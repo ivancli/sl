@@ -1,15 +1,17 @@
 {
-  "/js/app/product/index.js": "/js/app/product/index.0aa673a1cfbab8e01a81.js",
-  "/js/app/user/index.js": "/js/app/user/index.b1db96dccaf270914c23.js",
+  "/js/app/product/index.js": "/js/app/product/index.0507bf93766acd4be73b.js",
+  "/js/app/user/index.js": "/js/app/user/index.5ae6bf43d03b00a4db5f.js",
+  "/js/app/group/index.js": "/js/app/group/index.510cd34459f9275d77d1.js",
+  "/js/app/user/show.js": "/js/app/user/show.8af58b90a5d6565b8294.js",
   "/js/app/user/edit.js": "/js/app/user/edit.654cf11b1af01ade189f.js",
   "/js/app/user/create.js": "/js/app/user/create.8a1109a07c974a462f92.js",
+  "/js/app/group/create.js": "/js/app/group/create.944c5b46cd927bbda449.js",
   "/js/app/report/index.js": "/js/app/report/index.870ed76965ab396af752.js",
   "/js/app/alert/index.js": "/js/app/alert/index.8b2a9f95b93582fc73f0.js",
   "/js/auth/register.js": "/js/auth/register.231d65a343e8469ed5f0.js",
   "/js/auth/login.js": "/js/auth/login.afb8298c568714d08624.js",
   "/js/auth/forgot.js": "/js/auth/forgot.89b21b60ee2b0e3a919a.js",
   "/js/app.js": "/js/app.bbd513c67050673bdab4.js",
-  "/css/app.css": "/css/app.8d8cc682b686993c87fa.css",
-  "/css/auth.css": "/css/auth.8d8cc682b686993c87fa.css",
-  "/js/app/user/show.js": "/js/app/user/show.e3111bf0cce7e881593a.js"
+  "/css/app.css": "/css/app.6e0dceff22559d0ac698.css",
+  "/css/auth.css": "/css/auth.6e0dceff22559d0ac698.css"
 }

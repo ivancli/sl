@@ -42,4 +42,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     /*user management*/
     Route::resource('user-management/user', 'UserManagement\UserController');
+    Route::resource('user-management/group', 'UserManagement\GroupController');
+    Route::resource('user-management/role', 'UserManagement\RoleController');
+    Route::resource('user-management/permission', 'UserManagement\PermissionController');
 });
