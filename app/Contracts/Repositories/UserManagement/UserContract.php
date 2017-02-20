@@ -13,6 +13,14 @@ interface UserContract
 {
 
     /**
+     * Load all users and filter them
+     * @param array $data
+     * @return mixed
+     */
+    public function filterAll(Array $data = []);
+
+    /**
+     * Load all users
      * @return mixed
      */
     public function all();

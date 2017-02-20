@@ -1,6 +1,7 @@
 /**
- * Created by ivan.li on 2/14/2017.
+ * Created by ivan.li on 2/20/2017.
  */
+
 import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);

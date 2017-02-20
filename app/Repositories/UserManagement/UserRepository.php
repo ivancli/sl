@@ -3,6 +3,7 @@ namespace App\Repositories\UserManagement;
 
 use App\Contracts\Repositories\UserManagement\UserContract;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 /**
  * Created by PhpStorm.
@@ -13,10 +14,41 @@ use App\Models\User;
 class UserRepository implements UserContract
 {
     var $user;
+    var $request;
 
-    public function __construct(User $user)
+    public function __construct(User $user, Request $request)
     {
         $this->user = $user;
+
+        $this->request = $request;
+    }
+
+    /**
+     * Load all users and filter them
+     * @param $data
+     * @return mixed
+     */
+    public function filterAll(Array $data = [])
+    {
+        $length = array_get($data, 'per_page', 25);
+        $orderByColumn = array_get($data, 'orderBy', 'id');
+        $orderByDirection = array_get($data, 'direction', 'asc');
+        $builder = $this->user;
+        $builder = $builder->orderBy($orderByColumn, $orderByDirection);
+        if (array_has($data, 'key') && !empty(array_get($data, 'key'))) {
+            $key = array_get($data, 'key');
+            $builder->where('id', 'LIKE', "%{$key}%");
+            $builder->orWhere('first_name', 'LIKE', "%{$key}%");
+            $builder->orWhere('last_name', 'LIKE', "%{$key}%");
+            $builder->orWhere('email', 'LIKE', "%{$key}%");
+        }
+        $users = $builder->paginate($length);
+        if ($users->count() == 0) {
+            $page = 1;
+            $this->request->merge(compact(['page']));
+            $users = $builder->paginate($length);
+        }
+        return $users;
     }
 
     /**
@@ -67,7 +99,10 @@ class UserRepository implements UserContract
     public function update($user_id, Array $data)
     {
         $user = $this->get($user_id);
-        $data = array_except($data, ['password']);
+        $data = array_except($data, ['email']);
+        if (array_has($data, 'password') && !empty(array_get($data, 'password'))) {
+            array_set($data, 'password', bcrypt(array_get($data, 'password')));
+        }
         $user->update($data);
         return $user;
     }

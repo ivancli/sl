@@ -163,6 +163,9 @@
 </template>
 
 <script>
+    /* TODO top level active class needs to be refined */
+    /* TODO now active top level item caret does not rotate while collapsing its child-list */
+
     export default {
         data(){
             return {
@@ -234,6 +237,19 @@
 
     .skin-black-light .treeview-menu > li.active > a, .skin-black-light .treeview-menu > li > a:hover {
         color: #fff;
+    }
+
+    .sidebar-menu li.treeview.active > a > .fa-caret-down, .sidebar-menu li.treeview.active > a > .pull-right-container > .fa-caret-down {
+        transform: rotate(-180deg);
+        -moz-transform: rotate(-180deg);
+        -ms-transform: rotate(-180deg);
+        -o-transform: rotate(-180deg);
+        -webkit-transform: rotate(-180deg);
+        transition: transform 550ms ease;
+        -moz-transition: -moz-transform 550ms ease;
+        -ms-transition: -ms-transform 550ms ease;
+        -o-transition: -o-transform 550ms ease;
+        -webkit-transition: -webkit-transform 550ms ease;
     }
 
     @media (min-width: 768px) {

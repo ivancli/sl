@@ -9,7 +9,7 @@
 
         <div class="input-group sl-input-group" v-show="editingSiteURL">
             <input type="text" placeholder="Product Page URL" v-model="newSiteURL" autocomplete="off"
-                   class="form-control sl-form-control txt-site-url input-sm" ref="txt_edit_site" tabindex="-1">
+                   class="form-control sl-form-control txt-edit-site-url input-sm" ref="txt_edit_site" tabindex="-1">
             <span class="input-group-btn input-group-sm">
                 <button class="btn btn-primary btn-flat btn-sm" @click.prevent="editSite">
                     <i class="fa fa-check"></i>
@@ -108,7 +108,7 @@
         cursor: pointer;
     }
 
-    input.form-control.txt-site-url {
+    input.form-control.txt-edit-site-url {
         width: 135px;
     }
 </style>

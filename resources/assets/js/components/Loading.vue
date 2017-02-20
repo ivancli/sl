@@ -40,7 +40,7 @@
         margin-top: -50px;
         width: 100px;
         height: 100px;
-        background-image: url('../../images/spinner.png');
+        background-image: url('/images/spinner.png');
         background-size: 100px 3600px;
         -webkit-animation: loading-v 1s steps(36) infinite;
         z-index: 2000;

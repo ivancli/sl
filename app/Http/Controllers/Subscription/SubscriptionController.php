@@ -11,7 +11,7 @@ namespace App\Http\Controllers\Subscription;
 
 use App\Contracts\Repositories\Subscription\ProductContract;
 use App\Contracts\Repositories\Subscription\SubscriptionContract;
-use App\Contracts\Repositories\User\UserContract;
+use App\Contracts\Repositories\UserManagement\UserContract;
 use App\Exceptions\JsonDecodeException;
 use App\Exceptions\Subscription\SubscriptionNotFoundException;
 use App\Http\Controllers\Controller;

@@ -16,7 +16,7 @@ class CreateSitesTable extends Migration
         Schema::create('sites', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('product_id')->unsigned()->nullable();
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('set null');
             $table->integer('url_id')->unsigned()->nullable();
             $table->foreign('url_id')->references('id')->on('urls');
             $table->integer('item_id')->unsigned()->nullable();

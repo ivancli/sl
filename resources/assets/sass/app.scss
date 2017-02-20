@@ -32,3 +32,8 @@ td.shrink, th.shrink {
 .text-light {
   color: $light-grey;
 }
+
+.sl-form-control {
+  width: auto;
+  display: inline-block;
+}

@@ -50,7 +50,7 @@ class ProductController extends Controller
         }
         event(new AfterIndex());
         if ($this->request->ajax()) {
-            return new JsonResponse(compact(['status', 'products']));
+            return compact(['status', 'products']);
         } else {
             return view('app.product.index');
         }
@@ -78,7 +78,7 @@ class ProductController extends Controller
 
         event(new AfterStore($product));
         if ($this->request->ajax()) {
-            return new JsonResponse(compact(['product', 'status']));
+            return compact(['product', 'status']);
         } else {
             return redirect()->route('product');
         }
@@ -131,7 +131,7 @@ class ProductController extends Controller
 
         event(new AfterUpdate($product));
         if ($this->request->ajax()) {
-            return new JsonResponse(compact(['product', 'status']));
+            return compact(['product', 'status']);
         } else {
             return redirect()->route('product');
         }

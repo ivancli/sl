@@ -80,6 +80,7 @@
                     }
                 }).catch(error=> {
                     this.isLoggingIn = false;
+                    this.password = '';
                     if (error.response && error.response.status == 422 && error.response.data) {
                         this.errors = error.response.data;
                     }

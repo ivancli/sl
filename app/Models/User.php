@@ -29,7 +29,7 @@ class User extends Authenticatable
     ];
 
     protected $appends = [
-        'fullName', 'allPreferences',
+        'fullName', 'allPreferences', 'urls'
     ];
 
     /**
@@ -94,6 +94,22 @@ class User extends Authenticatable
     {
         $preferences = $this->preferences->pluck('value', 'element')->all();
         return $preferences;
+    }
+
+    /**
+     * an attribute with an array of routes related to this object
+     * @return array
+     */
+    public function getUrlsAttribute()
+    {
+        return array(
+            'index' => route('user.index'),
+            'show' => route('user.show', $this->getKey()),
+            'store' => route('user.store'),
+            'edit' => route('user.edit', $this->getKey()),
+            'update' => route('user.update', $this->getKey()),
+            'delete' => route('user.destroy', $this->getKey()),
+        );
     }
 
     /*----------------------------------------------------------------------*/

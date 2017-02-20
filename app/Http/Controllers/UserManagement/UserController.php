@@ -18,6 +18,8 @@ use App\Events\UserManagement\User\BeforeShow;
 use App\Events\UserManagement\User\BeforeStore;
 use App\Events\UserManagement\User\BeforeUpdate;
 use App\Http\Controllers\Controller;
+use App\Validators\UserManagement\User\StoreValidator;
+use App\Validators\UserManagement\User\UpdateValidator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -43,13 +45,13 @@ class UserController extends Controller
     {
         event(new BeforeIndex());
 
-        $users = $this->userRepo->all();
+        $users = $this->userRepo->filterAll($this->request->all());
         $status = true;
 
         event(new AfterIndex());
 
         if ($this->request->ajax()) {
-            return new JsonResponse(compact('users', 'status'));
+            return compact('users', 'status');
         } else {
             return view('app.user_management.user.index');
         }
@@ -65,57 +67,78 @@ class UserController extends Controller
         event(new BeforeCreate());
 
         event(new AfterCreate());
+        return view('app.user_management.user.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
+     * @param StoreValidator $storeValidator
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(StoreValidator $storeValidator)
     {
         event(new BeforeStore());
 
-        event(new AfterStore());
+        $storeValidator->validate($this->request->all());
+        $user = $this->userRepo->store($this->request->all());
+        $status = true;
+
+        event(new AfterStore($user));
+        return compact(['user', 'status']);
     }
 
     /**
      * Display the specified resource.
      *
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function show($id)
     {
-        event(new BeforeShow());
-
-        event(new AfterShow());
+        $user = $this->userRepo->get($id);
+        event(new BeforeShow($user));
+        $status = true;
+        event(new AfterShow($user));
+        if ($this->request->ajax()) {
+            return compact(['status', 'user']);
+        } else {
+            return view('app.user_management.user.show')->with(compact(['status', 'user']));
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function edit($id)
     {
-        event(new BeforeEdit());
-
-        event(new AfterEdit());
+        $user = $this->userRepo->get($id);
+        event(new BeforeEdit($user));
+        $status = true;
+        event(new AfterEdit($user));
+        return view('app.user_management.user.edit')->with(compact(['user', 'status']));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  int $id
+     * @param UpdateValidator $updateValidator
      * @return \Illuminate\Http\Response
      */
-    public function update($id)
+    public function update($id, UpdateValidator $updateValidator)
     {
-        event(new BeforeUpdate());
-
-        event(new AfterUpdate());
+        $user = $this->userRepo->get($id);
+        event(new BeforeUpdate($user));
+        $this->request->merge(compact(['id']));
+        $updateValidator->validate($this->request->all());
+        $user = $this->userRepo->update($id, $this->request->all());
+        $status = true;
+        event(new AfterUpdate($user));
+        return compact(['user', 'status']);
     }
 
     /**
@@ -126,8 +149,11 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        event(new BeforeDestroy());
-
+        $user = $this->userRepo->get($id);
+        event(new BeforeDestroy($user));
+        $this->userRepo->destroy($id);
+        $status = true;
         event(new AfterDestroy());
+        return compact(['status']);
     }
 }

@@ -133,4 +133,16 @@
         display: inline-block;
         vertical-align: middle;
     }
+
+    .add-item-block .add-item-controls input {
+        font-size: 18px;
+        padding-right: 300px;
+    }
+
+    @media (max-width: 991px) {
+        .add-item-block .add-item-controls input {
+            padding-right: 100px;
+        }
+    }
+
 </style>

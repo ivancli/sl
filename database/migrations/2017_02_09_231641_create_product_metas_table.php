@@ -16,7 +16,7 @@ class CreateProductMetasTable extends Migration
         Schema::create('product_metas', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('product_id')->unsigned();
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->string('sku')->nullable();
             $table->string('brand')->nullable();
             $table->string('supplier')->nullable();
