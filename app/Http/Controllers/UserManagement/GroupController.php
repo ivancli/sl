@@ -18,6 +18,7 @@ use App\Events\UserManagement\Group\BeforeShow;
 use App\Events\UserManagement\Group\BeforeStore;
 use App\Events\UserManagement\Group\BeforeUpdate;
 use App\Http\Controllers\Controller;
+use App\Models\Group;
 use App\Validators\UserManagement\Group\StoreValidator;
 use App\Validators\UserManagement\Group\UpdateValidator;
 use Illuminate\Http\Request;
@@ -87,12 +88,11 @@ class GroupController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param Group $group
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function show($id)
+    public function show(Group $group)
     {
-        $group = $this->groupRepo->get($id);
         event(new BeforeShow($group));
         $status = true;
         event(new AfterShow($group));
@@ -106,12 +106,11 @@ class GroupController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param Group $group
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function edit($id)
+    public function edit(Group $group)
     {
-        $group = $this->groupRepo->get($id);
         event(new BeforeEdit($group));
         $status = true;
         event(new AfterEdit($group));
@@ -121,17 +120,17 @@ class GroupController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int $id
+     * @param Group $group
      * @param UpdateValidator $updateValidator
      * @return \Illuminate\Http\Response
      */
-    public function update($id, UpdateValidator $updateValidator)
+    public function update(Group $group, UpdateValidator $updateValidator)
     {
-        $group = $this->groupRepo->get($id);
         event(new BeforeUpdate($group));
+        $id = $group->getKey();
         $this->request->merge(compact(['id']));
         $updateValidator->validate($this->request->all());
-        $group = $this->groupRepo->update($id, $this->request->all());
+        $group = $this->groupRepo->update($group, $this->request->all());
         $status = true;
         event(new AfterUpdate($group));
         return compact(['group', 'status']);
@@ -140,14 +139,13 @@ class GroupController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param Group $group
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Group $group)
     {
-        $group = $this->groupRepo->get($id);
         event(new BeforeDestroy($group));
-        $this->groupRepo->destroy($id);
+        $this->groupRepo->destroy($group);
         $status = true;
         event(new AfterDestroy());
 

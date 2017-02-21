@@ -94,13 +94,12 @@ class UserRepository implements UserContract
 
     /**
      * Update existing user
-     * @param $user_id
+     * @param User $user
      * @param array $data
      * @return mixed
      */
-    public function update($user_id, Array $data)
+    public function update(User $user, Array $data)
     {
-        $user = $this->get($user_id);
         $data = array_except($data, ['email']);
         if (array_has($data, 'password') && !empty(array_get($data, 'password'))) {
             array_set($data, 'password', bcrypt(array_get($data, 'password')));
@@ -111,12 +110,11 @@ class UserRepository implements UserContract
 
     /**
      * Remove an existing user
-     * @param $user_id
+     * @param User $user
      * @return mixed
      */
-    public function destroy($user_id)
+    public function destroy(User $user)
     {
-        $user = $this->get($user_id);
         $user->delete();
     }
 }

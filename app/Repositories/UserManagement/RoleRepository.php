@@ -58,7 +58,7 @@ class RoleRepository implements RoleContract
      */
     public function all()
     {
-        // TODO: Implement all() method.
+        return $this->role->all();
     }
 
     /**
@@ -69,7 +69,11 @@ class RoleRepository implements RoleContract
      */
     public function get($role_id, $throw = true)
     {
-        // TODO: Implement get() method.
+        if ($throw) {
+            return $this->role->findOrFail($role_id);
+        } else {
+            return $this->role->find($role_id);
+        }
     }
 
     /**
@@ -79,26 +83,32 @@ class RoleRepository implements RoleContract
      */
     public function store(Array $data)
     {
-        // TODO: Implement store() method.
+        $role = new $this->role;
+        $role->name = array_get($data, 'name');
+        $role->display_name = array_get($data, 'display_name');
+        $role->description = array_get($data, 'description');
+        $role->save();
+        return $role;
     }
 
     /**
      * Update existing role
-     * @param $role_id
+     * @param Role $role
      * @param array $data
      * @return Role
      */
-    public function update($role_id, Array $data)
+    public function update(Role $role, Array $data)
     {
-        // TODO: Implement update() method.
+        $role->update($data);
+        return $role;
     }
 
     /**
      * Remove an existing role
-     * @param $role_id
+     * @param Role $role
      */
-    public function destroy($role_id)
+    public function destroy(Role $role)
     {
-        // TODO: Implement destroy() method.
+        $role->delete();
     }
 }

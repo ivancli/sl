@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title', 'Users - SpotLite')
+@section('title', 'Roles - SpotLite')
 
 @section('links')
     <link rel="stylesheet" href="{{mix('/css/app.css')}}">
@@ -13,7 +13,7 @@
             <default-sidebar slot="default-sidebar"></default-sidebar>
             <default-content slot="default-content">
                 <content-header slot="content-header">
-                    <span slot="content-header-title">Update User</span>
+                    <span slot="content-header-title">Update Role</span>
                 </content-header>
                 <content-body slot="content-body"></content-body>
             </default-content>
@@ -23,7 +23,7 @@
 
 @section('scripts')
     <script>
-        var editingUser = JSON.parse('{!! addslashes($user->toJson()) !!}');
+        var editingRole = JSON.parse('{!! addslashes($role->toJson()) !!}');
     </script>
-    <script src="{{mix('/js/app/user/edit.js')}}"></script>
+    <script src="{{mix('/js/app/role/edit.js')}}"></script>
 @stop

@@ -18,6 +18,9 @@ use App\Events\UserManagement\Role\BeforeShow;
 use App\Events\UserManagement\Role\BeforeStore;
 use App\Events\UserManagement\Role\BeforeUpdate;
 use App\Http\Controllers\Controller;
+use App\Models\Role;
+use App\Validators\UserManagement\Role\StoreValidator;
+use App\Validators\UserManagement\Role\UpdateValidator;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
@@ -60,64 +63,92 @@ class RoleController extends Controller
     {
         event(new BeforeCreate());
         event(new AfterCreate());
+
+        return view('app.user_management.role.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
+     * @param StoreValidator $storeValidator
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(StoreValidator $storeValidator)
     {
         event(new BeforeStore());
-        event(new AfterStore());
+        $storeValidator->validate($this->request->all());
+        $role = $this->roleRepo->store($this->request->all());
+        $status = true;
+        event(new AfterStore($role));
+        return compact(['status', 'role']);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param Role $role
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function show($id)
+    public function show(Role $role)
     {
-        event(new BeforeShow());
-        event(new AfterShow());
+        event(new BeforeShow($role));
+        $status = true;
+        event(new AfterShow($role));
+
+        if ($this->request->ajax()) {
+            return compact(['status', 'role']);
+        } else {
+            return view('app.user_management.role.show')->with(compact(['status', 'role']));
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param Role $role
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function edit($id)
+    public function edit(Role $role)
     {
-        event(new BeforeEdit());
-        event(new AfterEdit());
+        event(new BeforeEdit($role));
+        $status = true;
+        event(new AfterEdit($role));
+        return view('app.user_management.role.edit')->with(compact(['role', 'status']));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  int $id
+     * @param Role $role
+     * @param UpdateValidator $updateValidator
      * @return \Illuminate\Http\Response
+     * @internal param int $id
      */
-    public function update($id)
+    public function update(Role $role, UpdateValidator $updateValidator)
     {
-        event(new BeforeUpdate());
-        event(new AfterUpdate());
+        event(new BeforeUpdate($role));
+        $id = $role->getKey();
+        $this->request->merge(compact(['id']));
+        $updateValidator->validate($this->request->all());
+        $role = $this->roleRepo->update($role, $this->request->all());
+        $status = true;
+        event(new AfterUpdate($role));
+        return compact(['role', 'status']);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param Role $role
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Role $role)
     {
-        event(new BeforeDestroy());
+        event(new BeforeDestroy($role));
+        $this->roleRepo->destroy($role);
+        $status = true;
         event(new AfterDestroy());
+
+        return compact(['status']);
     }
 }

@@ -94,24 +94,22 @@ class GroupRepository implements GroupContract
 
     /**
      * Update existing group
-     * @param $group_id
+     * @param Group $group
      * @param array $data
      * @return Group
      */
-    public function update($group_id, Array $data)
+    public function update(Group $group, Array $data)
     {
-        $group = $this->get($group_id);
         $group->update($data);
         return $group;
     }
 
     /**
      * Remove an existing group
-     * @param $group_id
+     * @param Group $group
      */
-    public function destroy($group_id)
+    public function destroy(Group $group)
     {
-        $group = $this->get($group_id);
         $group->delete();
     }
 }

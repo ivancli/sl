@@ -52,7 +52,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <a href="/user-management/role/create" class="btn btn-primary btn-sm btn-flat">CREATE NEW GROUP</a>
+                        <a href="/user-management/role/create" class="btn btn-primary btn-sm btn-flat">CREATE NEW ROLE</a>
                     </div>
                     <div class="col-sm-6 text-right">
                         <button class="btn btn-default btn-sm btn-flat" @click="loadRoles" :disabled="paginationData.current_page == 1">FIRST</button>

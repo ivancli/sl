@@ -43,16 +43,16 @@ interface RoleContract
 
     /**
      * Update existing role
-     * @param $role_id
+     * @param Role $role
      * @param array $data
      * @return Role
      */
-    public function update($role_id, Array $data);
+    public function update(Role $role, Array $data);
 
     /**
      * Remove an existing role
-     * @param $role_id
+     * @param Role $role
      * @return
      */
-    public function destroy($role_id);
+    public function destroy(Role $role);
 }

@@ -23,7 +23,7 @@
 
 @section('scripts')
     <script>
-        var editingGroup = JSON.parse('{!! $group->toJson() !!}');
+        var editingGroup = JSON.parse('{!! addslashes($group->toJson()) !!}');
     </script>
     <script src="{{mix('/js/app/group/edit.js')}}"></script>
 @stop

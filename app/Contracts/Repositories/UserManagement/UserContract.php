@@ -42,15 +42,16 @@ interface UserContract
 
     /**
      * Update existing user
-     * @param $user_id
+     * @param User $user
      * @param array $data
      * @return mixed
      */
-    public function update($user_id, Array $data);
+    public function update(User $user, Array $data);
 
     /**
      * Remove an existing user
-     * @param $user_id
+     * @param User $user
+     * @return
      */
-    public function destroy($user_id);
+    public function destroy(User $user);
 }

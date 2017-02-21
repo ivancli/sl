@@ -43,15 +43,16 @@ interface GroupContract
 
     /**
      * Update existing group
-     * @param $group_id
+     * @param Group $group
      * @param array $data
      * @return Group
      */
-    public function update($group_id, Array $data);
+    public function update(Group $group, Array $data);
 
     /**
      * Remove an existing group
-     * @param $group_id
+     * @param Group $group
+     * @return
      */
-    public function destroy($group_id);
+    public function destroy(Group $group);
 }

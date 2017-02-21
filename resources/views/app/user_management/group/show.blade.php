@@ -23,7 +23,7 @@
 
 @section('scripts')
     <script>
-        var showingGroup = JSON.parse('{!! $group->toJson() !!}');
+        var showingGroup = JSON.parse('{!! addslashes($group->toJson()) !!}');
     </script>
     <script src="{{mix('/js/app/group/show.js')}}"></script>
 @stop

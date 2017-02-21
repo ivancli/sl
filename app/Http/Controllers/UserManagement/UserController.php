@@ -18,6 +18,7 @@ use App\Events\UserManagement\User\BeforeShow;
 use App\Events\UserManagement\User\BeforeStore;
 use App\Events\UserManagement\User\BeforeUpdate;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Validators\UserManagement\User\StoreValidator;
 use App\Validators\UserManagement\User\UpdateValidator;
 use Illuminate\Http\JsonResponse;
@@ -91,12 +92,11 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param User $user
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function show($id)
+    public function show(User $user)
     {
-        $user = $this->userRepo->get($id);
         event(new BeforeShow($user));
         $status = true;
         event(new AfterShow($user));
@@ -110,12 +110,12 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param User $user
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
+     * @internal param int $id
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        $user = $this->userRepo->get($id);
         event(new BeforeEdit($user));
         $status = true;
         event(new AfterEdit($user));
@@ -125,17 +125,18 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int $id
+     * @param User $user
      * @param UpdateValidator $updateValidator
      * @return \Illuminate\Http\Response
+     * @internal param int $id
      */
-    public function update($id, UpdateValidator $updateValidator)
+    public function update(User $user, UpdateValidator $updateValidator)
     {
-        $user = $this->userRepo->get($id);
         event(new BeforeUpdate($user));
+        $id = $user->getKey();
         $this->request->merge(compact(['id']));
         $updateValidator->validate($this->request->all());
-        $user = $this->userRepo->update($id, $this->request->all());
+        $user = $this->userRepo->update($user, $this->request->all());
         $status = true;
         event(new AfterUpdate($user));
         return compact(['user', 'status']);
@@ -144,14 +145,13 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param User $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        $user = $this->userRepo->get($id);
         event(new BeforeDestroy($user));
-        $this->userRepo->destroy($id);
+        $this->userRepo->destroy($user);
         $status = true;
         event(new AfterDestroy());
         return compact(['status']);

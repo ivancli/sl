@@ -39,6 +39,11 @@ mix
     .js('resources/assets/js/app/user_management/group/create.js', 'public/js/app/group')
     .js('resources/assets/js/app/user_management/group/edit.js', 'public/js/app/group')
     .js('resources/assets/js/app/user_management/group/show.js', 'public/js/app/group')
+    /* role */
+    .js('resources/assets/js/app/user_management/role/index.js', 'public/js/app/role')
+    .js('resources/assets/js/app/user_management/role/create.js', 'public/js/app/role')
+    .js('resources/assets/js/app/user_management/role/edit.js', 'public/js/app/role')
+    .js('resources/assets/js/app/user_management/role/show.js', 'public/js/app/role')
 
 
     .sass('resources/assets/sass/app.scss', 'public/css')

@@ -23,7 +23,7 @@
 
 @section('scripts')
     <script>
-        var showingUser = JSON.parse('{!! $user->toJson() !!}');
+        var showingUser = JSON.parse('{!! addslashes($user->toJson()) !!}');
     </script>
     <script src="{{mix('/js/app/user/show.js')}}"></script>
 @stop
