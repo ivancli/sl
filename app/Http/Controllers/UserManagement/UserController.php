@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\UserManagement;
 
+use App\Contracts\Repositories\UserManagement\RoleContract;
 use App\Contracts\Repositories\UserManagement\UserContract;
 use App\Events\UserManagement\User\AfterCreate;
 use App\Events\UserManagement\User\AfterDestroy;
@@ -27,14 +28,16 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     var $request;
-    var $userRepo;
+    var $userRepo, $roleRepo;
 
     public function __construct(Request $request,
-                                UserContract $userContract)
+                                UserContract $userContract,
+                                RoleContract $roleContract)
     {
         $this->request = $request;
 
         $this->userRepo = $userContract;
+        $this->roleRepo = $roleContract;
     }
 
     /**
@@ -46,7 +49,11 @@ class UserController extends Controller
     {
         event(new BeforeIndex());
 
-        $users = $this->userRepo->filterAll($this->request->all());
+        if (!$this->request->has('page')) {
+            $users = $this->userRepo->all();
+        } else {
+            $users = $this->userRepo->filterAll($this->request->all());
+        }
         $status = true;
 
         event(new AfterIndex());
@@ -83,6 +90,15 @@ class UserController extends Controller
 
         $storeValidator->validate($this->request->all());
         $user = $this->userRepo->store($this->request->all());
+
+        if ($this->request->has('role_ids')) {
+            $roles = array();
+            foreach ($this->request->get('role_ids') as $role_id) {
+                $role = $this->roleRepo->get($role_id);
+                $roles[] = $role;
+            }
+            $this->userRepo->updateRoles($user, $roles);
+        }
         $status = true;
 
         event(new AfterStore($user));
@@ -98,6 +114,7 @@ class UserController extends Controller
     public function show(User $user)
     {
         event(new BeforeShow($user));
+        $user->selectedRoles = $user->roles;
         $status = true;
         event(new AfterShow($user));
         if ($this->request->ajax()) {
@@ -137,6 +154,16 @@ class UserController extends Controller
         $this->request->merge(compact(['id']));
         $updateValidator->validate($this->request->all());
         $user = $this->userRepo->update($user, $this->request->all());
+
+        if ($this->request->has('role_ids')) {
+            $roles = array();
+            foreach ($this->request->get('role_ids') as $role_id) {
+                $role = $this->roleRepo->get($role_id);
+                $roles[] = $role;
+            }
+            $this->userRepo->updateRoles($user, $roles);
+        }
+
         $status = true;
         event(new AfterUpdate($user));
         return compact(['user', 'status']);

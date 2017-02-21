@@ -54,4 +54,12 @@ interface UserContract
      * @return
      */
     public function destroy(User $user);
+
+    /**
+     * Update roles of a user
+     * @param User $user
+     * @param array $roles
+     * @return mixed
+     */
+    public function updateRoles(User $user, Array $roles);
 }

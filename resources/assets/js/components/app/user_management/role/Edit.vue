@@ -32,6 +32,56 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="col-sm-2 control-label">Permissions</label>
+                        <div class="col-sm-10">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td class="vertical-align-middle text-center">
+                                        <div>
+                                            Available Permissions
+                                        </div>
+                                        <div>
+                                            <select multiple class="form-control sl-form-control"
+                                                    v-model="inputPermissionIds">
+                                                <option v-for="permission in permissions"
+                                                        v-if="selectedPermissionIds.indexOf(permission.id) == -1"
+                                                        v-text="permission.display_name"
+                                                        :value="permission.id"></option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td class="vertical-align-middle text-center shrink">
+                                        <div>
+                                            <a href="#" @click="grantPermission">
+                                                <i class="fa fa-arrow-right"></i>
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <a href="#" @click="revokePermission">
+                                                <i class="fa fa-arrow-left"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td class="vertical-align-middle text-center">
+                                        <div class="text-center">
+                                            Granted Permissions
+                                        </div>
+                                        <div>
+                                            <select multiple class="form-control sl-form-control"
+                                                    v-model="outputPermissionIds">
+                                                <option v-for="permission in selectedPermissions"
+                                                        v-text="permission.display_name"
+                                                        :value="permission.id"></option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <div class="col-sm-12 text-right">
                             <button class="btn btn-primary btn-sm btn-flat" @click="editRole">UPDATE</button>
                             <a href="/user-management/role" class="btn btn-default btn-sm btn-flat">CANCEL</a>
@@ -40,7 +90,7 @@
                 </form>
             </div>
         </div>
-        <loading v-if="isEditingRole || isLoadingRole"></loading>
+        <loading v-if="isEditingRole || isLoadingRole || isLoadingPermissions"></loading>
     </section>
 </template>
 
@@ -56,14 +106,20 @@
                 name: '',
                 displayName: '',
                 description: '',
+                permissions: [],
+                selectedPermissions: [],
+                inputPermissionIds: [],
+                outputPermissionIds: [],
                 isEditingRole: false,
                 isLoadingRole: false,
+                isLoadingPermissions: false,
                 errors: {},
             }
         },
         mounted() {
             console.info('Edit component is mounted.');
             this.loadRole();
+            this.loadPermissions();
         },
         methods: {
             loadRole(){
@@ -75,9 +131,21 @@
                         this.name = role.name;
                         this.displayName = role.display_name;
                         this.description = role.description;
+                        this.selectedPermissions = role.selectedPermissions;
                     }
                 }).catch(error=> {
                     this.isLoadingRole = false;
+                })
+            },
+            loadPermissions(){
+                this.isLoadingPermission = true;
+                axios.get('/user-management/permission').then(response=> {
+                    this.isLoadingPermission = false;
+                    if (response.data.status == true) {
+                        this.permissions = response.data.permissions;
+                    }
+                }).catch(error=> {
+                    this.isLoadingPermission = false;
                 })
             },
             editRole(){
@@ -93,6 +161,17 @@
                         this.errors = error.response.data;
                     }
                 })
+            },
+            grantPermission(){
+                var permissions = this.permissions.filter((permission) => {
+                    return this.inputPermissionIds.indexOf(permission.id) > -1;
+                });
+                this.selectedPermissions = this.selectedPermissions.concat(permissions);
+            },
+            revokePermission(){
+                this.selectedPermissions = this.selectedPermissions.filter((permission)=> {
+                    return this.outputPermissionIds.indexOf(permission.id) == -1;
+                });
             }
         },
         computed: {
@@ -101,7 +180,17 @@
                     name: this.name,
                     display_name: this.displayName,
                     description: this.description,
+                    permission_ids: this.selectedPermissionIds
                 };
+            },
+            selectedPermissionIds: function () {
+                var ids = [];
+                for (var selectedPermissionKey in this.selectedPermissions) {
+                    if (this.selectedPermissions.hasOwnProperty(selectedPermissionKey)) {
+                        ids.push(this.selectedPermissions[selectedPermissionKey].id);
+                    }
+                }
+                return ids;
             }
         }
     }
@@ -113,5 +202,16 @@
         color: #ff0000;
         padding-right: 5px;
         font-weight: bold;
+    }
+
+    select[multiple] {
+        min-width: 200px;
+    }
+
+    @media (max-width: 991px) {
+        select[multiple] {
+            min-width: 100px;
+            max-width: 150px;
+        }
     }
 </style>

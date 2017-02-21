@@ -180,7 +180,7 @@
                 }
             },
             firstPageUrl: function () {
-                return '/user-management/user?orderBy=' + this.orderByData.column
+                return '/user-management/user?page=1&orderBy=' + this.orderByData.column
                         + '&direction=' + this.orderByData.direction
                         + '&per_page=' + this.paginationData.per_page
                         + '&key=' + this.filterText;

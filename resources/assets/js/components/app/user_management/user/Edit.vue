@@ -41,7 +41,58 @@
                     <div class="form-group">
                         <label for="txt-confirm-password" class="col-sm-2 control-label">Password</label>
                         <div class="col-sm-10">
-                            <input type="password" class="form-control" id="txt-confirm-password" v-model="passwordConfirmation">
+                            <input type="password" class="form-control" id="txt-confirm-password"
+                                   v-model="passwordConfirmation">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Roles</label>
+                        <div class="col-sm-10">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td class="vertical-align-middle text-center">
+                                        <div>
+                                            Available Roles
+                                        </div>
+                                        <div>
+                                            <select multiple class="form-control sl-form-control"
+                                                    v-model="inputRoleIds">
+                                                <option v-for="role in roles"
+                                                        v-if="selectedRoleIds.indexOf(role.id) == -1"
+                                                        v-text="role.display_name"
+                                                        :value="role.id"></option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td class="vertical-align-middle text-center shrink">
+                                        <div>
+                                            <a href="#" @click="grantRole">
+                                                <i class="fa fa-arrow-right"></i>
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <a href="#" @click="revokeRole">
+                                                <i class="fa fa-arrow-left"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td class="vertical-align-middle text-center">
+                                        <div class="text-center">
+                                            Granted Roles
+                                        </div>
+                                        <div>
+                                            <select multiple class="form-control sl-form-control"
+                                                    v-model="outputRoleIds">
+                                                <option v-for="role in selectedRoles"
+                                                        v-text="role.display_name"
+                                                        :value="role.id"></option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                     <div class="form-group">
@@ -71,6 +122,10 @@
                 email: '',
                 password: '',
                 passwordConfirmation: '',
+                roles: [],
+                selectedRoles: [],
+                inputRoleIds: [],
+                outputRoleIds: [],
                 isEditingUser: false,
                 isLoadingUser: false,
                 errors: {},
@@ -79,6 +134,7 @@
         mounted() {
             console.info('Edit component is mounted.');
             this.loadUser();
+            this.loadRoles();
         },
         methods: {
             loadUser(){
@@ -90,6 +146,7 @@
                         this.firstName = user.first_name;
                         this.lastName = user.last_name;
                         this.email = user.email;
+                        this.selectedRoles = user.selectedRoles;
                     }
                 }).catch(error=> {
                     this.isLoadingUser = false;
@@ -108,6 +165,28 @@
                         this.errors = error.response.data;
                     }
                 })
+            },
+            loadRoles(){
+                this.isLoadingRole = true;
+                axios.get('/user-management/role').then(response => {
+                    this.isLoadingRole = false;
+                    if (response.data.status == true) {
+                        this.roles = response.data.roles;
+                    }
+                }).catch(error => {
+                    this.isLoadingRole = false;
+                })
+            },
+            grantRole(){
+                var roles = this.roles.filter((role) => {
+                    return this.inputRoleIds.indexOf(role.id) > -1;
+                });
+                this.selectedRoles = this.selectedRoles.concat(roles);
+            },
+            revokeRole(){
+                this.selectedRoles = this.selectedRoles.filter((role)=> {
+                    return this.outputRoleIds.indexOf(role.id) == -1;
+                });
             }
         },
         computed: {
@@ -116,12 +195,22 @@
                     first_name: this.firstName,
                     last_name: this.lastName,
                     email: this.email,
+                    role_ids: this.selectedRoleIds,
                 };
                 if (this.password != '') {
                     data.password = this.password;
                     data.password_confirmation = this.passwordConfirmation;
                 }
                 return data;
+            },
+            selectedRoleIds: function () {
+                var ids = [];
+                for (var selectedRoleKey in this.selectedRoles) {
+                    if (this.selectedRoles.hasOwnProperty(selectedRoleKey)) {
+                        ids.push(this.selectedRoles[selectedRoleKey].id);
+                    }
+                }
+                return ids;
             }
         }
     }
@@ -133,5 +222,16 @@
         color: #ff0000;
         padding-right: 5px;
         font-weight: bold;
+    }
+
+    select[multiple] {
+        min-width: 200px;
+    }
+
+    @media (max-width: 991px) {
+        select[multiple] {
+            min-width: 100px;
+            max-width: 150px;
+        }
     }
 </style>

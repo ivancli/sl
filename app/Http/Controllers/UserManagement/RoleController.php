@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\UserManagement;
 
+use App\Contracts\Repositories\UserManagement\PermissionContract;
 use App\Contracts\Repositories\UserManagement\RoleContract;
 use App\Events\UserManagement\Role\AfterCreate;
 use App\Events\UserManagement\Role\AfterDestroy;
@@ -26,12 +27,15 @@ use Illuminate\Http\Request;
 class RoleController extends Controller
 {
     var $request;
-    var $roleRepo;
+    var $roleRepo, $permissionRepo;
 
-    public function __construct(Request $request, RoleContract $roleContract)
+    public function __construct(Request $request,
+                                RoleContract $roleContract,
+                                PermissionContract $permissionContract)
     {
         $this->request = $request;
         $this->roleRepo = $roleContract;
+        $this->permissionRepo = $permissionContract;
     }
 
     /**
@@ -43,7 +47,11 @@ class RoleController extends Controller
     {
         event(new BeforeIndex());
 
-        $roles = $this->roleRepo->filterAll($this->request->all());
+        if (!$this->request->has('page')) {
+            $roles = $this->roleRepo->all();
+        } else {
+            $roles = $this->roleRepo->filterAll($this->request->all());
+        }
         $status = true;
 
         event(new AfterIndex());
@@ -78,6 +86,15 @@ class RoleController extends Controller
         event(new BeforeStore());
         $storeValidator->validate($this->request->all());
         $role = $this->roleRepo->store($this->request->all());
+
+        /* update permission */
+        if ($this->request->has('permission_ids')) {
+            $permissions = array();
+            foreach ($this->request->get('permission_ids') as $permission_id) {
+                $permissions[] = $this->permissionRepo->get($permission_id);
+            }
+            $this->roleRepo->updatePermissions($role, $permissions);
+        }
         $status = true;
         event(new AfterStore($role));
         return compact(['status', 'role']);
@@ -93,6 +110,7 @@ class RoleController extends Controller
     {
         event(new BeforeShow($role));
         $status = true;
+        $role->selectedPermissions = $role->perms;
         event(new AfterShow($role));
 
         if ($this->request->ajax()) {
@@ -130,7 +148,19 @@ class RoleController extends Controller
         $id = $role->getKey();
         $this->request->merge(compact(['id']));
         $updateValidator->validate($this->request->all());
+
+        /* update role itself */
         $role = $this->roleRepo->update($role, $this->request->all());
+
+        /* update permission */
+        if ($this->request->has('permission_ids')) {
+            $permissions = array();
+            foreach ($this->request->get('permission_ids') as $permission_id) {
+                $permissions[] = $this->permissionRepo->get($permission_id);
+            }
+            $this->roleRepo->updatePermissions($role, $permissions);
+        }
+
         $status = true;
         event(new AfterUpdate($role));
         return compact(['role', 'status']);

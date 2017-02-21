@@ -117,4 +117,16 @@ class UserRepository implements UserContract
     {
         $user->delete();
     }
+
+    /**
+     * Update roles of a user
+     * @param User $user
+     * @param array $roles
+     * @return mixed|void
+     */
+    public function updateRoles(User $user, Array $roles)
+    {
+        $user->detachRoles();
+        $user->attachRoles($roles);
+    }
 }

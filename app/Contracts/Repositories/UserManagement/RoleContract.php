@@ -10,6 +10,7 @@ namespace App\Contracts\Repositories\UserManagement;
 
 
 use App\Models\Role;
+use phpDocumentor\Reflection\Types\Array_;
 
 interface RoleContract
 {
@@ -55,4 +56,12 @@ interface RoleContract
      * @return
      */
     public function destroy(Role $role);
+
+    /**
+     * Update permission of a role
+     * @param Role $role
+     * @param array $permissions
+     * @return mixed
+     */
+    public function updatePermissions(Role $role, Array $permissions);
 }

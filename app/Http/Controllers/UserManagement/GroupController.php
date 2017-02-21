@@ -45,7 +45,11 @@ class GroupController extends Controller
     {
         event(new BeforeIndex());
 
-        $groups = $this->groupRepo->filterAll($this->request->all());
+        if (!$this->request->has('page')) {
+            $groups = $this->groupRepo->all();
+        } else {
+            $groups = $this->groupRepo->filterAll($this->request->all());
+        }
         $status = true;
 
         event(new AfterIndex());

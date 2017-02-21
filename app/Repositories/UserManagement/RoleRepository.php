@@ -111,4 +111,16 @@ class RoleRepository implements RoleContract
     {
         $role->delete();
     }
+
+    /**
+     * Update permission of a role
+     * @param Role $role
+     * @param array $permissions
+     * @return mixed
+     */
+    public function updatePermissions(Role $role, Array $permissions)
+    {
+        $role->detachPermissions();
+        $role->attachPermissions($permissions);
+    }
 }

@@ -44,6 +44,11 @@ mix
     .js('resources/assets/js/app/user_management/role/create.js', 'public/js/app/role')
     .js('resources/assets/js/app/user_management/role/edit.js', 'public/js/app/role')
     .js('resources/assets/js/app/user_management/role/show.js', 'public/js/app/role')
+    /* permission */
+    .js('resources/assets/js/app/user_management/permission/index.js', 'public/js/app/permission')
+    .js('resources/assets/js/app/user_management/permission/create.js', 'public/js/app/permission')
+    .js('resources/assets/js/app/user_management/permission/edit.js', 'public/js/app/permission')
+    .js('resources/assets/js/app/user_management/permission/show.js', 'public/js/app/permission')
 
 
     .sass('resources/assets/sass/app.scss', 'public/css')
