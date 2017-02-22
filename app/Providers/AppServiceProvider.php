@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Models\Domain;
-use App\Models\Subscription;
 use App\Models\Url;
 use App\Models\User;
+use App\Observers\UrlObserver;
+use App\Observers\UserObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -17,21 +17,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        User::created(function ($user) {
-            /* create blank subscription record */
-            $user->subscription()->save(new Subscription);
-            $user->setPreference('DATE_FORMAT', 'Y-m-d');
-            $user->setPreference('TIME_FORMAT', 'g:i:a');
-        });
-
-        Url::created(function ($url) {
-            /* create new domain if it's not yet in DB */
-            if (Domain::where($url->domainFullPath)->count() == 0) {
-                new Domain([
-                    'full_path' => $url->domainFullPath
-                ]);
-            }
-        });
+        User::observe(UserObserver::class);
+        Url::observe(UrlObserver::class);
     }
 
     /**

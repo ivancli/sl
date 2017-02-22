@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Contracts\Repositories\Subscription\ProductContract as SubscriptionPlanContract;
 use App\Contracts\Repositories\Subscription\SubscriptionContract;
 use App\Exceptions\Subscription\SubscriptionNotFoundException;
+use App\Models\Subscription;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -89,7 +90,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
-
+        $user->subscription()->save(new Subscription);
         $couponCode = isset($couponCode) ? $couponCode : '';
 
         if ($subscriptionPlan->require_credit_card) {

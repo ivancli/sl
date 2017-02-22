@@ -2,6 +2,16 @@
 
 namespace App\Models;
 
+use App\Events\Models\User\Created;
+use App\Events\Models\User\Creating;
+use App\Events\Models\User\Deleted;
+use App\Events\Models\User\Deleting;
+use App\Events\Models\User\Restored;
+use App\Events\Models\User\Restoring;
+use App\Events\Models\User\Saved;
+use App\Events\Models\User\Saving;
+use App\Events\Models\User\Updated;
+use App\Events\Models\User\Updating;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use IvanCLI\UM\Traits\UMUserTrait;
@@ -30,6 +40,19 @@ class User extends Authenticatable
 
     protected $appends = [
         'fullName', 'allPreferences', 'urls'
+    ];
+
+    protected $events = [
+        'creating' => Creating::class,
+        'created' => Created::class,
+        'updating' => Updating::class,
+        'updated' => Updated::class,
+        'saving' => Saving::class,
+        'saved' => Saved::class,
+        'deleting' => Deleting::class,
+        'deleted' => Deleted::class,
+        'restoring' => Restoring::class,
+        'restored' => Restored::class,
     ];
 
     /**
