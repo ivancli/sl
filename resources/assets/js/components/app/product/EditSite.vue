@@ -61,8 +61,8 @@
                 this.$emit('cancel-edit-site-url');
             },
             editSite: function () {
-                // product name same as before, quit
-                if (this.currentSite.name == this.newSiteURL) {
+                // site url same as before, quit
+                if (this.currentSite.siteUrl == this.newSiteURL) {
                     this.isEditingSite = false;
                     this.editingSiteURL = false;
                     this.$refs['txt_edit_site'].blur();
@@ -77,7 +77,7 @@
                     if (response.data.status == true) {
                         this.editingSiteURL = false;
                     }
-                    this.$emit('edited-product');
+                    this.$emit('edited-site');
                 }).catch(error=> {
                     this.isEditingSite = false;
                     if (error.response && error.response.status == 422 && error.response.data) {

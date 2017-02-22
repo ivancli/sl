@@ -9,6 +9,7 @@
 namespace App\Contracts\Repositories\Product;
 
 
+use App\Models\Site;
 use App\Models\User;
 
 interface SiteContract
@@ -37,4 +38,19 @@ interface SiteContract
      * @return mixed
      */
     public function store(Array $data);
+
+    /**
+     * Editing an existing site
+     * @param Site $site
+     * @param array $data
+     * @return mixed
+     */
+    public function update(Site $site, Array $data);
+
+    /**
+     * Deleting an existing site
+     * @param Site $site
+     * @return mixed
+     */
+    public function destroy(Site $site);
 }

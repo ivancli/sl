@@ -71,15 +71,25 @@ class ProductRepository implements ProductContract
     /**
      * Editing existing product
      *
-     * @param $id
+     * @param Product $product
      * @param array $data
      * @return Product
+     * @internal param $id
      */
-    public function update($id, Array $data)
+    public function update(Product $product, Array $data)
     {
-        $product = $this->get($id);
         $product->name = $data['name'];
         $product->save();
         return $product;
+    }
+
+    /**
+     * Deleting a product
+     * @param Product $product
+     * @return mixed
+     */
+    public function destroy(Product $product)
+    {
+        $product->delete();
     }
 }

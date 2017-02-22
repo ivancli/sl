@@ -5,7 +5,7 @@
 
         <div class="box box-solid">
             <div class="box-body p-20">
-                <div class="row m-b-10">
+                <div class="row m-b-10" v-if="hasCategories">
                     <div class="col-md-8">
 
                     </div>
@@ -19,10 +19,10 @@
                 </div>
                 <div class="row m-b-10">
                     <div class="col-sm-12">
-                        <add-category @addedCategory="loadCategories"></add-category>
+                        <add-category @added-category="loadCategories"></add-category>
                     </div>
                 </div>
-                <div class="row m-b-20">
+                <div class="row m-b-20" v-if="hasCategories">
                     <div class="col-sm-12 text-right">
                         <a href="#" class="text-muted btn-collapse-all" @click.prevent="toggleAllCategories" v-text="shouldExpandAll ? 'Expand All' : 'Collapse All'"></a>
                     </div>
@@ -93,6 +93,9 @@
                     }
                 }
                 return shouldExpand;
+            },
+            hasCategories(){
+                return this.categories.length > 0;
             }
         }
     }

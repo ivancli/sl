@@ -41,9 +41,16 @@ interface CategoryContract
     /**
      * Editing existing category
      *
-     * @param $id
+     * @param Category $category
      * @param array $data
      * @return Category
      */
-    public function update($id, Array $data);
+    public function update(Category $category, Array $data);
+
+    /**
+     * Deleting a category
+     * @param Category $category
+     * @return mixed
+     */
+    public function destroy(Category $category);
 }

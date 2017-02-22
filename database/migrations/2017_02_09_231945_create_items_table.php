@@ -16,7 +16,8 @@ class CreateItemsTable extends Migration
         Schema::create('items', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('url_id')->unsigned()->nullable();
-            $table->foreign('url_id')->references('id')->on('urls')->onDelete('cascade');
+            $table->foreign('url_id')->references('id')->on('urls')
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->string('name')->nullable();
             $table->char('is_active', 1)->default('y');
             $table->timestamps();

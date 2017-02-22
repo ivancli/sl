@@ -18,7 +18,9 @@ use App\Events\Product\Site\BeforeShow;
 use App\Events\Product\Site\BeforeStore;
 use App\Events\Product\Site\BeforeUpdate;
 use App\Http\Controllers\Controller;
+use App\Models\Site;
 use App\Validators\Product\Site\StoreValidator;
+use App\Validators\Product\Site\UpdateValidator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -53,7 +55,7 @@ class SiteController extends Controller
         }
         event(new AfterIndex());
         if ($this->request->ajax()) {
-            return new JsonResponse(compact(['status', 'sites']));
+            return compact(['status', 'sites']);
         } else {
             return view('app.product.index');
         }
@@ -81,7 +83,7 @@ class SiteController extends Controller
 
         event(new AfterStore($site));
         if ($this->request->ajax()) {
-            return new JsonResponse(compact(['status', 'site']));
+            return compact(['status', 'site']);
         } else {
             return redirect()->route('product');
         }
@@ -90,12 +92,11 @@ class SiteController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param Site $site
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Site $site)
     {
-        $site = $this->siteRepo->get($id);
         event(new BeforeShow($site));
 
         event(new AfterShow($site));
@@ -104,12 +105,11 @@ class SiteController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param Site $site
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Site $site)
     {
-        $site = $this->siteRepo->get($id);
         event(new BeforeEdit($site));
 
         event(new AfterEdit($site));
@@ -118,28 +118,53 @@ class SiteController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int $id
+     * @param Site $site
+     * @param UpdateValidator $updateValidator
      * @return \Illuminate\Http\Response
      */
-    public function update($id)
+    public function update(Site $site, UpdateValidator $updateValidator)
     {
-        $site = $this->siteRepo->get($id);
         event(new BeforeUpdate($site));
+        $id = $site->getKey();
+        $this->request->merge(compact(['id']));
+        $updateValidator->validate($this->request->all());
+
+
+        $site = $this->siteRepo->update($site, $this->request->all());
+        $url = $this->urlRepo->getByFullPathOrCreate($this->request->all());
+
+        $url->sites()->save($site);
+        $product = $this->productRepo->get($this->request->get('product_id'));
+        $product->sites()->save($site);
+
+        $status = true;
 
         event(new AfterUpdate($site));
+
+        if ($this->request->ajax()) {
+            return compact(['status', 'site']);
+        } else {
+            return redirect()->route('product');
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param Site $site
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Site $site)
     {
-        $site = $this->siteRepo->get($id);
         event(new BeforeDestroy($site));
-
+        $this->siteRepo->destroy($site);
+        $status = true;
         event(new AfterDestroy());
+
+        if ($this->request->ajax()) {
+            return compact(['status']);
+        } else {
+            return redirect()->route('product');
+        }
     }
 }

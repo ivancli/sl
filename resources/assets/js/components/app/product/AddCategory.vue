@@ -79,7 +79,7 @@
                         this.addingCategory = false;
                     }
                     this.clearNewCategoryname();
-                    this.$emit('addedCategory');
+                    this.$emit('added-category');
                 }).catch(error=> {
                     this.isAddingCategory = false;
                     if (error.response && error.response.status == 422 && error.response.data) {

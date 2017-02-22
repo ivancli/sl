@@ -66,4 +66,26 @@ class SiteRepository implements SiteContract
         $site->save();
         return $site;
     }
+
+    /**
+     * Editing an existing site
+     * @param Site $site
+     * @param array $data
+     * @return mixed
+     */
+    public function update(Site $site, Array $data)
+    {
+        $site->update($data);
+        return $site;
+    }
+
+    /**
+     * Deleting an existing site
+     * @param Site $site
+     * @return mixed
+     */
+    public function destroy(Site $site)
+    {
+        $site->delete();
+    }
 }

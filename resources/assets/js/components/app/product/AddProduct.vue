@@ -76,7 +76,7 @@
                         this.addingProduct = false;
                     }
                     this.clearNewProductName();
-                    this.$emit('addedProduct');
+                    this.$emit('added-product');
                 }).catch(error=> {
                     this.isAddingProduct = false;
                     if (error.response && error.response.status == 422 && error.response.data) {

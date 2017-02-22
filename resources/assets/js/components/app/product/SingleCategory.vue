@@ -18,7 +18,7 @@
                 <a href="#" class="btn-action btn-report" title="report">
                     <i class="fa fa-envelope-o"></i>
                 </a>
-                <a href="#" class="btn-action btn-delete-category" title="delete">
+                <a href="#" class="btn-action btn-delete-category" title="delete" @click.prevent="onClickDeleteCategory">
                     <i class="glyphicon glyphicon-trash"></i>
                 </a>
             </th>
@@ -42,11 +42,10 @@
                 </div>
             </th>
         </tr>
-
         <tr>
             <th></th>
             <th colspan="3" class="category-th action-cell add-item-cell">
-                <add-product :category="currentCategory" @addedProduct="addedProduct"></add-product>
+                <add-product :category="currentCategory" @added-product="addedProduct"></add-product>
             </th>
         </tr>
         </thead>
@@ -59,21 +58,8 @@
                 </div>
             </td>
         </tr>
-        <!--<tr>-->
-        <!--<td></td>-->
-        <!--<td colspan="3" class="table-container">-->
-        <!--<div class="collapse collapsible-category-div in" data-products-url="http://login.spotlite.com.au/product/category/313" aria-expanded="true">-->
-        <!--<div class="row">-->
-        <!--<div class="col-sm-12 text-center">-->
-        <!--<div class="dotdotdot loading-products" style="margin: 20px auto; display: none;">-->
-
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</td>-->
-        <!--</tr>-->
         </tbody>
+        <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
     </table>
 </template>
 
@@ -83,6 +69,7 @@
     import editCategory from './EditCategory.vue';
     import formatDateTime from '../../../filters/formatDateTime';
 
+    import deleteConfirmation from '../../fragments/modals/DeleteConfirmation.vue';
 
     import {
             SET_CATEGORY_COLLAPSE_STATUS, TOGGLE_COLLAPSE_CATEGORY
@@ -92,7 +79,8 @@
         components: {
             addProduct,
             singleProduct,
-            editCategory
+            editCategory,
+            deleteConfirmation
         },
         props: [
             'current-category'
@@ -105,7 +93,19 @@
         data() {
             return {
                 products: [],
-                editingCategoryName: false
+                editingCategoryName: false,
+                deleteParams: {
+                    title: 'category',
+                    list: [
+                        'All Products you have added',
+                        'All URLs you have added',
+                        'All Category and Product Charts generated, including any Charts displayed on your Dashboards',
+                        'All Category Reports generated',
+                        'This Category\'s pricing information tracked to date'
+                    ],
+                    active: false
+                },
+                isDeletingCategory: false
             }
         },
         methods: {
@@ -145,6 +145,28 @@
                     category_id: this.category.id,
                     status: status
                 });
+            },
+            /*delete category*/
+            onClickDeleteCategory(){
+                this.deleteParams.active = true;
+            },
+            cancelDelete(){
+                this.deleteParams.active = false;
+            },
+            confirmDelete(){
+                this.deleteParams.active = false;
+                this.deleteCategory()
+            },
+            deleteCategory(){
+                this.isDeletingCategory = true;
+                axios.delete(this.category.urls.delete).then(response=> {
+                    this.isDeletingCategory = false;
+                    if (response.data.status == true) {
+                        this.$emit('reload-categories');
+                    }
+                }).catch(error=> {
+                    this.isDeletingCategory = false;
+                })
             }
         },
         computed: {

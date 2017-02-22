@@ -16,6 +16,7 @@ use App\Events\Product\Category\BeforeShow;
 use App\Events\Product\Category\BeforeStore;
 use App\Events\Product\Category\BeforeUpdate;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Validators\Product\Category\StoreValidator;
 use App\Validators\Product\Category\UpdateValidator;
 use Illuminate\Http\JsonResponse;
@@ -48,7 +49,7 @@ class CategoryController extends Controller
 
         event(new AfterIndex());
         if ($this->request->ajax()) {
-            return new JsonResponse(compact(['categories', 'status']));
+            return compact(['categories', 'status']);
         } else {
             return redirect()->route('product');
         }
@@ -72,7 +73,7 @@ class CategoryController extends Controller
 
         event(new AfterStore($category));
         if ($this->request->ajax()) {
-            return new JsonResponse(compact(['category', 'status']));
+            return compact(['category', 'status']);
         } else {
             return redirect()->route('product');
         }
@@ -82,12 +83,12 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param Category $category
      * @return \Illuminate\Http\Response
+     * @internal param int $id
      */
-    public function show($id)
+    public function show(Category $category)
     {
-        $category = $this->categoryRepo->get($id);
         event(new BeforeShow($category));
 
         event(new AfterShow($category));
@@ -96,12 +97,12 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param Category $category
      * @return \Illuminate\Http\Response
+     * @internal param int $id
      */
-    public function edit($id)
+    public function edit(Category $category)
     {
-        $category = $this->categoryRepo->get($id);
         event(new BeforeEdit($category));
 
         event(new AfterEdit($category));
@@ -110,24 +111,23 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int $id
+     * @param Category $category
      * @param UpdateValidator $updateValidator
      * @return JsonResponse|\Illuminate\Http\Response
      */
-    public function update($id, UpdateValidator $updateValidator)
+    public function update(Category $category, UpdateValidator $updateValidator)
     {
-        $category = $this->categoryRepo->get($id);
         event(new BeforeUpdate($category));
-
+        $id = $category->getKey();
         $this->request->merge(compact(['id']));
         $updateValidator->validate($this->request->all());
 
-        $category = $this->categoryRepo->update($id, $this->request->all());
+        $category = $this->categoryRepo->update($category, $this->request->all());
         $status = true;
 
         event(new AfterUpdate($category));
         if ($this->request->ajax()) {
-            return new JsonResponse(compact(['category', 'status']));
+            return compact(['category', 'status']);
         } else {
             return redirect()->route('product');
         }
@@ -136,14 +136,20 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param Category $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        $category = $this->categoryRepo->get($id);
         event(new BeforeDestroy($category));
-
+        $this->categoryRepo->destroy($category);
+        $status = true;
         event(new AfterDestroy());
+
+        if ($this->request->ajax()) {
+            return compact(['status']);
+        } else {
+            return redirect()->route('product');
+        }
     }
 }

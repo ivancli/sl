@@ -27,7 +27,7 @@ class UpdateValidator extends ValidatorAbstract
             if (is_array($parameters) && !is_null(array_first($parameters))) {
                 $builder->where('id', '<>', array_first($parameters));
             }
-            $currentCategoryNames = $builder->get()->pluck('name')->toArray();
+            $currentCategoryNames = $builder->get()->map->name->all();
             return !in_array($value, $currentCategoryNames);
         });
 

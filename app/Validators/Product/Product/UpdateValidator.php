@@ -22,7 +22,7 @@ class UpdateValidator extends ValidatorAbstract
      */
     public function validate(array $data, $throw = true)
     {
-        $this->validator->extendImplicit('unique_per_user', function ($message, $value, $parameters) use ($data) {
+        $this->validator->extendImplicit('unique_per_category', function ($message, $value, $parameters) use ($data) {
             $builder = auth()->user()->products();
             if (isset($data['category_id'])) {
                 $builder->where('category_id', $data['category_id']);
@@ -30,7 +30,7 @@ class UpdateValidator extends ValidatorAbstract
             if (is_array($parameters) && !is_null(array_first($parameters))) {
                 $builder->where('id', '<>', array_first($parameters));
             }
-            $currentProductNames = $builder->get()->pluck('name')->toArray();
+            $currentProductNames = $builder->get()->map->name->all();
             return !in_array($value, $currentProductNames);
         });
 
@@ -56,7 +56,7 @@ class UpdateValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return [
-            'name' => "required|max:255|unique_per_user:{$id}"
+            'name' => "required|max:255|unique_per_category:{$id}"
         ];
     }
 

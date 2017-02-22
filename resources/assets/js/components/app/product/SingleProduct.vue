@@ -20,12 +20,12 @@
                 <a href="#" class="btn-action" title="report">
                     <i class="fa fa-envelope-o"></i>
                 </a>
-                <a href="#" class="btn-action" title="delete">
+                <a href="#" class="btn-action" title="delete" @click.prevent="onClickDeleteProduct">
                     <i class="glyphicon glyphicon-trash"></i>
                 </a>
             </th>
-            <th class="text-center vertical-align-middle product-collapse-cell" width="70">
-                <a class="text-muted btn-collapse collapsed">
+            <th class="text-center vertical-align-middle product-collapse-cell" width="70" @click.prevent="toggleProductCollapse">
+                <a class="text-muted btn-collapse" :class="isProductCollapsed ? 'collapsed' : ''">
                     <i class="fa fa-angle-up"></i>
                 </a>
             </th>
@@ -45,7 +45,7 @@
         <tr>
             <td></td>
             <td colspan="3" class="table-container">
-                <div class="collapsible-product-div collapse in">
+                <div class="collapsible-product-div collapse in" v-show="!isProductCollapsed">
                     <table class="table table-striped table-condensed tbl-site">
                         <thead>
                         <tr>
@@ -62,9 +62,14 @@
                         </thead>
                         <single-site v-for="site in sites" :current-site="site" @reload-sites="loadSites"></single-site>
                         <tbody>
+                        <tr class="empty-message-row" v-if="!hasSites">
+                            <td colspan="9" class="text-center">To start tracking prices, simply copy and paste the URL of the product page of the website your want to track.</td>
+                        </tr>
+                        </tbody>
+                        <tbody>
                         <tr class="add-site-row">
                             <td colspan="9" class="add-item-cell">
-                                <add-site :product="product" @addedSite="loadSites"></add-site>
+                                <add-site :product="product" @added-site="loadSites"></add-site>
                             </td>
                         </tr>
                         </tbody>
@@ -73,6 +78,7 @@
             </td>
         </tr>
         </tbody>
+        <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
     </table>
 </template>
 
@@ -82,11 +88,14 @@
     import editProduct from './EditProduct.vue';
     import formatDateTime from '../../../filters/formatDateTime';
 
+    import deleteConfirmation from '../../fragments/modals/DeleteConfirmation.vue';
+
     export default {
         components: {
             addSite,
             singleSite,
             editProduct,
+            deleteConfirmation,
         },
         props: [
             'current-product'
@@ -97,7 +106,20 @@
         data() {
             return {
                 sites: [],
-                editingProductName: false
+                editingProductName: false,
+                deleteParams: {
+                    title: 'product',
+                    list: [
+                        'All URLs you have added',
+                        'All Product charts generated, including any Charts displayed on your Dashboards',
+                        'All Product Reports generated',
+                        'All Alerts set up for this Product',
+                        'This Product\'s pricing information tracked to date'
+                    ],
+                    active: false
+                },
+                isDeletingProduct: false,
+                isProductCollapsed: false,
             }
         },
         methods: {
@@ -122,6 +144,32 @@
             editedProduct: function () {
                 this.editingProductName = false;
                 this.reloadProducts();
+            },
+
+            /*delete product*/
+            onClickDeleteProduct(){
+                this.deleteParams.active = true;
+            },
+            cancelDelete(){
+                this.deleteParams.active = false;
+            },
+            confirmDelete(){
+                this.deleteParams.active = false;
+                this.deleteProduct()
+            },
+            deleteProduct(){
+                this.isDeletingProduct = true;
+                axios.delete(this.product.urls.delete).then(response=> {
+                    this.isDeletingProduct = false;
+                    if (response.data.status == true) {
+                        this.$emit('reload-products');
+                    }
+                }).catch(error=> {
+                    this.isDeletingProduct = false;
+                })
+            },
+            toggleProductCollapse(){
+                this.isProductCollapsed = !this.isProductCollapsed;
             }
         },
         computed: {
@@ -144,6 +192,9 @@
             datetimeFormat(){
                 return this.dateFormat + ' ' + this.timeFormat;
             },
+            hasSites(){
+                return this.sites.length > 0;
+            }
         }
     }
 </script>
@@ -211,6 +262,13 @@
 
     .collapsible-category-div table.product-wrapper thead tr:first-child th {
         padding-top: 10px;
+    }
+
+    tr.empty-message-row td {
+        font-weight: bold;
+        padding: 20px !important;
+        font-size: 16px;
+        color: #777;
     }
 
     tr.add-site-row {

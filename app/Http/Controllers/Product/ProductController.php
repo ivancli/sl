@@ -17,6 +17,7 @@ use App\Events\Product\Product\BeforeShow;
 use App\Events\Product\Product\BeforeStore;
 use App\Events\Product\Product\BeforeUpdate;
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use App\Validators\Product\Product\StoreValidator;
 use App\Validators\Product\Product\UpdateValidator;
 use Illuminate\Http\JsonResponse;
@@ -87,12 +88,11 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param Product $product
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Product $product)
     {
-        $product = $this->productRepo->get($id);
         event(new BeforeShow($product));
 
         event(new AfterShow($product));
@@ -101,12 +101,12 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param Product $product
      * @return \Illuminate\Http\Response
+     * @internal param int $id
      */
-    public function edit($id)
+    public function edit(Product $product)
     {
-        $product = $this->productRepo->get($id);
         event(new BeforeEdit($product));
 
         event(new AfterEdit($product));
@@ -115,18 +115,18 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int $id
+     * @param Product $product
      * @param UpdateValidator $updateValidator
      * @return JsonResponse|\Illuminate\Http\Response
      */
-    public function update($id, UpdateValidator $updateValidator)
+    public function update(Product $product, UpdateValidator $updateValidator)
     {
-        $product = $this->productRepo->get($id);
         event(new BeforeUpdate($product));
+        $id = $product->getKey();
         $this->request->merge(compact(['id']));
         $updateValidator->validate($this->request->all());
 
-        $product = $this->productRepo->update($id, $this->request->all());
+        $product = $this->productRepo->update($product, $this->request->all());
         $status = true;
 
         event(new AfterUpdate($product));
@@ -140,14 +140,20 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param Product $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        $product = $this->productRepo->get($id);
         event(new BeforeDestroy($product));
-
+        $this->productRepo->destroy($product);
+        $status = true;
         event(new AfterDestroy());
+
+        if ($this->request->ajax()) {
+            return compact(['status']);
+        } else {
+            return redirect()->route('product');
+        }
     }
 }

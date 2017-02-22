@@ -108,8 +108,14 @@ return [
             'required' => 'Please select a subscription plan.'
         ],
         'name' => [
-            'unique_per_user' => 'Name needs to be unique'
-        ]
+            'unique_per_user' => 'Name needs to be unique.',
+            'unique_per_category' => 'Name needs to be unique in a category.',
+        ],
+        'full_path' => [
+            'required' => 'URL is required.',
+            'url' => 'Please provide a valid URL.',
+            'unique_per_product' => 'A site with the same URL already exists in the same product.'
+        ],
     ],
 
     /*

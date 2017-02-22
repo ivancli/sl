@@ -58,7 +58,7 @@
             <a href="#" class="btn-action" title="chart">
                 <i class="fa fa-line-chart"></i>
             </a>
-            <a href="#" class="btn-action" title="delete">
+            <a href="#" class="btn-action" title="delete" @click.prevent="onClickDeleteSite">
                 <i class="glyphicon glyphicon-trash"></i>
             </a>
         </td>
@@ -73,7 +73,7 @@
                 </tr>
                 <tr>
                     <th>URL:</th>
-                    <td v-text="site.siteUrl"></td>
+                    <td class="url-container" v-text="site.siteUrl"></td>
                 </tr>
                 <tr>
                     <th>Is my site:</th>
@@ -87,6 +87,7 @@
             </table>
         </td>
     </tr>
+    <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
     </tbody>
 </template>
 
@@ -96,9 +97,12 @@
 
     import editSite from './EditSite.vue';
 
+    import deleteConfirmation from '../../fragments/modals/DeleteConfirmation.vue';
+
     export default {
         components: {
-            editSite
+            editSite,
+            deleteConfirmation,
         },
         props: [
             'current-site'
@@ -107,10 +111,21 @@
             return {
                 editingSiteURL: false,
                 showSiteDetails: false,
+                deleteParams: {
+                    title: 'URL',
+                    list: [
+                        'All pricing information related to this Site, including any information displayed on your Charts and Dashboards',
+                        'All Product Reports generated',
+                        'All alerts set up for this Site',
+                        'This Site\'s pricing information tracked to date',
+                    ],
+                    active: false
+                },
+                isDeletingSite: false
             }
         },
         mounted() {
-
+            console.info('SingleSite component is mounted');
         },
         methods: {
             goingToEditSiteURL: function () {
@@ -128,9 +143,34 @@
             },
             toggleSiteDetails: function () {
                 this.showSiteDetails = !this.showSiteDetails;
+            },
+            /*delete site*/
+            onClickDeleteSite(){
+                this.deleteParams.active = true;
+            },
+            cancelDelete(){
+                this.deleteParams.active = false;
+            },
+            confirmDelete(){
+                this.deleteParams.active = false;
+                this.deleteSite()
+            },
+            deleteSite(){
+                this.isDeletingSite = true;
+                axios.delete(this.site.urls.delete).then(response=> {
+                    this.isDeletingSite = false;
+                    if (response.data.status == true) {
+                        this.$emit('reload-sites');
+                    }
+                }).catch(error=> {
+                    this.isDeletingSite = false;
+                })
             }
         },
         computed: {
+            site(){
+                return this.currentSite;
+            },
             dateFormat(){
                 return user.allPreferences.DATE_FORMAT;
             },
@@ -139,9 +179,6 @@
             },
             datetimeFormat(){
                 return this.dateFormat + ' ' + this.timeFormat;
-            },
-            site(){
-                return this.currentSite;
             }
         },
     }
@@ -162,13 +199,14 @@
     }
 
     .btn-edit.btn-edit-site .btn-edit-align-middle {
-        position: relative;
+        position: absolute;
         top: 50%;
         -webkit-transform: translateY(-50%);
         -moz-transform: translateY(-50%);
         -ms-transform: translateY(-50%);
         -o-transform: translateY(-50%);
         transform: translateY(-50%);
+        right: 0px;
     }
 
     tr.site-wrapper td.site-url {
@@ -180,7 +218,20 @@
         min-width: 225px;
     }
 
-    tr.site-wrapper td.site-url a {
+    tr.site-wrapper td.site-url a.site-url-link {
         padding-right: 50px !important;
+    }
+
+    td.url-container {
+        -ms-word-wrap: break-word;
+        word-wrap: break-word;
+        -ms-word-break: break-all;
+        word-break: break-all;
+    }
+
+    @media (max-width: 991px) {
+        tr.site-wrapper td.site-url a.site-url-link {
+            padding-right: 15px !important;
+        }
     }
 </style>

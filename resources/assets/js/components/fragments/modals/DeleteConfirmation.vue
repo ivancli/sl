@@ -6,7 +6,7 @@
                 <button class="close" @click.prevent="cancelDelete"><span aria-hidden="true">×</span></button>
                 <div class="delete-popup-content-container">
                     <h3 class="text-center delete-popup-heading m-b-20">
-                        Are you sure you want to delete this {{ modalTitle }}?
+                        Are you sure you want to delete this {{ modalTitle | capitalise }}?
                     </h3>
                     <p class="delete-popup-subheading m-b-20">
                         By deleting this {{ modalTitle }}, you will lose the following:
@@ -38,6 +38,8 @@
 </template>
 
 <script>
+    import capitalise from '../../../filters/capitalise';
+
     export default {
         props: [
             'delete-params'

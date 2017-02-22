@@ -16,7 +16,8 @@ class CreateItemMetasTable extends Migration
         Schema::create('item_metas', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('item_id')->unsigned();
-            $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
+            $table->foreign('item_id')->references('id')->on('items')
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->text('element');
             $table->text('value');
             $table->timestamps();

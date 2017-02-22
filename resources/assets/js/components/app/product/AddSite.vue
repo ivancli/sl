@@ -85,7 +85,7 @@
                         this.addingSite = false;
                     }
                     this.clearNewSiteURL();
-                    this.$emit('addedSite');
+                    this.$emit('added-site');
                 }).catch(error=> {
                     this.isAddingSite = false;
                     if (error.response && error.response.status == 422 && error.response.data) {

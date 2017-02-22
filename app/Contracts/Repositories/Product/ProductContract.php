@@ -43,9 +43,16 @@ interface ProductContract
     /**
      * Editing existing product
      *
-     * @param $id
+     * @param Product $product
      * @param array $data
      * @return Product
      */
-    public function update($id, Array $data);
+    public function update(Product $product, Array $data);
+
+    /**
+     * Deleting a product
+     * @param Product $product
+     * @return mixed
+     */
+    public function destroy(Product $product);
 }

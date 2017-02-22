@@ -1,5 +1,5 @@
 <template>
-    <div class="modal" :class="isActive ? 'is-active' : ''">
+    <div class="modal error-modal" :class="isActive ? 'is-active' : ''">
         <div class="modal-background"></div>
         <div class="modal-card">
             <header class="modal-card-head">
@@ -74,8 +74,15 @@
 </script>
 
 <style>
+    .error-modal {
+        -ms-word-wrap: normal;
+        word-wrap: normal;
+        white-space: normal;
+    }
+
     @media screen and (min-width: 301px) {
-        .modal-content, .modal-card {
+        .error-modal .modal-content,
+        .error-modal .modal-card {
             width: 300px;
         }
     }

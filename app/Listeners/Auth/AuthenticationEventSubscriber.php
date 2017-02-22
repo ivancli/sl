@@ -45,9 +45,6 @@ class AuthenticationEventSubscriber
     public function onAuthRegistered($event)
     {
         $user = $event->user;
-        /* set initial preferences */
-        $user->setPreference('DATE_FORMAT', 'Y-m-d');
-        $user->setPreference('TIME_FORMAT', 'g:i:a');
     }
 
     /**
