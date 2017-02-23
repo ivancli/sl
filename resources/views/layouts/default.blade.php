@@ -10,6 +10,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{asset('/images/favicon.png')}}"/>
     <title>@yield('title', 'SpotLite')</title>
     @yield('links')
+    @yield('head_scripts')
     @component('components.csrf_token_script')
     @endcomponent
     @component('components.variable_setter')

@@ -46,7 +46,7 @@
                         </ul>
                     </li>
                     <li class="spotlite-user-menu">
-                        <a href="#">&nbsp;
+                        <a href="/account_settings">&nbsp;
                             <i class="fa fa-wrench"></i>
                             <span class="hidden-xs">
                                 &nbsp;

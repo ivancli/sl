@@ -13,6 +13,16 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
+        /**
+         * account settings
+         */
+        'App\Events\Account\AccountSettings\BeforeIndex' => [],
+        'App\Events\Account\AccountSettings\AfterIndex' => [],
+        'App\Events\Account\Profile\BeforeUpdate' => [],
+        'App\Events\Account\Profile\AfterUpdate' => [],
+        'App\Events\Account\Preference\BeforeUpdate' => [],
+        'App\Events\Account\Preference\AfterUpdate' => [],
+
         'App\Events\Product\Category\BeforeIndex' => [],
         'App\Events\Product\Category\AfterIndex' => [],
         'App\Events\Product\Category\BeforeShow' => [],
@@ -132,12 +142,17 @@ class EventServiceProvider extends ServiceProvider
 //        'App\Listeners\Subscription\ProductControllerEventSubscriber',
 //        'App\Listeners\Subscription\SubscriptionControllerEventSubscriber',
 
-//        /*product*/
+        /*account*/
+        'App\Listeners\Account\AccountSettingsControllerEventSubscriber',
+        'App\Listeners\Account\ProfileControllerEventSubscriber',
+        'App\Listeners\Account\PreferenceControllerEventSubscriber',
+
+        /*product*/
         'App\Listeners\Product\CategoryControllerEventSubscriber',
         'App\Listeners\Product\ProductControllerEventSubscriber',
         'App\Listeners\Product\SiteControllerEventSubscriber',
 
-//        /*auth*/
+        /*auth*/
         'App\Listeners\Auth\AuthenticationEventSubscriber',
         'App\Listeners\Auth\ForgotPasswordControllerEventSubscriber',
         'App\Listeners\Auth\LoginControllerEventSubscriber',

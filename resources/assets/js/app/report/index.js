@@ -9,6 +9,8 @@ import defaultContent from '../../components/partials/Content.vue';
 import contentHeader from '../../components/partials/content/ContentHeader.vue';
 import contentBody from '../../components/app/report/Index.vue';
 
+import store from '../../stores/app/product/index';
+
 const sl = new Vue({
     el: '#sl',
     components: {
@@ -18,5 +20,6 @@ const sl = new Vue({
         defaultContent,
         contentHeader,
         contentBody
-    }
+    },
+    store
 });

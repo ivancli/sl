@@ -116,6 +116,12 @@ return [
             'url' => 'Please provide a valid URL.',
             'unique_per_product' => 'A site with the same URL already exists in the same product.'
         ],
+        'DATE_FORMAT' => [
+            'required' => 'Please select a date format',
+        ],
+        'TIME_FORMAT' => [
+            'required' => 'Please select a time format',
+        ],
     ],
 
     /*

@@ -27,12 +27,20 @@ Route::group(['middleware' => ['auth']], function () {
         return view('app.product.index');
     })->name('home.get');
 
+
+    Route::resource('account_settings', 'Account\AccountSettingsController');
+    Route::resource('user/profile', 'Account\ProfileController');
+    Route::resource('user/preference', 'Account\PreferenceController');
+
+
     Route::resource('category', 'Product\CategoryController', ['except' => [
         'create'
     ]]);
+
     Route::resource('product', 'Product\ProductController', ['except' => [
         'create'
     ]]);
+
     Route::resource('site', 'Product\SiteController', ['except' => [
         'create'
     ]]);

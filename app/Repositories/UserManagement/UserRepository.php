@@ -104,8 +104,21 @@ class UserRepository implements UserContract
         if (array_has($data, 'password') && !empty(array_get($data, 'password'))) {
             array_set($data, 'password', bcrypt(array_get($data, 'password')));
         }
+
         $user->update($data);
         return $user;
+    }
+
+    /**
+     * update user meta info
+     * @param User $user
+     * @param array $data
+     * @return mixed
+     */
+    public function updateMetas(User $user, Array $data)
+    {
+        $metas = $user->metas->update($data);
+        return $metas;
     }
 
     /**

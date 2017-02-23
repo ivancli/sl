@@ -1,4 +1,3 @@
-\
 <template>
     <!-- Main content -->
     <section class="content">

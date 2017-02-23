@@ -39,20 +39,7 @@ class User extends Authenticatable
     ];
 
     protected $appends = [
-        'fullName', 'allPreferences', 'urls'
-    ];
-
-    protected $events = [
-        'creating' => Creating::class,
-        'created' => Created::class,
-        'updating' => Updating::class,
-        'updated' => Updated::class,
-        'saving' => Saving::class,
-        'saved' => Saved::class,
-        'deleting' => Deleting::class,
-        'deleted' => Deleted::class,
-        'restoring' => Restoring::class,
-        'restored' => Restored::class,
+        'fullName', 'allPreferences', 'allMetas', 'urls', 'profileUrls', 'preferenceUrls',
     ];
 
     /**
@@ -91,9 +78,22 @@ class User extends Authenticatable
         return $this->hasManyThrough('App\Models\Site', 'App\Models\Product', 'user_id', 'product_id', 'id');
     }
 
+    /**
+     * relationship with user preference
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function preferences()
     {
         return $this->hasMany('App\Models\UserPreference', 'user_id', 'id');
+    }
+
+    /**
+     * relationship with user meta
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function metas()
+    {
+        return $this->hasOne('App\Models\UserMeta', 'user_id', 'id');
     }
 
     /*----------------------------------------------------------------------*/
@@ -119,6 +119,12 @@ class User extends Authenticatable
         return $preferences;
     }
 
+    public function getAllMetasAttribute()
+    {
+        $metas = $this->metas;
+        return $metas;
+    }
+
     /**
      * an attribute with an array of routes related to this object
      * @return array
@@ -132,6 +138,28 @@ class User extends Authenticatable
             'edit' => route('user.edit', $this->getKey()),
             'update' => route('user.update', $this->getKey()),
             'delete' => route('user.destroy', $this->getKey()),
+        );
+    }
+
+    /**
+     * an attribute with an array of routes related to this object
+     * @return array
+     */
+    public function getProfileUrlsAttribute()
+    {
+        return array(
+            'update' => route('profile.update', $this->getKey()),
+        );
+    }
+
+    /**
+     * an attribute with an array of routes related to this object
+     * @return array
+     */
+    public function getPreferenceUrlsAttribute()
+    {
+        return array(
+            'update' => route('preference.update', $this->getKey()),
         );
     }
 

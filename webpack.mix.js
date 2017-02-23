@@ -19,6 +19,9 @@ mix
     .js('resources/assets/js/auth/register.js', 'public/js/auth')
     .js('resources/assets/js/auth/forgot.js', 'public/js/auth')
 
+    /* account settings */
+    .js('resources/assets/js/app/account_settings/index.js', 'public/js/app/account_settings')
+
     /* product */
     .js('resources/assets/js/app/product/index.js', 'public/js/app/product')
 

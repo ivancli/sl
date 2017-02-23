@@ -49,6 +49,14 @@ interface UserContract
     public function update(User $user, Array $data);
 
     /**
+     * update user meta info
+     * @param User $user
+     * @param array $data
+     * @return mixed
+     */
+    public function updateMetas(User $user, Array $data);
+
+    /**
      * Remove an existing user
      * @param User $user
      * @return

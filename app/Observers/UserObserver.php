@@ -2,6 +2,7 @@
 namespace App\Observers;
 
 use App\Models\User;
+use App\Models\UserMeta;
 
 /**
  * Created by PhpStorm.
@@ -19,7 +20,8 @@ class UserObserver
     public function created(User $user)
     {
         $user->setPreference('DATE_FORMAT', 'Y-m-d');
-        $user->setPreference('TIME_FORMAT', 'g:i:a');
+        $user->setPreference('TIME_FORMAT', 'g:i a');
+        $user->metas()->save(new UserMeta());
     }
 
     public function saving()
