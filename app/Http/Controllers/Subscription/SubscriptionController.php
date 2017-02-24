@@ -15,6 +15,7 @@ use App\Contracts\Repositories\UserManagement\UserContract;
 use App\Exceptions\JsonDecodeException;
 use App\Exceptions\Subscription\SubscriptionNotFoundException;
 use App\Http\Controllers\Controller;
+use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -80,5 +81,14 @@ class SubscriptionController extends Controller
         $userSubscription->save();
 
         return redirect()->route('home.get');
+    }
+
+    /**
+     * User without subscription will come to this page and reactivate/subscribe
+     * @param Subscription $subscription
+     */
+    public function edit(Subscription $subscription)
+    {
+
     }
 }

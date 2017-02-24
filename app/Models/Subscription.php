@@ -10,6 +10,7 @@ namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Invigor\Chargify\Chargify;
 
 class Subscription extends Model
 {
@@ -17,9 +18,23 @@ class Subscription extends Model
         'token', 'api_subscription_id'
     ];
 
+    protected $appends = [
+        'isValid'
+];
+
     public function user()
     {
         return $this->belongsTo('App\Models\User', 'user_id', 'id');
+    }
+
+    /*----------------------------------------------------------------------*/
+    /* Attributes                                                           */
+    /*----------------------------------------------------------------------*/
+
+    public function getIsValidAttribute()
+    {
+        $api_subscription = Chargify::subscription()->get($this->api_subscription_id);
+        return $api_subscription->state == 'trialing' || $api_subscription->state == 'active';
     }
 
     /* ---------------------------------------------------------------------- */
@@ -38,4 +53,5 @@ class Subscription extends Model
         $this->save();
         return $this->token;
     }
+
 }

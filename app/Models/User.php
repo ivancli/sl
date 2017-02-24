@@ -39,7 +39,7 @@ class User extends Authenticatable
     ];
 
     protected $appends = [
-        'fullName', 'allPreferences', 'allMetas', 'urls', 'profileUrls', 'preferenceUrls',
+        'fullName', 'allPreferences', 'allMetas', 'profileUrls', 'preferenceUrls', 'isStaffMember', 'isUnlimitedClient', 'needSubscription', 'urls'
     ];
 
     /**
@@ -161,6 +161,23 @@ class User extends Authenticatable
         return array(
             'update' => route('preference.update', $this->getKey()),
         );
+    }
+
+    public function getIsStaffMemberAttribute()
+    {
+        return $this->hasRole([
+            'tier_1', 'tier_2', 'tier_3', 'tier_4'
+        ]);
+    }
+
+    public function getIsUnlimitedClientAttribute()
+    {
+        return $this->hasRole('unlimited_client');
+    }
+
+    public function getNeedSubscriptionAttribute()
+    {
+        return !$this->isStaffMember && !$this->isUnlimitedClient;
     }
 
     /*----------------------------------------------------------------------*/

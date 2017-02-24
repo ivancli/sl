@@ -42,7 +42,7 @@
                         <div class="col-md-9">
                             <select id="sel-time-format" class="form-control" v-model="timeFormat">
                                 <option value="">Please select</option>
-                                <option value="g:i a">{{ currentDateTime | formatDateTime('m/d/Y') }}</option>
+                                <option value="g:i a">{{ currentDateTime | formatDateTime('g:i a') }}</option>
                                 <option value="h:i a">{{ currentDateTime | formatDateTime('h:i a') }}</option>
                                 <option value="g:i A">{{ currentDateTime | formatDateTime('g:i A') }}</option>
                                 <option value="h:i A">{{ currentDateTime | formatDateTime('h:i A') }}</option>

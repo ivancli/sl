@@ -22,7 +22,7 @@ Route::get('subscription/product', 'Subscription\ProductController@index')->name
 Route::resource('subscription/subscription', 'Subscription\SubscriptionController');
 
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth', 'subs']], function () {
     Route::get('/', function () {
         return view('app.product.index');
     })->name('home.get');
@@ -53,4 +53,24 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('user-management/group', 'UserManagement\GroupController');
     Route::resource('user-management/role', 'UserManagement\RoleController');
     Route::resource('user-management/permission', 'UserManagement\PermissionController');
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| Errors Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+Route::group(['prefix' => 'errors'], function () {
+    Route::get('javascript_disabled', function () {
+        return view('errors.javascript_disabled');
+    })->name('errors.javascript_disabled');
+    Route::get('cookie_disabled', function () {
+        return view('errors.cookie_disabled');
+    })->name('errors.cookie_disabled');
 });

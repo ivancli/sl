@@ -1,6 +1,17 @@
 <!doctype html>
 <html lang="en">
 <head>
+    {{--redirect if js not available--}}
+    <noscript>
+        <meta http-equiv="refresh" content="0; url={{route('errors.javascript_disabled')}}"/>
+    </noscript>
+    {{--redirect if cookie not available, unable to store login session anyway without cookie--}}
+    <script type="text/javascript">
+        if (navigator.cookieEnabled == false) {
+            window.location = "{{route('errors.cookie_disabled')}}";
+        }
+    </script>
+
     @component('components.csrf_token_meta')
     @endcomponent
     <meta charset="UTF-8">

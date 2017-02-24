@@ -179,7 +179,6 @@ return [
 
         \Invigor\Chargify\ChargifyServiceProvider::class,
         App\Providers\SubscriptionServiceProvider::class,
-        App\Providers\UserServiceProvider::class,
 
         IvanCLI\UM\UMServiceProvider::class,
     ],
