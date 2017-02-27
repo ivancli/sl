@@ -43,7 +43,8 @@ class SubscriptionController extends Controller
         $updatePaymentProfileLink = $this->subscriptionRepo->generateUpdatePaymentProfileLink($subscription);
         $subscriptionPlan = $subscription->apiSubscription->product();
         $transactions = $this->subscriptionRepo->getTransactions($subscription);
-        return compact(['updatePaymentProfileLink', 'subscriptionPlan', 'transaction']);
+        $status = true;
+        return compact(['updatePaymentProfileLink', 'subscriptionPlan', 'transactions', 'status']);
     }
 
     /**

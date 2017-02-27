@@ -46,6 +46,9 @@ class Subscription extends Model
      */
     public function getIsValidAttribute()
     {
+        if (is_null($this->apiSubscription)) {
+            return false;
+        }
         return $this->apiSubscription->state == 'trialing' || $this->apiSubscription->state == 'active';
     }
 
