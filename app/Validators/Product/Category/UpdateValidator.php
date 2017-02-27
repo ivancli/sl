@@ -27,7 +27,7 @@ class UpdateValidator extends ValidatorAbstract
             if (is_array($parameters) && !is_null(array_first($parameters))) {
                 $builder->where('id', '<>', array_first($parameters));
             }
-            $currentCategoryNames = $builder->get()->map->name->all();
+            $currentCategoryNames = $builder->get()->map->category_name->all();
             return !in_array($value, $currentCategoryNames);
         });
 
@@ -53,7 +53,7 @@ class UpdateValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return [
-            'name' => "required|max:255|unique_per_user:{$id}"
+            'category_name' => "required|max:255|unique_per_user:{$id}"
         ];
     }
 }

@@ -111,10 +111,17 @@ return [
             'unique_per_user' => 'Name needs to be unique.',
             'unique_per_category' => 'Name needs to be unique in a category.',
         ],
+        'category_name' => [
+            'unique_per_user' => 'A category with the same name already exists.',
+        ],
+        'product_name' => [
+            'unique_per_user' => 'A product with the same name already exists.',
+            'unique_per_category' => 'A product with the same name already exists in this category.',
+        ],
         'full_path' => [
             'required' => 'URL is required.',
             'url' => 'Please provide a valid URL.',
-            'unique_per_product' => 'A site with the same URL already exists in the same product.'
+            'unique_per_product' => 'A site with the same URL already exists in this product.'
         ],
         'DATE_FORMAT' => [
             'required' => 'Please select a date format',

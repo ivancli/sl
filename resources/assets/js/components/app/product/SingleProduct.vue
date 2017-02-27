@@ -8,7 +8,8 @@
                 </a>
             </th>
             <th class="product-th">
-                <a class="text-muted product-name-link" href="#" v-text="product.product_name" v-show="!editingProductName"></a>
+                <a class="text-muted product-name-link" href="#" v-text="product.product_name"
+                   v-show="!editingProductName"></a>
                 <edit-product :editing-product="product" @edited-product="editedProduct"
                               @edit-product-name="goingToEditProductName"
                               @cancel-edit-product-name="cancelEditProductName"></edit-product>
@@ -24,7 +25,8 @@
                     <i class="glyphicon glyphicon-trash"></i>
                 </a>
             </th>
-            <th class="text-center vertical-align-middle product-collapse-cell" width="70" @click.prevent="toggleProductCollapse">
+            <th class="text-center vertical-align-middle product-collapse-cell" width="70"
+                @click.prevent="toggleProductCollapse">
                 <a class="text-muted btn-collapse" :class="isProductCollapsed ? 'collapsed' : ''">
                     <i class="fa fa-angle-up"></i>
                 </a>
@@ -63,7 +65,9 @@
                         <single-site v-for="site in sites" :current-site="site" @reload-sites="loadSites"></single-site>
                         <tbody>
                         <tr class="empty-message-row" v-if="!hasSites">
-                            <td colspan="9" class="text-center">To start tracking prices, simply copy and paste the URL of the product page of the website your want to track.</td>
+                            <td colspan="9" class="text-center">To start tracking prices, simply copy and paste the URL
+                                of the product page of the website your want to track.
+                            </td>
                         </tr>
                         </tbody>
                         <tbody>
@@ -78,7 +82,8 @@
             </td>
         </tr>
         </tbody>
-        <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
+        <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete"
+                             @confirmDelete="confirmDelete"></delete-confirmation>
     </table>
 </template>
 
@@ -124,11 +129,11 @@
         },
         methods: {
             loadSites: function () {
-                axios.get('/site', this.loadSitesRequestData).then(response=> {
+                axios.get('/site', this.loadSitesRequestData).then(response => {
                     if (response.data.status == true) {
                         this.sites = response.data.sites;
                     }
-                }).catch(error=> {
+                }).catch(error => {
                     console.info(error.response);
                 })
             },
@@ -159,12 +164,12 @@
             },
             deleteProduct(){
                 this.isDeletingProduct = true;
-                axios.delete(this.product.urls.delete).then(response=> {
+                axios.delete(this.product.urls.delete).then(response => {
                     this.isDeletingProduct = false;
                     if (response.data.status == true) {
                         this.$emit('reload-products');
                     }
-                }).catch(error=> {
+                }).catch(error => {
                     this.isDeletingProduct = false;
                 })
             },
@@ -217,6 +222,7 @@
         background-color: #e8e8e8;
         padding-top: 10px;
         padding-bottom: 10px;
+        cursor: pointer;
     }
 
     .product-collapse-cell .btn-collapse {

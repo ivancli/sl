@@ -1,6 +1,6 @@
 {
-  "/js/app/product/index.js": "/js/app/product/index.fcb611f1b137f311762a.js",
-  "/js/app/account_settings/index.js": "/js/app/account_settings/index.4be225b2c9bec61e5711.js",
+  "/js/app/product/index.js": "/js/app/product/index.42d8b9a6ce11f8159136.js",
+  "/js/app/account_settings/index.js": "/js/app/account_settings/index.1840dbc8187f11f4000d.js",
   "/js/app/user/index.js": "/js/app/user/index.3150a2d60f628c96ced0.js",
   "/js/app/role/index.js": "/js/app/role/index.86e5d5d9a6073e6bdc91.js",
   "/js/app/permission/index.js": "/js/app/permission/index.84442a347539f0944016.js",
@@ -23,6 +23,6 @@
   "/js/auth/login.js": "/js/auth/login.80882250a89b34fdc4ff.js",
   "/js/auth/forgot.js": "/js/auth/forgot.6308a7f828518d123a88.js",
   "/js/app.js": "/js/app.bbd513c67050673bdab4.js",
-  "/css/app.css": "/css/app.241933589bc0e7f87112.css",
-  "/css/auth.css": "/css/auth.241933589bc0e7f87112.css"
+  "/css/app.css": "/css/app.059ee97ecf4bb13c712a.css",
+  "/css/auth.css": "/css/auth.059ee97ecf4bb13c712a.css"
 }

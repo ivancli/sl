@@ -44,8 +44,7 @@
                         </table>
                         <div class="row">
                             <div class="col-sm-12 text-right">
-                                <a href="https://gmail-sandbox.chargify.com/update_payment/16543488/a87d8ff5bc"
-                                   class="btn btn-primary btn-flat">
+                                <a :href="updatePaymentProfileLink" class="btn btn-primary btn-flat">
                                     UPDATE PAYMENT DETAILS
                                 </a>
                                 &nbsp;

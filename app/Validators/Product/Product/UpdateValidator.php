@@ -30,7 +30,7 @@ class UpdateValidator extends ValidatorAbstract
             if (is_array($parameters) && !is_null(array_first($parameters))) {
                 $builder->where('id', '<>', array_first($parameters));
             }
-            $currentProductNames = $builder->get()->map->name->all();
+            $currentProductNames = $builder->get()->map->product_name->all();
             return !in_array($value, $currentProductNames);
         });
 
@@ -56,7 +56,7 @@ class UpdateValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return [
-            'name' => "required|max:255|unique_per_category:{$id}"
+            'product_name' => "required|max:255|unique_per_category:{$id}"
         ];
     }
 
