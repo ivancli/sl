@@ -18,7 +18,7 @@
     },
     {
       "type": "vcs",
-      "url": "git@bitbucket.org:invigorgroup/spotlite-chargify.git"
+      "url": "git@github.com:ketchol/chargify.git"
     }
   ],
   "require": {
@@ -30,8 +30,7 @@
     "mpdf/mpdf": "^6.1",
     "predis/predis": "^1.1",
     "ivancli/um": "dev-master",
-    "invigor/crawler": "1.*",
-    "invigor/chargify": "dev-master"
+    "ivancli/chargify": "dev-master"
   },
   "require-dev": {
     "almasaeed2010/adminlte": "^2.3",

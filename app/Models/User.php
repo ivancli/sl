@@ -2,16 +2,6 @@
 
 namespace App\Models;
 
-use App\Events\Models\User\Created;
-use App\Events\Models\User\Creating;
-use App\Events\Models\User\Deleted;
-use App\Events\Models\User\Deleting;
-use App\Events\Models\User\Restored;
-use App\Events\Models\User\Restoring;
-use App\Events\Models\User\Saved;
-use App\Events\Models\User\Saving;
-use App\Events\Models\User\Updated;
-use App\Events\Models\User\Updating;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use IvanCLI\UM\Traits\UMUserTrait;
@@ -26,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'title', 'first_name', 'last_name', 'email', 'password',
+        'title', 'first_name', 'last_name', 'email', 'password', 'status'
     ];
 
     /**

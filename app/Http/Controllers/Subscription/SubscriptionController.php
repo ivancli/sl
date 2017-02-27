@@ -38,6 +38,14 @@ class SubscriptionController extends Controller
         $this->userRepo = $userContract;
     }
 
+    public function show(Subscription $subscription)
+    {
+        $updatePaymentProfileLink = $this->subscriptionRepo->generateUpdatePaymentProfileLink($subscription);
+        $subscriptionPlan = $subscription->apiSubscription->product();
+        $transactions = $this->subscriptionRepo->getTransactions($subscription);
+        return compact(['updatePaymentProfileLink', 'subscriptionPlan', 'transaction']);
+    }
+
     /**
      * Accept subscription update from Chargify
      *

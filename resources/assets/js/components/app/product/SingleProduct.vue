@@ -8,7 +8,7 @@
                 </a>
             </th>
             <th class="product-th">
-                <a class="text-muted product-name-link" href="#" v-text="product.name" v-show="!editingProductName"></a>
+                <a class="text-muted product-name-link" href="#" v-text="product.product_name" v-show="!editingProductName"></a>
                 <edit-product :editing-product="product" @edited-product="editedProduct"
                               @edit-product-name="goingToEditProductName"
                               @cancel-edit-product-name="cancelEditProductName"></edit-product>

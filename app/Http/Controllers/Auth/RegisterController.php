@@ -107,10 +107,9 @@ class RegisterController extends Controller
                 ),
                 "coupon_code" => $couponCode
             ]);
+
+            // update api_subscription_id
             $subscription = $user->subscription;
-            if (is_null($subscription)) {
-                throw new SubscriptionNotFoundException();
-            }
             $subscription->api_subscription_id = $result->id;
             $subscription->save();
         }

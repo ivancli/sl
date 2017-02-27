@@ -19,5 +19,7 @@ class TestingUserSeeder extends Seeder
             'password' => bcrypt('secret'),
         ]);
         $adminUser->save();
+        $tier_1 = \App\Models\Role::where('name', 'tier_1')->first();
+        $adminUser->attachRole($tier_1);
     }
 }

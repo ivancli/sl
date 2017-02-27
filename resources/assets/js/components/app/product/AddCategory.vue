@@ -97,7 +97,7 @@
         computed: {
             addCategoryData: function () {
                 return {
-                    name: this.newCategoryName
+                    category_name: this.newCategoryName
                 };
             }
         }

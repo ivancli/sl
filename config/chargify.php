@@ -7,6 +7,15 @@
  */
 
 return [
+
+    'caching' => array(
+
+        'enable' => true,
+
+        'ttl' => 60 * 24
+
+    ),
+
     //the api key generate in Chargify settings
     'api_key' => env('CHARGIFY_API_KEY'),
 

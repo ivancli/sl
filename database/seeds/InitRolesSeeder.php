@@ -27,8 +27,14 @@ class InitRolesSeeder extends Seeder
         $tier_3 = new Role;
         $tier_3->name = 'tier_3';
         $tier_3->display_name = 'Tier 3';
-        $tier_3->description = 'Second level administrators';
+        $tier_3->description = 'Third level administrators';
         $tier_3->save();
+
+        $tier_4 = new Role;
+        $tier_4->name = 'tier_4';
+        $tier_4->display_name = 'Tier 4';
+        $tier_4->description = 'Fourth level administrators';
+        $tier_4->save();
 
         $client = new Role;
         $client->name = 'client';

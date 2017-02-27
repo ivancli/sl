@@ -11,7 +11,7 @@ namespace App\Repositories\Subscription;
 
 use App\Contracts\Repositories\Subscription\ProductFamilyContract;
 use App\Exceptions\Subscription\ProductFamilyNotFoundException;
-use Invigor\Chargify\Chargify;
+use IvanCLI\Chargify\Chargify;
 
 class ProductFamilyRepository implements ProductFamilyContract
 {

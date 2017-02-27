@@ -9,6 +9,9 @@
 namespace App\Listeners\Auth;
 
 
+use App\Models\Role;
+use Illuminate\Support\Facades\Cache;
+
 class AuthenticationEventSubscriber
 {
 
@@ -34,7 +37,10 @@ class AuthenticationEventSubscriber
 
     public function onAuthLogin($event)
     {
-
+        $user = $event->user;
+        if (!is_null($user->subscription)) {
+            Cache::forget("chargify.subscriptions.{$user->subscription->api_subscription_id}");
+        }
     }
 
     public function onAuthLogout($event)
@@ -45,6 +51,9 @@ class AuthenticationEventSubscriber
     public function onAuthRegistered($event)
     {
         $user = $event->user;
+        /* assign registered users to client role */
+        $client = Role::where('name', 'client')->first();
+        $user->attachRole($client);
     }
 
     /**

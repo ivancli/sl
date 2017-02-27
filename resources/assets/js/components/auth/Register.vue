@@ -134,3 +134,26 @@
         }
     }
 </script>
+
+<style>
+    .form-group input {
+        padding-left: 20px;
+    }
+
+    .form-group select {
+        padding-left: 15px;
+    }
+
+    .form-group.required {
+        position: relative;
+    }
+
+    .form-group.required::before {
+        content: "*";
+        color: red;
+        font-weight: bold;
+        position: absolute;
+        left: 10px;
+        top: 10px;
+    }
+</style>

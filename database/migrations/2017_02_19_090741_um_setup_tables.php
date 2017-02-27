@@ -60,6 +60,8 @@ class UMSetupTables extends Migration
         // Create table for storing permissions
         Schema::create('permissions', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('parent_id')->unsigned()->nullable();
+            $table->foreign('parent_id')->references('id')->on('permissions');
             $table->string('name')->unique();
             $table->string('display_name')->nullable();
             $table->text('description')->nullable();

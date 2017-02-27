@@ -177,7 +177,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        \Invigor\Chargify\ChargifyServiceProvider::class,
+        IvanCLI\Chargify\ChargifyServiceProvider::class,
         App\Providers\SubscriptionServiceProvider::class,
 
         IvanCLI\UM\UMServiceProvider::class,
@@ -230,7 +230,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
-        'Chargify' => Invigor\Chargify\ChargifyFacade::class,
+        'Chargify' => IvanCLI\Chargify\ChargifyFacade::class,
 
         'UM' => IvanCLI\UM\UMFacade::class,
     ],

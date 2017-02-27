@@ -6,7 +6,7 @@
                 <a class="btn-collapse" aria-expanded="true"><i class="fa fa-tag "></i></a>
             </th>
             <th class="category-th">
-                <a class="text-muted category-name-link" href="#" v-text="currentCategory.name" v-show="!editingCategoryName"></a>
+                <a class="text-muted category-name-link" href="#" v-text="category.category_name" v-show="!editingCategoryName"></a>
                 <edit-category :editing-category="category" @edited-category="editedCategory" @edit-category-name="goingToEditCategoryName"
                                @cancel-edit-category-name="cancelEditCategoryName"></edit-category>
             </th>
@@ -33,19 +33,19 @@
             <th colspan="3" class="category-th">
                 <div class="text-light">
                     Created
-                    on {{currentCategory.created_at | formatDateTime(dateFormat)}}
-                    <strong class="text-muted"><i>by {{currentCategory.owner.fullName}}</i></strong>
+                    on {{category.created_at | formatDateTime(dateFormat)}}
+                    <strong class="text-muted"><i>by {{category.owner.fullName}}</i></strong>
                 </div>
                 <div class="text-light">
                     Product URLs Tracked:
-                    <strong><span class="lbl-site-usage text-muted" v-text="currentCategory.numberOfSites"></span></strong>
+                    <strong><span class="lbl-site-usage text-muted" v-text="category.numberOfSites"></span></strong>
                 </div>
             </th>
         </tr>
         <tr>
             <th></th>
             <th colspan="3" class="category-th action-cell add-item-cell">
-                <add-product :category="currentCategory" @added-product="addedProduct"></add-product>
+                <add-product :category="category" @added-product="addedProduct"></add-product>
             </th>
         </tr>
         </thead>

@@ -20,6 +20,11 @@
                         Display Settings
                     </a>
                 </li>
+                <li :class="setTabActiveClass('manage-subscription')">
+                    <a href="#display-settings" @click.prevent="setActiveTab('manage-subscription')">
+                        Manage My Subscription
+                    </a>
+                </li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane" id="edit-profile" :class="setTabActiveClass('edit-profile')">
@@ -31,8 +36,8 @@
                 <div class="tab-pane" id="display-settings" :class="setTabActiveClass('display-settings')">
                     <display-settings></display-settings>
                 </div>
-                <div class="tab-pane" id="manage-subscription">
-
+                <div class="tab-pane" id="manage-subscription" :class="setTabActiveClass('manage-subscription')">
+                    <manage-subscription></manage-subscription>
                 </div>
             </div>
         </div>
@@ -43,12 +48,14 @@
     import EditProfile from './EditProfile.vue';
     import ResetPassword from './ResetPassword.vue';
     import DisplaySettings from './DisplaySettings.vue';
+    import ManageSubscription from './ManageSubscription.vue';
 
     export default {
         components: {
             EditProfile,
             ResetPassword,
-            DisplaySettings
+            DisplaySettings,
+            ManageSubscription
         },
         data(){
             return {
@@ -65,6 +72,20 @@
         },
         mounted() {
             console.info('Index component is mounted');
+            /**
+             * set active tab based on URL hash value
+             */
+            if (window.location.hash != '') {
+                switch (window.location.hash) {
+                    case "#reset-password":
+                    case "#display-settings":
+                        this.activeTab = window.location.hash.replace('#', '');
+                        break;
+                    case "#edit-profile":
+                    default:
+                        this.activeTab = 'edit-profile';
+                }
+            }
         }
     }
 </script>

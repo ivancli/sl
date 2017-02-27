@@ -94,7 +94,7 @@
         computed: {
             addProductData: function () {
                 return {
-                    name: this.newProductName,
+                    product_name: this.newProductName,
                     category_id: this.category.id
                 };
             }

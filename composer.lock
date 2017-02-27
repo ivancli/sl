@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "49169b8c7385b051a4cd965424cabbaf",
+    "content-hash": "a74c137d5fceff845e938fbfed1d8baa",
     "packages": [
         {
             "name": "campaignmonitor/createsend-php",
@@ -206,16 +206,22 @@
             "time": "2016-11-02T15:56:58+00:00"
         },
         {
-            "name": "invigor/chargify",
+            "name": "ivancli/chargify",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git@bitbucket.org:invigorgroup/spotlite-chargify.git",
-                "reference": "808ac42680cf7f456b58e4ed685e1e7e57e83886"
+                "url": "https://github.com/ketchol/chargify.git",
+                "reference": "fd7670a1ed0eafec6a6cb4e61f3ebeeb82036110"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ketchol/chargify/zipball/fd7670a1ed0eafec6a6cb4e61f3ebeeb82036110",
+                "reference": "fd7670a1ed0eafec6a6cb4e61f3ebeeb82036110",
+                "shasum": ""
             },
             "require": {
                 "illuminate/cache": "~5.0",
-                "php": ">=5.5"
+                "php": ">=5.5.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "~4.1"
@@ -223,7 +229,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Invigor\\Chargify\\": "src/Chargify/"
+                    "IvanCLI\\Chargify\\": "src/Chargify/"
                 }
             },
             "license": [
@@ -232,54 +238,20 @@
             "authors": [
                 {
                     "name": "Ivan Li",
-                    "email": "ivan.li@invigorgroup.com"
+                    "email": "ivan.li@hotmail.com"
                 }
             ],
-            "description": "This is a Chargify API wrapper owned by Invigor",
+            "description": "This is a Chargify API wrapper owned by IvanCLI",
             "keywords": [
                 "chargify",
                 "laravel",
                 "subscription"
             ],
-            "time": "2016-11-22 00:23:13"
-        },
-        {
-            "name": "invigor/crawler",
-            "version": "1.1.35",
-            "source": {
-                "type": "git",
-                "url": "git@bitbucket.org:invigorgroup/spotlite-crawler.git",
-                "reference": "911d38ce28c5b51b02038da543d39063f4086278"
+            "support": {
+                "source": "https://github.com/ketchol/chargify/tree/master",
+                "issues": "https://github.com/ketchol/chargify/issues"
             },
-            "require": {
-                "illuminate/cache": "~5.0",
-                "php": ">=5.5.9"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0"
-            },
-            "type": "project",
-            "autoload": {
-                "psr-4": {
-                    "Invigor\\Crawler\\": "src/Crawler/"
-                }
-            },
-            "autoload-dev": {
-                "classmap": [
-                    "tests/Middleware/MiddlewareTest.php"
-                ]
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Ivan Li",
-                    "email": "ivan.li@invigorgroup.com"
-                }
-            ],
-            "description": "Invigor Crawler Package",
-            "time": "2017-02-15T06:30:30+00:00"
+            "time": "2017-02-27T06:16:29+00:00"
         },
         {
             "name": "ivancli/um",
@@ -287,12 +259,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ketchol/um.git",
-                "reference": "12977fe4d247bef0ceb6338e203f0491d80e24be"
+                "reference": "647c3004a9d24dd0a6c1cdaa7b9adcea176dcd80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ketchol/um/zipball/12977fe4d247bef0ceb6338e203f0491d80e24be",
-                "reference": "12977fe4d247bef0ceb6338e203f0491d80e24be",
+                "url": "https://api.github.com/repos/ketchol/um/zipball/647c3004a9d24dd0a6c1cdaa7b9adcea176dcd80",
+                "reference": "647c3004a9d24dd0a6c1cdaa7b9adcea176dcd80",
                 "shasum": ""
             },
             "require": {
@@ -324,7 +296,7 @@
                 "source": "https://github.com/ketchol/um/tree/master",
                 "issues": "https://github.com/ketchol/um/issues"
             },
-            "time": "2017-02-19T09:05:27+00:00"
+            "time": "2017-02-27T03:08:48+00:00"
         },
         {
             "name": "jakub-onderka/php-console-color",
@@ -415,16 +387,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.4.12",
+            "version": "v5.4.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "707f32d32dce58232f7a860e0a1d62caf6f9dbfc"
+                "reference": "3eebfaa759156e06144892b00bb95304aa5a71c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/707f32d32dce58232f7a860e0a1d62caf6f9dbfc",
-                "reference": "707f32d32dce58232f7a860e0a1d62caf6f9dbfc",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/3eebfaa759156e06144892b00bb95304aa5a71c1",
+                "reference": "3eebfaa759156e06144892b00bb95304aa5a71c1",
                 "shasum": ""
             },
             "require": {
@@ -540,7 +512,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2017-02-15T14:31:32+00:00"
+            "time": "2017-02-22T16:07:04+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -2818,23 +2790,23 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "4.0.5",
+            "version": "4.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "c19cfc7cbb0e9338d8c469c7eedecc2a428b0971"
+                "reference": "ca060f645beeddebedb1885c97bf163e93264c35"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/c19cfc7cbb0e9338d8c469c7eedecc2a428b0971",
-                "reference": "c19cfc7cbb0e9338d8c469c7eedecc2a428b0971",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/ca060f645beeddebedb1885c97bf163e93264c35",
+                "reference": "ca060f645beeddebedb1885c97bf163e93264c35",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.6 || ^7.0",
                 "phpunit/php-file-iterator": "~1.3",
                 "phpunit/php-text-template": "~1.2",
-                "phpunit/php-token-stream": "^1.4.2",
+                "phpunit/php-token-stream": "^1.4.2 || ^2.0",
                 "sebastian/code-unit-reverse-lookup": "~1.0",
                 "sebastian/environment": "^1.3.2 || ^2.0",
                 "sebastian/version": "~1.0|~2.0"
@@ -2877,7 +2849,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-01-20T15:06:43+00:00"
+            "time": "2017-02-23T07:38:02+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -2969,25 +2941,30 @@
         },
         {
             "name": "phpunit/php-timer",
-            "version": "1.0.8",
+            "version": "1.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-timer.git",
-                "reference": "38e9124049cf1a164f1e4537caf19c99bf1eb260"
+                "reference": "3dcf38ca72b158baf0bc245e9184d3fdffa9c46f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/38e9124049cf1a164f1e4537caf19c99bf1eb260",
-                "reference": "38e9124049cf1a164f1e4537caf19c99bf1eb260",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/3dcf38ca72b158baf0bc245e9184d3fdffa9c46f",
+                "reference": "3dcf38ca72b158baf0bc245e9184d3fdffa9c46f",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "php": "^5.3.3 || ^7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4|~5"
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.0"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
             "autoload": {
                 "classmap": [
                     "src/"
@@ -3009,20 +2986,20 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2016-05-12T18:03:57+00:00"
+            "time": "2017-02-26T11:10:40+00:00"
         },
         {
             "name": "phpunit/php-token-stream",
-            "version": "1.4.9",
+            "version": "1.4.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-token-stream.git",
-                "reference": "3b402f65a4cc90abf6e1104e388b896ce209631b"
+                "reference": "284fb0679dd25fb5ffb56dad92c72860c0a22f1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/3b402f65a4cc90abf6e1104e388b896ce209631b",
-                "reference": "3b402f65a4cc90abf6e1104e388b896ce209631b",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/284fb0679dd25fb5ffb56dad92c72860c0a22f1b",
+                "reference": "284fb0679dd25fb5ffb56dad92c72860c0a22f1b",
                 "shasum": ""
             },
             "require": {
@@ -3058,7 +3035,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2016-11-15T14:06:22+00:00"
+            "time": "2017-02-23T06:14:45+00:00"
         },
         {
             "name": "phpunit/phpunit",
@@ -3824,7 +3801,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "ivancli/um": 20,
-        "invigor/chargify": 20
+        "ivancli/chargify": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

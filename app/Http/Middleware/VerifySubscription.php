@@ -16,14 +16,12 @@ class VerifySubscription
      */
     public function handle($request, Closure $next)
     {
-
-        if (!Auth::check()) {
-            return redirect()->route('login.index');
-        }
-        $user = Auth::user();
-        /* user need subscription but subscription is invalid */
-        if (($user->needSubscription && !$user->subscription->isValid)) {
-            return redirect()->route('subscription.edit', $user->subscription->getKey());
+        if (Auth::check()) {
+            $user = Auth::user();
+            /* user need subscription but subscription is invalid */
+            if ($user->needSubscription && !$user->subscription->isValid) {
+                return redirect()->route('subscription.edit', $user->subscription->getKey());
+            }
         }
         return $next($request);
     }

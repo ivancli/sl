@@ -16,7 +16,7 @@ use App\Exceptions\Subscription\ProductNotFoundException;
 use App\Exceptions\Subscription\ProductSignUpPageNotFoundException;
 use App\Exceptions\Subscription\SubscriptionNotFoundException;
 use App\Models\User;
-use Invigor\Chargify\Chargify;
+use IvanCLI\Chargify\Chargify;
 
 class ProductRepository implements ProductContract
 {

@@ -3,6 +3,7 @@ namespace App\Contracts\Repositories\Subscription;
 
 use App\Exceptions\Subscription\CannotCreateSubscriptionException;
 use App\Exceptions\Subscription\SubscriptionNotFoundException;
+use App\Models\Subscription;
 
 /**
  * Created by PhpStorm.
@@ -44,4 +45,18 @@ interface SubscriptionContract
      * * @throws SubscriptionNotFoundException
      */
     public function get($subscription_id);
+
+    /**
+     * Generate update payment profile URL for a subscription
+     * @param Subscription $subscription
+     * @return mixed
+     */
+    public function generateUpdatePaymentProfileLink(Subscription $subscription);
+
+    /**
+     * Get all transactions of a subscription
+     * @param Subscription $subscription
+     * @return mixed
+     */
+    public function getTransactions(Subscription $subscription);
 }
