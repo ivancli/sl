@@ -39,7 +39,7 @@
             }
         },
         mounted(){
-            this.newCategoryName = this.currentCategory.name;
+            this.newCategoryName = this.currentCategory.category_name;
             console.info('Edit Category component mounted');
         },
         methods: {
@@ -51,14 +51,14 @@
                 this.$emit('edit-category-name');
             },
             cancelEditCategoryName: function () {
-                this.newCategoryName = this.currentCategory.name;
+                this.newCategoryName = this.currentCategory.category_name;
                 this.editingCategoryName = false;
                 this.$refs['txt_edit_category'].blur();
                 this.$emit('cancel-edit-category-name');
             },
             editCategory: function () {
                 // category name same as before, quit
-                if (this.currentCategory.name == this.newCategoryName) {
+                if (this.currentCategory.category_name == this.newCategoryName) {
                     this.isEditingCategory = false;
                     this.editingCategoryName = false;
                     this.$refs['txt_edit_category'].blur();
@@ -91,7 +91,7 @@
             },
             editCategoryData: function () {
                 return {
-                    name: this.newCategoryName
+                    category_name: this.newCategoryName
                 };
             }
         }

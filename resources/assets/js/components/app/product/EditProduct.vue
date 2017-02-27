@@ -39,7 +39,7 @@
             }
         },
         mounted(){
-            this.newProductName = this.currentProduct.name;
+            this.newProductName = this.currentProduct.product_name;
             console.info('Edit Product component mounted');
         },
         methods: {
@@ -51,14 +51,14 @@
                 this.$emit('edit-product-name');
             },
             cancelEditProductName: function () {
-                this.newProductName = this.currentProduct.name;
+                this.newProductName = this.currentProduct.product_name;
                 this.editingProductName = false;
                 this.$refs['txt_edit_product'].blur();
                 this.$emit('cancel-edit-product-name');
             },
             editProduct: function () {
                 // product name same as before, quit
-                if (this.currentProduct.name == this.newProductName) {
+                if (this.currentProduct.product_name == this.newProductName) {
                     this.isEditingProduct = false;
                     this.editingProductName = false;
                     this.$refs['txt_edit_product'].blur();
@@ -91,7 +91,7 @@
             },
             editProductData: function () {
                 return {
-                    name: this.newProductName,
+                    product_name: this.newProductName,
                     category_id: this.currentProduct.category_id,
                 };
             }
