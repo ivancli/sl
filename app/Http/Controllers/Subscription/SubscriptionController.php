@@ -100,4 +100,20 @@ class SubscriptionController extends Controller
     {
 
     }
+
+    /**
+     * Subscription Migration
+     * @param Subscription $subscription
+     * @return array
+     */
+    public function update(Subscription $subscription)
+    {
+        $subscription = $this->subscriptionRepo->migrateSubscription($subscription, $this->request->all());
+        $status = true;
+        if (isset($subscription->errors)) {
+            $errors = $subscription->errors;
+            $status = false;
+        }
+        return compact(['status', 'subscription', 'errors']);
+    }
 }

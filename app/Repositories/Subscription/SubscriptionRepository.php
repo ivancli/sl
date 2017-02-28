@@ -41,11 +41,11 @@ class SubscriptionRepository implements SubscriptionContract
     /**
      * Create new subscription
      *
-     * @param $data
+     * @param array $data
      * @return mixed
      * @throws CannotCreateSubscriptionException
      */
-    public function createSubscription($data)
+    public function createSubscription(Array $data)
     {
         $subscription = Chargify::subscription()->create($data);
         /* TODO add exception here */
@@ -53,6 +53,18 @@ class SubscriptionRepository implements SubscriptionContract
             throw new CannotCreateSubscriptionException($subscription->errors);
         }
         return $subscription;
+    }
+
+    /**
+     * Migrate an existing subscription to a new product
+     *
+     * @param Subscription $subscription
+     * @param array $data
+     * @return mixed
+     */
+    public function migrateSubscription(Subscription $subscription, Array $data)
+    {
+        $subscription = Chargify::subscription()->createMigration($subscription->api_subscription_id, $data);
     }
 
     /**

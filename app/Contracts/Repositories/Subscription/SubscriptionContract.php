@@ -31,11 +31,19 @@ interface SubscriptionContract
     /**
      * Create new subscription
      *
-     * @param $data
+     * @param array $data
      * @return mixed
-     * @throws CannotCreateSubscriptionException
      */
-    public function createSubscription($data);
+    public function createSubscription(Array $data);
+
+    /**
+     * Migrate an existing subscription to a new product
+     *
+     * @param Subscription $subscription
+     * @param array $data
+     * @return mixed
+     */
+    public function migrateSubscription(Subscription $subscription, Array $data);
 
     /**
      * Get subscription by Subscription ID

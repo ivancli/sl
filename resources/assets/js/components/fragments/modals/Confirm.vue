@@ -3,19 +3,21 @@
         <div class="modal-background"></div>
         <div class="modal-card">
             <header class="modal-card-head">
-                <h4 class="modal-card-title">Oops! Something went wrong.</h4>
+                <h4 class="modal-card-title" v-text="title"></h4>
                 <a @click.prevent="hideModal" class="close">&times;</a>
             </header>
             <section class="modal-card-body">
                 <div class="row">
-                    <div class="col-sm-12" v-text="content">
+                    <div class="col-sm-12" v-html="content">
 
                     </div>
                 </div>
             </section>
             <footer class="modal-card-foot">
-                <a class="btn btn-primary btn-flat" href="#" @click.prevent="confirm">CONFIRM</a>
-                <a class="btn btn-default btn-flat" href="#" @click.prevent="hideModal">OK</a>
+                <div class="text-right">
+                    <a class="btn btn-primary btn-flat" href="#" @click.prevent="confirm">CONFIRM</a>
+                    <a class="btn btn-default btn-flat" href="#" @click.prevent="hideModal">CANCEL</a>
+                </div>
             </footer>
         </div>
     </div>
@@ -24,6 +26,7 @@
 <script>
     export default{
         props: [
+            'title',
             'content',
         ],
         mounted(){
@@ -31,10 +34,10 @@
         },
         methods: {
             confirm: function () {
-//                this.$emit()
+                this.$emit('confirm')
             },
             hideModal: function () {
-                this.$emit('hideErrorModal');
+                this.$emit('hide');
             }
         },
         computed: {
@@ -49,5 +52,16 @@
 </script>
 
 <style>
+    .confirm-modal {
+        -ms-word-wrap: normal;
+        word-wrap: normal;
+        white-space: normal;
+    }
 
+    @media screen and (min-width: 301px) {
+        .confirm-modal .modal-content,
+        .confirm-modal .modal-card {
+            width: 300px;
+        }
+    }
 </style>
