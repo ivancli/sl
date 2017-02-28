@@ -5,18 +5,16 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-
-import {
-    SET_SUBSCRIPTION_PLAN_ID,
-} from '../../actions/mutation-types';
+import subscriptionPlans from '../subscription/subscriptionPlans';
 
 export default new Vuex.Store({
-    state: {
-        selectedSubscriptionPlanId: null
-    },
-    mutations: {
-        [SET_SUBSCRIPTION_PLAN_ID] (state, selectedSubscriptionPlanId){
-            state.selectedSubscriptionPlanId = selectedSubscriptionPlanId;
+    modules: {
+        subscriptionPlans,
+        index: {
+            state: {},
+            mutations: {},
+            actions: {},
+            getters: {}
         }
-    },
+    }
 });

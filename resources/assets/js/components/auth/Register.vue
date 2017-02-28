@@ -73,7 +73,6 @@
 </template>
 
 <script>
-    //    Vue.component('loading', require('../Loading.vue'));
     import loading from '../Loading.vue';
 
     export default {
@@ -126,7 +125,7 @@
                 }
             },
             selectedSubscriptionPlanId(){
-                return this.$store.state.selectedSubscriptionPlanId;
+                return this.$store.getters.selectedSubscriptionPlanId;
             }
         },
         mounted() {

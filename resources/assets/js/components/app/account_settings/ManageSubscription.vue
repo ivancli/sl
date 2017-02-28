@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-lg-offset-2 col-lg-8 col-md-offset-1 col-md-10">
             <div class="p-10">
-                <div class="row subscription-info-panel" v-if="subscriptionPlan != null">
+                <div class="row subscription-info-panel" v-if="subscriptionPlan != null" v-show="!migratingSubscriptionPlan">
                     <div class="col-sm-12">
                         <div class="row m-b-20">
                             <div class="col-sm-12">
@@ -14,7 +14,7 @@
                                 </p>
                             </div>
                             <div class="col-sm-12">
-                                <a href="#" class="btn btn-primary btn-flat">
+                                <a href="#" class="btn btn-primary btn-flat" @click.prevent="viewMigration">
                                     CHANGE MY PLAN
                                 </a>
                             </div>
@@ -37,8 +37,14 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
+                            <tr v-if="transactions.length == 0">
                                 <td colspan="4" align="center">No payment histories in the list</td>
+                            </tr>
+                            <tr v-else v-for="transaction in filteredTransactions">
+                                <td>{{ transaction.created_at | formatDateTime(dateFormat) }}</td>
+                                <td></td>
+                                <td v-text="transaction.kind"></td>
+                                <td>${{ transaction.amount_in_cents/100 | currency }}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -55,19 +61,39 @@
                         </div>
                     </div>
                 </div>
+                <div class="row m-b-20" v-show="migratingSubscriptionPlan">
+                    <div class="col-sm-12">
+                        <pricing-table @select-subscription-plan="selectSubscriptionPlan"></pricing-table>
+                    </div>
+                    <div class="col-sm-12 text-center">
+                        <button class="btn btn-default btn-flat" @click.prevent="cancelMigratingSubscriptionPlan">BACK</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 <script>
+    import pricingTable from '../../subscription/PricingTable.vue';
+
     import formatDateTime from '../../../filters/formatDateTime';
+    import currency from '../../../filters/currency';
+
+    import {
+            SET_SUBSCRIPTION_PLAN_ID
+    } from '../../../actions/action-types';
 
     export default{
+        components: {
+            pricingTable
+        },
         data(){
             return {
                 subscriptionPlan: null,
                 updatePaymentProfileLink: '',
                 transactions: [],
+
+                migratingSubscriptionPlan: false,
             }
         },
         mounted(){
@@ -85,6 +111,24 @@
                 }).catch(error => {
 
                 })
+            },
+            viewMigration: function () {
+                this.migratingSubscriptionPlan = true;
+            },
+            cancelMigratingSubscriptionPlan: function () {
+                this.migratingSubscriptionPlan = false;
+                this.resetSelectedSubscriptionPlan();
+            },
+            selectSubscriptionPlan: function (subscriptionPlan) {
+                /*TODO show confirmation popup and migrate*/
+                console.info("selected", subscriptionPlan);
+
+                /*TODO if popup cancelled, reset selected subscription plan*/
+            },
+            resetSelectedSubscriptionPlan: function () {
+                this.$store.dispatch(SET_SUBSCRIPTION_PLAN_ID, {
+                    selectedSubscriptionPlanId: null
+                });
             }
         },
         computed: {
@@ -95,6 +139,10 @@
                     return null;
                 }
             },
+            filteredTransactions(){
+                /*TODO need to filter these transactions*/
+                return this.transactions;
+            },
             dateFormat(){
                 return user.allPreferences.DATE_FORMAT;
             },
@@ -103,6 +151,9 @@
             },
             datetimeFormat(){
                 return this.dateFormat + ' ' + this.timeFormat;
+            },
+            selectedSubscriptionPlanId(){
+                return this.$store.getters.selectedSubscriptionPlanId;
             }
         }
     }

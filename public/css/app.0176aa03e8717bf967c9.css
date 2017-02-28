@@ -20087,6 +20087,24 @@ a.button.disabled:active {
   cursor: default;
 }
 
+a.button.subscribed,
+a.button.subscribed:hover,
+a.button.subscribed:focus,
+a.button.subscribed:active {
+  background-color: #8c8b87 !important;
+  border-bottom: 4px solid #413e40 !important;
+  cursor: default;
+}
+
+a.button.unable,
+a.button.unable:hover,
+a.button.unable:focus,
+a.button.unable:active {
+  background-color: #8c8b87 !important;
+  border-bottom: 4px solid #413e40 !important;
+  cursor: default;
+}
+
 .form-control:focus {
   border-color: #7ed0c0;
 }
@@ -20330,4 +20348,4 @@ th.shrink {
 }
 
 
-/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiIvY3NzL2FwcC4yYTdlYmFmZWNlNzM0YWU0NGU1Ny5jc3MiLCJzb3VyY2VSb290IjoiIn0=*/
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiIvY3NzL2FwcC4wMTc2YWEwM2U4NzE3YmY5NjdjOS5jc3MiLCJzb3VyY2VSb290IjoiIn0=*/

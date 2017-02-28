@@ -1,9 +1,6 @@
 /**
  * Created by Ivan on 11/02/2017.
  */
-// import Vue from 'vue';
-// import Vuex from 'vuex';
-// Vue.use(Vuex);
 
 import {
     TOGGLE_SIDEBAR, OPEN_SIDEBAR, COLLAPSE_SIDEBAR

@@ -20087,6 +20087,24 @@ a.button.disabled:active {
   cursor: default;
 }
 
+a.button.subscribed,
+a.button.subscribed:hover,
+a.button.subscribed:focus,
+a.button.subscribed:active {
+  background-color: #8c8b87 !important;
+  border-bottom: 4px solid #413e40 !important;
+  cursor: default;
+}
+
+a.button.unable,
+a.button.unable:hover,
+a.button.unable:focus,
+a.button.unable:active {
+  background-color: #8c8b87 !important;
+  border-bottom: 4px solid #413e40 !important;
+  cursor: default;
+}
+
 .form-control:focus {
   border-color: #7ed0c0;
 }
@@ -20113,4 +20131,4 @@ div {
 }
 
 
-/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiIvY3NzL2F1dGguMmE3ZWJhZmVjZTczNGFlNDRlNTcuY3NzIiwic291cmNlUm9vdCI6IiJ9*/
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiIvY3NzL2F1dGguMDE3NmFhMDNlODcxN2JmOTY3YzkuY3NzIiwic291cmNlUm9vdCI6IiJ9*/

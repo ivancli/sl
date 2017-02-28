@@ -189,3 +189,15 @@ a.button.disabled, a.button.disabled:hover, a.button.disabled:focus, a.button.di
   border-bottom: 4px solid #f2710d !important;
   cursor: default;
 }
+
+a.button.subscribed, a.button.subscribed:hover, a.button.subscribed:focus, a.button.subscribed:active {
+  background-color: #8c8b87 !important;
+  border-bottom: 4px solid #413e40 !important;
+  cursor: default;
+}
+
+a.button.unable, a.button.unable:hover, a.button.unable:focus, a.button.unable:active {
+  background-color: #8c8b87 !important;
+  border-bottom: 4px solid #413e40 !important;
+  cursor: default;
+}

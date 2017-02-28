@@ -20,7 +20,7 @@
                         Display Settings
                     </a>
                 </li>
-                <li :class="setTabActiveClass('manage-subscription')">
+                <li :class="setTabActiveClass('manage-subscription')" v-if="hasSubscription">
                     <a href="#display-settings" @click.prevent="setActiveTab('manage-subscription')">
                         Manage My Subscription
                     </a>
@@ -36,7 +36,7 @@
                 <div class="tab-pane" id="display-settings" :class="setTabActiveClass('display-settings')">
                     <display-settings></display-settings>
                 </div>
-                <div class="tab-pane" id="manage-subscription" :class="setTabActiveClass('manage-subscription')">
+                <div class="tab-pane" id="manage-subscription" :class="setTabActiveClass('manage-subscription')" v-if="hasSubscription">
                     <manage-subscription></manage-subscription>
                 </div>
             </div>
@@ -63,28 +63,39 @@
             }
         },
         methods: {
+            setInitActiveTab: function () {
+                if (window.location.hash != '') {
+                    switch (window.location.hash) {
+                        case "#reset-password":
+                        case "#display-settings":
+                            this.activeTab = window.location.hash.replace('#', '');
+                            break;
+                        case "#manage-subscription":
+                            if (this.hasSubscription) {
+                                this.activeTab = window.location.hash.replace('#', '');
+                                break;
+                            }
+                        case "#edit-profile":
+                        default:
+                            this.activeTab = 'edit-profile';
+                    }
+                }
+            },
             setTabActiveClass: function (tabName) {
                 return tabName == this.activeTab ? 'active' : '';
             },
             setActiveTab: function (tabName) {
                 this.activeTab = tabName;
+                location.replace(window.location.href.split('#')[0] + '#' + tabName);
             }
         },
         mounted() {
             console.info('Index component is mounted');
-            /**
-             * set active tab based on URL hash value
-             */
-            if (window.location.hash != '') {
-                switch (window.location.hash) {
-                    case "#reset-password":
-                    case "#display-settings":
-                        this.activeTab = window.location.hash.replace('#', '');
-                        break;
-                    case "#edit-profile":
-                    default:
-                        this.activeTab = 'edit-profile';
-                }
+            this.setInitActiveTab();
+        },
+        computed: {
+            hasSubscription(){
+                return !user.isStaffMember && user.subscription && user.subscription.apiSubscription;
             }
         }
     }

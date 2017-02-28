@@ -3,6 +3,8 @@
  */
 export const TOGGLE_SIDEBAR = 'toggleSidebar';
 
+export const SET_SUBSCRIPTION_PLAN_ID = 'setSubscriptionPlanId';
+
 export const SET_CATEGORY_COLLAPSE_STATUS = 'setCategoryCollapseStatus';
 export const TOGGLE_COLLAPSE_CATEGORY = 'toggleCollapseCategory';
 export const COLLAPSE_ALL_CATEGORIES = 'collapseAllCategories';

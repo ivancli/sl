@@ -29,7 +29,9 @@ class User extends Authenticatable
     ];
 
     protected $appends = [
-        'fullName', 'allPreferences', 'allMetas', 'profileUrls', 'preferenceUrls', 'isStaffMember', 'isUnlimitedClient', 'needSubscription', 'urls'
+        'fullName', 'allPreferences', 'allMetas',
+        'numberOfCategories', 'numberOfProducts', 'numberOfSites', 'MaxNumberOfSites',
+        'profileUrls', 'preferenceUrls', 'isStaffMember', 'isUnlimitedClient', 'needSubscription', 'urls'
     ];
 
     /**
@@ -109,10 +111,47 @@ class User extends Authenticatable
         return $preferences;
     }
 
+    /**
+     * all user meta data
+     * @return mixed
+     */
     public function getAllMetasAttribute()
     {
         $metas = $this->metas;
         return $metas;
+    }
+
+    /**
+     * number of categories
+     * @return mixed
+     */
+    public function getNumberOfCategoriesAttribute()
+    {
+        return $this->categories()->count();
+    }
+
+    /**
+     * number of products
+     * @return mixed
+     */
+    public function getNumberOfProductsAttribute()
+    {
+        return $this->products()->count();
+    }
+
+    /**
+     * number of sites
+     * @return mixed
+     */
+    public function getNumberOfSitesAttribute()
+    {
+        return $this->sites()->count();
+    }
+
+
+    public function getMaxNumberOfSitesAttribute()
+    {
+        return $this->sites()->groupBy('product_id')->count();
     }
 
     /**
