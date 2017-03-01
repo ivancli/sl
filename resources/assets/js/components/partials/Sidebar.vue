@@ -45,13 +45,13 @@
                         <span>REPORTS</span>
                     </a>
                 </li>
-                <li class="">
+                <li class="" v-if="isStaffMember">
                     <a href="#">
                         <i class="fa fa-gears"></i>
                         <span>APP PREFERENCES</span>
                     </a>
                 </li>
-                <li class="treeview" :class="topLevelActiveClass('/manage-crawler')">
+                <li class="treeview" :class="topLevelActiveClass('/manage-crawler')" v-if="isStaffMember">
                     <a href="#" @click.prevent="toggleDropDownItems('/manage-crawler')">
                         <i class="fa fa-files-o"></i>
                         <span>Manage Crawler</span>
@@ -74,7 +74,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="treeview" :class="topLevelActiveClass('/user-management')">
+                <li class="treeview" :class="topLevelActiveClass('/user-management')" v-if="isStaffMember">
                     <a href="#" @click.prevent="toggleDropDownItems('/user-management')">
                         <i class="fa fa-users"></i>
                         <span>USER MANAGEMENT</span>
@@ -110,7 +110,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="treeview ">
+                <li class="treeview" v-if="isStaffMember">
                     <a href="#">
                         <i class="fa fa-file-text-o"></i>
                         <span>SYSTEM LOG</span>
@@ -133,7 +133,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="treeview  ">
+                <li class="treeview" v-if="isStaffMember">
                     <a href="#">
                         <i class="fa fa-file-archive-o"></i>
                         <span>MANAGE LEGALS</span>
@@ -208,6 +208,14 @@
                         this.dropDownItemVisibility[key] = true;
                     }
                 }
+            }
+        },
+        computed: {
+            isStaffMember(){
+                if (typeof user != 'undefined') {
+                    return user.isStaffMember;
+                }
+                return false;
             }
         }
     }

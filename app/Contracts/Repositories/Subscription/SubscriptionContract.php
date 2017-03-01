@@ -37,6 +37,15 @@ interface SubscriptionContract
     public function createSubscription(Array $data);
 
     /**
+     * Update an existing subscription
+     *
+     * @param Subscription $subscription
+     * @param array $data
+     * @return mixed
+     */
+    public function updateSubscription(Subscription $subscription, Array $data);
+
+    /**
      * Migrate an existing subscription to a new product
      *
      * @param Subscription $subscription

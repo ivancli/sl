@@ -96,7 +96,7 @@
     import currency from '../../../filters/currency';
 
     import {
-        SET_SUBSCRIPTION_PLAN_ID
+            SET_SUBSCRIPTION_PLAN_ID
     } from '../../../actions/action-types';
 
     export default{
@@ -107,6 +107,7 @@
         },
         data(){
             return {
+                subscription: null,
                 subscriptionPlan: null,
                 updatePaymentProfileLink: '',
                 transactions: [],
@@ -120,9 +121,17 @@
         },
         mounted(){
             console.info('ManageSubscription component is mounted.');
+            this.initSetUserSubscription();
             this.loadSubscription();
         },
         methods: {
+            initSetUserSubscription: function () {
+                if (user.subscription && user.subscription.apiSubscription) {
+                    this.subscription = user.subscription.apiSubscription;
+                } else {
+                    this.subscription = null;
+                }
+            },
             loadSubscription: function () {
                 axios.get('/subscription/subscription/' + user.subscription.id).then(response => {
                     if (response.data.status == true) {
@@ -167,7 +176,10 @@
                     axios.put('/subscription/subscription/' + user.subscription.id, this.migrateSubscriptionData).then(response => {
                         this.submittingMigration = false;
                         if (response.data.status == true) {
-                            this.setSuccessMsg();
+                            this.subscription = response.data.subscription;
+                            this.loadSubscription();
+                            this.setSuccessMsg("You subscription plan has been updated.");
+                            this.cancelMigratingSubscriptionPlan();
                         }
                     }).catch(error => {
                         this.submittingMigration = false;
@@ -177,7 +189,7 @@
                     })
                 }
             },
-            resetConfirmMigrateMessage: function(){
+            resetConfirmMigrateMessage: function () {
                 this.confirmMigrateTitle = "";
                 this.confirmMigrateContent = "";
             },
@@ -185,18 +197,11 @@
                 this.resetConfirmMigrateMessage();
                 this.resetSelectedSubscriptionPlan();
             },
-            setSuccessMsg: function () {
-
+            setSuccessMsg: function (text) {
+                this.successMsg = text;
             }
         },
         computed: {
-            subscription(){
-                if (user.subscription && user.subscription.apiSubscription) {
-                    return user.subscription.apiSubscription;
-                } else {
-                    return null;
-                }
-            },
             filteredTransactions(){
                 /*TODO need to filter these transactions*/
                 return this.transactions;

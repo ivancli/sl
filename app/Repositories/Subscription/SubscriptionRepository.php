@@ -56,6 +56,19 @@ class SubscriptionRepository implements SubscriptionContract
     }
 
     /**
+     * Update an existing subscription
+     *
+     * @param Subscription $subscription
+     * @param array $data
+     * @return mixed
+     */
+    public function updateSubscription(Subscription $subscription, Array $data)
+    {
+        $subscription = Chargify::subscription()->update($subscription->api_subscription_id, $data);
+        return $subscription;
+    }
+
+    /**
      * Migrate an existing subscription to a new product
      *
      * @param Subscription $subscription

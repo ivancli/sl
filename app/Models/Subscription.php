@@ -19,7 +19,7 @@ class Subscription extends Model
     ];
 
     protected $appends = [
-        'isValid', 'apiSubscription'
+        'isValid', 'apiSubscription', 'isTrialing', 'isPastDue', 'isActive'
     ];
 
     public function user()
@@ -41,6 +41,42 @@ class Subscription extends Model
     }
 
     /**
+     * attribute showing subscription state
+     * @return bool
+     */
+    public function getIsTrialingAttribute()
+    {
+        if (!is_null($this->apiSubscription)) {
+            return $this->apiSubscription->state == 'trialing';
+        }
+        return false;
+    }
+
+    /**
+     * attribute showing subscription state
+     * @return bool
+     */
+    public function getIsPastDueAttribute()
+    {
+        if (!is_null($this->apiSubscription)) {
+            return $this->apiSubscription->state == 'past_due';
+        }
+        return false;
+    }
+
+    /**
+     * attribute showing subscription state
+     * @return bool
+     */
+    public function getIsActiveAttribute()
+    {
+        if (!is_null($this->apiSubscription)) {
+            return $this->apiSubscription->state == 'active';
+        }
+        return false;
+    }
+
+    /**
      * Check if subscription is valid
      * @return bool
      */
@@ -49,7 +85,7 @@ class Subscription extends Model
         if (is_null($this->apiSubscription)) {
             return false;
         }
-        return $this->apiSubscription->state == 'trialing' || $this->apiSubscription->state == 'active';
+        return $this->isTrialing || $this->isActive;
     }
 
     /* ---------------------------------------------------------------------- */

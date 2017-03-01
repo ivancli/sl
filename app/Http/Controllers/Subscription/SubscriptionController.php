@@ -102,17 +102,34 @@ class SubscriptionController extends Controller
     }
 
     /**
-     * Subscription Migration
+     * Subscription Upgrade or Downgrade
      * @param Subscription $subscription
      * @return array
      */
     public function update(Subscription $subscription)
     {
-        $subscription = $this->subscriptionRepo->migrateSubscription($subscription, $this->request->all());
+        /**
+         * If subscription is not active, that means subscription profile does not actively charging from credit card/payment profile
+         * Updating product in subscription will not cause pro-rata issue.
+         *
+         * However, for trialing subscriptions which do not have credit card/payment details.
+         * It is impossible to migrate, in which will cause pro-rata calculation and charge money from users
+         *
+         */
         $status = true;
-        if (isset($subscription->errors)) {
-            $errors = $subscription->errors;
-            $status = false;
+
+        if ($subscription->isActive == true) { //migrate active subscription
+            $subscription = $this->subscriptionRepo->migrateSubscription($subscription, $this->request->all());
+            if (isset($subscription->errors)) {
+                $errors = $subscription->errors;
+                $status = false;
+            }
+        } else { //update subscription which are not active
+            $subscription = $this->subscriptionRepo->updateSubscription($subscription, $this->request->all());
+            if (isset($subscription->errors)) {
+                $errors = $subscription->errors;
+                $status = false;
+            }
         }
         return compact(['status', 'subscription', 'errors']);
     }
