@@ -3,7 +3,8 @@
         <div class="col-sm-12">
             <div class="row m-b-20 p-10" v-show="migratingSubscriptionPlan">
                 <div class="col-sm-12">
-                    <pricing-table @select-subscription-plan="selectSubscriptionPlan"></pricing-table>
+                    <pricing-table @select-subscription-plan="selectSubscriptionPlan"
+                                   :login-user="user"></pricing-table>
                 </div>
                 <div class="col-sm-12 text-center">
                     <button class="btn btn-default btn-flat" @click.prevent="cancelMigratingSubscriptionPlan">BACK
@@ -96,7 +97,7 @@
     import currency from '../../../filters/currency';
 
     import {
-            SET_SUBSCRIPTION_PLAN_ID
+        SET_SUBSCRIPTION_PLAN_ID
     } from '../../../actions/action-types';
 
     export default{
@@ -117,14 +118,22 @@
                 confirmMigrateTitle: "",
                 confirmMigrateContent: "",
                 successMsg: "",
+
+                user: null,
             }
         },
         mounted(){
             console.info('ManageSubscription component is mounted.');
+            this.initSetUser();
             this.initSetUserSubscription();
             this.loadSubscription();
         },
         methods: {
+            initSetUser: function () {
+                if (typeof user != 'undefined') {
+                    this.user = user;
+                }
+            },
             initSetUserSubscription: function () {
                 if (user.subscription && user.subscription.apiSubscription) {
                     this.subscription = user.subscription.apiSubscription;
@@ -180,6 +189,7 @@
                             this.loadSubscription();
                             this.setSuccessMsg("You subscription plan has been updated.");
                             this.cancelMigratingSubscriptionPlan();
+                            this.user.subscription.apiSubscription = response.data.subscription;
                         }
                     }).catch(error => {
                         this.submittingMigration = false;
