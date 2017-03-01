@@ -104,6 +104,8 @@ class RegisterController extends Controller
                     "first_name" => $user->first_name,
                     "last_name" => $user->last_name,
                     "email" => $user->email,
+                    "country" => "AU",
+                    "state" => "NSW"
                 ),
                 "coupon_code" => $couponCode
             ]);
