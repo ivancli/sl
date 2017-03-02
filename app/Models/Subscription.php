@@ -11,6 +11,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use IvanCLI\Chargify\Chargify;
+use IvanCLI\Chargify\Models\Product;
 
 class Subscription extends Model
 {
@@ -19,7 +20,7 @@ class Subscription extends Model
     ];
 
     protected $appends = [
-        'isValid', 'apiSubscription', 'isTrialing', 'isPastDue', 'isActive'
+        'isValid', 'apiSubscription', 'isTrialing', 'isPastDue', 'isActive', 'subscriptionPlan', 'subscriptionCriteria'
     ];
 
     public function user()
@@ -86,6 +87,30 @@ class Subscription extends Model
             return false;
         }
         return $this->isTrialing || $this->isActive;
+    }
+
+    /**
+     * attribute showing subscription plan
+     * @return null|Product
+     */
+    public function getSubscriptionPlanAttribute()
+    {
+        if (is_null($this->apiSubscription)) {
+            return null;
+        }
+        return $this->apiSubscription->product();
+    }
+
+    /**
+     * attribute showing subscription criteria/limitations
+     * @return null
+     */
+    public function getSubscriptionCriteriaAttribute()
+    {
+        if (is_null($this->subscriptionPlan) || $this->subscriptionPlan == false) {
+            return null;
+        }
+        return json_decode($this->subscriptionPlan->description);
     }
 
     /* ---------------------------------------------------------------------- */

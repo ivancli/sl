@@ -9,6 +9,7 @@ export const OPEN_SIDEBAR = 'OPEN_SIDEBAR';
 export const COLLAPSE_SIDEBAR = 'COLLAPSE_SIDEBAR';
 
 /*user*/
+export const LOAD_USER = 'LOAD_USER';
 export const SET_USER = 'SET_USER';
 export const SET_USER_ATTRIBUTE = 'SET_USER_ATTRIBUTE';
 

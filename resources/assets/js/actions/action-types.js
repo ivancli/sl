@@ -7,6 +7,7 @@ export const TOGGLE_SIDEBAR = 'toggleSidebar';
 export const OPEN_SIDEBAR = 'openSidebar';
 export const COLLAPSE_SIDEBAR = 'collapseSidebar';
 
+export const LOAD_USER = 'loadUser';
 export const SET_USER = 'setUser';
 export const SET_USER_ATTRIBUTE = 'setUserAttribute';
 

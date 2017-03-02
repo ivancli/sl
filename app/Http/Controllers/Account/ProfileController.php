@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Account;
 
 use App\Contracts\Repositories\UserManagement\UserContract;
+use App\Events\Account\Profile\AfterShow;
 use App\Events\Account\Profile\AfterUpdate;
+use App\Events\Account\Profile\BeforeShow;
 use App\Events\Account\Profile\BeforeUpdate;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -21,16 +23,23 @@ class ProfileController extends Controller
         $this->userRepo = $userContract;
     }
 
+    public function show(User $user)
+    {
+        event(new BeforeShow($user));
+        $status = true;
+        event(new AfterShow($user));
+        return compact(['user', 'status']);
+    }
+
     /**
      * Update the specified resource in storage.
      *
-     * @param $id
+     * @param User $user
      * @param UpdateValidator $updateValidator
      * @return \Illuminate\Http\Response
      */
-    public function update($id, UpdateValidator $updateValidator)
+    public function update(User $user, UpdateValidator $updateValidator)
     {
-        $user = $this->userRepo->get($id);
         event(new BeforeUpdate($user));
         $updateValidator->validate($this->request->all());
 

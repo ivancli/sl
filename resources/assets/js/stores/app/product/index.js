@@ -6,13 +6,19 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 import {
-    SET_CATEGORY_COLLAPSE_STATUS, TOGGLE_COLLAPSE_CATEGORY, COLLAPSE_ALL_CATEGORIES, EXPAND_ALL_CATEGORIES, TOGGLE_ALL_CATEGORIES
+    SET_CATEGORY_COLLAPSE_STATUS,
+    TOGGLE_COLLAPSE_CATEGORY,
+    COLLAPSE_ALL_CATEGORIES,
+    EXPAND_ALL_CATEGORIES,
+    TOGGLE_ALL_CATEGORIES
 } from '../../../actions/mutation-types';
 
+import loginUserStore from '../../loginUser';
 import defaultStore from '../../default';
 
 export default new Vuex.Store({
     modules: {
+        loginUserStore,
         defaultStore,
         index: {
             state: {

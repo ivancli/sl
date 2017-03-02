@@ -18,8 +18,12 @@ class EventServiceProvider extends ServiceProvider
          */
         'App\Events\Account\AccountSettings\BeforeIndex' => [],
         'App\Events\Account\AccountSettings\AfterIndex' => [],
+
+        'App\Events\Account\Profile\BeforeShow' => [],
+        'App\Events\Account\Profile\AfterShow' => [],
         'App\Events\Account\Profile\BeforeUpdate' => [],
         'App\Events\Account\Profile\AfterUpdate' => [],
+
         'App\Events\Account\Preference\BeforeUpdate' => [],
         'App\Events\Account\Preference\AfterUpdate' => [],
 
