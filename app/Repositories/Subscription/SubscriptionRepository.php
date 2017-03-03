@@ -48,7 +48,6 @@ class SubscriptionRepository implements SubscriptionContract
     public function createSubscription(Array $data)
     {
         $subscription = Chargify::subscription()->create($data);
-        /* TODO add exception here */
         if (isset($subscription->errors)) {
             throw new CannotCreateSubscriptionException($subscription->errors);
         }

@@ -16,14 +16,13 @@
             <div class="box-body p-20">
                 <div class="row m-b-20">
                     <div class="col-md-8">
-                        <div v-if="user.subscription">
+                        <div class="text-muted f-w-bold l-h-30" v-if="user.subscription">
                             {{ subscriptionPlan.name }} Plan:
                             &nbsp;&nbsp;&nbsp;&nbsp;
                             <div class="progress vertical-align-middle product-usage-progress">
                                 <div class="progress-bar progress-bar-success progress-bar-striped"
                                      role="progressbar" :aria-valuenow="productUsagePercentage" aria-valuemin="0"
-                                     aria-valuemax="100"
-                                     :style="{width: productUsagePercentage + '%'}">
+                                     aria-valuemax="100" :style="{width: productUsagePercentage + '%'}">
                                 </div>
                             </div>
                             &nbsp;&nbsp;&nbsp;&nbsp;

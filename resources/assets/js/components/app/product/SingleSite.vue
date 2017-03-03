@@ -160,7 +160,7 @@
                 axios.delete(this.site.urls.delete).then(response=> {
                     this.isDeletingSite = false;
                     if (response.data.status == true) {
-                        this.$emit('reload-sites');
+                        this.$emit('deleted-site');
                     }
                 }).catch(error=> {
                     this.isDeletingSite = false;

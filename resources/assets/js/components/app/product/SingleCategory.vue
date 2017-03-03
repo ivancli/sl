@@ -54,7 +54,8 @@
             <td></td>
             <td colspan="3" class="table-container">
                 <div class="collapsible-category-div collapse" :class="isCollapsed ? '' : 'in'">
-                    <single-product v-for="product in products" :current-product="product" @reload-products="reloadProducts"></single-product>
+                    <single-product v-for="product in products" :current-product="product" @reload-products="reloadProducts"
+                                    @added-site="reloadCategories" @deleted-site="reloadCategories"></single-product>
                 </div>
             </td>
         </tr>

@@ -13,7 +13,7 @@
                 </header>
                 <div class="pricing-body">
                     <ul>
-                        <li v-if="product.criteria.recommended > 0">
+                        <li v-if="product.criteria.product > 0">
                             Up to <strong>{{product.criteria.product}} Products</strong>
                         </li>
                         <li v-else>
@@ -67,7 +67,7 @@
 <script>
     import currency from '../../filters/currency';
     import {
-        SET_SUBSCRIPTION_PLAN_ID
+            SET_SUBSCRIPTION_PLAN_ID
     } from '../../actions/action-types';
 
     export default{

@@ -62,7 +62,7 @@
                             <th width="100"></th>
                         </tr>
                         </thead>
-                        <single-site v-for="site in sites" :current-site="site" @reload-sites="reloadSites"></single-site>
+                        <single-site v-for="site in sites" :current-site="site" @reload-sites="reloadSites" @deleted-site="deletedSite"></single-site>
                         <tbody>
                         <tr class="empty-message-row" v-if="!hasSites">
                             <td colspan="9" class="text-center">To start tracking prices, simply copy and paste the URL
@@ -73,7 +73,7 @@
                         <tbody>
                         <tr class="add-site-row">
                             <td colspan="9" class="add-item-cell">
-                                <add-site :product="product" @added-site="reloadSites"></add-site>
+                                <add-site :product="product" @added-site="addedSite"></add-site>
                             </td>
                         </tr>
                         </tbody>
@@ -145,11 +145,19 @@
                 this.loadSites();
                 this.loadUser();
             },
+            deletedSite: function(){
+                this.reloadSites();
+                this.$emit('deleted-site');
+            },
             goingToEditProductName: function () {
                 this.editingProductName = true;
             },
             cancelEditProductName: function () {
                 this.editingProductName = false;
+            },
+            addedSite: function () {
+                this.$emit('added-site');
+                this.reloadSites();
             },
             reloadProducts: function () {
                 this.$emit('reload-products');
@@ -158,7 +166,6 @@
                 this.editingProductName = false;
                 this.reloadProducts();
             },
-
             /*delete product*/
             onClickDeleteProduct: function () {
                 this.deleteParams.active = true;
@@ -176,6 +183,7 @@
                     this.isDeletingProduct = false;
                     if (response.data.status == true) {
                         this.$emit('reload-products');
+                        /*TODO deteld-product*/
                     }
                 }).catch(error => {
                     this.isDeletingProduct = false;
