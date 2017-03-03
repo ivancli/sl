@@ -52,7 +52,7 @@
                     </div>
                     <div class="form-group text-right">
                         <div class="col-sm-12">
-                            <button class="btn btn-primary btn-flat" @click="updatePreference">UPDATE</button>
+                            <button class="btn btn-primary btn-flat" @click.prevent="updatePreference">UPDATE</button>
                         </div>
                     </div>
                 </form>

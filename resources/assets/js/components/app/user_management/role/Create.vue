@@ -53,12 +53,12 @@
                                     </td>
                                     <td class="vertical-align-middle text-center shrink">
                                         <div>
-                                            <a href="#" @click="grantPermission">
+                                            <a href="#" @click.prevent="grantPermission">
                                                 <i class="fa fa-arrow-right"></i>
                                             </a>
                                         </div>
                                         <div>
-                                            <a href="#" @click="revokePermission">
+                                            <a href="#" @click.prevent="revokePermission">
                                                 <i class="fa fa-arrow-left"></i>
                                             </a>
                                         </div>
@@ -83,7 +83,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12 text-right">
-                            <button class="btn btn-primary btn-sm btn-flat" @click="createRole">CREATE</button>
+                            <button class="btn btn-primary btn-sm btn-flat" @click.prevent="createRole">CREATE</button>
                             <a href="/user-management/role" class="btn btn-default btn-sm btn-flat">CANCEL</a>
                         </div>
                     </div>

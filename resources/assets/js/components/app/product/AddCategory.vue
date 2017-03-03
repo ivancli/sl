@@ -2,35 +2,36 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="add-item-block add-category-container">
-                <div class="add-item-label" v-show="!addingCategory" @click="goingToAddCategory">
+                <div class="add-item-label" v-show="!addingCategory" @click.prevent="goingToAddCategory">
                     <i class="fa fa-plus label-icon"></i>&nbsp;&nbsp;&nbsp;
                     <span class="add-item-text">ADD CATEGORY</span>
                 </div>
                 <div class="add-item-controls" v-show="addingCategory">
                     <div class="row">
                         <div class="col-sm-12">
-                            <input type="text" autocomplete="off" class="form-control txt-item"
-                                   placeholder="Enter a category name here" v-model="newCategoryName"
-                                   ref="txt_new_category" tabindex="-1">
-                            <div class="buttons">
-                                <button class="btn btn-primary btn-flat" @click.prevent="addCategory">
-                                    <span class="hidden-sm hidden-xs">
-                                        ADD CATEGORY
-                                    </span>
-                                    <span class="visible-sm visible-xs">
-                                        <i class="fa fa-plus"></i>
-                                    </span>
-                                </button>
-                                &nbsp;&nbsp;
-                                <button class="btn btn-default btn-flat" @click.prevent="cancelAddCategory">
-                                    <span class="hidden-sm hidden-xs">
-                                        CANCEL
-                                    </span>
-                                    <span class="visible-sm visible-xs">
-                                        <i class="fa fa-times"></i>
-                                    </span>
-                                </button>
-                            </div>
+                            <form>
+                                <input type="text" autocomplete="off" class="form-control txt-item" placeholder="Enter a category name here" v-model="newCategoryName" ref="txt_new_category"
+                                       tabindex="-1">
+                                <div class="buttons">
+                                    <button class="btn btn-primary btn-flat" @click.prevent="addCategory">
+                                        <span class="hidden-sm hidden-xs">
+                                            ADD CATEGORY
+                                        </span>
+                                        <span class="visible-sm visible-xs">
+                                            <i class="fa fa-plus"></i>
+                                        </span>
+                                    </button>
+                                    &nbsp;&nbsp;
+                                    <button class="btn btn-default btn-flat" @click.prevent="cancelAddCategory">
+                                        <span class="hidden-sm hidden-xs">
+                                            CANCEL
+                                        </span>
+                                        <span class="visible-sm visible-xs">
+                                            <i class="fa fa-times"></i>
+                                        </span>
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -71,6 +72,7 @@
                 this.$refs['txt_new_category'].blur();
             },
             addCategory: function () {
+                this.$refs['txt_new_category'].blur();
                 this.isAddingCategory = true;
                 this.errors = {};
                 axios.post('/category', this.addCategoryData).then(response=> {

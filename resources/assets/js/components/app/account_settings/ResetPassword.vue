@@ -22,7 +22,7 @@
 
                     <div class="row">
                         <div class="col-sm-12 text-right">
-                            <button class="btn btn-primary btn-flat" @click="resetPassword">RESET PASSWORD</button>
+                            <button class="btn btn-primary btn-flat" @click.prevent="resetPassword">RESET PASSWORD</button>
                         </div>
                     </div>
                 </form>

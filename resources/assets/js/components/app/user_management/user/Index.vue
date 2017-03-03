@@ -28,12 +28,12 @@
                         <table class="table table-bordered table-hover table-striped table-condensed table-paginated">
                             <thead>
                             <tr>
-                                <th :class="orderByClass('id')" @click="setOrdering('id')">ID</th>
-                                <th :class="orderByClass('first_name')" @click="setOrdering('first_name')">First name</th>
-                                <th :class="orderByClass('last_name')" @click="setOrdering('last_name')">Last name</th>
-                                <th :class="orderByClass('email')" @click="setOrdering('email')">Email</th>
-                                <th :class="orderByClass('created_at')" @click="setOrdering('created_at')">Created at</th>
-                                <th :class="orderByClass('updated_at')" @click="setOrdering('updated_at')">Updated at</th>
+                                <th :class="orderByClass('id')" @click.prevent="setOrdering('id')">ID</th>
+                                <th :class="orderByClass('first_name')" @click.prevent="setOrdering('first_name')">First name</th>
+                                <th :class="orderByClass('last_name')" @click.prevent="setOrdering('last_name')">Last name</th>
+                                <th :class="orderByClass('email')" @click.prevent="setOrdering('email')">Email</th>
+                                <th :class="orderByClass('created_at')" @click.prevent="setOrdering('created_at')">Created at</th>
+                                <th :class="orderByClass('updated_at')" @click.prevent="setOrdering('updated_at')">Updated at</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -55,10 +55,10 @@
                         <a href="/user-management/user/create" class="btn btn-primary btn-sm btn-flat">CREATE NEW USER</a>
                     </div>
                     <div class="col-sm-6 text-right">
-                        <button class="btn btn-default btn-sm btn-flat" @click="loadUsers" :disabled="paginationData.current_page == 1">FIRST</button>
-                        <button class="btn btn-default btn-sm btn-flat" @click="loadUsers(prevPageUrl)" :disabled="prevPageUrl == null">PREV</button>
-                        <button class="btn btn-default btn-sm btn-flat" @click="loadUsers(nextPageUrl)" :disabled="nextPageUrl == null">NEXT</button>
-                        <button class="btn btn-default btn-sm btn-flat" @click="loadUsers(lastPageUrl)" :disabled="paginationData.current_page == paginationData.last_page">LAST</button>
+                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadUsers" :disabled="paginationData.current_page == 1">FIRST</button>
+                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadUsers(prevPageUrl)" :disabled="prevPageUrl == null">PREV</button>
+                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadUsers(nextPageUrl)" :disabled="nextPageUrl == null">NEXT</button>
+                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadUsers(lastPageUrl)" :disabled="paginationData.current_page == paginationData.last_page">LAST</button>
                     </div>
                 </div>
             </div>

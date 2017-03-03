@@ -22,7 +22,7 @@
                     <i class="glyphicon glyphicon-trash"></i>
                 </a>
             </th>
-            <th class="text-center vertical-align-middle cell-category-collapse" width="70" @click="toggleCategoryCollapse">
+            <th class="text-center vertical-align-middle cell-category-collapse" width="70" @click.prevent="toggleCategoryCollapse">
                 <a class="text-muted btn-collapse btn-category-collapse" :class="isCollapsed ? 'collapsed' : ''">
                     <i class="fa fa-angle-up"></i>
                 </a>
@@ -54,7 +54,7 @@
             <td></td>
             <td colspan="3" class="table-container">
                 <div class="collapsible-category-div collapse" :class="isCollapsed ? '' : 'in'">
-                    <single-product v-for="product in products" :current-product="product" @reload-products="loadProducts"></single-product>
+                    <single-product v-for="product in products" :current-product="product" @reload-products="reloadProducts"></single-product>
                 </div>
             </td>
         </tr>
@@ -72,7 +72,7 @@
     import deleteConfirmation from '../../fragments/modals/DeleteConfirmation.vue';
 
     import {
-            SET_CATEGORY_COLLAPSE_STATUS, TOGGLE_COLLAPSE_CATEGORY
+            SET_CATEGORY_COLLAPSE_STATUS, TOGGLE_COLLAPSE_CATEGORY, LOAD_USER
     } from '../../../actions/action-types';
 
     export default {
@@ -118,9 +118,13 @@
                     console.info(error.response);
                 })
             },
+            reloadProducts: function () {
+                this.loadProducts();
+                this.loadUser();
+            },
             addedProduct: function () {
                 this.setCategoryCollapseStatus(false);
-                this.loadProducts();
+                this.reloadProducts();
             },
             goingToEditCategoryName: function () {
                 this.editingCategoryName = true;
@@ -147,17 +151,17 @@
                 });
             },
             /*delete category*/
-            onClickDeleteCategory(){
+            onClickDeleteCategory: function () {
                 this.deleteParams.active = true;
             },
-            cancelDelete(){
+            cancelDelete: function () {
                 this.deleteParams.active = false;
             },
-            confirmDelete(){
+            confirmDelete: function () {
                 this.deleteParams.active = false;
                 this.deleteCategory()
             },
-            deleteCategory(){
+            deleteCategory: function () {
                 this.isDeletingCategory = true;
                 axios.delete(this.category.urls.delete).then(response=> {
                     this.isDeletingCategory = false;
@@ -167,6 +171,9 @@
                 }).catch(error=> {
                     this.isDeletingCategory = false;
                 })
+            },
+            loadUser: function () {
+                this.$store.dispatch(LOAD_USER);
             }
         },
         computed: {

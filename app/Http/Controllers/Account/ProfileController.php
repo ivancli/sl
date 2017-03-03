@@ -23,9 +23,15 @@ class ProfileController extends Controller
         $this->userRepo = $userContract;
     }
 
-    public function show(User $user)
+    public function show($id)
     {
+        if ($id != auth()->user()->getKey()) {
+            abort(403);
+            return false;
+        }
+        $user = $this->userRepo->get($id);
         event(new BeforeShow($user));
+        $user = auth()->user();
         $status = true;
         event(new AfterShow($user));
         return compact(['user', 'status']);
@@ -34,15 +40,19 @@ class ProfileController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param User $user
+     * @param $id
      * @param UpdateValidator $updateValidator
-     * @return \Illuminate\Http\Response
+     * @return bool|\Illuminate\Http\Response
      */
-    public function update(User $user, UpdateValidator $updateValidator)
+    public function update($id, UpdateValidator $updateValidator)
     {
+        if ($id != auth()->user()->getKey()) {
+            abort(403);
+            return false;
+        }
+        $user = $this->userRepo->get($id);
         event(new BeforeUpdate($user));
         $updateValidator->validate($this->request->all());
-
         $this->userRepo->update($user, $this->request->all());
         $this->userRepo->updateMetas($user, $this->request->all());
         $status = true;

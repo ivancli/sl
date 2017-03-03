@@ -32,7 +32,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12 text-right">
-                            <button class="btn btn-primary btn-sm btn-flat" @click="createPermission">CREATE</button>
+                            <button class="btn btn-primary btn-sm btn-flat" @click.prevent="createPermission">CREATE</button>
                             <a href="/user-management/permission" class="btn btn-default btn-sm btn-flat">CANCEL</a>
                         </div>
                     </div>

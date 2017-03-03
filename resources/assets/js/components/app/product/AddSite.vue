@@ -1,6 +1,6 @@
 <template>
     <div class="add-item-block add-site-container">
-        <div class="add-item-label add-site-label" v-show="!addingSite" @click="goingToAddSite">
+        <div class="add-item-label add-site-label" v-show="!addingSite" @click.prevent="goingToAddSite">
             <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;
             <div class="site-label-text-container">
                 <div>ADD <span class="hidden-xs hidden-sm">THE</span> PRODUCT PAGE URL
@@ -14,28 +14,28 @@
         <div class="add-item-controls" v-show="addingSite">
             <div class="row">
                 <div class="col-sm-12">
-                    <input type="text" autocomplete="off" name="site_url" class="txt-site-url form-control txt-item"
-                           v-model="newSiteURL" ref="txt_new_site"
-                           placeholder="Enter a product page URL here">
-                    <div class="buttons">
-                        <button class="btn btn-primary btn-flat" @click="addSite">
-                            <span class="hidden-sm hidden-xs">
-                                ADD PRODUCT PAGE URL
-                            </span>
-                            <span class="visible-sm visible-xs">
-                                <i class="fa fa-plus"></i>
-                            </span>
-                        </button>
-                        &nbsp;&nbsp;
-                        <button class="btn btn-default btn-flat btn-cancel-add-site" @click="cancelAddSite">
-                            <span class="hidden-sm hidden-xs">
-                                CANCEL
-                            </span>
-                            <span class="visible-sm visible-xs">
-                                <i class="fa fa-times"></i>
-                            </span>
-                        </button>
-                    </div>
+                    <form>
+                        <input type="text" autocomplete="off" name="site_url" class="txt-site-url form-control txt-item" v-model="newSiteURL" ref="txt_new_site" placeholder="Enter a product page URL here">
+                        <div class="buttons">
+                            <button class="btn btn-primary btn-flat" @click.prevent="addSite">
+                                <span class="hidden-sm hidden-xs">
+                                    ADD PRODUCT PAGE URL
+                                </span>
+                                <span class="visible-sm visible-xs">
+                                    <i class="fa fa-plus"></i>
+                                </span>
+                            </button>
+                            &nbsp;&nbsp;
+                            <button class="btn btn-default btn-flat btn-cancel-add-site" @click.prevent="cancelAddSite">
+                                <span class="hidden-sm hidden-xs">
+                                    CANCEL
+                                </span>
+                                <span class="visible-sm visible-xs">
+                                    <i class="fa fa-times"></i>
+                                </span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -77,6 +77,7 @@
                 this.$refs['txt_new_site'].blur();
             },
             addSite: function () {
+                this.$refs['txt_new_site'].blur();
                 this.isAddingSite = true;
                 this.errors = {};
                 axios.post('/site', this.addSiteData).then(response=> {

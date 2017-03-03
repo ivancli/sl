@@ -1,32 +1,35 @@
 <template>
     <div class="add-item-block add-product-container">
-        <div class="add-item-label" v-show="!addingProduct" @click="goingToAddProduct">
+        <div class="add-item-label" v-show="!addingProduct" @click.prevent="goingToAddProduct">
             <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;
             <span class="add-item-text">ADD PRODUCT</span>
         </div>
         <div class="add-item-controls" v-show="addingProduct">
             <div class="row">
                 <div class="col-sm-12">
-                    <input type="text" autocomplete="off" class="form-control txt-item txt-product-name" ref="txt_new_product" tabindex="=-1" v-model="newProductName" placeholder="Enter a product name here">
-                    <div class="buttons">
-                        <button class="btn btn-primary btn-flat" @click.prevent="addProduct">
-                            <span class="hidden-sm hidden-xs">
-                                ADD PRODUCT
-                            </span>
-                            <span class="visible-sm visible-xs">
-                                <i class="fa fa-plus"></i>
-                            </span>
-                        </button>
-                        &nbsp;&nbsp;
-                        <button class="btn btn-default btn-flat btn-cancel-add-product" @click.prevent="cancelAddProduct">
-                            <span class="hidden-sm hidden-xs">
-                                CANCEL
-                            </span>
-                            <span class="visible-sm visible-xs">
-                                <i class="fa fa-times"></i>
-                            </span>
-                        </button>
-                    </div>
+                    <form>
+                        <input type="text" autocomplete="off" class="form-control txt-item txt-product-name" ref="txt_new_product" tabindex="=-1" v-model="newProductName"
+                               placeholder="Enter a product name here">
+                        <div class="buttons">
+                            <button class="btn btn-primary btn-flat" @click.prevent="addProduct">
+                                <span class="hidden-sm hidden-xs">
+                                    ADD PRODUCT
+                                </span>
+                                <span class="visible-sm visible-xs">
+                                    <i class="fa fa-plus"></i>
+                                </span>
+                            </button>
+                            &nbsp;&nbsp;
+                            <button class="btn btn-default btn-flat btn-cancel-add-product" @click.prevent="cancelAddProduct">
+                                <span class="hidden-sm hidden-xs">
+                                    CANCEL
+                                </span>
+                                <span class="visible-sm visible-xs">
+                                    <i class="fa fa-times"></i>
+                                </span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -68,6 +71,7 @@
                 this.$refs['txt_new_product'].blur();
             },
             addProduct: function () {
+                this.$refs['txt_new_product'].blur();
                 this.isAddingProduct = true;
                 this.errors = {};
                 axios.post('/product', this.addProductData).then(response=> {

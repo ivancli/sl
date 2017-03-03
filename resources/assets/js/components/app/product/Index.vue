@@ -14,7 +14,7 @@
 
         <div class="box box-solid">
             <div class="box-body p-20">
-                <div class="row m-b-10">
+                <div class="row m-b-20">
                     <div class="col-md-8">
                         <div v-if="user.subscription">
                             {{ subscriptionPlan.name }} Plan:
@@ -42,7 +42,7 @@
                 </div>
                 <div class="row m-b-10">
                     <div class="col-sm-12">
-                        <add-category @added-category="loadCategories"></add-category>
+                        <add-category @added-category="reloadCategories"></add-category>
                     </div>
                 </div>
                 <div class="row m-b-20" v-if="hasCategories">
@@ -54,7 +54,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <single-category v-for="single_category in categories" :current-category="single_category"
-                                         @reload-categories="loadCategories"></single-category>
+                                         @reload-categories="reloadCategories"></single-category>
                     </div>
                 </div>
                 <div class="row">
@@ -74,7 +74,7 @@
     import singleCategory from './SingleCategory.vue';
 
     import {
-        TOGGLE_ALL_CATEGORIES
+            TOGGLE_ALL_CATEGORIES, LOAD_USER
     } from '../../../actions/action-types';
 
     export default {
@@ -101,9 +101,16 @@
                     console.info(error.response);
                 })
             },
+            reloadCategories: function () {
+                this.loadCategories();
+                this.loadUser();
+            },
             toggleAllCategories: function () {
                 this.$store.dispatch(TOGGLE_ALL_CATEGORIES);
-            }
+            },
+            loadUser: function () {
+                this.$store.dispatch(LOAD_USER);
+            },
         },
         computed: {
             allCollapseStatus(){

@@ -28,11 +28,11 @@
                         <table class="table table-bordered table-hover table-striped table-condensed table-paginated">
                             <thead>
                             <tr>
-                                <th :class="orderByClass('id')" @click="setOrdering('id')">ID</th>
-                                <th :class="orderByClass('name')" @click="setOrdering('name')">Name</th>
-                                <th :class="orderByClass('display_name')" @click="setOrdering('display_name')">Display name</th>
-                                <th :class="orderByClass('created_at')" @click="setOrdering('created_at')">Created at</th>
-                                <th :class="orderByClass('updated_at')" @click="setOrdering('updated_at')">Updated at</th>
+                                <th :class="orderByClass('id')" @click.prevent="setOrdering('id')">ID</th>
+                                <th :class="orderByClass('name')" @click.prevent="setOrdering('name')">Name</th>
+                                <th :class="orderByClass('display_name')" @click.prevent="setOrdering('display_name')">Display name</th>
+                                <th :class="orderByClass('created_at')" @click.prevent="setOrdering('created_at')">Created at</th>
+                                <th :class="orderByClass('updated_at')" @click.prevent="setOrdering('updated_at')">Updated at</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -54,10 +54,10 @@
                         <a href="/user-management/permission/create" class="btn btn-primary btn-sm btn-flat">CREATE NEW PERMISSION</a>
                     </div>
                     <div class="col-sm-6 text-right">
-                        <button class="btn btn-default btn-sm btn-flat" @click="loadPermissions" :disabled="paginationData.current_page == 1">FIRST</button>
-                        <button class="btn btn-default btn-sm btn-flat" @click="loadPermissions(prevPageUrl)" :disabled="prevPageUrl == null">PREV</button>
-                        <button class="btn btn-default btn-sm btn-flat" @click="loadPermissions(nextPageUrl)" :disabled="nextPageUrl == null">NEXT</button>
-                        <button class="btn btn-default btn-sm btn-flat" @click="loadPermissions(lastPageUrl)" :disabled="paginationData.current_page == paginationData.last_page">LAST</button>
+                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadPermissions" :disabled="paginationData.current_page == 1">FIRST</button>
+                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadPermissions(prevPageUrl)" :disabled="prevPageUrl == null">PREV</button>
+                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadPermissions(nextPageUrl)" :disabled="nextPageUrl == null">NEXT</button>
+                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadPermissions(lastPageUrl)" :disabled="paginationData.current_page == paginationData.last_page">LAST</button>
                     </div>
                 </div>
             </div>

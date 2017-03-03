@@ -62,7 +62,7 @@
                             <th width="100"></th>
                         </tr>
                         </thead>
-                        <single-site v-for="site in sites" :current-site="site" @reload-sites="loadSites"></single-site>
+                        <single-site v-for="site in sites" :current-site="site" @reload-sites="reloadSites"></single-site>
                         <tbody>
                         <tr class="empty-message-row" v-if="!hasSites">
                             <td colspan="9" class="text-center">To start tracking prices, simply copy and paste the URL
@@ -73,7 +73,7 @@
                         <tbody>
                         <tr class="add-site-row">
                             <td colspan="9" class="add-item-cell">
-                                <add-site :product="product" @added-site="loadSites"></add-site>
+                                <add-site :product="product" @added-site="reloadSites"></add-site>
                             </td>
                         </tr>
                         </tbody>
@@ -94,6 +94,10 @@
     import formatDateTime from '../../../filters/formatDateTime';
 
     import deleteConfirmation from '../../fragments/modals/DeleteConfirmation.vue';
+
+    import {
+            LOAD_USER
+    } from '../../../actions/action-types';
 
     export default {
         components: {
@@ -137,6 +141,10 @@
                     console.info(error.response);
                 })
             },
+            reloadSites: function () {
+                this.loadSites();
+                this.loadUser();
+            },
             goingToEditProductName: function () {
                 this.editingProductName = true;
             },
@@ -152,17 +160,17 @@
             },
 
             /*delete product*/
-            onClickDeleteProduct(){
+            onClickDeleteProduct: function () {
                 this.deleteParams.active = true;
             },
-            cancelDelete(){
+            cancelDelete: function () {
                 this.deleteParams.active = false;
             },
-            confirmDelete(){
+            confirmDelete: function () {
                 this.deleteParams.active = false;
                 this.deleteProduct()
             },
-            deleteProduct(){
+            deleteProduct: function () {
                 this.isDeletingProduct = true;
                 axios.delete(this.product.urls.delete).then(response => {
                     this.isDeletingProduct = false;
@@ -173,8 +181,11 @@
                     this.isDeletingProduct = false;
                 })
             },
-            toggleProductCollapse(){
+            toggleProductCollapse: function () {
                 this.isProductCollapsed = !this.isProductCollapsed;
+            },
+            loadUser: function () {
+                this.$store.dispatch(LOAD_USER);
             }
         },
         computed: {
