@@ -63,13 +63,13 @@
                         :class="dropDownItemVisibility['/manage-crawler'] ? 'menu-open' : ''"
                         v-show="dropDownItemVisibility['/manage-crawler']">
                         <li class="">
-                            <a href="#">
+                            <a href="/url-management/domain">
                                 <i class="fa fa-circle-o"></i> Domains
                             </a>
                         </li>
                         <li class="">
-                            <a href="#">
-                                <i class="fa fa-circle-o"></i> Sites
+                            <a href="/url-management/url">
+                                <i class="fa fa-circle-o"></i> URLs
                             </a>
                         </li>
                     </ul>

@@ -27,11 +27,9 @@ Route::group(['middleware' => ['auth', 'subs']], function () {
         return view('app.product.index');
     })->name('home.get');
 
-
     Route::resource('account_settings', 'Account\AccountSettingsController');
     Route::resource('user/profile', 'Account\ProfileController');
     Route::resource('user/preference', 'Account\PreferenceController');
-
 
     Route::resource('category', 'Product\CategoryController', ['except' => [
         'create'
@@ -47,6 +45,10 @@ Route::group(['middleware' => ['auth', 'subs']], function () {
 
     Route::resource('alert', 'Alert\AlertController');
     Route::resource('report', 'Report\ReportController');
+
+    Route::resource('url-management/domain', 'UrlManagement\DomainController');
+    Route::resource('url-management/domain-meta', 'UrlManagement\DomainMetaController');
+    Route::resource('url-management/url', 'UrlManagement\UrlController');
 
     /*user management*/
     Route::resource('user-management/user', 'UserManagement\UserController');
@@ -67,10 +69,10 @@ Route::group(['middleware' => ['auth', 'subs']], function () {
 |
 */
 Route::group(['prefix' => 'errors'], function () {
-    Route::get('javascript_disabled', function () {
+    Route::get('javascript-disabled', function () {
         return view('errors.javascript_disabled');
     })->name('errors.javascript_disabled');
-    Route::get('cookie_disabled', function () {
+    Route::get('cookie-disabled', function () {
         return view('errors.cookie_disabled');
     })->name('errors.cookie_disabled');
 });

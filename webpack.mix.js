@@ -31,6 +31,17 @@ mix
     /* report */
     .js('resources/assets/js/app/report/index.js', 'public/js/app/report')
 
+    /* domain */
+    .js('resources/assets/js/app/url_management/domain/index.js', 'public/js/app/domain')
+    .js('resources/assets/js/app/url_management/domain/show.js', 'public/js/app/domain')
+    .js('resources/assets/js/app/url_management/domain/edit.js', 'public/js/app/domain')
+
+    /* domain meta */
+    .js('resources/assets/js/app/url_management/domain_meta/edit.js', 'public/js/app/domain_meta')
+
+    /* url */
+    .js('resources/assets/js/app/url_management/url/index.js', 'public/js/app/url')
+
     /* user management */
     /* user */
     .js('resources/assets/js/app/user_management/user/index.js', 'public/js/app/user')

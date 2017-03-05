@@ -18,7 +18,7 @@ class Url extends Model
     ];
 
     protected $appends = [
-        'domainFullPath'
+        'domainFullPath', 'urls'
     ];
 
     /**
@@ -51,11 +51,28 @@ class Url extends Model
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/
-
+    /**
+     * Get Domain
+     * @return mixed
+     */
     public function getDomainFullPathAttribute()
     {
-        return parse_url($this->full_path)['host'];
+        $urlSegments = parse_url($this->full_path);
+        return "{$urlSegments['scheme']}://{$urlSegments['host']}";
     }
 
-
+    /**
+     * Get related path to interact with Url object
+     * @return array
+     */
+    public function getUrlsAttribute()
+    {
+        return [
+            'show' => route('url.show', $this->getKey()),
+            'store' => route('url.store'),
+            'edit' => route('url.edit', $this->getKey()),
+            'update' => route('url.update', $this->getKey()),
+            'delete' => route('url.destroy', $this->getKey()),
+        ];
+    }
 }

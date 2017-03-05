@@ -3,13 +3,15 @@
     <section class="content">
         <div class="box box-solid">
             <div class="box-body p-20">
-                <div class="col-sm-offset-2">
-                    <ul class="text-danger errors-container p-b-10 p-l-20" v-if="Object.keys(errors).length > 0">
-                        <li v-for="error in errors">
-                            <div v-if="error.constructor != Array" v-text="error"></div>
-                            <div v-else v-for="message in error" v-text="message"></div>
-                        </li>
-                    </ul>
+                <div class="row">
+                    <div class="col-sm-offset-2">
+                        <ul class="text-danger errors-container p-b-10 p-l-20" v-if="Object.keys(errors).length > 0">
+                            <li v-for="error in errors">
+                                <div v-if="error.constructor != Array" v-text="error"></div>
+                                <div v-else v-for="message in error" v-text="message"></div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <form class="form-horizontal" onsubmit="return false;">
                     <div class="form-group required">
@@ -124,7 +126,7 @@
         methods: {
             loadRole(){
                 this.isLoadingRole = true;
-                axios.get(editingRole.urls.show).then(response=> {
+                axios.get(editingRole.urls.show).then(response => {
                     this.isLoadingRole = false;
                     if (response.data.status == true) {
                         var role = response.data.role;
@@ -133,29 +135,29 @@
                         this.description = role.description;
                         this.selectedPermissions = role.selectedPermissions;
                     }
-                }).catch(error=> {
+                }).catch(error => {
                     this.isLoadingRole = false;
                 })
             },
             loadPermissions(){
                 this.isLoadingPermission = true;
-                axios.get('/user-management/permission').then(response=> {
+                axios.get('/user-management/permission').then(response => {
                     this.isLoadingPermission = false;
                     if (response.data.status == true) {
                         this.permissions = response.data.permissions;
                     }
-                }).catch(error=> {
+                }).catch(error => {
                     this.isLoadingPermission = false;
                 })
             },
             editRole(){
                 this.isEditingRole = true;
-                axios.put(editingRole.urls.update, this.editRoleData).then(response=> {
+                axios.put(editingRole.urls.update, this.editRoleData).then(response => {
                     this.isEditingRole = false;
                     if (response.data.status == true) {
                         window.location.href = '/user-management/role';
                     }
-                }).catch(error=> {
+                }).catch(error => {
                     this.isEditingRole = false;
                     if (error.response && error.response.status == 422 && error.response.data) {
                         this.errors = error.response.data;
@@ -169,7 +171,7 @@
                 this.selectedPermissions = this.selectedPermissions.concat(permissions);
             },
             revokePermission(){
-                this.selectedPermissions = this.selectedPermissions.filter((permission)=> {
+                this.selectedPermissions = this.selectedPermissions.filter((permission) => {
                     return this.outputPermissionIds.indexOf(permission.id) == -1;
                 });
             }

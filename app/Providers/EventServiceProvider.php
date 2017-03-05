@@ -73,6 +73,57 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Product\Site\AfterDestroy' => [],
 
         /**
+         * URL Management
+         */
+        /* domain */
+        'App\Events\UrlManagement\Domain\BeforeIndex' => [],
+        'App\Events\UrlManagement\Domain\AfterIndex' => [],
+        'App\Events\UrlManagement\Domain\BeforeShow' => [],
+        'App\Events\UrlManagement\Domain\AfterShow' => [],
+        'App\Events\UrlManagement\Domain\BeforeCreate' => [],
+        'App\Events\UrlManagement\Domain\AfterCreate' => [],
+        'App\Events\UrlManagement\Domain\BeforeStore' => [],
+        'App\Events\UrlManagement\Domain\AfterStore' => [],
+        'App\Events\UrlManagement\Domain\BeforeEdit' => [],
+        'App\Events\UrlManagement\Domain\AfterEdit' => [],
+        'App\Events\UrlManagement\Domain\BeforeUpdate' => [],
+        'App\Events\UrlManagement\Domain\AfterUpdate' => [],
+        'App\Events\UrlManagement\Domain\BeforeDestroy' => [],
+        'App\Events\UrlManagement\Domain\AfterDestroy' => [],
+
+        /* domain meta */
+        'App\Events\UrlManagement\DomainMeta\BeforeIndex' => [],
+        'App\Events\UrlManagement\DomainMeta\AfterIndex' => [],
+        'App\Events\UrlManagement\DomainMeta\BeforeShow' => [],
+        'App\Events\UrlManagement\DomainMeta\AfterShow' => [],
+        'App\Events\UrlManagement\DomainMeta\BeforeCreate' => [],
+        'App\Events\UrlManagement\DomainMeta\AfterCreate' => [],
+        'App\Events\UrlManagement\DomainMeta\BeforeStore' => [],
+        'App\Events\UrlManagement\DomainMeta\AfterStore' => [],
+        'App\Events\UrlManagement\DomainMeta\BeforeEdit' => [],
+        'App\Events\UrlManagement\DomainMeta\AfterEdit' => [],
+        'App\Events\UrlManagement\DomainMeta\BeforeUpdate' => [],
+        'App\Events\UrlManagement\DomainMeta\AfterUpdate' => [],
+        'App\Events\UrlManagement\DomainMeta\BeforeDestroy' => [],
+        'App\Events\UrlManagement\DomainMeta\AfterDestroy' => [],
+
+        /* url */
+        'App\Events\UrlManagement\Url\BeforeIndex' => [],
+        'App\Events\UrlManagement\Url\AfterIndex' => [],
+        'App\Events\UrlManagement\Url\BeforeShow' => [],
+        'App\Events\UrlManagement\Url\AfterShow' => [],
+        'App\Events\UrlManagement\Url\BeforeCreate' => [],
+        'App\Events\UrlManagement\Url\AfterCreate' => [],
+        'App\Events\UrlManagement\Url\BeforeStore' => [],
+        'App\Events\UrlManagement\Url\AfterStore' => [],
+        'App\Events\UrlManagement\Url\BeforeEdit' => [],
+        'App\Events\UrlManagement\Url\AfterEdit' => [],
+        'App\Events\UrlManagement\Url\BeforeUpdate' => [],
+        'App\Events\UrlManagement\Url\AfterUpdate' => [],
+        'App\Events\UrlManagement\Url\BeforeDestroy' => [],
+        'App\Events\UrlManagement\Url\AfterDestroy' => [],
+
+        /**
          * User management
          */
         /* user */
@@ -155,6 +206,11 @@ class EventServiceProvider extends ServiceProvider
         'App\Listeners\Product\CategoryControllerEventSubscriber',
         'App\Listeners\Product\ProductControllerEventSubscriber',
         'App\Listeners\Product\SiteControllerEventSubscriber',
+
+        /*url management*/
+        'App\Listeners\UrlManagement\DomainControllerEventSubscriber',
+        'App\Listeners\UrlManagement\DomainMetaControllerEventSubscriber',
+        'App\Listeners\UrlManagement\UrlControllerEventSubscriber',
 
         /*auth*/
         'App\Listeners\Auth\AuthenticationEventSubscriber',

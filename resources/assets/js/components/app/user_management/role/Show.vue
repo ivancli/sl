@@ -37,6 +37,7 @@
                 </table>
                 <div class="row m-t-20">
                     <div class="col-sm-12 text-right">
+                        <a :href="role.urls.edit" class="btn btn-primary btn-sm btn-flat" v-if="role.urls">EDIT</a>
                         <a href="/user-management/role" class="btn btn-default btn-sm btn-flat">BACK</a>
                     </div>
                 </div>

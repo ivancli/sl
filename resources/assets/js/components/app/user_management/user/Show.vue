@@ -37,6 +37,7 @@
                 </table>
                 <div class="row m-t-20">
                     <div class="col-sm-12 text-right">
+                        <a :href="user.urls.edit" class="btn btn-primary btn-sm btn-flat" v-if="user.urls">EDIT</a>
                         <a href="/user-management/user" class="btn btn-default btn-sm btn-flat">BACK</a>
                     </div>
                 </div>
@@ -66,12 +67,12 @@
         methods: {
             loadUser(){
                 this.isLoadingUser = true;
-                axios.get(showingUser.urls.show).then(response=> {
+                axios.get(showingUser.urls.show).then(response => {
                     this.isLoadingUser = false;
                     if (response.data.status == true) {
                         this.user = response.data.user;
                     }
-                }).catch(error=> {
+                }).catch(error => {
                     this.isLoadingUser = false;
                 })
             },

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Product;
 
 use App\Contracts\Repositories\Product\ProductContract;
 use App\Contracts\Repositories\Product\SiteContract;
-use App\Contracts\Repositories\Product\UrlContract;
+use App\Contracts\Repositories\UrlManagement\UrlContract;
 use App\Events\Product\Site\AfterDestroy;
 use App\Events\Product\Site\AfterEdit;
 use App\Events\Product\Site\AfterIndex;

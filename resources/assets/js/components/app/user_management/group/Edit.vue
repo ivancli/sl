@@ -3,13 +3,15 @@
     <section class="content">
         <div class="box box-solid">
             <div class="box-body p-20">
-                <div class="col-sm-offset-2">
-                    <ul class="text-danger errors-container p-b-10 p-l-20" v-if="Object.keys(errors).length > 0">
-                        <li v-for="error in errors">
-                            <div v-if="error.constructor != Array" v-text="error"></div>
-                            <div v-else v-for="message in error" v-text="message"></div>
-                        </li>
-                    </ul>
+                <div class="row">
+                    <div class="col-sm-offset-2">
+                        <ul class="text-danger errors-container p-b-10 p-l-20" v-if="Object.keys(errors).length > 0">
+                            <li v-for="error in errors">
+                                <div v-if="error.constructor != Array" v-text="error"></div>
+                                <div v-else v-for="message in error" v-text="message"></div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <form class="form-horizontal" onsubmit="return false;">
                     <div class="form-group required">
@@ -68,7 +70,7 @@
         methods: {
             loadGroup(){
                 this.isLoadingGroup = true;
-                axios.get(editingGroup.urls.show).then(response=> {
+                axios.get(editingGroup.urls.show).then(response => {
                     this.isLoadingGroup = false;
                     if (response.data.status == true) {
                         var group = response.data.group;
@@ -76,18 +78,18 @@
                         this.displayName = group.display_name;
                         this.description = group.description;
                     }
-                }).catch(error=> {
+                }).catch(error => {
                     this.isLoadingGroup = false;
                 })
             },
             editGroup(){
                 this.isEditingGroup = true;
-                axios.put(editingGroup.urls.update, this.editGroupData).then(response=> {
+                axios.put(editingGroup.urls.update, this.editGroupData).then(response => {
                     this.isEditingGroup = false;
                     if (response.data.status == true) {
                         window.location.href = '/user-management/group';
                     }
-                }).catch(error=> {
+                }).catch(error => {
                     this.isEditingGroup = false;
                     if (error.response && error.response.status == 422 && error.response.data) {
                         this.errors = error.response.data;
