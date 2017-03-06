@@ -24,7 +24,9 @@
                         </div>
                     </div>
 
-                    <single-edit-domain-meta v-for="(meta, key) in domain.metas" :meta="meta" @remove-meta="removeMeta(key)"></single-edit-domain-meta>
+                    <single-edit-domain-meta v-for="(meta, key) in domain.metas" :meta="meta"
+                                             @remove-meta="removeMeta(key)"
+                                             @updating-domain-meta="setMeta(key, $event)"></single-edit-domain-meta>
                     <!--TODO use store to loop meta controllers-->
 
                     <div class="form-group">
@@ -38,7 +40,8 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12 text-right">
-                            <button class="btn btn-primary btn-sm btn-flat" @click.prevent="editDomainMeta">UPDATE</button>
+                            <button class="btn btn-primary btn-sm btn-flat" @click.prevent="editDomainMeta">UPDATE
+                            </button>
                             <a href="/url-management/domain" class="btn btn-default btn-sm btn-flat">CANCEL</a>
                         </div>
                     </div>
@@ -89,7 +92,7 @@
                     if (response.data.status == true) {
                         window.location.href = '/url-management/domain';
                     }
-                }).catch(error=> {
+                }).catch(error => {
                     this.isEditingDomainMeta = false;
                     if (error.response && error.response.status == 422 && error.response.data) {
                         this.errors = error.response.data;
@@ -104,6 +107,9 @@
             },
             removeMeta(key){
                 this.domain.metas.splice(key, 1);
+            },
+            setMeta(key, meta){
+                this.domain.metas[key] = meta;
             }
         },
         computed: {
