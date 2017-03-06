@@ -129,6 +129,13 @@ return [
         'TIME_FORMAT' => [
             'required' => 'Please select a time format',
         ],
+        /*TODO find a way to make message appear once only, or add index to message*/
+        'metas.*.name' => [
+            'required' => 'Each meta\'s name is required',
+        ],
+        'metas.*.type' => [
+            'required' => 'Each meta\'s type is required',
+        ]
     ],
 
     /*

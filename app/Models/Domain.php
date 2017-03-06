@@ -18,7 +18,11 @@ class Domain extends Model
     ];
 
     protected $appends = [
-        'allMetas', 'modelUrls'
+        'modelUrls'
+    ];
+
+    protected $with = [
+        'metas'
     ];
 
     /**
@@ -45,15 +49,6 @@ class Domain extends Model
     /*----------------------------------------------------------------------*/
 
     /**
-     * Get all metas
-     * @return mixed
-     */
-    public function getAllMetasAttribute()
-    {
-        return $this->metas->map->name;
-    }
-
-    /**
      * Get related path to interact with Domain object
      * @return array
      */
@@ -71,5 +66,23 @@ class Domain extends Model
             'meta_update' => route('domain-meta.update', $this->getKey()),
             'meta_delete' => route('domain-meta.destroy', $this->getKey()),
         ];
+    }
+
+    /*----------------------------------------------------------------------*/
+    /* Helpers                                                              */
+    /*----------------------------------------------------------------------*/
+
+    public function clearMeta()
+    {
+        $this->metas()->delete();
+    }
+
+    public function setMeta($name, $type)
+    {
+        $meta = $this->metas()->create([
+            'name' => $name,
+            'type' => $type
+        ]);
+        return $meta;
     }
 }

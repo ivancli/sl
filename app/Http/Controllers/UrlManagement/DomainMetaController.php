@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UrlManagement;
 
 use App\Contracts\Repositories\UrlManagement\DomainContract;
+use App\Contracts\Repositories\UrlManagement\DomainMetaContract;
 use App\Events\UrlManagement\DomainMeta\BeforeIndex;
 use App\Events\UrlManagement\DomainMeta\AfterIndex;
 use App\Events\UrlManagement\DomainMeta\BeforeCreate;
@@ -18,18 +19,22 @@ use App\Events\UrlManagement\DomainMeta\AfterUpdate;
 use App\Events\UrlManagement\DomainMeta\BeforeDestroy;
 use App\Events\UrlManagement\DomainMeta\AfterDestroy;
 use App\Http\Controllers\Controller;
+use App\Validators\UrlManagement\DomainMeta\UpdateValidator;
 use Illuminate\Http\Request;
 
 class DomainMetaController extends Controller
 {
     var $request;
     var $domainRepo;
+    var $domainMetaRepo;
 
     public function __construct(Request $request,
-                                DomainContract $domainContract)
+                                DomainContract $domainContract,
+                                DomainMetaContract $domainMetaContract)
     {
         $this->request = $request;
         $this->domainRepo = $domainContract;
+        $this->domainMetaRepo = $domainMetaContract;
     }
 
     /**
@@ -99,13 +104,19 @@ class DomainMetaController extends Controller
      * Update the specified resource in storage.
      *
      * @param  int $id
+     * @param UpdateValidator $updateValidator
      * @return \Illuminate\Http\Response
      */
-    public function update($id)
+    public function update($id, UpdateValidator $updateValidator)
     {
         $domain = $this->domainRepo->get($id);
         event(new BeforeUpdate($domain));
+        $updateValidator->validate($this->request->all());
+
+        $domain = $this->domainMetaRepo->update($domain, $this->request->get('metas'));
+        $status = true;
         event(new AfterUpdate($domain));
+        return compact(['status', 'domain']);
     }
 
     /**

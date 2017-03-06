@@ -24,12 +24,13 @@
                         </div>
                     </div>
 
+                    <single-edit-domain-meta v-for="(meta, key) in domain.metas" :meta="meta" @remove-meta="removeMeta(key)"></single-edit-domain-meta>
                     <!--TODO use store to loop meta controllers-->
 
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
                             <p class="form-control-static">
-                                <a href="#" class="text-muted">
+                                <a href="#" class="text-muted" @click.prevent="addNewMeta">
                                     ADD NEW META <i class="glyphicon glyphicon-plus text-success"></i>
                                 </a>
                             </p>
@@ -37,28 +38,31 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12 text-right">
-                            <button class="btn btn-primary btn-sm btn-flat" @click.prevent="editDomain">UPDATE</button>
+                            <button class="btn btn-primary btn-sm btn-flat" @click.prevent="editDomainMeta">UPDATE</button>
                             <a href="/url-management/domain" class="btn btn-default btn-sm btn-flat">CANCEL</a>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
-        <loading v-if="isEditingDomain || isLoadingDomain"></loading>
+        <loading v-if="isEditingDomainMeta || isLoadingDomain"></loading>
     </section>
 </template>
 
 <script>
     import loading from '../../../Loading.vue';
 
+    import singleEditDomainMeta from './SingleEditDomainMeta.vue';
+
     export default{
         components: {
-            loading
+            loading,
+            singleEditDomainMeta
         },
         data(){
             return {
                 domain: null,
-                isEditingDomain: false,
+                isEditingDomainMeta: false,
                 isLoadingDomain: false,
                 errors: {},
             }
@@ -79,8 +83,36 @@
                     this.isLoadingDomain = false;
                 })
             },
+            editDomainMeta(){
+                axios.put(editingDomain.modelUrls.meta_update, this.editDomainMetaData).then(response => {
+                    this.isEditingDomainMeta = false;
+                    if (response.data.status == true) {
+                        window.location.href = '/url-management/domain';
+                    }
+                }).catch(error=> {
+                    this.isEditingDomainMeta = false;
+                    if (error.response && error.response.status == 422 && error.response.data) {
+                        this.errors = error.response.data;
+                    }
+                });
+            },
+            addNewMeta(){
+                this.domain.metas.push({
+                    name: '',
+                    type: ''
+                });
+            },
+            removeMeta(key){
+                this.domain.metas.splice(key, 1);
+            }
         },
-        computed: {}
+        computed: {
+            editDomainMetaData(){
+                return {
+                    metas: this.domain.metas
+                };
+            }
+        }
     }
 </script>
 
