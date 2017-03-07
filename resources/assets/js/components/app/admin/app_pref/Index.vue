@@ -1,17 +1,15 @@
 <template>
     <!-- Main content -->
     <section class="content">
-        <div class="box">
-            <div class="box-body">
+        <div class="box box-solid">
+            <div class="box-body p-20">
                 <div class="row">
                     <div class="col-sm-12">
                         <form class="form-horizontal">
-                            <div class="form-group" v-for="appPref in appPrefs">
-                                <label :for="appPref.id" v-text="appPref.element" class="control-label col-sm-4"></label>
-                                <div class="col-sm-8">
-                                    <input type="text" v-model="appPref.value" :id="appPref.id">
-                                </div>
-                            </div>
+                            <single-edit-app-pref v-for="(value, element) in appPrefs" :value="value" :element="element"
+                                                  @updating-pref="updatingPref"></single-edit-app-pref>
+                            <button class="btn btn-primary btn-sm btn-flat" @click.prevent="updatePref">UPDATE</button>
+                            <a href="/app-preference" class="btn btn-default btn-sm btn-flat">CANCEL</a>
                         </form>
                     </div>
                 </div>
@@ -21,7 +19,12 @@
 </template>
 
 <script>
+    import singleEditAppPref from './SingleEditAppPref.vue';
+
     export default{
+        components: {
+            singleEditAppPref
+        },
         data(){
             return {
                 isLoadingAppPreference: false,
@@ -43,6 +46,26 @@
                 }).catch(error => {
                     this.isLoadingAppPreference = false;
                 })
+            },
+            updatingPref(pref){
+                console.info('pref.element', pref.element);
+                console.info('pref.value', pref.value);
+                this.appPrefs[pref.element] = pref.value;
+            },
+            updatePref(){
+                /*TODO submit form*/
+            }
+        },
+        computed: {
+            updateAppPrefData(){
+                let data = [];
+                this.appPrefs.forEach((item, index) => {
+                    data.push({
+                        element: index,
+                        value: item
+                    });
+                });
+                return data;
             }
         }
     }
