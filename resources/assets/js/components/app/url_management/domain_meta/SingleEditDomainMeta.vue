@@ -25,8 +25,7 @@
                 </a>
             </p>
         </div>
-        <edit-popup :is-active="isMetaConfActive" :confs="meta.confs" @hide-modal="hideEditPopup"
-                    @set-confs="setMetaConfs"></edit-popup>
+        <edit-popup :is-active="isMetaConfActive" :confs="meta.confs" @hide-modal="hideEditPopup" @set-confs="setMetaConfs"></edit-popup>
     </div>
 </template>
 
@@ -43,7 +42,11 @@
         data(){
             return {
                 isMetaConfActive: false,
-                editingMeta: {},
+                editingMeta: {
+                    name: null,
+                    type: null,
+                    confs: []
+                },
             };
         },
         mounted(){
@@ -70,6 +73,7 @@
             },
             setMetaConfs(confs){
                 this.editingMeta.confs = confs;
+                this.hideEditPopup();
             },
             updatingDomainMeta(){
                 this.$emit('updating-domain-meta', this.editingMeta);

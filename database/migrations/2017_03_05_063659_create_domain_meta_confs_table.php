@@ -16,7 +16,8 @@ class CreateDomainMetaConfsTable extends Migration
         Schema::create('domain_meta_confs', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('domain_meta_id')->unsigned()->nullable();
-            $table->foreign('domain_meta_id')->references('id')->on('domain_metas');
+            $table->foreign('domain_meta_id')->references('id')->on('domain_metas')
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->text('element');
             $table->text('value');
             $table->integer('order');

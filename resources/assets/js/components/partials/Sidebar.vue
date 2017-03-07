@@ -45,8 +45,8 @@
                         <span>REPORTS</span>
                     </a>
                 </li>
-                <li class="" v-if="isStaffMember">
-                    <a href="#">
+                <li :class="topLevelActiveClass('/app-preference')" v-if="isStaffMember">
+                    <a href="/app-preference">
                         <i class="fa fa-gears"></i>
                         <span>APP PREFERENCES</span>
                     </a>

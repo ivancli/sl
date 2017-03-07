@@ -20,6 +20,10 @@
                 <i class="glyphicon glyphicon-qrcode"></i>
             </a>
             &nbsp;
+            <a :href="domain.modelUrls.conf_edit" class="text-muted" title="edit configuration">
+                <i class="glyphicon glyphicon-cog"></i>
+            </a>
+            &nbsp;
             <a href="#" class="text-danger" @click.prevent="onClickDeleteDomain" title="delete">
                 <i class="glyphicon glyphicon-trash"></i>
             </a>
@@ -86,7 +90,7 @@
             },
             deleteDomain(){
                 this.isDeletingDomain = true;
-                axios.delete(this.domain.urls.delete).then(response=> {
+                axios.delete(this.domain.modelUrls.delete).then(response=> {
                     this.isDeletingDomain = false;
                     if (response.data.status == true) {
                         this.$emit('reloadDomains');

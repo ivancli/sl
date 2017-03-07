@@ -15,7 +15,7 @@
                             <option value="100">100</option>
                         </select>
                         &nbsp;&nbsp;
-                        Urls
+                        URLs
                     </div>
                     <div class="col-sm-6 text-right">
                         Search
@@ -29,9 +29,8 @@
                             <thead>
                             <tr>
                                 <th :class="orderByClass('id')" @click.prevent="setOrdering('id')">ID</th>
-                                <th :class="orderByClass('name')" @click.prevent="setOrdering('name')">Name</th>
-                                <th :class="orderByClass('display_name')" @click.prevent="setOrdering('display_name')">Display name</th>
-                                <th :class="orderByClass('numberOfUsers')" @click.prevent="setOrdering('numberOfUsers')">Number of users</th>
+                                <th :class="orderByClass('full_path')" @click.prevent="setOrdering('full_path')">Full path</th>
+                                <th :class="orderByClass('status')" @click.prevent="setOrdering('status')">Status</th>
                                 <th :class="orderByClass('created_at')" @click.prevent="setOrdering('created_at')">Created at</th>
                                 <th :class="orderByClass('updated_at')" @click.prevent="setOrdering('updated_at')">Updated at</th>
                                 <th></th>
@@ -52,7 +51,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <a href="/url-management/url/create" class="btn btn-primary btn-sm btn-flat">CREATE NEW DOMAIN</a>
+                        <a href="/url-management/url/create" class="btn btn-primary btn-sm btn-flat">CREATE NEW URL</a>
                     </div>
                     <div class="col-sm-6 text-right">
                         <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadUrls" :disabled="paginationData.current_page == 1">FIRST</button>
@@ -152,20 +151,20 @@
         computed: {
             currentPageUrl: function () {
                 return '/url-management/url?page=' + this.paginationData.current_page
-                    + '&orderBy=' + this.orderByData.column
-                    + '&direction=' + this.orderByData.direction
-                    + '&per_page=' + this.paginationData.per_page
-                    + '&key=' + this.filterText;
+                        + '&orderBy=' + this.orderByData.column
+                        + '&direction=' + this.orderByData.direction
+                        + '&per_page=' + this.paginationData.per_page
+                        + '&key=' + this.filterText;
             },
             nextPageUrl: function () {
                 if (this.paginationData.next_page_url == null) {
                     return null;
                 } else {
                     return this.paginationData.next_page_url
-                        + '&orderBy=' + this.orderByData.column
-                        + '&direction=' + this.orderByData.direction
-                        + '&per_page=' + this.paginationData.per_page
-                        + '&key=' + this.filterText;
+                            + '&orderBy=' + this.orderByData.column
+                            + '&direction=' + this.orderByData.direction
+                            + '&per_page=' + this.paginationData.per_page
+                            + '&key=' + this.filterText;
                 }
             },
             prevPageUrl: function () {
@@ -173,24 +172,24 @@
                     return null;
                 } else {
                     return this.paginationData.prev_page_url
-                        + '&orderBy=' + this.orderByData.column
-                        + '&direction=' + this.orderByData.direction
-                        + '&per_page=' + this.paginationData.per_page
-                        + '&key=' + this.filterText;
+                            + '&orderBy=' + this.orderByData.column
+                            + '&direction=' + this.orderByData.direction
+                            + '&per_page=' + this.paginationData.per_page
+                            + '&key=' + this.filterText;
                 }
             },
             firstPageUrl: function () {
                 return '/url-management/url?page=1&orderBy=' + this.orderByData.column
-                    + '&direction=' + this.orderByData.direction
-                    + '&per_page=' + this.paginationData.per_page
-                    + '&key=' + this.filterText;
+                        + '&direction=' + this.orderByData.direction
+                        + '&per_page=' + this.paginationData.per_page
+                        + '&key=' + this.filterText;
             },
             lastPageUrl: function () {
                 return '/url-management/url?page=' + this.paginationData.last_page
-                    + '&orderBy=' + this.orderByData.column
-                    + '&direction=' + this.orderByData.direction
-                    + '&per_page=' + this.paginationData.per_page
-                    + '&key=' + this.filterText;
+                        + '&orderBy=' + this.orderByData.column
+                        + '&direction=' + this.orderByData.direction
+                        + '&per_page=' + this.paginationData.per_page
+                        + '&key=' + this.filterText;
             }
         }
     }

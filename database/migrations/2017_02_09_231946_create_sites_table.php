@@ -19,9 +19,11 @@ class CreateSitesTable extends Migration
             $table->foreign('product_id')->references('id')->on('products')
                 ->onUpdate('cascade')->onDelete('set null');
             $table->integer('url_id')->unsigned()->nullable();
-            $table->foreign('url_id')->references('id')->on('urls');
+            $table->foreign('url_id')->references('id')->on('urls')
+                ->onUpdate('cascade')->onDelete('set null');
             $table->integer('item_id')->unsigned()->nullable();
-            $table->foreign('item_id')->references('id')->on('items');
+            $table->foreign('item_id')->references('id')->on('items')
+                ->onUpdate('cascade')->onDelete('set null');
             $table->char('is_active', 1)->default('y');
             $table->timestamps();
         });

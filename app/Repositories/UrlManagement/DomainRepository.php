@@ -109,6 +109,6 @@ class DomainRepository implements DomainContract
      */
     public function destroy(Domain $domain)
     {
-        // TODO: Implement destroy() method.
+        $domain->delete();
     }
 }

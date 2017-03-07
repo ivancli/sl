@@ -42,7 +42,9 @@ class Site extends Model
      */
     public function getSiteUrlAttribute()
     {
-        return $this->url->full_path;
+        if (!is_null($this->url)) {
+            return $this->url->full_path;
+        }
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\UrlManagement;
 
+use App\Contracts\Repositories\UrlManagement\UrlContract;
 use App\Http\Controllers\Controller;
 use App\Models\Url;
 use App\Events\UrlManagement\Url\BeforeIndex;
@@ -23,10 +24,13 @@ use Illuminate\Http\Request;
 class UrlController extends Controller
 {
     var $request;
+    var $urlRepo;
 
-    public function __construct(Request $request)
+    public function __construct(Request $request,
+                                UrlContract $urlContract)
     {
         $this->request = $request;
+        $this->urlRepo = $urlContract;
     }
 
     /**
@@ -37,7 +41,19 @@ class UrlController extends Controller
     public function index()
     {
         event(new BeforeIndex());
+        if (!$this->request->has('page')) {
+            $urls = $this->urlRepo->all();
+        } else {
+            $urls = $this->urlRepo->filterAll($this->request->all());
+        }
+        $status = true;
+
         event(new AfterIndex());
+        if ($this->request->ajax()) {
+            return compact(['status', 'urls']);
+        } else {
+            return view('app.url_management.url.index');
+        }
     }
 
     /**
@@ -72,7 +88,6 @@ class UrlController extends Controller
      */
     public function show(Url $url)
     {
-
         event(new BeforeShow($url));
         event(new AfterShow($url));
     }
@@ -85,7 +100,6 @@ class UrlController extends Controller
      */
     public function edit(Url $url)
     {
-
         event(new BeforeEdit($url));
         event(new AfterEdit($url));
     }
@@ -98,7 +112,6 @@ class UrlController extends Controller
      */
     public function update(Url $url)
     {
-
         event(new BeforeUpdate($url));
         event(new AfterUpdate($url));
     }
@@ -111,8 +124,10 @@ class UrlController extends Controller
      */
     public function destroy(Url $url)
     {
-
         event(new BeforeDestroy($url));
+        $this->urlRepo->destroy($url);
+        $status = true;
         event(new AfterDestroy());
+        return compact(['status']);
     }
 }

@@ -11,14 +11,47 @@ namespace App\Repositories\UrlManagement;
 
 use App\Contracts\Repositories\UrlManagement\UrlContract;
 use App\Models\Url;
+use Illuminate\Http\Request;
 
 class UrlRepository implements UrlContract
 {
     var $url;
+    var $request;
 
-    public function __construct(Url $url)
+    public function __construct(Url $url, Request $request)
     {
         $this->url = $url;
+        $this->request = $request;
+    }
+
+    /**
+     * Load all url and filter them
+     * @param array $data
+     * @return mixed
+     */
+    public function filterAll(Array $data)
+    {
+
+        $length = array_get($data, 'per_page', 25);
+        $orderByColumn = array_get($data, 'orderBy', 'id');
+        $orderByDirection = array_get($data, 'direction', 'asc');
+        $builder = $this->url;
+        $builder = $builder->orderBy($orderByColumn, $orderByDirection);
+        if (array_has($data, 'key') && !empty(array_get($data, 'key'))) {
+            $key = array_get($data, 'key');
+            $builder->where('id', 'LIKE', "%{$key}%");
+            $builder->orWhere('full_path', 'LIKE', "%{$key}%");
+            $builder->orWhere('status', 'LIKE', "%{$key}%");
+            $builder->orWhere('created_at', 'LIKE', "%{$key}%");
+            $builder->orWhere('updated_at', 'LIKE', "%{$key}%");
+        }
+        $urls = $builder->paginate($length);
+        if ($urls->count() == 0) {
+            $page = 1;
+            $this->request->merge(compact(['page']));
+            $urls = $builder->paginate($length);
+        }
+        return $urls;
     }
 
     /**
@@ -83,5 +116,28 @@ class UrlRepository implements UrlContract
             $url = $urls->first();
         }
         return $url;
+    }
+
+    /**
+     * Update existing URL
+     * @param Url $url
+     * @param array $data
+     * @return mixed
+     */
+    public function update(Url $url, Array $data)
+    {
+        $url->status = $data['status'];
+        $url->save();
+        return $url;
+    }
+
+    /**
+     * Remove an existing URL
+     * @param Url $url
+     * @return mixed
+     */
+    public function destroy(Url $url)
+    {
+        $url->delete();
     }
 }

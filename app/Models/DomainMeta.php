@@ -38,4 +38,33 @@ class DomainMeta extends Model
     {
         return $this->hasMany('App\Models\DomainMetaConf', 'domain_meta_id', 'id');
     }
+
+    /*----------------------------------------------------------------------*/
+    /* Helpers                                                              */
+    /*----------------------------------------------------------------------*/
+
+    /**
+     * Remove all configuration
+     */
+    public function clearConf()
+    {
+        $this->confs()->delete();
+    }
+
+    /**
+     * Create new configuration
+     * @param $element
+     * @param $value
+     * @param int $order
+     * @return Model
+     */
+    public function setConf($element, $value, $order = 0)
+    {
+        $conf = $this->confs()->create([
+            'element' => $element,
+            'value' => $value,
+            'order' => $order,
+        ]);
+        return $conf;
+    }
 }

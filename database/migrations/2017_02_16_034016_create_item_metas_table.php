@@ -19,7 +19,7 @@ class CreateItemMetasTable extends Migration
             $table->foreign('item_id')->references('id')->on('items')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->text('element');
-            $table->text('value');
+            $table->text('value')->nullable();
             $table->timestamps();
         });
     }

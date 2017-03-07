@@ -67,7 +67,7 @@
                 domain: null,
                 isEditingDomainMeta: false,
                 isLoadingDomain: false,
-                errors: {},
+                errors: {}
             }
         },
         mounted() {
@@ -102,7 +102,8 @@
             addNewMeta(){
                 this.domain.metas.push({
                     name: '',
-                    type: ''
+                    type: '',
+                    confs: []
                 });
             },
             removeMeta(key){

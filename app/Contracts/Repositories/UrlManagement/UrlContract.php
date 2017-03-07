@@ -9,8 +9,17 @@
 namespace App\Contracts\Repositories\UrlManagement;
 
 
+use App\Models\Url;
+
 interface UrlContract
 {
+    /**
+     * Load all url and filter them
+     * @param array $data
+     * @return mixed
+     */
+    public function filterAll(Array $data);
+
     /**
      * load all URLs
      * @return mixed
@@ -47,4 +56,19 @@ interface UrlContract
      * @return mixed
      */
     public function store(Array $data);
+
+    /**
+     * Update existing URL
+     * @param Url $url
+     * @param array $data
+     * @return mixed
+     */
+    public function update(Url $url, Array $data);
+
+    /**
+     * Remove an existing URL
+     * @param Url $url
+     * @return mixed
+     */
+    public function destroy(Url $url);
 }

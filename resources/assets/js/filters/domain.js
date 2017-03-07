@@ -4,7 +4,7 @@
 import Vue from 'vue';
 
 Vue.filter('domain', function (url) {
-    if (typeof url == 'undefined') {
+    if (typeof url == 'undefined' || url == null) {
         return null;
     }
     var domain;

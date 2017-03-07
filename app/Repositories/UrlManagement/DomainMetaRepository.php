@@ -25,7 +25,13 @@ class DomainMetaRepository implements DomainMetaContract
     {
         $domain->clearMeta();
         foreach ($data as $domainMeta) {
-            $domain->setMeta($domainMeta['name'], $domainMeta['type']);
+            $meta = $domain->setMeta($domainMeta['name'], $domainMeta['type']);
+            $meta->clearConf();
+            if (isset($domainMeta['confs']) && is_array($domainMeta['confs']) && !empty($domainMeta['confs'])) {
+                foreach ($domainMeta['confs'] as $key => $metaConf) {
+                    $conf = $meta->setConf($metaConf['element'], $metaConf['value'], $key);
+                }
+            }
         }
         return $domain;
     }

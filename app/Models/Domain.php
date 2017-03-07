@@ -22,7 +22,7 @@ class Domain extends Model
     ];
 
     protected $with = [
-        'metas'
+        'metas', 'confs'
     ];
 
     /**
@@ -41,6 +41,15 @@ class Domain extends Model
     public function metas()
     {
         return $this->hasMany('App\Models\DomainMeta', 'domain_id', 'id');
+    }
+
+    /**
+     * relationship with domain configuration
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function confs()
+    {
+        return $this->hasMany('App\Models\DomainConf', 'domain_id', 'id');
     }
 
 
@@ -65,6 +74,11 @@ class Domain extends Model
             'meta_edit' => route('domain-meta.edit', $this->getKey()),
             'meta_update' => route('domain-meta.update', $this->getKey()),
             'meta_delete' => route('domain-meta.destroy', $this->getKey()),
+            'conf_show' => route('domain-conf.show', $this->getKey()),
+            'conf_store' => route('domain-conf.store'),
+            'conf_edit' => route('domain-conf.edit', $this->getKey()),
+            'conf_update' => route('domain-conf.update', $this->getKey()),
+            'conf_delete' => route('domain-conf.destroy', $this->getKey()),
         ];
     }
 
@@ -72,11 +86,20 @@ class Domain extends Model
     /* Helpers                                                              */
     /*----------------------------------------------------------------------*/
 
+    /**
+     * Remove all meta data
+     */
     public function clearMeta()
     {
         $this->metas()->delete();
     }
 
+    /**
+     * Create new meta data
+     * @param $name
+     * @param $type
+     * @return Model
+     */
     public function setMeta($name, $type)
     {
         $meta = $this->metas()->create([
@@ -84,5 +107,38 @@ class Domain extends Model
             'type' => $type
         ]);
         return $meta;
+    }
+
+    public function getMeta($name)
+    {
+        return $this->metas()->where('name', $name)->first();
+    }
+
+    /**
+     * remove all configurations
+     */
+    public function clearConf()
+    {
+        $this->confs()->delete();
+    }
+
+    /**
+     * Create new configuration
+     * @param $element
+     * @param $value
+     * @return Model
+     */
+    public function setConf($element, $value)
+    {
+        $conf = $this->confs()->create([
+            'element' => $element,
+            'value' => $value,
+        ]);
+        return $conf;
+    }
+
+    public function getConf($element)
+    {
+        return $this->confs()->where('element', $element)->first();
     }
 }

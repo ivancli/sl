@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title', 'Domains - SpotLite')
+@section('title', 'URLs - SpotLite')
 
 @section('links')
     <link rel="stylesheet" href="{{mix('/css/app.css')}}">

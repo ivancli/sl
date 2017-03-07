@@ -12,12 +12,15 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <form class="form-horizontal">
+                            <single-edit-domain-meta-conf v-for="(conf, key) in editingConfs" :conf="conf" @remove-conf="removeConf(key)" @updating-meta-conf="setConf(key, $event)">
+                            </single-edit-domain-meta-conf>
                             <div class="form-group">
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" placeholder="Element" autocomplete="off">
-                                </div>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" placeholder="Value" autocomplete="off">
+                                <div class="col-sm-12">
+                                    <p class="form-control-static">
+                                        <a href="#" @click.prevent="addNewConf">
+                                            ADD NEW CONFIGURATION <i class="glyphicon glyphicon-plus text-success"></i>
+                                        </a>
+                                    </p>
                                 </div>
                             </div>
                         </form>
@@ -35,7 +38,12 @@
 </template>
 
 <script>
+    import singleEditDomainMetaConf from './SingleEditDomainMetaConf.vue';
+
     export default{
+        components: {
+            singleEditDomainMetaConf
+        },
         props: [
             'isActive',
             'confs'
@@ -52,6 +60,20 @@
         methods: {
             setMetaConfs(){
                 this.$emit('set-confs', this.editingConfs);
+            },
+            setConf(key, conf){
+                this.editingConfs[key] = conf;
+            },
+            addNewConf(){
+                this.editingConfs.push({
+                    element: null,
+                    value: null,
+                });
+            },
+            removeConf(key){
+                console.info('key', key);
+                console.info('this.editingConfs', this.editingConfs);
+                this.editingConfs.splice(key, 1);
             },
             initSetEditingConfs(){
                 this.editingConfs = this.confs;

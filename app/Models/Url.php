@@ -18,7 +18,7 @@ class Url extends Model
     ];
 
     protected $appends = [
-        'domainFullPath', 'urls'
+        'domain', 'domainFullPath', 'urls'
     ];
 
     /**
@@ -40,17 +40,23 @@ class Url extends Model
     }
 
     /**
-     * relationship with domain
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * relationship with crawler
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function domain()
+    public function crawler()
     {
-        return $this->belongsTo('App\Models\Domain', 'domain_id', 'id');
+        return $this->hasOne('App\Models\Crawler', 'url_id', 'id');
     }
 
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/
+
+    public function getDomainAttribute()
+    {
+        return Domain::where('full_path', $this->domainFullPath)->first();
+    }
+
     /**
      * Get Domain
      * @return mixed

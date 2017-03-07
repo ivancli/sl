@@ -46,8 +46,15 @@ Route::group(['middleware' => ['auth', 'subs']], function () {
     Route::resource('alert', 'Alert\AlertController');
     Route::resource('report', 'Report\ReportController');
 
+
+    /**
+     * ADMINISTRATION ROUTES
+     */
+    Route::resource('app-preference', 'Admin\AppPrefController');
+
     Route::resource('url-management/domain', 'UrlManagement\DomainController');
     Route::resource('url-management/domain-meta', 'UrlManagement\DomainMetaController');
+    Route::resource('url-management/domain-conf', 'UrlManagement\DomainConfController');
     Route::resource('url-management/url', 'UrlManagement\UrlController');
 
     /*user management*/

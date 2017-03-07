@@ -26,6 +26,11 @@ class Item extends Model
         return $this->belongsTo('App\Models\Url', 'url_id', 'id');
     }
 
+    public function metas()
+    {
+        return $this->hasMany('App\Models\ItemMeta', 'item_id', 'id');
+    }
+
     /**
      * relationship with historical price
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -34,4 +39,32 @@ class Item extends Model
     {
         return $this->hasMany('App\Models\HistoricalPrice', 'item_id', 'id');
     }
+
+    /*----------------------------------------------------------------------*/
+    /* Helpers                                                              */
+    /*----------------------------------------------------------------------*/
+
+    /**
+     * Remove all meta data
+     */
+    public function clearMeta()
+    {
+        $this->metas()->delete();
+    }
+
+    /**
+     * Create new meta data
+     * @param $element
+     * @param $value
+     * @return Model
+     */
+    public function setMeta($element, $value)
+    {
+        $meta = $this->metas()->create([
+            'element' => $element,
+            'value' => $value
+        ]);
+        return $meta;
+    }
+
 }
