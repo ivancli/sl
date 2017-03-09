@@ -53,7 +53,12 @@ class AppPrefController extends Controller
      */
     public function store()
     {
-        //
+        /*TODO add validation to appPrefs*/
+        foreach ($this->request->get('appPrefs') as $appPref) {
+            $pref = $this->appPrefRepo->store($appPref);
+        }
+        $status = true;
+        return compact(['status']);
     }
 
     /**
