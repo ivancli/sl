@@ -11,14 +11,14 @@ class Crawl extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'crawl {crawler_id?}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'This command runs crawler for particular url or all urls if no parameters given.';
 
     /**
      * Create a new command instance.
@@ -37,6 +37,11 @@ class Crawl extends Command
      */
     public function handle()
     {
-        //
+        $crawler_id = $this->argument('crawler_id');
+        if(is_null($crawler_id)){
+            /* TODO run a for loop to crawl all urls */
+        }else{
+            /* TODO crawl a particular*/
+        }
     }
 }
