@@ -181,6 +181,7 @@ return [
         App\Providers\SubscriptionServiceProvider::class,
 
         IvanCLI\UM\UMServiceProvider::class,
+        IvanCLI\Crawler\CrawlerServiceProvider::class,
     ],
 
     /*
@@ -233,6 +234,7 @@ return [
         'Chargify' => IvanCLI\Chargify\ChargifyFacade::class,
 
         'UM' => IvanCLI\UM\UMFacade::class,
+        'Crawler' => IvanCLI\Crawler\CrawlerFacade::class,
     ],
 
 ];

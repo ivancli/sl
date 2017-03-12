@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUrlsTable extends Migration
+class CreateCrawlerConfsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateUrlsTable extends Migration
      */
     public function up()
     {
-        Schema::create('urls', function (Blueprint $table) {
+        Schema::create('crawler_confs', function (Blueprint $table) {
             $table->increments('id');
-            $table->text('full_path');
-            $table->string('status')->default('waiting');
-            $table->char('is_active', 1)->default('y');
+            $table->integer('crawler_id')->unsigned()->nullable();
+            $table->foreign('crawler_id')->references('id')->on('crawlers')
+                ->onUpdate('cascade')->onDelete('cascade');
+            $table->text('class')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateUrlsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('urls');
+        Schema::dropIfExists('crawler_confs');
     }
 }

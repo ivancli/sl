@@ -2,7 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Contracts\Repositories\UrlManagement\UrlContract;
+use App\Models\Crawler;
+use App\Models\Url;
 use Illuminate\Console\Command;
+use App\Jobs\Crawl as CrawlJob;
 
 class Crawl extends Command
 {
@@ -11,7 +15,7 @@ class Crawl extends Command
      *
      * @var string
      */
-    protected $signature = 'crawl {crawler_id?}';
+    protected $signature = 'crawl {url_id?} {--active}';
 
     /**
      * The console command description.
@@ -20,13 +24,15 @@ class Crawl extends Command
      */
     protected $description = 'This command runs crawler for particular url or all urls if no parameters given.';
 
+    var $urlRepo;
+
     /**
      * Create a new command instance.
-     *
-     * @return void
+     * @param UrlContract $urlContract
      */
-    public function __construct()
+    public function __construct(UrlContract $urlContract)
     {
+        $this->urlRepo = $urlContract;
         parent::__construct();
     }
 
@@ -37,11 +43,64 @@ class Crawl extends Command
      */
     public function handle()
     {
-        $crawler_id = $this->argument('crawler_id');
-        if(is_null($crawler_id)){
-            /* TODO run a for loop to crawl all urls */
-        }else{
-            /* TODO crawl a particular*/
+        // get URL ID
+        $url_id = $this->argument('url_id');
+        // if URL ID is provided
+        if (!is_null($url_id)) {
+            // get URL by URL ID
+            $url = $this->urlRepo->get($url_id);
+            // check activeness of URL
+            if ($this->validate($url)) {
+                // make sure the URL has corresponding crawler in DB
+                if (!is_null($crawler = $url->crawler)) {
+                    $this->pushToQueue($crawler);
+                    $this->info("URL-{$url->getKey()} {$url->domainFullPath} has been pushed to queue.");
+                } else {
+                    $this->error("URL-{$url->getKey()} {$url->domainFullPath} does not have a crawler in DB.");
+                }
+            }
+        } else { // if URL ID is not provided
+            // process all URLs
+            $urls = $this->urlRepo->all();
+            $urls->each(function ($url, $index) {
+                // check activeness of URL
+                if ($this->validate($url)) {
+                    // make sure the URL has corresponding crawler in DB
+                    if (!is_null($crawler = $url->crawler)) {
+                        // push crawler to queue
+                        $this->pushToQueue($crawler);
+                        $this->info("URL-{$url->getKey()} {$url->domainFullPath} has been pushed to queue.");
+                    } else {
+                        $this->error("URL-{$url->getKey()} {$url->domainFullPath} does not have a crawler in DB.");
+                    }
+                }
+            });
         }
+    }
+
+    /**
+     * Push a single crawl job to queue
+     * @param Url $url
+     * @return bool
+     */
+    protected function validate(Url $url)
+    {
+        if ($this->option('active') && !$url->active) {
+            $this->warn("URL-{$url->getKey()} {$url->domainFullPath} is inactive. Scheduler has skipped this URL.");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * @param Crawler $crawler
+     */
+    protected function pushToQueue(Crawler $crawler)
+    {
+        $delay = rand(config('crawl.delay.min'), config('crawl.delay.max'));
+//        dispatch((new CrawlJob($crawler))->onQueue("crawl")->delay($delay));
+        dispatch((new CrawlJob($crawler))->onQueue("crawl"));
+        $crawler->statusQueuing();
     }
 }

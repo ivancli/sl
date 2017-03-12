@@ -54,7 +54,7 @@
                 <li class="treeview" :class="topLevelActiveClass('/manage-crawler')" v-if="isStaffMember">
                     <a href="#" @click.prevent="toggleDropDownItems('/manage-crawler')">
                         <i class="fa fa-files-o"></i>
-                        <span>Manage Crawler</span>
+                        <span>MANAGE CRAWLER</span>
                         <span class="pull-right-container">
                             <i class="fa fa-caret-down pull-right"></i>
                         </span>

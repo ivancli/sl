@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Models\Category;
+use App\Models\Crawler;
 use App\Models\Url;
 use App\Models\User;
 use App\Observers\CategoryObserver;
+use App\Observers\CrawlerObserver;
 use App\Observers\UrlObserver;
 use App\Observers\UserObserver;
 use Illuminate\Support\ServiceProvider;
@@ -22,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
         User::observe(UserObserver::class);
         Category::observe(CategoryObserver::class);
         Url::observe(UrlObserver::class);
+        Crawler::observe(CrawlerObserver::class);
     }
 
     /**
@@ -40,6 +43,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Contracts\Repositories\UrlManagement\DomainContract', 'App\Repositories\UrlManagement\DomainRepository');
         $this->app->bind('App\Contracts\Repositories\UrlManagement\DomainMetaContract', 'App\Repositories\UrlManagement\DomainMetaRepository');
         $this->app->bind('App\Contracts\Repositories\UrlManagement\UrlContract', 'App\Repositories\UrlManagement\UrlRepository');
+        $this->app->bind('App\Contracts\Repositories\UrlManagement\CrawlerContract', 'App\Repositories\UrlManagement\CrawlerRepository');
 
         $this->app->bind('App\Contracts\Repositories\UserManagement\UserContract', 'App\Repositories\UserManagement\UserRepository');
         $this->app->bind('App\Contracts\Repositories\UserManagement\GroupContract', 'App\Repositories\UserManagement\GroupRepository');

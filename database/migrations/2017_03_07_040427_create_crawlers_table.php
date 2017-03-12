@@ -18,9 +18,8 @@ class CreateCrawlersTable extends Migration
             $table->integer('url_id')->unsigned()->nullable();
             $table->foreign('url_id')->references('id')->on('urls')
                 ->onUpdate('cascade')->onDelete('cascade');
-            $table->text('class')->nullable();
             $table->string('status')->nullable();
-            $table->timestamp('last_active_at');
+            $table->timestamp('last_active_at')->nullable();
             $table->timestamps();
         });
     }

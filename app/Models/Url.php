@@ -14,11 +14,11 @@ use Illuminate\Database\Eloquent\Model;
 class Url extends Model
 {
     protected $fillable = [
-        'full_path', 'status'
+        'full_path', 'status', 'is_active'
     ];
 
     protected $appends = [
-        'domain', 'domainFullPath', 'urls'
+        'domain', 'domainFullPath', 'urls', 'active'
     ];
 
     /**
@@ -67,6 +67,11 @@ class Url extends Model
         return "{$urlSegments['scheme']}://{$urlSegments['host']}";
     }
 
+    public function getActiveAttribute()
+    {
+        return $this->is_active == 'y';
+    }
+
     /**
      * Get related path to interact with Url object
      * @return array
@@ -81,4 +86,19 @@ class Url extends Model
             'delete' => route('url.destroy', $this->getKey()),
         ];
     }
+
+    /*----------------------------------------------------------------------*/
+    /* Helpers                                                              */
+    /*----------------------------------------------------------------------*/
+
+    /**
+     * Set URL's activeness
+     * @param $is_active
+     */
+    public function setActive($is_active)
+    {
+        $this->is_active = $is_active == 'n' ? 'n' : 'y';
+        $this->save();
+    }
+
 }
