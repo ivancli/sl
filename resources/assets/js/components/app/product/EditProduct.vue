@@ -5,17 +5,19 @@
             <i class="fa fa-pencil-square-o"></i>
         </span>
 
-        <div class="input-group sl-input-group" v-show="editingProductName">
-            <input type="text" placeholder="Product Name" autocomplete="off" v-model="newProductName" class="form-control sl-form-control product-name" ref="txt_edit_product" tabindex="-1">
-            <span class="input-group-btn">
-                <button class="btn btn-primary btn-flat" @click.prevent="editProduct">
-                    <i class="fa fa-check"></i>
-                </button>
-                <button class="btn btn-default btn-flat" @click.prevent="cancelEditProductName">
-                    <i class="fa fa-times"></i>
-                </button>
-            </span>
-        </div>
+        <form>
+            <div class="input-group sl-input-group" v-show="editingProductName">
+                <input type="text" placeholder="Product Name" autocomplete="off" v-model="newProductName" class="form-control sl-form-control product-name" ref="txt_edit_product" tabindex="-1">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary btn-flat" @click.prevent="editProduct">
+                        <i class="fa fa-check"></i>
+                    </button>
+                    <button class="btn btn-default btn-flat" @click.prevent="cancelEditProductName">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </span>
+            </div>
+        </form>
         <error-modal :modal-errors="errors" @hideErrorModal="clearErrors"></error-modal>
     </div>
 </template>

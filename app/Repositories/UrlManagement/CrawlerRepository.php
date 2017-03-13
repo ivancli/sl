@@ -51,9 +51,9 @@ class CrawlerRepository implements CrawlerContract
             $crawlerClassName = $conf->class;
         }
         $crawlerClass = app()->make("{$crawlerClassPath}$crawlerClassName");
-        dd($crawlerClass);
-        $crawlerClass->setURL($crawler->url);
-        $content = $crawlerClass->fetch();
+        $crawlerClass->setURL($crawler->url->full_path);
+        $crawlerClass->fetch();
+        $content = $crawlerClass->getContent();
         return $content;
     }
 

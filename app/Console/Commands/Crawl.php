@@ -10,21 +10,19 @@ use App\Jobs\Crawl as CrawlJob;
 
 class Crawl extends Command
 {
+    var $urlRepo;
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
     protected $signature = 'crawl {url_id?} {--active}';
-
     /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'This command runs crawler for particular url or all urls if no parameters given.';
-
-    var $urlRepo;
 
     /**
      * Create a new command instance.
@@ -99,8 +97,7 @@ class Crawl extends Command
     protected function pushToQueue(Crawler $crawler)
     {
         $delay = rand(config('crawl.delay.min'), config('crawl.delay.max'));
-//        dispatch((new CrawlJob($crawler))->onQueue("crawl")->delay($delay));
-        dispatch((new CrawlJob($crawler))->onQueue("crawl"));
+        dispatch((new CrawlJob($crawler))->onQueue("crawl")->delay($delay));
         $crawler->statusQueuing();
     }
 }

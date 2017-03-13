@@ -182,6 +182,7 @@ return [
 
         IvanCLI\UM\UMServiceProvider::class,
         IvanCLI\Crawler\CrawlerServiceProvider::class,
+        IvanCLI\Parser\ParserServiceProvider::class,
     ],
 
     /*
@@ -235,6 +236,7 @@ return [
 
         'UM' => IvanCLI\UM\UMFacade::class,
         'Crawler' => IvanCLI\Crawler\CrawlerFacade::class,
+        'Parser' => IvanCLI\Parser\ParserFacade::class,
     ],
 
 ];

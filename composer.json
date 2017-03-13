@@ -18,20 +18,25 @@
     },
     {
       "type": "vcs",
+      "url": "git@github.com:ketchol/parser.git"
+    },
+    {
+      "type": "vcs",
       "url": "git@github.com:ketchol/chargify.git"
     }
   ],
   "require": {
     "php": ">=5.6.4",
     "campaignmonitor/createsend-php": "^5.0",
+    "ivancli/chargify": "dev-master",
+    "ivancli/crawler": "dev-master",
+    "ivancli/parser": "dev-master",
+    "ivancli/um": "dev-master",
     "laravel/framework": "5.4.*",
     "laravel/tinker": "~1.0",
     "maatwebsite/excel": "^2.1",
     "mpdf/mpdf": "^6.1",
-    "predis/predis": "^1.1",
-    "ivancli/um": "dev-master",
-    "ivancli/chargify": "dev-master",
-    "ivancli/crawler": "dev-master"
+    "predis/predis": "^1.1"
   },
   "require-dev": {
     "almasaeed2010/adminlte": "^2.3",

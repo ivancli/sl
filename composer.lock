@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "e0b26c949ec989c074c411cd0b83bb6d",
+    "content-hash": "19789ee77e5ea4426c46992ddc4fd13e",
     "packages": [
         {
             "name": "campaignmonitor/createsend-php",
@@ -259,12 +259,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ketchol/crawler.git",
-                "reference": "57a278eee9accb0368aa17a7e75ebb59b91a0a05"
+                "reference": "cde5880847ed89c857046698e7461aa09ea0a17e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ketchol/crawler/zipball/57a278eee9accb0368aa17a7e75ebb59b91a0a05",
-                "reference": "57a278eee9accb0368aa17a7e75ebb59b91a0a05",
+                "url": "https://api.github.com/repos/ketchol/crawler/zipball/cde5880847ed89c857046698e7461aa09ea0a17e",
+                "reference": "cde5880847ed89c857046698e7461aa09ea0a17e",
                 "shasum": ""
             },
             "require": {
@@ -297,7 +297,54 @@
                 "source": "https://github.com/ketchol/crawler/tree/master",
                 "issues": "https://github.com/ketchol/crawler/issues"
             },
-            "time": "2017-03-12T12:27:43+00:00"
+            "time": "2017-03-13T05:01:21+00:00"
+        },
+        {
+            "name": "ivancli/parser",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ketchol/parser.git",
+                "reference": "02207a0943a2d2de810cc2e60cceead0efe612cc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ketchol/parser/zipball/02207a0943a2d2de810cc2e60cceead0efe612cc",
+                "reference": "02207a0943a2d2de810cc2e60cceead0efe612cc",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/cache": "~5.0",
+                "php": ">=5.5.0",
+                "symfony/dom-crawler": "^3.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "IvanCLI\\Parser\\": "src/Parser/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ivan Li",
+                    "email": "ivan.li@hotmail.com"
+                }
+            ],
+            "description": "Parser repository for extracting content from given content",
+            "keywords": [
+                "laravel",
+                "parser",
+                "parsing",
+                "xpath"
+            ],
+            "support": {
+                "source": "https://github.com/ketchol/parser/tree/master",
+                "issues": "https://github.com/ketchol/parser/issues"
+            },
+            "time": "2017-03-13T06:16:06+00:00"
         },
         {
             "name": "ivancli/um",
@@ -1677,6 +1724,62 @@
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
             "time": "2017-02-18T17:28:00+00:00"
+        },
+        {
+            "name": "symfony/dom-crawler",
+            "version": "v3.2.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/dom-crawler.git",
+                "reference": "403944e294cf4ceb3b8447f54cbad88ea7b99cee"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/403944e294cf4ceb3b8447f54cbad88ea7b99cee",
+                "reference": "403944e294cf4ceb3b8447f54cbad88ea7b99cee",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9",
+                "symfony/polyfill-mbstring": "~1.0"
+            },
+            "require-dev": {
+                "symfony/css-selector": "~2.8|~3.0"
+            },
+            "suggest": {
+                "symfony/css-selector": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\DomCrawler\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony DomCrawler Component",
+            "homepage": "https://symfony.com",
+            "time": "2017-02-21T09:12:04+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -3849,9 +3952,10 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "ivancli/um": 20,
         "ivancli/chargify": 20,
-        "ivancli/crawler": 20
+        "ivancli/crawler": 20,
+        "ivancli/parser": 20,
+        "ivancli/um": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

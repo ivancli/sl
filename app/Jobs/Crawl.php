@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Contracts\Repositories\UrlManagement\CrawlerContract;
+use App\Contracts\Repositories\UrlManagement\ParserContract;
 use App\Models\Crawler;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -30,13 +31,18 @@ class Crawl implements ShouldQueue
      * Execute the job.
      *
      * @param CrawlerContract $crawlerRepo
-     * @return void
+     * @param ParserContract $parserRepo
      */
-    public function handle(CrawlerContract $crawlerRepo)
+    public function handle(CrawlerContract $crawlerRepo, ParserContract $parserRepo)
     {
         /* TODO fetch */
         $content = $crawlerRepo->fetch($this->crawler);
-        dd($content);
+
         /* TODO parse for each item */
+        $result = $parserRepo->extract($content, [
+            "xpath" => "//*[@class='price-now']"
+        ]);
+
+        dd($result);
     }
 }
