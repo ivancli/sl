@@ -96,12 +96,14 @@ class UrlController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Url $url
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function edit(Url $url)
     {
         event(new BeforeEdit($url));
+        $status = true;
         event(new AfterEdit($url));
+        return view('app.url_management.url.edit')->with(compact(['url']));
     }
 
     /**

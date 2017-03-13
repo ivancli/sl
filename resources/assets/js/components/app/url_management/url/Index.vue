@@ -42,7 +42,7 @@
                             <tbody v-else>
                             <tr>
                                 <td colspan="7" class="text-center">
-                                    No url data available
+                                    No URL data available
                                 </td>
                             </tr>
                             </tbody>

@@ -15,28 +15,21 @@
                 </div>
                 <form class="form-horizontal" onsubmit="return false;">
                     <div class="form-group required">
-                        <label for="txt-name" class="col-sm-2 control-label">Name</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="txt-name" v-model="name">
-                        </div>
-                    </div>
-                    <div class="form-group required">
                         <label for="txt-full-path" class="col-sm-2 control-label">Full path</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="txt-full-path" v-model="fullPath"
-                                   disabled="disabled">
+                            <input type="text" class="form-control" id="txt-full-path" v-model="fullPath">
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12 text-right">
-                            <button class="btn btn-primary btn-sm btn-flat" @click.prevent="editDomain">UPDATE</button>
-                            <a href="/url-management/domain" class="btn btn-default btn-sm btn-flat">CANCEL</a>
+                            <button class="btn btn-primary btn-sm btn-flat" @click.prevent="editUrl">UPDATE</button>
+                            <a href="/url-management/url" class="btn btn-default btn-sm btn-flat">CANCEL</a>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
-        <loading v-if="isEditingDomain || isLoadingDomain"></loading>
+        <loading v-if="isEditingUrl || isLoadingUrl"></loading>
     </section>
 </template>
 
@@ -49,40 +42,39 @@
         },
         data(){
             return {
-                name: '',
                 fullPath: '',
-                isEditingDomain: false,
-                isLoadingDomain: false,
+                isEditingUrl: false,
+                isLoadingUrl: false,
                 errors: {},
             }
         },
         mounted() {
             console.info('Edit component is mounted.');
-            this.loadDomain();
+            this.loadUrl();
         },
         methods: {
-            loadDomain(){
-                this.isLoadingDomain = true;
-                axios.get(editingDomain.modelUrls.show).then(response => {
-                    this.isLoadingDomain = false;
+            loadUrl(){
+                this.isLoadingUrl = true;
+                axios.get(editingUrl.urls.show).then(response => {
+                    this.isLoadingUrl = false;
                     if (response.data.status == true) {
-                        let domain = response.data.domain;
-                        this.name = domain.name;
-                        this.fullPath = domain.full_path;
+                        let url = response.data.url;
+                        this.name = url.name;
+                        this.fullPath = url.full_path;
                     }
                 }).catch(error => {
-                    this.isLoadingDomain = false;
+                    this.isLoadingUrl = false;
                 })
             },
-            editDomain(){
-                this.isEditingDomain = true;
-                axios.put(editingDomain.modelUrls.update, this.editDomainData).then(response => {
-                    this.isEditingDomain = false;
+            editUrl(){
+                this.isEditingUrl = true;
+                axios.put(editingUrl.urls.update, this.editUrlData).then(response => {
+                    this.isEditingUrl = false;
                     if (response.data.status == true) {
-                        window.location.href = '/url-management/domain';
+                        window.location.href = '/url-management/url';
                     }
                 }).catch(error => {
-                    this.isEditingDomain = false;
+                    this.isEditingUrl = false;
                     if (error.response && error.response.status == 422 && error.response.data) {
                         this.errors = error.response.data;
                     }
@@ -90,9 +82,9 @@
             }
         },
         computed: {
-            editDomainData: function () {
+            editUrlData: function () {
                 return {
-                    name: this.name,
+                    full_path: this.fullPath,
                 };
             }
         }
