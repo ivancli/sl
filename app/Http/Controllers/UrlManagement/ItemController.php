@@ -41,13 +41,11 @@ class ItemController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function index()
     {
         event(new BeforeIndex());
-        /*TODO load data according to the parameters*/
-        /*TODO e.g. if URL id is provided, load URL related items instead of all items*/
         $url = null;
         if ($this->request->has('url_id')) {
             $url = $this->urlRepo->get($this->request->get('url_id'));
@@ -56,11 +54,11 @@ class ItemController extends Controller
         $status = true;
         event(new AfterIndex());
 
-        return compact(['status', 'items']);
+
         if ($this->request->ajax()) {
-            return compact(['status', 'domains']);
+            return compact(['status', 'items']);
         } else {
-            return view('app.url_management.domain.index');
+            return view('app.url_management.item.index')->with(compact(['url']));
         }
     }
 

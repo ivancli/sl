@@ -56,6 +56,7 @@ Route::group(['middleware' => ['auth', 'subs']], function () {
     Route::resource('url-management/domain-meta', 'UrlManagement\DomainMetaController');
     Route::resource('url-management/domain-conf', 'UrlManagement\DomainConfController');
     Route::resource('url-management/url', 'UrlManagement\UrlController');
+    Route::resource('url-management/item', 'UrlManagement\ItemController');
 
     /*user management*/
     Route::resource('user-management/user', 'UserManagement\UserController');

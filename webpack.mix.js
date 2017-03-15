@@ -42,6 +42,9 @@ mix
     /* domain meta */
     .js('resources/assets/js/app/url_management/domain_meta/edit.js', 'public/js/app/domain_meta')
 
+    /* item */
+    .js('resources/assets/js/app/url_management/item/index.js', 'public/js/app/item')
+
     /* url */
     .js('resources/assets/js/app/url_management/url/index.js', 'public/js/app/url')
     .js('resources/assets/js/app/url_management/url/edit.js', 'public/js/app/url')

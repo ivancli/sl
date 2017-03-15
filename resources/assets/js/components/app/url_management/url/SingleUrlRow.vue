@@ -16,7 +16,7 @@
                 <i class="glyphicon glyphicon-pencil"></i>
             </a>
             &nbsp;
-            <a :href="url.urls.meta_edit" class="text-muted" title="edit meta">
+            <a :href="url.urls.item_index" class="text-muted" title="edit items">
                 <i class="glyphicon glyphicon-qrcode"></i>
             </a>
             &nbsp;
