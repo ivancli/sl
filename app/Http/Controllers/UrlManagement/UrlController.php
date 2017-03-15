@@ -89,7 +89,9 @@ class UrlController extends Controller
     public function show(Url $url)
     {
         event(new BeforeShow($url));
+        $status = true;
         event(new AfterShow($url));
+        return compact(['status', 'url']);
     }
 
     /**

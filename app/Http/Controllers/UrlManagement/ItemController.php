@@ -1,0 +1,144 @@
+<?php
+
+namespace App\Http\Controllers\UrlManagement;
+
+use App\Contracts\Repositories\UrlManagement\ItemContract;
+use App\Contracts\Repositories\UrlManagement\UrlContract;
+use App\Http\Controllers\Controller;
+use App\Events\UrlManagement\Item\BeforeIndex;
+use App\Events\UrlManagement\Item\AfterIndex;
+use App\Events\UrlManagement\Item\BeforeCreate;
+use App\Events\UrlManagement\Item\AfterCreate;
+use App\Events\UrlManagement\Item\BeforeStore;
+use App\Events\UrlManagement\Item\AfterStore;
+use App\Events\UrlManagement\Item\BeforeShow;
+use App\Events\UrlManagement\Item\AfterShow;
+use App\Events\UrlManagement\Item\BeforeEdit;
+use App\Events\UrlManagement\Item\AfterEdit;
+use App\Events\UrlManagement\Item\BeforeUpdate;
+use App\Events\UrlManagement\Item\AfterUpdate;
+use App\Events\UrlManagement\Item\BeforeDestroy;
+use App\Events\UrlManagement\Item\AfterDestroy;
+use App\Models\Item;
+use Illuminate\Http\Request;
+
+class ItemController extends Controller
+{
+    var $request;
+    var $urlRepo;
+    var $itemRepo;
+
+    public function __construct(Request $request,
+                                UrlContract $urlContract,
+                                ItemContract $itemContract)
+    {
+        $this->request = $request;
+
+        $this->urlRepo = $urlContract;
+        $this->itemRepo = $itemContract;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        event(new BeforeIndex());
+        /*TODO load data according to the parameters*/
+        /*TODO e.g. if URL id is provided, load URL related items instead of all items*/
+        $url = null;
+        if ($this->request->has('url_id')) {
+            $url = $this->urlRepo->get($this->request->get('url_id'));
+        }
+        $items = $this->itemRepo->all($url);
+        $status = true;
+        event(new AfterIndex());
+
+        return compact(['status', 'items']);
+        if ($this->request->ajax()) {
+            return compact(['status', 'domains']);
+        } else {
+            return view('app.url_management.domain.index');
+        }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        event(new BeforeCreate());
+        event(new AfterCreate());
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function store()
+    {
+        event(new BeforeStore());
+        event(new AfterStore());
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param Item $item
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Item $item)
+    {
+        event(new BeforeShow($item));
+        $status = true;
+        event(new AfterShow($item));
+        return compact(['status', 'item']);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param Item $item
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Item $item)
+    {
+        event(new BeforeEdit($item));
+        event(new AfterEdit($item));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Item $item
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Item $item)
+    {
+        event(new BeforeUpdate($item));
+        $item = $this->itemRepo->update($item, $this->request->all());
+        $status = true;
+        event(new AfterUpdate($item));
+        return compact(['status', 'item']);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param Item $item
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Item $item)
+    {
+        event(new BeforeDestroy($item));
+        $this->itemRepo->destroy($item);
+        $status = true;
+        event(new AfterDestroy());
+        return compact(['status']);
+    }
+}
