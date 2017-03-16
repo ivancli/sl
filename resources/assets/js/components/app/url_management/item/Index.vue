@@ -33,8 +33,8 @@
                                     <tr>
                                         <th :class="orderByClass('id')" @click.prevent="setOrdering('id')">ID</th>
                                         <th :class="orderByClass('name')" @click.prevent="setOrdering('name')">Name</th>
-                                        <th :class="orderByClass('display_name')" @click.prevent="setOrdering('full_path')">
-                                            Full path
+                                        <th :class="orderByClass('is_active')" @click.prevent="setOrdering('is_active')">
+                                            Is active
                                         </th>
                                         <th :class="orderByClass('created_at')" @click.prevent="setOrdering('created_at')">
                                             Created at
@@ -46,7 +46,7 @@
                                     </tr>
                                     </thead>
                                     <tbody v-if="items.length > 0">
-                                    <!--<single-item-row v-for="item in items" :current-item="item" @reloadItems="loadItems(currentPageUrl)"></single-item-row>-->
+                                    <single-item-row v-for="item in items" :current-item="item" @reloadItems="loadItems(currentPageUrl)"></single-item-row>
                                     </tbody>
                                     <tbody v-else>
                                     <tr>
@@ -80,10 +80,12 @@
 
 <script>
     import createPopup from './CreatePopup.vue';
+    import singleItemRow from './SingleItemRow.vue';
 
     export default{
         components: {
-            createPopup
+            createPopup,
+            singleItemRow,
         },
         data(){
             return {

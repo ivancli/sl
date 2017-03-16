@@ -3,13 +3,15 @@
     <section class="content">
         <div class="box box-solid">
             <div class="box-body p-20">
-                <div class="col-sm-offset-2">
-                    <ul class="text-danger errors-container p-b-10 p-l-20" v-if="Object.keys(errors).length > 0">
-                        <li v-for="error in errors">
-                            <div v-if="error.constructor != Array" v-text="error"></div>
-                            <div v-else v-for="message in error" v-text="message"></div>
-                        </li>
-                    </ul>
+                <div class="row">
+                    <div class="col-sm-offset-2">
+                        <ul class="text-danger errors-container p-b-10 p-l-20" v-if="Object.keys(errors).length > 0">
+                            <li v-for="error in errors">
+                                <div v-if="error.constructor != Array" v-text="error"></div>
+                                <div v-else v-for="message in error" v-text="message"></div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <form class="form-horizontal" onsubmit="return false;">
                     <div class="form-group required">
@@ -39,7 +41,8 @@
                     <div class="form-group">
                         <label for="txt-confirm-password" class="col-sm-2 control-label">Password</label>
                         <div class="col-sm-10">
-                            <input type="password" class="form-control" id="txt-confirm-password" v-model="passwordConfirmation">
+                            <input type="password" class="form-control" id="txt-confirm-password"
+                                   v-model="passwordConfirmation">
                         </div>
                     </div>
                     <div class="form-group">
@@ -135,12 +138,12 @@
         methods: {
             createUser(){
                 this.isCreatingUser = true;
-                axios.post('/user-management/user', this.createUserData).then(response=> {
+                axios.post('/user-management/user', this.createUserData).then(response => {
                     this.isCreatingUser = false;
                     if (response.data.status == true) {
                         window.location.href = '/user-management/user';
                     }
-                }).catch(error=> {
+                }).catch(error => {
                     this.isCreatingUser = false;
                     if (error.response && error.response.status == 422 && error.response.data) {
                         this.errors = error.response.data;
@@ -165,7 +168,7 @@
                 this.selectedRoles = this.selectedRoles.concat(roles);
             },
             revokeRole(){
-                this.selectedRoles = this.selectedRoles.filter((role)=> {
+                this.selectedRoles = this.selectedRoles.filter((role) => {
                     return this.outputRoleIds.indexOf(role.id) == -1;
                 });
             }

@@ -12,18 +12,51 @@ namespace App\Repositories\UrlManagement;
 use App\Contracts\Repositories\UrlManagement\ItemContract;
 use App\Models\Item;
 use App\Models\Url;
+use Illuminate\Http\Request;
 
 class ItemRepository implements ItemContract
 {
+    var $item;
+    var $request;
+
+    public function __construct(Item $item, Request $request)
+    {
+        $this->item = $item;
+        $this->request = $request;
+    }
 
     /**
      * Load all item (according to provided URL)
+     * @param array $data
      * @param Url|null $url
      * @return mixed
      */
-    public function all(Url $url = null)
+    public function filterAll(Array $data = [], Url $url = null)
     {
-        // TODO: Implement all() method.
+        $length = array_get($data, 'per_page', 25);
+        $orderByColumn = array_get($data, 'orderBy', 'id');
+        $orderByDirection = array_get($data, 'direction', 'asc');
+        if (!is_null($url)) {
+            $builder = $url->items();
+        } else {
+            $builder = $this->item;
+        }
+        $builder = $builder->orderBy($orderByColumn, $orderByDirection);
+        if (array_has($data, 'key') && !empty(array_get($data, 'key'))) {
+            $key = array_get($data, 'key');
+            $builder->where('id', 'LIKE', "%{$key}%");
+            $builder->orWhere('name', 'LIKE', "%{$key}%");
+            $builder->orWhere('is_active', 'LIKE', "%{$key}%");
+            $builder->orWhere('created_at', 'LIKE', "%{$key}%");
+            $builder->orWhere('updated_at', 'LIKE', "%{$key}%");
+        }
+        $items = $builder->paginate($length);
+        if ($items->count() == 0) {
+            $page = 1;
+            $this->request->merge(compact(['page']));
+            $items = $builder->paginate($length);
+        }
+        return $items;
     }
 
     /**
@@ -43,7 +76,11 @@ class ItemRepository implements ItemContract
      */
     public function store(Array $data)
     {
-        // TODO: Implement store() method.
+        $item = new $this->item;
+        $item->name = isset($data['name']) ? $data['name'] : null;
+        $item->is_active = isset($data['is_active']) ? $data['is_active'] : null;
+        $item->save();
+        return $item;
     }
 
     /**

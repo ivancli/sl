@@ -20,6 +20,7 @@ use App\Events\UrlManagement\Item\AfterUpdate;
 use App\Events\UrlManagement\Item\BeforeDestroy;
 use App\Events\UrlManagement\Item\AfterDestroy;
 use App\Models\Item;
+use App\Validators\UrlManagement\Item\StoreValidator;
 use Illuminate\Http\Request;
 
 class ItemController extends Controller
@@ -50,10 +51,9 @@ class ItemController extends Controller
         if ($this->request->has('url_id')) {
             $url = $this->urlRepo->get($this->request->get('url_id'));
         }
-        $items = $this->itemRepo->all($url);
+        $items = $this->itemRepo->filterAll($this->request->all(), $url);
         $status = true;
         event(new AfterIndex());
-
 
         if ($this->request->ajax()) {
             return compact(['status', 'items']);
@@ -76,12 +76,22 @@ class ItemController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @param StoreValidator $storeValidator
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(StoreValidator $storeValidator)
     {
+
         event(new BeforeStore());
-        event(new AfterStore());
+        $storeValidator->validate($this->request->all());
+
+        $url = $this->urlRepo->get($this->request->get('url_id'));
+        $item = $this->itemRepo->store($this->request->all());
+        $url->items()->save($item);
+        $status = true;
+        event(new AfterStore($item));
+        return compact(['status', 'item']);
+
     }
 
     /**

@@ -32,7 +32,7 @@
                             <tr>
                                 <th :class="orderByClass('id')" @click.prevent="setOrdering('id')">ID</th>
                                 <th :class="orderByClass('name')" @click.prevent="setOrdering('name')">Name</th>
-                                <th :class="orderByClass('display_name')" @click.prevent="setOrdering('full_path')">
+                                <th :class="orderByClass('full_path')" @click.prevent="setOrdering('full_path')">
                                     Full path
                                 </th>
                                 <th :class="orderByClass('created_at')" @click.prevent="setOrdering('created_at')">

@@ -85,6 +85,7 @@ class Url extends Model
             'update' => route('url.update', $this->getKey()),
             'delete' => route('url.destroy', $this->getKey()),
             'item_index' => route('item.index', ['url_id' => $this->getKey()]),
+            'item_store' => route('item.store', ['url_id' => $this->getKey()]),
         ];
     }
 

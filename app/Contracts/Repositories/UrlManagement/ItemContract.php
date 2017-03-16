@@ -19,7 +19,7 @@ interface ItemContract
      * @param Url|null $url
      * @return mixed
      */
-    public function all(Url $url = null);
+    public function filterAll(Array $data = [], Url $url = null);
 
     /**
      * Load an item by item ID

@@ -17,6 +17,10 @@ class Item extends Model
         'name', 'is_active'
     ];
 
+    protected $appends = [
+        'urls'
+    ];
+
     /**
      * relationship with url
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -38,6 +42,21 @@ class Item extends Model
     public function historicalPrices()
     {
         return $this->hasMany('App\Models\HistoricalPrice', 'item_id', 'id');
+    }
+
+    /*----------------------------------------------------------------------*/
+    /* Attributes                                                           */
+    /*----------------------------------------------------------------------*/
+
+    public function getUrlsAttribute()
+    {
+        return [
+            'show' => route('item.show', $this->getKey()),
+            'store' => route('item.store'),
+            'edit' => route('item.edit', $this->getKey()),
+            'update' => route('item.update', $this->getKey()),
+            'delete' => route('item.destroy', $this->getKey()),
+        ];
     }
 
     /*----------------------------------------------------------------------*/
