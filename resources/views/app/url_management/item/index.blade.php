@@ -22,5 +22,8 @@
 @stop
 
 @section('scripts')
+    <script>
+        var editingUrl = JSON.parse('{!! addslashes($url->toJson()) !!}');
+    </script>
     <script src="{{mix('/js/app/item/index.js')}}"></script>
 @stop
