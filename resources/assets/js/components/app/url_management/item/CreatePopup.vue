@@ -19,7 +19,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <form action="" class="form-horizontal">
+                        <form class="form-horizontal" onsubmit="return false;">
                             <div class="form-group">
                                 <label for="txt-item-name" class="control-label col-sm-3">Name</label>
                                 <div class="col-sm-9">
@@ -54,7 +54,7 @@
     import loading from '../../../Loading.vue';
 
     export default{
-        components:{
+        components: {
             loading
         },
         props: [
@@ -70,7 +70,7 @@
             }
         },
         mounted(){
-            console.info("Create component mounted.");
+            console.info("CreatePopup component mounted.");
         },
         methods: {
             createItem(){

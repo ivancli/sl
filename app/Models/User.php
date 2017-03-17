@@ -88,6 +88,15 @@ class User extends Authenticatable
         return $this->hasOne('App\Models\UserMeta', 'user_id', 'id');
     }
 
+    /**
+     * relationship with user activity log
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function activityLogs()
+    {
+        return $this->hasMany('App\Models\LoggingModels\UserActivityLog', 'user_id', 'id');
+    }
+
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/

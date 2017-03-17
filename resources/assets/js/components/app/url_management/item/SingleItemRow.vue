@@ -6,24 +6,31 @@
         <td>{{ item.created_at | formatDateTime(datetimeFormat) }}</td>
         <td>{{ item.updated_at | formatDateTime(datetimeFormat) }}</td>
         <td class="text-center">
-            <a :href="item.urls.show" class="text-muted">
+            <a :href="item.urls.show" class="text-muted" title="view">
                 <i class="glyphicon glyphicon-search"></i>
             </a>
             &nbsp;
-            <a :href="item.urls.edit" class="text-muted">
+            <a href="#" class="text-muted" title="edit" @click.prevent="onClickEditItem">
                 <i class="glyphicon glyphicon-pencil"></i>
             </a>
             &nbsp;
-            <a href="#" class="text-danger" @click.prevent="onClickDeleteItem">
+            <a :href="url.urls.item_index" class="text-muted" title="edit meta">
+                <i class="glyphicon glyphicon-qrcode"></i>
+            </a>
+            &nbsp;
+            <a href="#" class="text-danger" @click.prevent="onClickDeleteItem" title="delete">
                 <i class="glyphicon glyphicon-trash"></i>
             </a>
         </td>
+        <edit-popup :is-active="isEditingItem" :item="item" @hide-modal="hideEditPopup" @updated-item="updatedItem"></edit-popup>
         <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
         <loading v-if="isDeletingItem"></loading>
     </tr>
 </template>
 
 <script>
+    import editPopup from './EditPopup.vue';
+
     import deleteConfirmation from '../../../fragments/modals/DeleteConfirmation.vue';
     import loading from '../../../Loading.vue';
 
@@ -31,6 +38,7 @@
 
     export default{
         components: {
+            editPopup,
             deleteConfirmation,
             loading,
         },
@@ -45,10 +53,12 @@
                     active: false
                 },
                 isDeletingItem: false,
+                isEditingItem: false,
             }
         },
         props: [
-            'current-item'
+            'current-item',
+            'url'
         ],
         mounted(){
             console.info('SingleItemRow component mounted.');
@@ -68,6 +78,16 @@
             },
         },
         methods: {
+            onClickEditItem(){
+                this.isEditingItem = true;
+            },
+            hideEditPopup(){
+                this.isEditingItem = false;
+            },
+            updatedItem(){
+                this.$emit('reloadItems');
+                this.hideEditPopup();
+            },
             onClickDeleteItem(){
                 this.deleteParams.active = true;
             },

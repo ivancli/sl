@@ -21,6 +21,8 @@ mix
 
     /* app pref */
     .js('resources/assets/js/app/admin/app_pref/index.js', 'public/js/app/admin/app_pref')
+    /* user activity log */
+    .js('resources/assets/js/app/admin/user_activity_log/index.js', 'public/js/app/admin/user_activity_log')
 
     /* account settings */
     .js('resources/assets/js/app/account_settings/index.js', 'public/js/app/account_settings')

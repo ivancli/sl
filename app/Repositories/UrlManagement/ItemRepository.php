@@ -91,7 +91,8 @@ class ItemRepository implements ItemContract
      */
     public function update(Item $item, Array $data)
     {
-        // TODO: Implement update() method.
+        $item->update($data);
+        return $item;
     }
 
     /**
@@ -101,6 +102,6 @@ class ItemRepository implements ItemContract
      */
     public function destroy(Item $item)
     {
-        // TODO: Implement destroy() method.
+        return $item->delete();
     }
 }

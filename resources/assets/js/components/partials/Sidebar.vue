@@ -110,8 +110,8 @@
                         </li>
                     </ul>
                 </li>
-                <li class="treeview" v-if="isStaffMember">
-                    <a href="#">
+                <li class="treeview" :class="topLevelActiveClass('/system-log')" v-if="isStaffMember">
+                    <a href="#" @click.prevent="toggleDropDownItems('/system-log')">
                         <i class="fa fa-file-text-o"></i>
                         <span>SYSTEM LOG</span>
                         <span class="pull-right-container">
@@ -126,7 +126,7 @@
                             </a>
                         </li>
                         <li class="">
-                            <a href="#">
+                            <a href="/log/user-activity-log">
                                 <i class="fa fa-map-o"></i>
                                 <span>User Activity Logs</span>
                             </a>

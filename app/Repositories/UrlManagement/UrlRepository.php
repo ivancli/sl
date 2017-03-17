@@ -138,6 +138,6 @@ class UrlRepository implements UrlContract
      */
     public function destroy(Url $url)
     {
-        $url->delete();
+        return $url->delete();
     }
 }

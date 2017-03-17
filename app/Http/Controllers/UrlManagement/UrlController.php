@@ -129,8 +129,8 @@ class UrlController extends Controller
     public function destroy(Url $url)
     {
         event(new BeforeDestroy($url));
-        $this->urlRepo->destroy($url);
-        $status = true;
+        $status = $this->urlRepo->destroy($url);
+
         event(new AfterDestroy());
         return compact(['status']);
     }

@@ -19,7 +19,19 @@
                                                     <tbody>
                                                     <tr v-for="(nested_val, nested_prop) in child_val">
                                                         <th v-text="nested_prop"></th>
-                                                        <td v-text="nested_val"></td>
+                                                        <td>
+                                                            <div v-if="typeof nested_val == 'object' || typeof nested_val == 'array'">
+                                                                <table class="table table-bordered table-striped table-condensed table-hover">
+                                                                    <tbody>
+                                                                    <tr v-for="(innerNested_val, innerNested_prop) in nested_val">
+                                                                        <th v-text="innerNested_prop"></th>
+                                                                        <td v-text="innerNested_val"></td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <div v-else v-text="nested_val"></div>
+                                                        </td>
                                                     </tr>
                                                     </tbody>
                                                 </table>

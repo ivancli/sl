@@ -178,8 +178,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         event(new BeforeDestroy($user));
-        $this->userRepo->destroy($user);
-        $status = true;
+        $status = $this->userRepo->destroy($user);
         event(new AfterDestroy());
         return compact(['status']);
     }

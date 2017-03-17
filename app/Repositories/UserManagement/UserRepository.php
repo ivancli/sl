@@ -124,11 +124,11 @@ class UserRepository implements UserContract
     /**
      * Remove an existing user
      * @param User $user
-     * @return mixed
+     * @return bool|null|void
      */
     public function destroy(User $user)
     {
-        $user->delete();
+        return $user->delete();
     }
 
     /**

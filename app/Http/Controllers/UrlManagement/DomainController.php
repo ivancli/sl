@@ -137,8 +137,7 @@ class DomainController extends Controller
     public function destroy(Domain $domain)
     {
         event(new BeforeDestroy($domain));
-        $this->domainRepo->destroy($domain);
-        $status = true;
+        $status = $this->domainRepo->destroy($domain);
         event(new AfterDestroy());
         return compact(['status']);
     }

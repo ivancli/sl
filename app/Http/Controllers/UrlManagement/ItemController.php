@@ -144,8 +144,7 @@ class ItemController extends Controller
     public function destroy(Item $item)
     {
         event(new BeforeDestroy($item));
-        $this->itemRepo->destroy($item);
-        $status = true;
+        $status = $this->itemRepo->destroy($item);
         event(new AfterDestroy());
         return compact(['status']);
     }

@@ -46,7 +46,7 @@
                                     </tr>
                                     </thead>
                                     <tbody v-if="items.length > 0">
-                                    <single-item-row v-for="item in items" :current-item="item" @reloadItems="loadItems(currentPageUrl)"></single-item-row>
+                                    <single-item-row v-for="item in items" :current-item="item" :url="url" @reloadItems="loadItems(currentPageUrl)"></single-item-row>
                                     </tbody>
                                     <tbody v-else>
                                     <tr>

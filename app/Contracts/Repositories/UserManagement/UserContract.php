@@ -59,7 +59,7 @@ interface UserContract
     /**
      * Remove an existing user
      * @param User $user
-     * @return
+     * @return bool
      */
     public function destroy(User $user);
 

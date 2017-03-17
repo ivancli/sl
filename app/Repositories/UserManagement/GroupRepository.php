@@ -107,9 +107,10 @@ class GroupRepository implements GroupContract
     /**
      * Remove an existing group
      * @param Group $group
+     * @return bool|null
      */
     public function destroy(Group $group)
     {
-        $group->delete();
+        return $group->delete();
     }
 }

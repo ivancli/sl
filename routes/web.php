@@ -52,6 +52,8 @@ Route::group(['middleware' => ['auth', 'subs']], function () {
      */
     Route::resource('app-preference', 'Admin\AppPrefController');
 
+    Route::resource('log/user-activity-log', 'Admin\UserActivityLogController');
+
     Route::resource('url-management/domain', 'UrlManagement\DomainController');
     Route::resource('url-management/domain-meta', 'UrlManagement\DomainMetaController');
     Route::resource('url-management/domain-conf', 'UrlManagement\DomainConfController');

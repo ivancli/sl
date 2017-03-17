@@ -205,6 +205,25 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\UserManagement\Permission\AfterUpdate' => [],
         'App\Events\UserManagement\Permission\BeforeDestroy' => [],
         'App\Events\UserManagement\Permission\AfterDestroy' => [],
+
+        /**
+         * Admin
+         */
+        /* user activity log */
+        'App\Events\Admin\UserActivityLog\BeforeIndex' => [],
+        'App\Events\Admin\UserActivityLog\AfterIndex' => [],
+        'App\Events\Admin\UserActivityLog\BeforeShow' => [],
+        'App\Events\Admin\UserActivityLog\AfterShow' => [],
+        'App\Events\Admin\UserActivityLog\BeforeCreate' => [],
+        'App\Events\Admin\UserActivityLog\AfterCreate' => [],
+        'App\Events\Admin\UserActivityLog\BeforeStore' => [],
+        'App\Events\Admin\UserActivityLog\AfterStore' => [],
+        'App\Events\Admin\UserActivityLog\BeforeEdit' => [],
+        'App\Events\Admin\UserActivityLog\AfterEdit' => [],
+        'App\Events\Admin\UserActivityLog\BeforeUpdate' => [],
+        'App\Events\Admin\UserActivityLog\AfterUpdate' => [],
+        'App\Events\Admin\UserActivityLog\BeforeDestroy' => [],
+        'App\Events\Admin\UserActivityLog\AfterDestroy' => [],
     ];
 
     protected $subscribe = [
@@ -247,6 +266,11 @@ class EventServiceProvider extends ServiceProvider
         'App\Listeners\UserManagement\RoleControllerEventSubscriber',
         /* permission */
         'App\Listeners\UserManagement\PermissionControllerEventSubscriber',
+
+        /**
+         * Admin
+         */
+        'App\Listeners\Admin\UserActivityLogControllerEventSubscriber',
     ];
 
     /**
