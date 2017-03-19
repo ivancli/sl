@@ -85,65 +85,65 @@ class RoleControllerEventSubscriber
     public function subscribe($events)
     {
         $events->listen(
-            'App\Events\UserManagement\Role\Index\Before',
+            'App\Events\UserManagement\Role\BeforeIndex',
             'App\Listeners\UserManagement\RoleControllerEventSubscriber@onBeforeIndex'
         );
         $events->listen(
-            'App\Events\UserManagement\Role\Index\After',
+            'App\Events\UserManagement\Role\AfterIndex',
             'App\Listeners\UserManagement\RoleControllerEventSubscriber@onAfterIndex'
         );
 
         $events->listen(
-            'App\Events\UserManagement\Role\Show\Before',
+            'App\Events\UserManagement\Role\BeforeShow',
             'App\Listeners\UserManagement\RoleControllerEventSubscriber@onBeforeShow'
         );
         $events->listen(
-            'App\Events\UserManagement\Role\Show\After',
+            'App\Events\UserManagement\Role\AfterShow',
             'App\Listeners\UserManagement\RoleControllerEventSubscriber@onAfterShow'
         );
 
         $events->listen(
-            'App\Events\UserManagement\Role\Create\Before',
+            'App\Events\UserManagement\Role\BeforeCreate',
             'App\Listeners\UserManagement\RoleControllerEventSubscriber@onBeforeCreate'
         );
         $events->listen(
-            'App\Events\UserManagement\Role\Create\After',
+            'App\Events\UserManagement\Role\AfterCreate',
             'App\Listeners\UserManagement\RoleControllerEventSubscriber@onAfterCreate'
         );
 
         $events->listen(
-            'App\Events\UserManagement\Role\Store\Before',
+            'App\Events\UserManagement\Role\BeforeStore',
             'App\Listeners\UserManagement\RoleControllerEventSubscriber@onBeforeStore'
         );
         $events->listen(
-            'App\Events\UserManagement\Role\Store\After',
+            'App\Events\UserManagement\Role\AfterStore',
             'App\Listeners\UserManagement\RoleControllerEventSubscriber@onAfterStore'
         );
 
         $events->listen(
-            'App\Events\UserManagement\Role\Edit\Before',
+            'App\Events\UserManagement\Role\BeforeEdit',
             'App\Listeners\UserManagement\RoleControllerEventSubscriber@onBeforeEdit'
         );
         $events->listen(
-            'App\Events\UserManagement\Role\Edit\After',
+            'App\Events\UserManagement\Role\AfterEdit',
             'App\Listeners\UserManagement\RoleControllerEventSubscriber@onAfterEdit'
         );
 
         $events->listen(
-            'App\Events\UserManagement\Role\Update\Before',
+            'App\Events\UserManagement\Role\BeforeUpdate',
             'App\Listeners\UserManagement\RoleControllerEventSubscriber@onBeforeUpdate'
         );
         $events->listen(
-            'App\Events\UserManagement\Role\Update\After',
+            'App\Events\UserManagement\Role\AfterUpdate',
             'App\Listeners\UserManagement\RoleControllerEventSubscriber@onAfterUpdate'
         );
 
         $events->listen(
-            'App\Events\UserManagement\Role\Destroy\Before',
+            'App\Events\UserManagement\Role\BeforeDestroy',
             'App\Listeners\UserManagement\RoleControllerEventSubscriber@onBeforeDestroy'
         );
         $events->listen(
-            'App\Events\UserManagement\Role\Destroy\After',
+            'App\Events\UserManagement\Role\AfterDestroy',
             'App\Listeners\UserManagement\RoleControllerEventSubscriber@onAfterDestroy'
         );
     }

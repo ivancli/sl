@@ -9,6 +9,8 @@
 namespace App\Listeners\UrlManagement;
 
 
+use App\Jobs\Log\UserActivity;
+
 class DomainControllerEventSubscriber
 {
     public function onBeforeIndex($event)
@@ -18,7 +20,8 @@ class DomainControllerEventSubscriber
 
     public function onAfterIndex($event)
     {
-
+        $activity = "Visited Domains Page";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function onBeforeShow($event)
@@ -29,6 +32,8 @@ class DomainControllerEventSubscriber
     public function onAfterShow($event)
     {
         $domain = $event->domain;
+        $activity = "Loaded Domain {$domain->getKey()}";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function onBeforeCreate($event)
@@ -59,6 +64,8 @@ class DomainControllerEventSubscriber
     public function onAfterEdit($event)
     {
         $domain = $event->domain;
+        $activity = "Editing Domain {$domain->getKey()}";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function onBeforeUpdate($event)
@@ -69,80 +76,85 @@ class DomainControllerEventSubscriber
     public function onAfterUpdate($event)
     {
         $domain = $event->domain;
+        $activity = "Updated Domain {$domain->getKey()}";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function onBeforeDestroy($event)
     {
         $domain = $event->domain;
+        $activity = "Deleting Domain {$domain->getKey()}";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function onAfterDestroy($event)
     {
-
+        $activity = "Deleted Domain";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function subscribe($events)
     {
         $events->listen(
-            'App\Events\UrlManagement\Domain\Index\Before',
+            'App\Events\UrlManagement\Domain\BeforeIndex',
             'App\Listeners\UrlManagement\DomainControllerEventSubscriber@onBeforeIndex'
         );
         $events->listen(
-            'App\Events\UrlManagement\Domain\Index\After',
+            'App\Events\UrlManagement\Domain\AfterIndex',
             'App\Listeners\UrlManagement\DomainControllerEventSubscriber@onAfterIndex'
         );
 
         $events->listen(
-            'App\Events\UrlManagement\Domain\Show\Before',
+            'App\Events\UrlManagement\Domain\BeforeShow',
             'App\Listeners\UrlManagement\DomainControllerEventSubscriber@onBeforeShow'
         );
         $events->listen(
-            'App\Events\UrlManagement\Domain\Show\After',
+            'App\Events\UrlManagement\Domain\AfterShow',
             'App\Listeners\UrlManagement\DomainControllerEventSubscriber@onAfterShow'
         );
 
         $events->listen(
-            'App\Events\UrlManagement\Domain\Create\Before',
+            'App\Events\UrlManagement\Domain\BeforeCreate',
             'App\Listeners\UrlManagement\DomainControllerEventSubscriber@onBeforeCreate'
         );
         $events->listen(
-            'App\Events\UrlManagement\Domain\Create\After',
+            'App\Events\UrlManagement\Domain\AfterCreate',
             'App\Listeners\UrlManagement\DomainControllerEventSubscriber@onAfterCreate'
         );
 
         $events->listen(
-            'App\Events\UrlManagement\Domain\Store\Before',
+            'App\Events\UrlManagement\Domain\BeforeStore',
             'App\Listeners\UrlManagement\DomainControllerEventSubscriber@onBeforeStore'
         );
         $events->listen(
-            'App\Events\UrlManagement\Domain\Store\After',
+            'App\Events\UrlManagement\Domain\AfterStore',
             'App\Listeners\UrlManagement\DomainControllerEventSubscriber@onAfterStore'
         );
 
         $events->listen(
-            'App\Events\UrlManagement\Domain\Edit\Before',
+            'App\Events\UrlManagement\Domain\BeforeEdit',
             'App\Listeners\UrlManagement\DomainControllerEventSubscriber@onBeforeEdit'
         );
         $events->listen(
-            'App\Events\UrlManagement\Domain\Edit\After',
+            'App\Events\UrlManagement\Domain\AfterEdit',
             'App\Listeners\UrlManagement\DomainControllerEventSubscriber@onAfterEdit'
         );
 
         $events->listen(
-            'App\Events\UrlManagement\Domain\Update\Before',
+            'App\Events\UrlManagement\Domain\BeforeUpdate',
             'App\Listeners\UrlManagement\DomainControllerEventSubscriber@onBeforeUpdate'
         );
         $events->listen(
-            'App\Events\UrlManagement\Domain\Update\After',
+            'App\Events\UrlManagement\Domain\AfterUpdate',
             'App\Listeners\UrlManagement\DomainControllerEventSubscriber@onAfterUpdate'
         );
 
         $events->listen(
-            'App\Events\UrlManagement\Domain\Destroy\Before',
+            'App\Events\UrlManagement\Domain\BeforeDestroy',
             'App\Listeners\UrlManagement\DomainControllerEventSubscriber@onBeforeDestroy'
         );
         $events->listen(
-            'App\Events\UrlManagement\Domain\Destroy\After',
+            'App\Events\UrlManagement\Domain\AfterDestroy',
             'App\Listeners\UrlManagement\DomainControllerEventSubscriber@onAfterDestroy'
         );
     }

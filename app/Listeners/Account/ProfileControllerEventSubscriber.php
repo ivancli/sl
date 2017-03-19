@@ -1,5 +1,7 @@
 <?php
 namespace App\Listeners\Account;
+use App\Jobs\Log\UserActivity;
+
 /**
  * Created by PhpStorm.
  * User: ivan.li
@@ -16,6 +18,8 @@ class ProfileControllerEventSubscriber
     public function onAfterShow($event)
     {
         $user = $event->user;
+        $activity = "Visited Account Profile";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function onBeforeUpdate($event)
@@ -26,6 +30,8 @@ class ProfileControllerEventSubscriber
     public function onAfterUpdate($event)
     {
         $user = $event->user;
+        $activity = "Updated Account Profile";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
 

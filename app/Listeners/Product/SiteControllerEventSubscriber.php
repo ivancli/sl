@@ -1,5 +1,8 @@
 <?php
 namespace App\Listeners\Product;
+
+use App\Jobs\Log\UserActivity;
+
 /**
  * Created by PhpStorm.
  * User: ivan.li
@@ -17,17 +20,18 @@ class SiteControllerEventSubscriber
 
     public function onAfterIndex()
     {
-
+        $activity = "Loaded Sites";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
-    public function onBeforeShow()
+    public function onBeforeShow($event)
     {
-
+        $site = $event->site;
     }
 
-    public function onAfterShow()
+    public function onAfterShow($event)
     {
-
+        $site = $event->site;
     }
 
     public function onBeforeCreate()
@@ -45,103 +49,110 @@ class SiteControllerEventSubscriber
 
     }
 
-    public function onAfterStore()
+    public function onAfterStore($event)
     {
-
+        $site = $event->site;
+        $activity = "Created Site {$site->getKey()}";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
-    public function onBeforeEdit()
+    public function onBeforeEdit($event)
     {
-
+        $site = $event->site;
     }
 
-    public function onAfterEdit()
+    public function onAfterEdit($event)
     {
-
+        $site = $event->site;
     }
 
-    public function onBeforeUpdate()
+    public function onBeforeUpdate($event)
     {
-
+        $site = $event->site;
     }
 
-    public function onAfterUpdate()
+    public function onAfterUpdate($event)
     {
-
+        $site = $event->site;
+        $activity = "Updated Site {$site->getKey()}";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
-    public function onBeforeDestroy()
+    public function onBeforeDestroy($event)
     {
-
+        $site = $event->site;
+        $activity = "Deleting Site {$site->getKey()}";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function onAfterDestroy()
     {
-
+        $activity = "Deleted Site";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function subscribe($events)
     {
         $events->listen(
-            'App\Events\Product\Site\Index\Before',
+            'App\Events\Product\Site\BeforeIndex',
             'App\Listeners\Product\SiteControllerEventSubscriber@onBeforeIndex'
         );
         $events->listen(
-            'App\Events\Product\Site\Index\After',
+            'App\Events\Product\Site\AfterIndex',
             'App\Listeners\Product\SiteControllerEventSubscriber@onAfterIndex'
         );
 
         $events->listen(
-            'App\Events\Product\Site\Show\Before',
+            'App\Events\Product\Site\BeforeShow',
             'App\Listeners\Product\SiteControllerEventSubscriber@onBeforeShow'
         );
         $events->listen(
-            'App\Events\Product\Site\Show\After',
+            'App\Events\Product\Site\AfterShow',
             'App\Listeners\Product\SiteControllerEventSubscriber@onAfterShow'
         );
 
         $events->listen(
-            'App\Events\Product\Site\Create\Before',
+            'App\Events\Product\Site\BeforeCreate',
             'App\Listeners\Product\SiteControllerEventSubscriber@onBeforeCreate'
         );
         $events->listen(
-            'App\Events\Product\Site\Create\After',
+            'App\Events\Product\Site\AfterCreate',
             'App\Listeners\Product\SiteControllerEventSubscriber@onAfterCreate'
         );
 
         $events->listen(
-            'App\Events\Product\Site\Store\Before',
+            'App\Events\Product\Site\BeforeStore',
             'App\Listeners\Product\SiteControllerEventSubscriber@onBeforeStore'
         );
         $events->listen(
-            'App\Events\Product\Site\Store\After',
+            'App\Events\Product\Site\AfterStore',
             'App\Listeners\Product\SiteControllerEventSubscriber@onAfterStore'
         );
 
         $events->listen(
-            'App\Events\Product\Site\Edit\Before',
+            'App\Events\Product\Site\BeforeEdit',
             'App\Listeners\Product\SiteControllerEventSubscriber@onBeforeEdit'
         );
         $events->listen(
-            'App\Events\Product\Site\Edit\After',
+            'App\Events\Product\Site\AfterEdit',
             'App\Listeners\Product\SiteControllerEventSubscriber@onAfterEdit'
         );
 
         $events->listen(
-            'App\Events\Product\Site\Update\Before',
+            'App\Events\Product\Site\BeforeUpdate',
             'App\Listeners\Product\SiteControllerEventSubscriber@onBeforeUpdate'
         );
         $events->listen(
-            'App\Events\Product\Site\Update\After',
+            'App\Events\Product\Site\AfterUpdate',
             'App\Listeners\Product\SiteControllerEventSubscriber@onAfterUpdate'
         );
 
         $events->listen(
-            'App\Events\Product\Site\Destroy\Before',
+            'App\Events\Product\Site\BeforeDestroy',
             'App\Listeners\Product\SiteControllerEventSubscriber@onBeforeDestroy'
         );
         $events->listen(
-            'App\Events\Product\Site\Destroy\After',
+            'App\Events\Product\Site\AfterDestroy',
             'App\Listeners\Product\SiteControllerEventSubscriber@onAfterDestroy'
         );
     }

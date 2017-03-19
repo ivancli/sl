@@ -85,65 +85,65 @@ class GroupControllerEventSubscriber
     public function subscribe($events)
     {
         $events->listen(
-            'App\Events\UserManagement\Group\Index\Before',
+            'App\Events\UserManagement\Group\BeforeIndex',
             'App\Listeners\UserManagement\GroupControllerEventSubscriber@onBeforeIndex'
         );
         $events->listen(
-            'App\Events\UserManagement\Group\Index\After',
+            'App\Events\UserManagement\Group\AfterIndex',
             'App\Listeners\UserManagement\GroupControllerEventSubscriber@onAfterIndex'
         );
 
         $events->listen(
-            'App\Events\UserManagement\Group\Show\Before',
+            'App\Events\UserManagement\Group\BeforeShow',
             'App\Listeners\UserManagement\GroupControllerEventSubscriber@onBeforeShow'
         );
         $events->listen(
-            'App\Events\UserManagement\Group\Show\After',
+            'App\Events\UserManagement\Group\AfterShow',
             'App\Listeners\UserManagement\GroupControllerEventSubscriber@onAfterShow'
         );
 
         $events->listen(
-            'App\Events\UserManagement\Group\Create\Before',
+            'App\Events\UserManagement\Group\BeforeCreate',
             'App\Listeners\UserManagement\GroupControllerEventSubscriber@onBeforeCreate'
         );
         $events->listen(
-            'App\Events\UserManagement\Group\Create\After',
+            'App\Events\UserManagement\Group\AfterCreate',
             'App\Listeners\UserManagement\GroupControllerEventSubscriber@onAfterCreate'
         );
 
         $events->listen(
-            'App\Events\UserManagement\Group\Store\Before',
+            'App\Events\UserManagement\Group\BeforeStore',
             'App\Listeners\UserManagement\GroupControllerEventSubscriber@onBeforeStore'
         );
         $events->listen(
-            'App\Events\UserManagement\Group\Store\After',
+            'App\Events\UserManagement\Group\AfterStore',
             'App\Listeners\UserManagement\GroupControllerEventSubscriber@onAfterStore'
         );
 
         $events->listen(
-            'App\Events\UserManagement\Group\Edit\Before',
+            'App\Events\UserManagement\Group\BeforeEdit',
             'App\Listeners\UserManagement\GroupControllerEventSubscriber@onBeforeEdit'
         );
         $events->listen(
-            'App\Events\UserManagement\Group\Edit\After',
+            'App\Events\UserManagement\Group\AfterEdit',
             'App\Listeners\UserManagement\GroupControllerEventSubscriber@onAfterEdit'
         );
 
         $events->listen(
-            'App\Events\UserManagement\Group\Update\Before',
+            'App\Events\UserManagement\Group\BeforeUpdate',
             'App\Listeners\UserManagement\GroupControllerEventSubscriber@onBeforeUpdate'
         );
         $events->listen(
-            'App\Events\UserManagement\Group\Update\After',
+            'App\Events\UserManagement\Group\AfterUpdate',
             'App\Listeners\UserManagement\GroupControllerEventSubscriber@onAfterUpdate'
         );
 
         $events->listen(
-            'App\Events\UserManagement\Group\Destroy\Before',
+            'App\Events\UserManagement\Group\BeforeDestroy',
             'App\Listeners\UserManagement\GroupControllerEventSubscriber@onBeforeDestroy'
         );
         $events->listen(
-            'App\Events\UserManagement\Group\Destroy\After',
+            'App\Events\UserManagement\Group\AfterDestroy',
             'App\Listeners\UserManagement\GroupControllerEventSubscriber@onAfterDestroy'
         );
     }

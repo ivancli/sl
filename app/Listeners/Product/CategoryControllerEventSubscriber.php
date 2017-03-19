@@ -9,6 +9,8 @@
 namespace App\Listeners\Product;
 
 
+use App\Jobs\Log\UserActivity;
+
 class CategoryControllerEventSubscriber
 {
     public function onBeforeIndex()
@@ -18,7 +20,8 @@ class CategoryControllerEventSubscriber
 
     public function onAfterIndex()
     {
-
+        $activity = "Loaded Categories";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function onBeforeShow()
@@ -46,103 +49,112 @@ class CategoryControllerEventSubscriber
 
     }
 
-    public function onAfterStore()
+    public function onAfterStore($event)
     {
-
+        $category = $event->category;
+        $activity = "Created Category {$category->getKey()}";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
-    public function onBeforeEdit()
+    public function onBeforeEdit($event)
     {
-
+        $category = $event->category;
     }
 
-    public function onAfterEdit()
+    public function onAfterEdit($event)
     {
-
+        $category = $event->category;
+        $activity = "Editing Category {$category->getKey()}";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
-    public function onBeforeUpdate()
+    public function onBeforeUpdate($event)
     {
-
+        $category = $event->category;
     }
 
-    public function onAfterUpdate()
+    public function onAfterUpdate($event)
     {
-
+        $category = $event->category;
+        $activity = "Updated Category {$category->getKey()}";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
-    public function onBeforeDestroy()
+    public function onBeforeDestroy($event)
     {
-
+        $category = $event->category;
+        $activity = "Deleting Category {$category->getKey()}";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function onAfterDestroy()
     {
-
+        $activity = "Deleted Category";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function subscribe($events)
     {
         $events->listen(
-            'App\Events\Product\Category\Index\Before',
+            'App\Events\Product\Category\BeforeIndex',
             'App\Listeners\Product\CategoryControllerEventSubscriber@onBeforeIndex'
         );
         $events->listen(
-            'App\Events\Product\Category\Index\After',
+            'App\Events\Product\Category\AfterIndex',
             'App\Listeners\Product\CategoryControllerEventSubscriber@onAfterIndex'
         );
 
         $events->listen(
-            'App\Events\Product\Category\Show\Before',
+            'App\Events\Product\Category\BeforeShow',
             'App\Listeners\Product\CategoryControllerEventSubscriber@onBeforeShow'
         );
         $events->listen(
-            'App\Events\Product\Category\Show\After',
+            'App\Events\Product\Category\AfterShow',
             'App\Listeners\Product\CategoryControllerEventSubscriber@onAfterShow'
         );
 
         $events->listen(
-            'App\Events\Product\Category\Create\Before',
+            'App\Events\Product\Category\BeforeCreate',
             'App\Listeners\Product\CategoryControllerEventSubscriber@onBeforeCreate'
         );
         $events->listen(
-            'App\Events\Product\Category\Create\After',
+            'App\Events\Product\Category\AfterCreate',
             'App\Listeners\Product\CategoryControllerEventSubscriber@onAfterCreate'
         );
 
         $events->listen(
-            'App\Events\Product\Category\Store\Before',
+            'App\Events\Product\Category\BeforeStore',
             'App\Listeners\Product\CategoryControllerEventSubscriber@onBeforeStore'
         );
         $events->listen(
-            'App\Events\Product\Category\Store\After',
+            'App\Events\Product\Category\AfterStore',
             'App\Listeners\Product\CategoryControllerEventSubscriber@onAfterStore'
         );
 
         $events->listen(
-            'App\Events\Product\Category\Edit\Before',
+            'App\Events\Product\Category\BeforeEdit',
             'App\Listeners\Product\CategoryControllerEventSubscriber@onBeforeEdit'
         );
         $events->listen(
-            'App\Events\Product\Category\Edit\After',
+            'App\Events\Product\Category\AfterEdit',
             'App\Listeners\Product\CategoryControllerEventSubscriber@onAfterEdit'
         );
 
         $events->listen(
-            'App\Events\Product\Category\Update\Before',
+            'App\Events\Product\Category\BeforeUpdate',
             'App\Listeners\Product\CategoryControllerEventSubscriber@onBeforeUpdate'
         );
         $events->listen(
-            'App\Events\Product\Category\Update\After',
+            'App\Events\Product\Category\AfterUpdate',
             'App\Listeners\Product\CategoryControllerEventSubscriber@onAfterUpdate'
         );
 
         $events->listen(
-            'App\Events\Product\Category\Destroy\Before',
+            'App\Events\Product\Category\BeforeDestroy',
             'App\Listeners\Product\CategoryControllerEventSubscriber@onBeforeDestroy'
         );
         $events->listen(
-            'App\Events\Product\Category\Destroy\After',
+            'App\Events\Product\Category\AfterDestroy',
             'App\Listeners\Product\CategoryControllerEventSubscriber@onAfterDestroy'
         );
     }

@@ -33,7 +33,6 @@
                                 <th :class="orderByClass('activity')" @click.prevent="setOrdering('activity')">Activity</th>
                                 <th :class="orderByClass('created_at')" @click.prevent="setOrdering('created_at')">Created at</th>
                                 <th :class="orderByClass('updated_at')" @click.prevent="setOrdering('updated_at')">Updated at</th>
-                                <th></th>
                             </tr>
                             </thead>
                             <tbody v-if="userActivityLogs.length > 0">
@@ -86,7 +85,7 @@
                 },
                 orderByData: {
                     column: 'id',
-                    direction: 'asc'
+                    direction: 'desc'
                 },
                 filterText: '',
                 filterDelayData: {

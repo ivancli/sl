@@ -85,65 +85,65 @@ class PermissionControllerEventSubscriber
     public function subscribe($events)
     {
         $events->listen(
-            'App\Events\UserManagement\Permission\Index\Before',
+            'App\Events\UserManagement\Permission\BeforeIndex',
             'App\Listeners\UserManagement\PermissionControllerEventSubscriber@onBeforeIndex'
         );
         $events->listen(
-            'App\Events\UserManagement\Permission\Index\After',
+            'App\Events\UserManagement\Permission\AfterIndex',
             'App\Listeners\UserManagement\PermissionControllerEventSubscriber@onAfterIndex'
         );
 
         $events->listen(
-            'App\Events\UserManagement\Permission\Show\Before',
+            'App\Events\UserManagement\Permission\BeforeShow',
             'App\Listeners\UserManagement\PermissionControllerEventSubscriber@onBeforeShow'
         );
         $events->listen(
-            'App\Events\UserManagement\Permission\Show\After',
+            'App\Events\UserManagement\Permission\AfterShow',
             'App\Listeners\UserManagement\PermissionControllerEventSubscriber@onAfterShow'
         );
 
         $events->listen(
-            'App\Events\UserManagement\Permission\Create\Before',
+            'App\Events\UserManagement\Permission\BeforeCreate',
             'App\Listeners\UserManagement\PermissionControllerEventSubscriber@onBeforeCreate'
         );
         $events->listen(
-            'App\Events\UserManagement\Permission\Create\After',
+            'App\Events\UserManagement\Permission\AfterCreate',
             'App\Listeners\UserManagement\PermissionControllerEventSubscriber@onAfterCreate'
         );
 
         $events->listen(
-            'App\Events\UserManagement\Permission\Store\Before',
+            'App\Events\UserManagement\Permission\BeforeStore',
             'App\Listeners\UserManagement\PermissionControllerEventSubscriber@onBeforeStore'
         );
         $events->listen(
-            'App\Events\UserManagement\Permission\Store\After',
+            'App\Events\UserManagement\Permission\AfterStore',
             'App\Listeners\UserManagement\PermissionControllerEventSubscriber@onAfterStore'
         );
 
         $events->listen(
-            'App\Events\UserManagement\Permission\Edit\Before',
+            'App\Events\UserManagement\Permission\BeforeEdit',
             'App\Listeners\UserManagement\PermissionControllerEventSubscriber@onBeforeEdit'
         );
         $events->listen(
-            'App\Events\UserManagement\Permission\Edit\After',
+            'App\Events\UserManagement\Permission\AfterEdit',
             'App\Listeners\UserManagement\PermissionControllerEventSubscriber@onAfterEdit'
         );
 
         $events->listen(
-            'App\Events\UserManagement\Permission\Update\Before',
+            'App\Events\UserManagement\Permission\BeforeUpdate',
             'App\Listeners\UserManagement\PermissionControllerEventSubscriber@onBeforeUpdate'
         );
         $events->listen(
-            'App\Events\UserManagement\Permission\Update\After',
+            'App\Events\UserManagement\Permission\AfterUpdate',
             'App\Listeners\UserManagement\PermissionControllerEventSubscriber@onAfterUpdate'
         );
 
         $events->listen(
-            'App\Events\UserManagement\Permission\Destroy\Before',
+            'App\Events\UserManagement\Permission\BeforeDestroy',
             'App\Listeners\UserManagement\PermissionControllerEventSubscriber@onBeforeDestroy'
         );
         $events->listen(
-            'App\Events\UserManagement\Permission\Destroy\After',
+            'App\Events\UserManagement\Permission\AfterDestroy',
             'App\Listeners\UserManagement\PermissionControllerEventSubscriber@onAfterDestroy'
         );
     }

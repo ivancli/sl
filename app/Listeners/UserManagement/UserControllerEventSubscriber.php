@@ -82,65 +82,65 @@ class UserControllerEventSubscriber
     public function subscribe($events)
     {
         $events->listen(
-            'App\Events\UserManagement\User\Index\Before',
+            'App\Events\UserManagement\User\BeforeIndex',
             'App\Listeners\UserManagement\UserControllerEventSubscriber@onBeforeIndex'
         );
         $events->listen(
-            'App\Events\UserManagement\User\Index\After',
+            'App\Events\UserManagement\User\AfterIndex',
             'App\Listeners\UserManagement\UserControllerEventSubscriber@onAfterIndex'
         );
 
         $events->listen(
-            'App\Events\UserManagement\User\Show\Before',
+            'App\Events\UserManagement\User\BeforeShow',
             'App\Listeners\UserManagement\UserControllerEventSubscriber@onBeforeShow'
         );
         $events->listen(
-            'App\Events\UserManagement\User\Show\After',
+            'App\Events\UserManagement\User\AfterShow',
             'App\Listeners\UserManagement\UserControllerEventSubscriber@onAfterShow'
         );
 
         $events->listen(
-            'App\Events\UserManagement\User\Create\Before',
+            'App\Events\UserManagement\User\BeforeCreate',
             'App\Listeners\UserManagement\UserControllerEventSubscriber@onBeforeCreate'
         );
         $events->listen(
-            'App\Events\UserManagement\User\Create\After',
+            'App\Events\UserManagement\User\AfterCreate',
             'App\Listeners\UserManagement\UserControllerEventSubscriber@onAfterCreate'
         );
 
         $events->listen(
-            'App\Events\UserManagement\User\Store\Before',
+            'App\Events\UserManagement\User\BeforeStore',
             'App\Listeners\UserManagement\UserControllerEventSubscriber@onBeforeStore'
         );
         $events->listen(
-            'App\Events\UserManagement\User\Store\After',
+            'App\Events\UserManagement\User\AfterStore',
             'App\Listeners\UserManagement\UserControllerEventSubscriber@onAfterStore'
         );
 
         $events->listen(
-            'App\Events\UserManagement\User\Edit\Before',
+            'App\Events\UserManagement\User\BeforeEdit',
             'App\Listeners\UserManagement\UserControllerEventSubscriber@onBeforeEdit'
         );
         $events->listen(
-            'App\Events\UserManagement\User\Edit\After',
+            'App\Events\UserManagement\User\AfterEdit',
             'App\Listeners\UserManagement\UserControllerEventSubscriber@onAfterEdit'
         );
 
         $events->listen(
-            'App\Events\UserManagement\User\Update\Before',
+            'App\Events\UserManagement\User\BeforeUpdate',
             'App\Listeners\UserManagement\UserControllerEventSubscriber@onBeforeUpdate'
         );
         $events->listen(
-            'App\Events\UserManagement\User\Update\After',
+            'App\Events\UserManagement\User\AfterUpdate',
             'App\Listeners\UserManagement\UserControllerEventSubscriber@onAfterUpdate'
         );
 
         $events->listen(
-            'App\Events\UserManagement\User\Destroy\Before',
+            'App\Events\UserManagement\User\BeforeDestroy',
             'App\Listeners\UserManagement\UserControllerEventSubscriber@onBeforeDestroy'
         );
         $events->listen(
-            'App\Events\UserManagement\User\Destroy\After',
+            'App\Events\UserManagement\User\AfterDestroy',
             'App\Listeners\UserManagement\UserControllerEventSubscriber@onAfterDestroy'
         );
     }

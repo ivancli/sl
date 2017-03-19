@@ -9,6 +9,8 @@
 namespace App\Listeners\UrlManagement;
 
 
+use App\Jobs\Log\UserActivity;
+
 class ItemControllerEventSubscriber
 {
 
@@ -20,7 +22,8 @@ class ItemControllerEventSubscriber
 
     public function onAfterIndex($event)
     {
-
+        $activity = "Visited Items Page";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function onBeforeShow($event)
@@ -31,6 +34,8 @@ class ItemControllerEventSubscriber
     public function onAfterShow($event)
     {
         $item = $event->item;
+        $activity = "Loaded Item {$item->getKey()}";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function onBeforeCreate($event)
@@ -51,6 +56,8 @@ class ItemControllerEventSubscriber
     public function onAfterStore($event)
     {
         $item = $event->item;
+        $activity = "Created Item {$item->getKey()}";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function onBeforeEdit($event)
@@ -71,80 +78,85 @@ class ItemControllerEventSubscriber
     public function onAfterUpdate($event)
     {
         $item = $event->item;
+        $activity = "Updated Item {$item->getKey()}";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function onBeforeDestroy($event)
     {
         $item = $event->item;
+        $activity = "Deleting Item {$item->getKey()}";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function onAfterDestroy($event)
     {
-
+        $activity = "Deleted Item";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function subscribe($events)
     {
         $events->listen(
-            'App\Events\UrlManagement\Url\Index\Before',
+            'App\Events\UrlManagement\Item\BeforeIndex',
             'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onBeforeIndex'
         );
         $events->listen(
-            'App\Events\UrlManagement\Url\Index\After',
+            'App\Events\UrlManagement\Item\AfterIndex',
             'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onAfterIndex'
         );
 
         $events->listen(
-            'App\Events\UrlManagement\Url\Show\Before',
+            'App\Events\UrlManagement\Item\BeforeShow',
             'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onBeforeShow'
         );
         $events->listen(
-            'App\Events\UrlManagement\Url\Show\After',
+            'App\Events\UrlManagement\Item\AfterShow',
             'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onAfterShow'
         );
 
         $events->listen(
-            'App\Events\UrlManagement\Url\Create\Before',
+            'App\Events\UrlManagement\Item\BeforeCreate',
             'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onBeforeCreate'
         );
         $events->listen(
-            'App\Events\UrlManagement\Url\Create\After',
+            'App\Events\UrlManagement\Item\AfterCreate',
             'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onAfterCreate'
         );
 
         $events->listen(
-            'App\Events\UrlManagement\Url\Store\Before',
+            'App\Events\UrlManagement\Item\BeforeStore',
             'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onBeforeStore'
         );
         $events->listen(
-            'App\Events\UrlManagement\Url\Store\After',
+            'App\Events\UrlManagement\Item\AfterStore',
             'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onAfterStore'
         );
 
         $events->listen(
-            'App\Events\UrlManagement\Url\Edit\Before',
+            'App\Events\UrlManagement\Item\BeforeEdit',
             'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onBeforeEdit'
         );
         $events->listen(
-            'App\Events\UrlManagement\Url\Edit\After',
+            'App\Events\UrlManagement\Item\AfterEdit',
             'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onAfterEdit'
         );
 
         $events->listen(
-            'App\Events\UrlManagement\Url\Update\Before',
+            'App\Events\UrlManagement\Item\BeforeUpdate',
             'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onBeforeUpdate'
         );
         $events->listen(
-            'App\Events\UrlManagement\Url\Update\After',
+            'App\Events\UrlManagement\Item\AfterUpdate',
             'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onAfterUpdate'
         );
 
         $events->listen(
-            'App\Events\UrlManagement\Url\Destroy\Before',
+            'App\Events\UrlManagement\Item\BeforeDestroy',
             'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onBeforeDestroy'
         );
         $events->listen(
-            'App\Events\UrlManagement\Url\Destroy\After',
+            'App\Events\UrlManagement\Item\AfterDestroy',
             'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onAfterDestroy'
         );
     }

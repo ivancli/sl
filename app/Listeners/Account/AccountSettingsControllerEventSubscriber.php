@@ -1,6 +1,8 @@
 <?php
 namespace App\Listeners\Account;
 
+use App\Jobs\Log\UserActivity;
+
 /**
  * Created by PhpStorm.
  * User: ivan.li
@@ -16,7 +18,8 @@ class AccountSettingsControllerEventSubscriber
 
     public function onAfterIndex()
     {
-
+        $activity = "Visited Account Settings";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
 

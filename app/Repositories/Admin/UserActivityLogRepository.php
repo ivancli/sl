@@ -51,4 +51,17 @@ class UserActivityLogRepository implements UserActivityLogContract
         }
         return $userActivityLogs;
     }
+
+    /**
+     * Create new user activity log
+     * @param array $data
+     * @return mixed
+     */
+    public function store(Array $data = [])
+    {
+        $userActivityLog = new $this->userActivityLog;
+        $userActivityLog->activity = $data['activity'];
+        $userActivityLog->save();
+        return $userActivityLog;
+    }
 }

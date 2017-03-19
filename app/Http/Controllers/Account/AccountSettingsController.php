@@ -1,5 +1,7 @@
 <?php
 namespace App\Http\Controllers\Account;
+use App\Events\Account\AccountSettings\AfterIndex;
+use App\Events\Account\AccountSettings\BeforeIndex;
 use App\Http\Controllers\Controller;
 
 /**
@@ -12,6 +14,8 @@ class AccountSettingsController extends Controller
 {
     public function index()
     {
+        event(new BeforeIndex());
+        event(new AfterIndex());
         return view('app.account_settings.index');
     }
 }

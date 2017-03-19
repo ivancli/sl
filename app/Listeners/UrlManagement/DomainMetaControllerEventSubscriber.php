@@ -9,6 +9,8 @@
 namespace App\Listeners\UrlManagement;
 
 
+use App\Jobs\Log\UserActivity;
+
 class DomainMetaControllerEventSubscriber
 {
 
@@ -60,6 +62,8 @@ class DomainMetaControllerEventSubscriber
     public function onAfterEdit($event)
     {
         $domain = $event->domain;
+        $activity = "Editing Domain {$domain->getKey()}";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function onBeforeUpdate($event)
@@ -70,80 +74,85 @@ class DomainMetaControllerEventSubscriber
     public function onAfterUpdate($event)
     {
         $domain = $event->domain;
+        $activity = "Updated Domain {$domain->getKey()}";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function onBeforeDestroy($event)
     {
         $domain = $event->domain;
+        $activity = "Deleting Domain {$domain->getKey()}";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function onAfterDestroy($event)
     {
-
+        $activity = "Deleted Domain";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function subscribe($events)
     {
         $events->listen(
-            'App\Events\UrlManagement\DomainMeta\Index\Before',
+            'App\Events\UrlManagement\DomainMeta\BeforeIndex',
             'App\Listeners\UrlManagement\DomainMetaControllerEventSubscriber@onBeforeIndex'
         );
         $events->listen(
-            'App\Events\UrlManagement\DomainMeta\Index\After',
+            'App\Events\UrlManagement\DomainMeta\AfterIndex',
             'App\Listeners\UrlManagement\DomainMetaControllerEventSubscriber@onAfterIndex'
         );
 
         $events->listen(
-            'App\Events\UrlManagement\DomainMeta\Show\Before',
+            'App\Events\UrlManagement\DomainMeta\BeforeShow',
             'App\Listeners\UrlManagement\DomainMetaControllerEventSubscriber@onBeforeShow'
         );
         $events->listen(
-            'App\Events\UrlManagement\DomainMeta\Show\After',
+            'App\Events\UrlManagement\DomainMeta\AfterShow',
             'App\Listeners\UrlManagement\DomainMetaControllerEventSubscriber@onAfterShow'
         );
 
         $events->listen(
-            'App\Events\UrlManagement\DomainMeta\Create\Before',
+            'App\Events\UrlManagement\DomainMeta\BeforeCreate',
             'App\Listeners\UrlManagement\DomainMetaControllerEventSubscriber@onBeforeCreate'
         );
         $events->listen(
-            'App\Events\UrlManagement\DomainMeta\Create\After',
+            'App\Events\UrlManagement\DomainMeta\AfterCreate',
             'App\Listeners\UrlManagement\DomainMetaControllerEventSubscriber@onAfterCreate'
         );
 
         $events->listen(
-            'App\Events\UrlManagement\DomainMeta\Store\Before',
+            'App\Events\UrlManagement\DomainMeta\BeforeStore',
             'App\Listeners\UrlManagement\DomainMetaControllerEventSubscriber@onBeforeStore'
         );
         $events->listen(
-            'App\Events\UrlManagement\DomainMeta\Store\After',
+            'App\Events\UrlManagement\DomainMeta\AfterStore',
             'App\Listeners\UrlManagement\DomainMetaControllerEventSubscriber@onAfterStore'
         );
 
         $events->listen(
-            'App\Events\UrlManagement\DomainMeta\Edit\Before',
+            'App\Events\UrlManagement\DomainMeta\BeforeEdit',
             'App\Listeners\UrlManagement\DomainMetaControllerEventSubscriber@onBeforeEdit'
         );
         $events->listen(
-            'App\Events\UrlManagement\DomainMeta\Edit\After',
+            'App\Events\UrlManagement\DomainMeta\AfterEdit',
             'App\Listeners\UrlManagement\DomainMetaControllerEventSubscriber@onAfterEdit'
         );
 
         $events->listen(
-            'App\Events\UrlManagement\DomainMeta\Update\Before',
+            'App\Events\UrlManagement\DomainMeta\BeforeUpdate',
             'App\Listeners\UrlManagement\DomainMetaControllerEventSubscriber@onBeforeUpdate'
         );
         $events->listen(
-            'App\Events\UrlManagement\DomainMeta\Update\After',
+            'App\Events\UrlManagement\DomainMeta\AfterUpdate',
             'App\Listeners\UrlManagement\DomainMetaControllerEventSubscriber@onAfterUpdate'
         );
 
         $events->listen(
-            'App\Events\UrlManagement\DomainMeta\Destroy\Before',
+            'App\Events\UrlManagement\DomainMeta\BeforeDestroy',
             'App\Listeners\UrlManagement\DomainMetaControllerEventSubscriber@onBeforeDestroy'
         );
         $events->listen(
-            'App\Events\UrlManagement\DomainMeta\Destroy\After',
+            'App\Events\UrlManagement\DomainMeta\AfterDestroy',
             'App\Listeners\UrlManagement\DomainMetaControllerEventSubscriber@onAfterDestroy'
         );
     }

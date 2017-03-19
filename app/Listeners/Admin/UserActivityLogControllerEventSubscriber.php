@@ -8,6 +8,8 @@
  */
 namespace App\Listeners\Admin;
 
+use App\Jobs\Log\UserActivity;
+
 class UserActivityLogControllerEventSubscriber
 {
 
@@ -18,7 +20,8 @@ class UserActivityLogControllerEventSubscriber
 
     public function onAfterIndex()
     {
-
+        $activity = "Visited User Activity Logs";
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
     }
 
     public function onBeforeShow()
@@ -84,65 +87,65 @@ class UserActivityLogControllerEventSubscriber
     public function subscribe($events)
     {
         $events->listen(
-            'App\Events\Admin\UserActivityLog\Index\Before',
+            'App\Events\Admin\UserActivityLog\BeforeIndex',
             'App\Listeners\Admin\UserActivityLogControllerEventSubscriber@onBeforeIndex'
         );
         $events->listen(
-            'App\Events\Admin\UserActivityLog\Index\After',
+            'App\Events\Admin\UserActivityLog\AfterIndex',
             'App\Listeners\Admin\UserActivityLogControllerEventSubscriber@onAfterIndex'
         );
 
         $events->listen(
-            'App\Events\Admin\UserActivityLog\Show\Before',
+            'App\Events\Admin\UserActivityLog\BeforeShow',
             'App\Listeners\Admin\UserActivityLogControllerEventSubscriber@onBeforeShow'
         );
         $events->listen(
-            'App\Events\Admin\UserActivityLog\Show\After',
+            'App\Events\Admin\UserActivityLog\AfterShow',
             'App\Listeners\Admin\UserActivityLogControllerEventSubscriber@onAfterShow'
         );
 
         $events->listen(
-            'App\Events\Admin\UserActivityLog\Create\Before',
+            'App\Events\Admin\UserActivityLog\BeforeCreate',
             'App\Listeners\Admin\UserActivityLogControllerEventSubscriber@onBeforeCreate'
         );
         $events->listen(
-            'App\Events\Admin\UserActivityLog\Create\After',
+            'App\Events\Admin\UserActivityLog\AfterCreate',
             'App\Listeners\Admin\UserActivityLogControllerEventSubscriber@onAfterCreate'
         );
 
         $events->listen(
-            'App\Events\Admin\UserActivityLog\Store\Before',
+            'App\Events\Admin\UserActivityLog\BeforeStore',
             'App\Listeners\Admin\UserActivityLogControllerEventSubscriber@onBeforeStore'
         );
         $events->listen(
-            'App\Events\Admin\UserActivityLog\Store\After',
+            'App\Events\Admin\UserActivityLog\AfterStore',
             'App\Listeners\Admin\UserActivityLogControllerEventSubscriber@onAfterStore'
         );
 
         $events->listen(
-            'App\Events\Admin\UserActivityLog\Edit\Before',
+            'App\Events\Admin\UserActivityLog\BeforeEdit',
             'App\Listeners\Admin\UserActivityLogControllerEventSubscriber@onBeforeEdit'
         );
         $events->listen(
-            'App\Events\Admin\UserActivityLog\Edit\After',
+            'App\Events\Admin\UserActivityLog\AfterEdit',
             'App\Listeners\Admin\UserActivityLogControllerEventSubscriber@onAfterEdit'
         );
 
         $events->listen(
-            'App\Events\Admin\UserActivityLog\Update\Before',
+            'App\Events\Admin\UserActivityLog\BeforeUpdate',
             'App\Listeners\Admin\UserActivityLogControllerEventSubscriber@onBeforeUpdate'
         );
         $events->listen(
-            'App\Events\Admin\UserActivityLog\Update\After',
+            'App\Events\Admin\UserActivityLog\AfterUpdate',
             'App\Listeners\Admin\UserActivityLogControllerEventSubscriber@onAfterUpdate'
         );
 
         $events->listen(
-            'App\Events\Admin\UserActivityLog\Destroy\Before',
+            'App\Events\Admin\UserActivityLog\BeforeDestroy',
             'App\Listeners\Admin\UserActivityLogControllerEventSubscriber@onBeforeDestroy'
         );
         $events->listen(
-            'App\Events\Admin\UserActivityLog\Destroy\After',
+            'App\Events\Admin\UserActivityLog\AfterDestroy',
             'App\Listeners\Admin\UserActivityLogControllerEventSubscriber@onAfterDestroy'
         );
     }
