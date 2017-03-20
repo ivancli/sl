@@ -62,11 +62,16 @@ class ItemRepository implements ItemContract
     /**
      * Load an item by item ID
      * @param $item_id
-     * @return mixed
+     * @param bool $throw
+     * @return Item | null
      */
-    public function get($item_id)
+    public function get($item_id, $throw = true)
     {
-        // TODO: Implement get() method.
+        if ($throw) {
+            return $this->item->findOrFail($item_id);
+        } else {
+            return $this->item->find($item_id);
+        }
     }
 
     /**

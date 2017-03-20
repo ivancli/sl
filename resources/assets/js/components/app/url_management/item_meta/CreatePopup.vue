@@ -3,7 +3,7 @@
         <div class="modal-background"></div>
         <div class="modal-card">
             <header class="modal-card-head">
-                <p class="modal-card-title">Create New Item</p>
+                <p class="modal-card-title">Create New Meta</p>
                 <button class="close" @click.prevent="cancelCreate"><span aria-hidden="true">×</span></button>
             </header>
             <section class="modal-card-body">
@@ -21,16 +21,15 @@
                         </div>
                         <form class="form-horizontal" onsubmit="return false;">
                             <div class="form-group">
-                                <label for="txt-item-name" class="control-label col-sm-3">Name</label>
+                                <label for="txt-meta-element" class="control-label col-sm-3">Element</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="txt-item-name" v-model="name">
+                                    <input type="text" class="form-control" id="txt-meta-element" v-model="element">
                                 </div>
                             </div>
-                            <div class="col-sm-offset-3 col-sm-9">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" v-model="is_active"> Is active?
-                                    </label>
+                            <div class="form-group">
+                                <label for="txt-meta-value" class="control-label col-sm-3">Value</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="txt-meta-value" v-model="value">
                                 </div>
                             </div>
                         </form>
@@ -40,13 +39,13 @@
             <footer class="modal-card-foot">
                 <div class="row">
                     <div class="col-sm-12 text-right">
-                        <button class="btn btn-primary btn-flat" @click.prevent="createItem" :disabled="isCreatingItem">CONFIRM</button>
+                        <button class="btn btn-primary btn-flat" @click.prevent="createMeta" :disabled="isCreatingMeta">CONFIRM</button>
                         <button class="btn btn-default btn-flat" @click.prevent="cancelCreate">CANCEL</button>
                     </div>
                 </div>
             </footer>
         </div>
-        <loading v-if="isCreatingItem"></loading>
+        <loading v-if="isCreatingMeta"></loading>
     </div>
 </template>
 
@@ -59,13 +58,13 @@
         },
         props: [
             'is-active',
-            'url',
+            'item',
         ],
         data(){
             return {
-                name: '',
-                is_active: true,
-                isCreatingItem: false,
+                element: '',
+                value: '',
+                isCreatingMeta: false,
                 errors: [],
             }
         },
@@ -73,34 +72,37 @@
             console.info("CreatePopup component mounted.");
         },
         methods: {
-            createItem(){
-                this.isCreatingItem = true;
-                axios.post(this.url.urls.item_store, this.createItemData).then(response => {
-                    this.isCreatingItem = false;
+            createMeta(){
+                this.isCreatingMeta = true;
+                axios.post(this.item.urls.meta_store, this.createMetaData).then(response => {
+                    this.isCreatingMeta = false;
                     if (response.data.status == true) {
                         this.confirmCreate();
                     }
                 }).catch(error => {
-                    this.isCreatingItem = false;
+                    this.isCreatingMeta = false;
                     if (error.response && error.response.status == 422 && error.response.data) {
                         this.errors = error.response.data;
                     }
                 })
             },
             confirmCreate(){
-                this.$emit('created-new-item');
+                this.$emit('created-new-item-meta');
             },
             cancelCreate(){
                 this.$emit('hide-modal');
             }
         },
         computed: {
-            createItemData(){
-                return {
-                    url_id: this.url.id,
-                    name: this.name,
-                    is_active: this.is_active ? 'y' : 'n',
+            createMetaData(){
+                let data = {
+                    item_id: this.item.id,
+                    element: this.element,
+                };
+                if (this.value) {
+                    data.value = this.value;
                 }
+                return data;
             }
         }
     }

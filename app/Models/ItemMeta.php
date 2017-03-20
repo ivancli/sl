@@ -17,6 +17,10 @@ class ItemMeta extends Model
         'element', 'value'
     ];
 
+    protected $appends = [
+        'urls',
+    ];
+
     /**
      * relationship with item
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -33,6 +37,21 @@ class ItemMeta extends Model
     public function confs()
     {
         return $this->hasMany('App\Models\ItemMetaConf', 'item_meta_id', 'id');
+    }
+
+    /*----------------------------------------------------------------------*/
+    /* Attributes                                                           */
+    /*----------------------------------------------------------------------*/
+
+    public function getUrlsAttribute()
+    {
+        return [
+            'show' => route('item-meta.show', $this->getKey()),
+            'store' => route('item-meta.store'),
+            'edit' => route('item-meta.edit', $this->getKey()),
+            'update' => route('item-meta.update', $this->getKey()),
+            'delete' => route('item-meta.destroy', $this->getKey()),
+        ];
     }
 
     /*----------------------------------------------------------------------*/

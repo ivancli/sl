@@ -56,6 +56,8 @@ class Item extends Model
             'edit' => route('item.edit', $this->getKey()),
             'update' => route('item.update', $this->getKey()),
             'delete' => route('item.destroy', $this->getKey()),
+            'meta_index' => route('item-meta.index', ['item_id' => $this->getKey()]),
+            'meta_store' => route('item-meta.store', ['item_id' => $this->getKey()]),
         ];
     }
 

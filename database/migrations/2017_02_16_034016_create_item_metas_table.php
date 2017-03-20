@@ -15,7 +15,7 @@ class CreateItemMetasTable extends Migration
     {
         Schema::create('item_metas', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('item_id')->unsigned();
+            $table->integer('item_id')->unsigned()->nullable();
             $table->foreign('item_id')->references('id')->on('items')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->text('element');

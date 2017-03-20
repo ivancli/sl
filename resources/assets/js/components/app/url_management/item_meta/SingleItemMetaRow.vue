@@ -1,30 +1,30 @@
 <template>
     <tr>
-        <td v-text="item.id"></td>
-        <td v-text="item.name"></td>
-        <td v-text="item.is_active"></td>
-        <td>{{ item.created_at | formatDateTime(datetimeFormat) }}</td>
-        <td>{{ item.updated_at | formatDateTime(datetimeFormat) }}</td>
+        <td v-text="itemMeta.id"></td>
+        <td v-text="itemMeta.element"></td>
+        <td v-text="itemMeta.value"></td>
+        <td>{{ itemMeta.created_at | formatDateTime(datetimeFormat) }}</td>
+        <td>{{ itemMeta.updated_at | formatDateTime(datetimeFormat) }}</td>
         <td class="text-center">
-            <a :href="item.urls.show" class="text-muted" title="view">
+            <a :href="itemMeta.urls.show" class="text-muted" title="view">
                 <i class="glyphicon glyphicon-search"></i>
             </a>
             &nbsp;
-            <a href="#" class="text-muted" title="edit" @click.prevent="onClickEditItem">
+            <a href="#" class="text-muted" title="edit" @click.prevent="onClickEditItemMeta">
                 <i class="glyphicon glyphicon-pencil"></i>
             </a>
             &nbsp;
-            <a :href="item.urls.meta_index" class="text-muted" title="edit meta">
+            <a :href="item.urls.item_meta_index" class="text-muted" title="edit meta">
                 <i class="glyphicon glyphicon-qrcode"></i>
             </a>
             &nbsp;
-            <a href="#" class="text-danger" @click.prevent="onClickDeleteItem" title="delete">
+            <a href="#" class="text-danger" @click.prevent="onClickDeleteItemMeta" title="delete">
                 <i class="glyphicon glyphicon-trash"></i>
             </a>
         </td>
-        <edit-popup :is-active="isEditingItem" :item="item" @hide-modal="hideEditPopup" @updated-item="updatedItem"></edit-popup>
+        <edit-popup :is-active="isEditingItemMeta" :itemMeta="itemMeta" @hide-modal="hideEditPopup" @updated-item-meta="updatedItemMeta"></edit-popup>
         <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
-        <loading v-if="isDeletingItem"></loading>
+        <loading v-if="isDeletingItemMeta"></loading>
     </tr>
 </template>
 
@@ -37,6 +37,7 @@
     import formatDateTime from '../../../../filters/formatDateTime';
 
     export default{
+
         components: {
             editPopup,
             deleteConfirmation,
@@ -45,27 +46,27 @@
         data(){
             return {
                 deleteParams: {
-                    title: 'item',
+                    title: 'item meta',
                     list: [
-                        'All historic prices associated with this item',
-                        'All meta data associated with this item',
+                        'All configuration associated with this meta',
+                        'All historical prices associated with this meta',
                     ],
                     active: false
                 },
-                isDeletingItem: false,
-                isEditingItem: false,
+                isDeletingItemMeta: false,
+                isEditingItemMeta: false,
             }
         },
         props: [
-            'current-item',
-            'url'
+            'current-item-meta',
+            'item'
         ],
         mounted(){
-            console.info('SingleItemRow component mounted.');
+            console.info('SingleItemMetaRow component mounted.');
         },
         computed: {
-            item(){
-                return this.currentItem;
+            itemMeta(){
+                return this.currentItemMeta;
             },
             dateFormat(){
                 return user.allPreferences.DATE_FORMAT;
@@ -78,17 +79,17 @@
             },
         },
         methods: {
-            onClickEditItem(){
-                this.isEditingItem = true;
+            onClickEditItemMeta(){
+                this.isEditingItemMeta = true;
             },
             hideEditPopup(){
-                this.isEditingItem = false;
+                this.isEditingItemMeta = false;
             },
-            updatedItem(){
-                this.$emit('reloadItems');
+            updatedItemMeta(){
+                this.$emit('reloadItemMetas');
                 this.hideEditPopup();
             },
-            onClickDeleteItem(){
+            onClickDeleteItemMeta(){
                 this.deleteParams.active = true;
             },
             cancelDelete(){
@@ -96,17 +97,17 @@
             },
             confirmDelete(){
                 this.deleteParams.active = false;
-                this.deleteItem()
+                this.deleteItemMeta()
             },
-            deleteItem(){
-                this.isDeletingItem = true;
-                axios.delete(this.item.urls.delete).then(response => {
-                    this.isDeletingItem = false;
+            deleteItemMeta(){
+                this.isDeletingItemMeta = true;
+                axios.delete(this.itemMeta.urls.delete).then(response => {
+                    this.isDeletingItemMeta = false;
                     if (response.data.status == true) {
-                        this.$emit('reloadItems');
+                        this.$emit('reloadItemMetas');
                     }
                 }).catch(error => {
-                    this.isDeletingItem = false;
+                    this.isDeletingItemMeta = false;
                 })
             }
         }

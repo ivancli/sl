@@ -99,65 +99,65 @@ class ItemControllerEventSubscriber
     {
         $events->listen(
             'App\Events\UrlManagement\Item\BeforeIndex',
-            'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onBeforeIndex'
+            'App\Listeners\UrlManagement\ItemControllerEventSubscriber@onBeforeIndex'
         );
         $events->listen(
             'App\Events\UrlManagement\Item\AfterIndex',
-            'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onAfterIndex'
+            'App\Listeners\UrlManagement\ItemControllerEventSubscriber@onAfterIndex'
         );
 
         $events->listen(
             'App\Events\UrlManagement\Item\BeforeShow',
-            'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onBeforeShow'
+            'App\Listeners\UrlManagement\ItemControllerEventSubscriber@onBeforeShow'
         );
         $events->listen(
             'App\Events\UrlManagement\Item\AfterShow',
-            'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onAfterShow'
+            'App\Listeners\UrlManagement\ItemControllerEventSubscriber@onAfterShow'
         );
 
         $events->listen(
             'App\Events\UrlManagement\Item\BeforeCreate',
-            'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onBeforeCreate'
+            'App\Listeners\UrlManagement\ItemControllerEventSubscriber@onBeforeCreate'
         );
         $events->listen(
             'App\Events\UrlManagement\Item\AfterCreate',
-            'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onAfterCreate'
+            'App\Listeners\UrlManagement\ItemControllerEventSubscriber@onAfterCreate'
         );
 
         $events->listen(
             'App\Events\UrlManagement\Item\BeforeStore',
-            'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onBeforeStore'
+            'App\Listeners\UrlManagement\ItemControllerEventSubscriber@onBeforeStore'
         );
         $events->listen(
             'App\Events\UrlManagement\Item\AfterStore',
-            'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onAfterStore'
+            'App\Listeners\UrlManagement\ItemControllerEventSubscriber@onAfterStore'
         );
 
         $events->listen(
             'App\Events\UrlManagement\Item\BeforeEdit',
-            'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onBeforeEdit'
+            'App\Listeners\UrlManagement\ItemControllerEventSubscriber@onBeforeEdit'
         );
         $events->listen(
             'App\Events\UrlManagement\Item\AfterEdit',
-            'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onAfterEdit'
+            'App\Listeners\UrlManagement\ItemControllerEventSubscriber@onAfterEdit'
         );
 
         $events->listen(
             'App\Events\UrlManagement\Item\BeforeUpdate',
-            'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onBeforeUpdate'
+            'App\Listeners\UrlManagement\ItemControllerEventSubscriber@onBeforeUpdate'
         );
         $events->listen(
             'App\Events\UrlManagement\Item\AfterUpdate',
-            'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onAfterUpdate'
+            'App\Listeners\UrlManagement\ItemControllerEventSubscriber@onAfterUpdate'
         );
 
         $events->listen(
             'App\Events\UrlManagement\Item\BeforeDestroy',
-            'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onBeforeDestroy'
+            'App\Listeners\UrlManagement\ItemControllerEventSubscriber@onBeforeDestroy'
         );
         $events->listen(
             'App\Events\UrlManagement\Item\AfterDestroy',
-            'App\Listeners\UrlManagement\UrlControllerEventSubscriber@onAfterDestroy'
+            'App\Listeners\UrlManagement\ItemControllerEventSubscriber@onAfterDestroy'
         );
     }
 }

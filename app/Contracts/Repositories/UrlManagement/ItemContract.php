@@ -24,9 +24,10 @@ interface ItemContract
     /**
      * Load an item by item ID
      * @param $item_id
-     * @return mixed
+     * @param bool $throw
+     * @return Item | null
      */
-    public function get($item_id);
+    public function get($item_id, $throw = true);
 
     /**
      * Create a new item

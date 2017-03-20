@@ -123,6 +123,22 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\UrlManagement\Item\BeforeDestroy' => [],
         'App\Events\UrlManagement\Item\AfterDestroy' => [],
 
+        /* item meta */
+        'App\Events\UrlManagement\ItemMeta\BeforeIndex' => [],
+        'App\Events\UrlManagement\ItemMeta\AfterIndex' => [],
+        'App\Events\UrlManagement\ItemMeta\BeforeShow' => [],
+        'App\Events\UrlManagement\ItemMeta\AfterShow' => [],
+        'App\Events\UrlManagement\ItemMeta\BeforeCreate' => [],
+        'App\Events\UrlManagement\ItemMeta\AfterCreate' => [],
+        'App\Events\UrlManagement\ItemMeta\BeforeStore' => [],
+        'App\Events\UrlManagement\ItemMeta\AfterStore' => [],
+        'App\Events\UrlManagement\ItemMeta\BeforeEdit' => [],
+        'App\Events\UrlManagement\ItemMeta\AfterEdit' => [],
+        'App\Events\UrlManagement\ItemMeta\BeforeUpdate' => [],
+        'App\Events\UrlManagement\ItemMeta\AfterUpdate' => [],
+        'App\Events\UrlManagement\ItemMeta\BeforeDestroy' => [],
+        'App\Events\UrlManagement\ItemMeta\AfterDestroy' => [],
+
         /* url */
         'App\Events\UrlManagement\Url\BeforeIndex' => [],
         'App\Events\UrlManagement\Url\AfterIndex' => [],
@@ -246,6 +262,7 @@ class EventServiceProvider extends ServiceProvider
         'App\Listeners\UrlManagement\DomainControllerEventSubscriber',
         'App\Listeners\UrlManagement\DomainMetaControllerEventSubscriber',
         'App\Listeners\UrlManagement\ItemControllerEventSubscriber',
+        'App\Listeners\UrlManagement\ItemMetaControllerEventSubscriber',
         'App\Listeners\UrlManagement\UrlControllerEventSubscriber',
 
         /*auth*/

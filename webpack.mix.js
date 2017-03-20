@@ -47,6 +47,9 @@ mix
     /* item */
     .js('resources/assets/js/app/url_management/item/index.js', 'public/js/app/item')
 
+    /* item meta */
+    .js('resources/assets/js/app/url_management/item_meta/index.js', 'public/js/app/item_meta')
+
     /* url */
     .js('resources/assets/js/app/url_management/url/index.js', 'public/js/app/url')
     .js('resources/assets/js/app/url_management/url/edit.js', 'public/js/app/url')

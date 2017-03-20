@@ -10,6 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login.get');
 Route::post('login', 'Auth\LoginController@login')->name('login.post');
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register.get');
@@ -55,10 +56,19 @@ Route::group(['middleware' => ['auth', 'subs']], function () {
     Route::resource('log/user-activity-log', 'Admin\UserActivityLogController');
 
     Route::resource('url-management/domain', 'UrlManagement\DomainController');
-    Route::resource('url-management/domain-meta', 'UrlManagement\DomainMetaController');
+    Route::resource('url-management/domain-meta', 'UrlManagement\DomainMetaController', [
+        'parameters' => [
+            'domain-meta' => 'domainMeta'
+        ]
+    ]);
     Route::resource('url-management/domain-conf', 'UrlManagement\DomainConfController');
     Route::resource('url-management/url', 'UrlManagement\UrlController');
     Route::resource('url-management/item', 'UrlManagement\ItemController');
+    Route::resource('url-management/item-meta', 'UrlManagement\ItemMetaController', [
+        'parameters' => [
+            'item-meta' => 'itemMeta'
+        ]
+    ]);
 
     /*user management*/
     Route::resource('user-management/user', 'UserManagement\UserController');
@@ -86,3 +96,4 @@ Route::group(['prefix' => 'errors'], function () {
         return view('errors.cookie_disabled');
     })->name('errors.cookie_disabled');
 });
+
