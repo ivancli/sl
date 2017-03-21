@@ -69,6 +69,7 @@ Route::group(['middleware' => ['auth', 'subs']], function () {
             'item-meta' => 'itemMeta'
         ]
     ]);
+    Route::resource('url-management/item-meta-conf', 'UrlManagement\ItemMetaConfController');
 
     /*user management*/
     Route::resource('user-management/user', 'UserManagement\UserController');

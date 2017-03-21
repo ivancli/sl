@@ -60,6 +60,21 @@ class ItemMetaRepository implements ItemMetaContract
     }
 
     /**
+     * Load an item meta by id
+     * @param $item_meta_id
+     * @param bool $throw
+     * @return mixed
+     */
+    public function get($item_meta_id, $throw = true)
+    {
+        if ($throw) {
+            return $this->itemMeta->findOrFail($item_meta_id);
+        } else {
+            return $this->itemMeta->find($item_meta_id);
+        }
+    }
+
+    /**
      * Create new item meta
      * @param array $data
      * @return ItemMeta

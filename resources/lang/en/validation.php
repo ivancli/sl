@@ -135,7 +135,13 @@ return [
         ],
         'metas.*.type' => [
             'required' => 'Each meta\'s type is required',
-        ]
+        ],
+        'confs.*.element' => [
+            'required' => 'Each configuration\'s element is required',
+        ],
+        'confs.*.value' => [
+            'required' => 'Each configuration\'s value is required',
+        ],
     ],
 
     /*

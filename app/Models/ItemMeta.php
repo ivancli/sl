@@ -17,6 +17,10 @@ class ItemMeta extends Model
         'element', 'value'
     ];
 
+    protected $with = [
+        'confs'
+    ];
+
     protected $appends = [
         'urls',
     ];
@@ -51,6 +55,8 @@ class ItemMeta extends Model
             'edit' => route('item-meta.edit', $this->getKey()),
             'update' => route('item-meta.update', $this->getKey()),
             'delete' => route('item-meta.destroy', $this->getKey()),
+            'conf_index' => route('item-meta-conf.index', ['item_meta_id' => $this->getKey()]),
+            'conf_store' => route('item-meta-conf.store', ['item_meta_id' => $this->getKey()]),
         ];
     }
 

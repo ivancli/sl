@@ -14,15 +14,16 @@
                 <i class="glyphicon glyphicon-pencil"></i>
             </a>
             &nbsp;
-            <a :href="item.urls.item_meta_index" class="text-muted" title="edit meta">
-                <i class="glyphicon glyphicon-qrcode"></i>
+            <a href="#" class="text-muted" title="edit configurations" @click.prevent="onClickEditItemMetaConfs">
+                <i class="glyphicon glyphicon-cog"></i>
             </a>
             &nbsp;
             <a href="#" class="text-danger" @click.prevent="onClickDeleteItemMeta" title="delete">
                 <i class="glyphicon glyphicon-trash"></i>
             </a>
         </td>
-        <edit-popup :is-active="isEditingItemMeta" :itemMeta="itemMeta" @hide-modal="hideEditPopup" @updated-item-meta="updatedItemMeta"></edit-popup>
+        <edit-popup :is-active="isEditingItemMeta" :item-meta="itemMeta" @hide-modal="hideEditPopup" @updated-item-meta="updatedItemMeta"></edit-popup>
+        <edit-confs-popup :is-active="isEditingItemMetaConfs" :item-meta="itemMeta" @hide-modal="hideEditItemMetaConfsPopup" @updated-item-meta-confs="updatedItemMetaConfs"></edit-confs-popup>
         <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
         <loading v-if="isDeletingItemMeta"></loading>
     </tr>
@@ -30,6 +31,7 @@
 
 <script>
     import editPopup from './EditPopup.vue';
+    import editConfsPopup from '../item_meta_conf/EditPopup.vue';
 
     import deleteConfirmation from '../../../fragments/modals/DeleteConfirmation.vue';
     import loading from '../../../Loading.vue';
@@ -37,9 +39,9 @@
     import formatDateTime from '../../../../filters/formatDateTime';
 
     export default{
-
         components: {
             editPopup,
+            editConfsPopup,
             deleteConfirmation,
             loading,
         },
@@ -55,6 +57,7 @@
                 },
                 isDeletingItemMeta: false,
                 isEditingItemMeta: false,
+                isEditingItemMetaConfs: false,
             }
         },
         props: [
@@ -88,6 +91,15 @@
             updatedItemMeta(){
                 this.$emit('reloadItemMetas');
                 this.hideEditPopup();
+            },
+            onClickEditItemMetaConfs(){
+                this.isEditingItemMetaConfs = true;
+            },
+            hideEditItemMetaConfsPopup(){
+                this.isEditingItemMetaConfs = false;
+            },
+            updatedItemMetaConfs(){
+                /*TODO see what needs to be notified*/
             },
             onClickDeleteItemMeta(){
                 this.deleteParams.active = true;
