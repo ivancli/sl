@@ -99,7 +99,7 @@
                 this.isEditingItemMetaConfs = false;
             },
             updatedItemMetaConfs(){
-                /*TODO see what needs to be notified*/
+                this.hideEditItemMetaConfsPopup();
             },
             onClickDeleteItemMeta(){
                 this.deleteParams.active = true;

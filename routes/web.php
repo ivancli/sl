@@ -98,3 +98,6 @@ Route::group(['prefix' => 'errors'], function () {
     })->name('errors.cookie_disabled');
 });
 
+
+
+Route::any('test', 'TestController@test');
