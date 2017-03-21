@@ -33,22 +33,24 @@ class TestController extends Controller
     {
         $url = $this->urlRepo->get(2);
 
-        $url->items->each(function ($item) {
-            $item->metas->each(function ($meta) {
-                $meta->confs->each(function () {
-
-                });
-            });
-        });
 
         /* TODO fetch */
         $content = $this->crawlerRepo->fetch($url->crawler);
 
-        /* TODO parse for each item */
-        $result = $this->parserRepo->extract($content, [
-            "xpath" => "//*[@class='price-now']"
-        ]);
+        foreach ($url->items as $item) {
+            foreach ($item->metas as $meta) {
+                foreach ($meta->confs as $conf) {
+                    if ($conf->element == 'XPATH') {
+                        /* TODO parse for each item */
+                        $result = $this->parserRepo->extract($content, [
+                            "xpath" => $conf->value
+                        ]);
+                        dump($result);
+                    }
+                }
+            }
+        }
 
-        dd($result);
+        dd("called");
     }
 }
