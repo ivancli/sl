@@ -86,4 +86,14 @@ class ItemMeta extends Model
         ]);
         return $conf;
     }
+
+    /**
+     * Load configuration by element
+     * @param $element
+     * @return mixed
+     */
+    public function getConfs($element)
+    {
+        return $this->confs()->where('element', $element)->get();
+    }
 }

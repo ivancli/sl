@@ -9,6 +9,8 @@
 namespace App\Contracts\Repositories\UrlManagement;
 
 
+use App\Models\ItemMeta;
+
 interface ParserContract
 {
     /**
@@ -19,4 +21,13 @@ interface ParserContract
      * @return mixed
      */
     public function extract($content, $options = [], $parserClassName = null);
+
+    /**
+     * Parse an item meta with its configuration
+     * @param ItemMeta $itemMeta
+     * @param $content
+     * @param bool $save
+     * @return mixed
+     */
+    public function parseMeta(ItemMeta $itemMeta, $content, $save = false);
 }

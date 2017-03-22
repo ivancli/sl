@@ -92,12 +92,13 @@ class Crawl extends Command
     }
 
     /**
-     * @param Crawler $crawler
+     * @param Url $url
      */
-    protected function pushToQueue(Crawler $crawler)
+    protected function pushToQueue(Url $url)
     {
         $delay = rand(config('crawl.delay.min'), config('crawl.delay.max'));
-        dispatch((new CrawlJob($crawler))->onQueue("crawl")->delay($delay));
+        dispatch((new CrawlJob($url))->onQueue("crawl")->delay($delay));
+        $crawler = $url->crawler;
         $crawler->statusQueuing();
     }
 }

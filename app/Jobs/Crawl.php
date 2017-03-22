@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Contracts\Repositories\UrlManagement\CrawlerContract;
 use App\Contracts\Repositories\UrlManagement\ParserContract;
 use App\Models\Crawler;
+use App\Models\Url;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -15,16 +16,16 @@ class Crawl implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $crawler;
+    protected $url;
 
     /**
      * Create a new job instance.
      *
-     * @param Crawler $crawler
+     * @param Url $url
      */
-    public function __construct(Crawler $crawler)
+    public function __construct(Url $url)
     {
-        $this->crawler = $crawler;
+        $this->url = $url;
     }
 
     /**
@@ -35,14 +36,24 @@ class Crawl implements ShouldQueue
      */
     public function handle(CrawlerContract $crawlerRepo, ParserContract $parserRepo)
     {
+        $crawler = $this->url->crawler;
+
         /* TODO fetch */
-        $content = $crawlerRepo->fetch($this->crawler);
+        $content = $crawlerRepo->fetch($crawler);
 
         /* TODO parse for each item */
-        $result = $parserRepo->extract($content, [
-            "xpath" => "//*[@class='price-now']"
-        ]);
+        $items = $this->url->items;
 
+//        $result = $parserRepo->extract($content, [
+//            "xpath" => "//*[@class='price-now']"
+//        ]);
+
+        foreach($items as $item){
+            foreach($item->metas as $meta){
+                $result = $parserRepo->parseMeta($meta, $content);
+                dump($result);
+            }
+        }
         dd($result);
     }
 }
