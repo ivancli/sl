@@ -17,15 +17,18 @@ class Crawl implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $url;
+    protected $test;
 
     /**
      * Create a new job instance.
      *
      * @param Url $url
+     * @param bool $test
      */
-    public function __construct(Url $url)
+    public function __construct(Url $url, bool $test)
     {
         $this->url = $url;
+        $this->test = $test;
     }
 
     /**
@@ -47,13 +50,21 @@ class Crawl implements ShouldQueue
 //        $result = $parserRepo->extract($content, [
 //            "xpath" => "//*[@class='price-now']"
 //        ]);
-
-        foreach($items as $item){
-            foreach($item->metas as $meta){
-                $result = $parserRepo->parseMeta($meta, $content);
-                dump($result);
+        foreach ($items as $item) {
+            if ($this->test) {
+                dump("Item {$item->getKey()} - {$item->name}:");
+            }
+            foreach ($item->metas as $meta) {
+                $parserResult = $parserRepo->parseMeta($meta, $content);
+                if ($this->test) {
+                    dump("Meta {$meta->element}:");
+                    dump($parserResult);
+                } else {
+                    /*TODO save data to meta data and historical prices*/
+                }
             }
         }
-        dd($result);
+
+        dd("End of Crawl");
     }
 }

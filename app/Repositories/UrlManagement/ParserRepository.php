@@ -63,7 +63,10 @@ class ParserRepository implements ParserContract
                 "xpath" => $xpathConf->value,
             ]);
             $parserClass->extract();
-            $extractions[] = $parserClass->getExtractions();
+            $extractions[] = [
+                'conf' => $xpathConf->value,
+                'result' => $parserClass->getExtractions()
+            ];
         }
         return $extractions;
     }

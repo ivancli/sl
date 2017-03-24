@@ -16,7 +16,7 @@ class Crawl extends Command
      *
      * @var string
      */
-    protected $signature = 'crawl {url_id?} {--active}';
+    protected $signature = 'crawl {url_id?} {--active} {--test}';
     /**
      * The console command description.
      *
@@ -51,7 +51,7 @@ class Crawl extends Command
             if ($this->validate($url)) {
                 // make sure the URL has corresponding crawler in DB
                 if (!is_null($crawler = $url->crawler)) {
-                    $this->pushToQueue($crawler);
+                    $this->pushToQueue($url);
                     $this->info("URL-{$url->getKey()} {$url->domainFullPath} has been pushed to queue.");
                 } else {
                     $this->error("URL-{$url->getKey()} {$url->domainFullPath} does not have a crawler in DB.");
@@ -97,7 +97,7 @@ class Crawl extends Command
     protected function pushToQueue(Url $url)
     {
         $delay = rand(config('crawl.delay.min'), config('crawl.delay.max'));
-        dispatch((new CrawlJob($url))->onQueue("crawl")->delay($delay));
+        dispatch((new CrawlJob($url, $this->option('test')))->onQueue("crawl")->delay($delay));
         $crawler = $url->crawler;
         $crawler->statusQueuing();
     }
