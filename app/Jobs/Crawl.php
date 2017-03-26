@@ -59,8 +59,53 @@ class Crawl implements ShouldQueue
                 if ($this->test) {
                     dump("Meta {$meta->element}:");
                     dump($parserResult);
+
+
+                    if ($parserResult !== false && is_array($parserResult) && count($parserResult) > 0) {
+                        $firstConf = array_first($parserResult);
+                        $firstConfResult = array_get($firstConf, 'result');
+                        if (!is_null($firstConfResult) && is_array($firstConfResult)) {
+                            $firstResult = array_first($firstConfResult);
+                            if (!is_null($firstResult) && is_array($firstResult)) {
+                                $resultFirstPart = array_first($firstResult);
+                                if (!is_null($resultFirstPart)) {
+                                    $resultFirstPart = $parserRepo->formatMetaValue([
+                                        'strip_text', 'currency'
+                                    ], $resultFirstPart);
+                                    if (!empty($resultFirstPart)) {
+                                        $meta->value = $resultFirstPart;
+                                        $meta->save();
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        /* parser has no result*/
+                    }
                 } else {
                     /*TODO save data to meta data and historical prices*/
+                    if ($parserResult !== false && is_array($parserResult) && count($parserResult) > 0) {
+                        $firstConf = array_first($parserResult);
+                        $firstConfResult = array_get($firstConf, 'result');
+                        if (!is_null($firstConfResult) && is_array($firstConfResult)) {
+                            $firstResult = array_first($firstConfResult);
+                            if (!is_null($firstResult) && is_array($firstResult)) {
+                                $resultFirstPart = array_first($firstResult);
+                                if (!is_null($resultFirstPart)) {
+                                    $resultFirstPart = $parserRepo->formatMetaValue([
+                                        'strip_text', 'currency'
+                                    ], $resultFirstPart);
+                                    if (!empty($resultFirstPart)) {
+                                        $meta->value = $resultFirstPart;
+                                        dump($meta->value);
+                                        $meta->save();
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        /* parser has no result*/
+                    }
                 }
             }
         }

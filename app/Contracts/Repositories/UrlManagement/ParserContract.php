@@ -30,4 +30,12 @@ interface ParserContract
      * @return mixed
      */
     public function parseMeta(ItemMeta $itemMeta, $content, $save = false);
+
+    /**
+     * format the provided value as per provided type
+     * @param $types
+     * @param $value
+     * @return mixed
+     */
+    public function formatMetaValue($types, $value);
 }
