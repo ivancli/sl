@@ -60,7 +60,6 @@ class Crawl implements ShouldQueue
                     dump("Meta {$meta->element}:");
                     dump($parserResult);
 
-
                     if ($parserResult !== false && is_array($parserResult) && count($parserResult) > 0) {
                         $firstConf = array_first($parserResult);
                         $firstConfResult = array_get($firstConf, 'result');
@@ -83,6 +82,7 @@ class Crawl implements ShouldQueue
                         /* parser has no result*/
                     }
                 } else {
+
                     /*TODO save data to meta data and historical prices*/
                     if ($parserResult !== false && is_array($parserResult) && count($parserResult) > 0) {
                         $firstConf = array_first($parserResult);
@@ -97,7 +97,6 @@ class Crawl implements ShouldQueue
                                     ], $resultFirstPart);
                                     if (!empty($resultFirstPart)) {
                                         $meta->value = $resultFirstPart;
-                                        dump($meta->value);
                                         $meta->save();
                                     }
                                 }

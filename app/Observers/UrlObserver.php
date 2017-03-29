@@ -47,15 +47,21 @@ class UrlObserver
         /* TODO if not, find price meta*/
         /* CREATE AN ITEM */
         $item = $url->items()->save(new Item);
-        /* REPLICATE DOMAIN META IN URL ITEM META*/
-        foreach ($url->domain->metas as $domainMeta) {
-            $itemMeta = $item->setMeta($domainMeta->name, null);
-            foreach ($domainMeta->confs as $domainMetaConf) {
-                $itemMeta->setConf($domainMetaConf->element, $domainMetaConf->value);
+
+        $domain = $url->domain;
+        if ($domain->metas->count() > 0) {
+            /* REPLICATE DOMAIN META IN URL ITEM META*/
+            foreach ($url->domain->metas as $domainMeta) {
+                $itemMeta = $item->setMeta($domainMeta->name, null);
+                foreach ($domainMeta->confs as $domainMetaConf) {
+                    $itemMeta->setConf($domainMetaConf->element, $domainMetaConf->value);
+                }
             }
+        } else {
+            /* price */
+            $priceMeta = $item->setMeta('PRICE', null);
+            $availabilityMeta = $item->setMeta('AVAILABILITY', null);
         }
-
-
         /* TODO check common crawler configuration */
 
     }

@@ -82,12 +82,10 @@ class ParserRepository implements ParserContract
         if (is_array($types)) {
             foreach ($types as $type) {
                 $value = $this->__formatMetaValue($type, $value);
-                dump("called");
             }
         } else {
             $value = $this->__formatMetaValue($types, $value);
         }
-        dump($value);
         return $value;
     }
 
@@ -104,11 +102,11 @@ class ParserRepository implements ParserContract
                 /*TODO remove words*/
                 $value = preg_replace('#[^0-9,.]#', '', $value);
                 /*TODO validate number format*/
-                if (preg_grep('#(?=.)^\$?(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+)?(\.[0-9]{1,2})?$#', $value)) {
+                if (preg_match('#(?=.)^\$?(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+)?(\.[0-9]{1,2})?$#', $value)) {
                     /* international format*/
                     /* remove , */
                     $value = str_replace(',', '', $value);
-                } elseif (preg_grep('#(?=.)^\$?(([1-9][0-9]{0,2}(.[0-9]{3})*)|[0-9]+)?(\,[0-9]{1,2})?$#', $value)) {
+                } elseif (preg_match('#(?=.)^\$?(([1-9][0-9]{0,2}(.[0-9]{3})*)|[0-9]+)?(\,[0-9]{1,2})?$#', $value)) {
                     /* money format for Brazil, Denmark, Germany, Greece, Indonesia, Italy, Netherlands, Portugal, Romania, Russia, Slovenia, Sweden and much of Europe*/
                     /* remove . */
                     $value = str_replace('.', '', $value);

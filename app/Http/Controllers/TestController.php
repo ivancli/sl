@@ -31,26 +31,49 @@ class TestController extends Controller
 
     public function test()
     {
-        $url = $this->urlRepo->get(2);
+        $url = $this->urlRepo->get(4);
 
+
+        $crawler = $url->crawler;
 
         /* TODO fetch */
-        $content = $this->crawlerRepo->fetch($url->crawler);
+        $content = $this->crawlerRepo->fetch($crawler);
 
-        foreach ($url->items as $item) {
+        /*TODO check if content==false*/
+
+        /* TODO parse for each item */
+        $items = $url->items;
+//        $result = $parserRepo->extract($content, [
+//            "xpath" => "//*[@class='price-now']"
+//        ]);
+        foreach ($items as $item) {
             foreach ($item->metas as $meta) {
-                foreach ($meta->confs as $conf) {
-                    if ($conf->element == 'XPATH') {
-                        /* TODO parse for each item */
-                        $result = $this->parserRepo->extract($content, [
-                            "xpath" => $conf->value
-                        ]);
-                        dump($result);
+                $parserResult = $this->parserRepo->parseMeta($meta, $content);
+                /*TODO save data to meta data and historical prices*/
+                if ($parserResult !== false && is_array($parserResult) && count($parserResult) > 0) {
+                    $firstConf = array_first($parserResult);
+                    $firstConfResult = array_get($firstConf, 'result');
+                    if (!is_null($firstConfResult) && is_array($firstConfResult)) {
+                        $firstResult = array_first($firstConfResult);
+                        if (!is_null($firstResult) && is_array($firstResult)) {
+                            $resultFirstPart = array_first($firstResult);
+                            if (!is_null($resultFirstPart)) {
+                                $resultFirstPart = $this->parserRepo->formatMetaValue([
+                                    'strip_text', 'currency'
+                                ], $resultFirstPart);
+                                if (!empty($resultFirstPart)) {
+                                    $meta->value = $resultFirstPart;
+                                    $meta->save();
+                                }
+                            }
+                        }
                     }
+                } else {
+                    /* parser has no result*/
                 }
             }
         }
 
-        dd("called");
+        dd("End of Crawl");
     }
 }
