@@ -53,6 +53,7 @@ class CrawlerRepository implements CrawlerContract
         $crawlerClass = app()->make("{$crawlerClassPath}$crawlerClassName");
         $crawlerClass->setURL($crawler->url->full_path);
         $crawlerClass->fetch();
+
         $content = $crawlerClass->getContent();
         return $content;
     }

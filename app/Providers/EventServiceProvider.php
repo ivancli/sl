@@ -239,6 +239,13 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\UserManagement\Permission\AfterDestroy' => [],
 
         /**
+         * Jobs
+         */
+        'App\Events\Jobs\Crawl\BeforeFetch' => [],
+        'App\Events\Jobs\Crawl\AfterFetch' => [],
+
+
+        /**
          * Admin
          */
         /* user activity log */

@@ -32,6 +32,16 @@
                                     <input type="text" class="form-control" id="txt-meta-value" v-model="value">
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label for="sel-historical-type" class="control-label col-sm-3">Historical Type</label>
+                                <div class="col-sm-9">
+                                    <select id="sel-historical-type" class="form-control" v-model="historical_type">
+                                        <option value="">None</option>
+                                        <option value="price">Price</option>
+                                        <!--TODO more will be coming such as stock, colour and size etc-->
+                                    </select>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>

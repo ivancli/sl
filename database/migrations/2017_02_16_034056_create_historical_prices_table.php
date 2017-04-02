@@ -15,8 +15,8 @@ class CreateHistoricalPricesTable extends Migration
     {
         Schema::create('historical_prices', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('item_id')->unsigned()->nullable();
-            $table->foreign('item_id')->references('id')->on('items')
+            $table->integer('item_meta_id')->unsigned()->nullable();
+            $table->foreign('item_meta_id')->references('id')->on('item_metas')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->decimal('amount');
             $table->timestamps();

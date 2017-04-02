@@ -31,21 +31,18 @@ class TestController extends Controller
 
     public function test()
     {
-        $url = $this->urlRepo->get(4);
+        $url = $this->urlRepo->get(1);
 
 
         $crawler = $url->crawler;
 
         /* TODO fetch */
         $content = $this->crawlerRepo->fetch($crawler);
-
+        dd($content);
         /*TODO check if content==false*/
 
         /* TODO parse for each item */
         $items = $url->items;
-//        $result = $parserRepo->extract($content, [
-//            "xpath" => "//*[@class='price-now']"
-//        ]);
         foreach ($items as $item) {
             foreach ($item->metas as $meta) {
                 $parserResult = $this->parserRepo->parseMeta($meta, $content);

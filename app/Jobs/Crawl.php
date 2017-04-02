@@ -41,15 +41,12 @@ class Crawl implements ShouldQueue
     {
         $crawler = $this->url->crawler;
 
-        /* TODO fetch */
+        /* fetch */
         $content = $crawlerRepo->fetch($crawler);
 
         /* TODO parse for each item */
         $items = $this->url->items;
 
-//        $result = $parserRepo->extract($content, [
-//            "xpath" => "//*[@class='price-now']"
-//        ]);
         foreach ($items as $item) {
             if ($this->test) {
                 dump("Item {$item->getKey()} - {$item->name}:");
@@ -58,8 +55,6 @@ class Crawl implements ShouldQueue
                 $parserResult = $parserRepo->parseMeta($meta, $content);
                 if ($this->test) {
                     dump("Meta {$meta->element}:");
-                    dump($parserResult);
-
                     if ($parserResult !== false && is_array($parserResult) && count($parserResult) > 0) {
                         $firstConf = array_first($parserResult);
                         $firstConfResult = array_get($firstConf, 'result');
@@ -72,17 +67,16 @@ class Crawl implements ShouldQueue
                                         'strip_text', 'currency'
                                     ], $resultFirstPart);
                                     if (!empty($resultFirstPart)) {
-                                        $meta->value = $resultFirstPart;
-                                        $meta->save();
+                                        dump("Result: ");
+                                        dump($resultFirstPart);
                                     }
                                 }
                             }
                         }
                     } else {
-                        /* parser has no result*/
+                        dump("Parser has no result.");
                     }
                 } else {
-
                     /*TODO save data to meta data and historical prices*/
                     if ($parserResult !== false && is_array($parserResult) && count($parserResult) > 0) {
                         $firstConf = array_first($parserResult);
@@ -92,12 +86,21 @@ class Crawl implements ShouldQueue
                             if (!is_null($firstResult) && is_array($firstResult)) {
                                 $resultFirstPart = array_first($firstResult);
                                 if (!is_null($resultFirstPart)) {
-                                    $resultFirstPart = $parserRepo->formatMetaValue([
-                                        'strip_text', 'currency'
-                                    ], $resultFirstPart);
+                                    /* format result */
+                                    switch ($meta->historical_type) {
+                                        case "price":
+                                            $resultFirstPart = $parserRepo->formatMetaValue([
+                                                'strip_text', 'currency'
+                                            ], $resultFirstPart);
+                                            break;
+                                        default:
+                                    }
+
+                                    /* save result */
                                     if (!empty($resultFirstPart)) {
                                         $meta->value = $resultFirstPart;
                                         $meta->save();
+                                        $meta->createHistoricalData($resultFirstPart);
                                     }
                                 }
                             }
@@ -109,6 +112,6 @@ class Crawl implements ShouldQueue
             }
         }
 
-        dd("End of Crawl");
+        dump("End of Crawl");
     }
 }

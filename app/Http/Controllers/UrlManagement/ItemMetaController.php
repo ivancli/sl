@@ -129,7 +129,10 @@ class ItemMetaController extends Controller
     public function update(ItemMeta $itemMeta)
     {
         event(new BeforeUpdate($itemMeta));
+        $itemMeta = $this->itemMetaRepo->update($itemMeta, $this->request->all());
+        $status = true;
         event(new AfterUpdate($itemMeta));
+        return compact(['itemMeta', 'status']);
     }
 
     /**

@@ -20,6 +20,7 @@ class CreateItemMetasTable extends Migration
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->text('element');
             $table->text('value')->nullable();
+            $table->string('historical_type')->nullable();
             $table->timestamps();
         });
     }

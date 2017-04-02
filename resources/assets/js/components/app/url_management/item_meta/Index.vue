@@ -34,6 +34,7 @@
                                         <th :class="orderByClass('id')" @click.prevent="setOrdering('id')">ID</th>
                                         <th :class="orderByClass('element')" @click.prevent="setOrdering('name')">Element</th>
                                         <th :class="orderByClass('value')" @click.prevent="setOrdering('value')">Value</th>
+                                        <th :class="orderByClass('historical_type')" @click.prevent="setOrdering('historical_type')">Historical Type</th>
                                         <th :class="orderByClass('created_at')" @click.prevent="setOrdering('created_at')">Created at</th>
                                         <th :class="orderByClass('updated_at')" @click.prevent="setOrdering('updated_at')">Updated at</th>
                                         <th></th>

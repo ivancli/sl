@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 class ItemMeta extends Model
 {
     protected $fillable = [
-        'element', 'value'
+        'element', 'value', 'historical_type'
     ];
 
     protected $with = [
@@ -32,6 +32,15 @@ class ItemMeta extends Model
     public function item()
     {
         return $this->belongsTo('App\Models\Item', 'item_id', 'id');
+    }
+
+    /**
+     * relationship with historical price
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function historicalPrices()
+    {
+        return $this->hasMany('App\Models\HistoricalPrice', 'item_meta_id', 'id');
     }
 
     /**
@@ -95,5 +104,25 @@ class ItemMeta extends Model
     public function getConfs($element)
     {
         return $this->confs()->where('element', $element)->get();
+    }
+
+    /**
+     * Create new historical data in corresponding table
+     * @param $value
+     * @return Model|null
+     */
+    public function createHistoricalData($value)
+    {
+        $historicalData = null;
+        switch ($this->historical_type) {
+            case "price":
+                $historicalData = $this->historicalPrices()->save(new HistoricalPrice([
+                    "amount" => $value,
+                ]));
+                break;
+            default:
+        }
+
+        return $historicalData;
     }
 }

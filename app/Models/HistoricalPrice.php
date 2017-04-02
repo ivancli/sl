@@ -21,8 +21,8 @@ class HistoricalPrice extends Model
      * relationship with item
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function item()
+    public function itemMeta()
     {
-        return $this->belongsTo('App\Models\Item', 'item_id', 'id');
+        return $this->belongsTo('App\Models\ItemMeta', 'item_meta_id', 'id');
     }
 }

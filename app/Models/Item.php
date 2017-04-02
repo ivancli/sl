@@ -35,15 +35,6 @@ class Item extends Model
         return $this->hasMany('App\Models\ItemMeta', 'item_id', 'id');
     }
 
-    /**
-     * relationship with historical price
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function historicalPrices()
-    {
-        return $this->hasMany('App\Models\HistoricalPrice', 'item_id', 'id');
-    }
-
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/

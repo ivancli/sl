@@ -50,10 +50,10 @@ class AuthenticationEventSubscriber
 
     public function onAuthLogout($event)
     {
-        $user = $event->user;
+//        $user = $event->user;
 
-        $activity = "Signed Out";
-        dispatch((new UserActivity($user, $activity))->onQueue("log"));
+//        $activity = "Signed Out";
+//        dispatch((new UserActivity($user, $activity))->onQueue("log"));
 
     }
 

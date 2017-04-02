@@ -97,4 +97,16 @@ class ItemMetaRepository implements ItemMetaContract
     {
         return $itemMeta->delete();
     }
+
+    /**
+     * Update existing item meta
+     * @param ItemMeta $itemMeta
+     * @param array $data
+     * @return mixed
+     */
+    public function update(ItemMeta $itemMeta, Array $data)
+    {
+        $itemMeta->update($data);
+        return $itemMeta;
+    }
 }

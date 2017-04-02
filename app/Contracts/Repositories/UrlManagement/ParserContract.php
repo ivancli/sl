@@ -14,15 +14,6 @@ use App\Models\ItemMeta;
 interface ParserContract
 {
     /**
-     * extract content from provided
-     * @param $content
-     * @param null $parserClassName
-     * @param $options
-     * @return mixed
-     */
-    public function extract($content, $options = [], $parserClassName = null);
-
-    /**
      * Parse an item meta with its configuration
      * @param ItemMeta $itemMeta
      * @param $content

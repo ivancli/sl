@@ -18,27 +18,6 @@ class ParserRepository implements ParserContract
     protected $parserClassPath = 'IvanCLI\Parser\Repositories\\';
 
     /**
-     * extract content from provided
-     * @param $content
-     * @param array $options
-     * @param null $parserClassName
-     * @return mixed
-     */
-    public function extract($content, $options = [], $parserClassName = null)
-    {
-        $parserClassPath = 'IvanCLI\Parser\Repositories\\';
-        if (is_null($parserClassName)) {
-            $parserClassName = "XPathParser";
-        }
-        $parserClass = app()->make("{$parserClassPath}$parserClassName");
-        $parserClass->setContent($content);
-        $parserClass->setOptions($options);
-        $parserClass->extract();
-        $extractions = $parserClass->getExtractions();
-        return $extractions;
-    }
-
-    /**
      * Parse an item meta with its configuration
      * @param ItemMeta $itemMeta
      * @param $content

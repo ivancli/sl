@@ -3,6 +3,7 @@
         <td v-text="itemMeta.id"></td>
         <td v-text="itemMeta.element"></td>
         <td v-text="itemMeta.value"></td>
+        <td v-text="itemMeta.historical_type"></td>
         <td>{{ itemMeta.created_at | formatDateTime(datetimeFormat) }}</td>
         <td>{{ itemMeta.updated_at | formatDateTime(datetimeFormat) }}</td>
         <td class="text-center">
