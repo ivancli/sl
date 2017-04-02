@@ -38,7 +38,6 @@ class TestController extends Controller
 
         /* TODO fetch */
         $content = $this->crawlerRepo->fetch($crawler);
-        dd($content);
         /*TODO check if content==false*/
 
         /* TODO parse for each item */
@@ -46,6 +45,7 @@ class TestController extends Controller
         foreach ($items as $item) {
             foreach ($item->metas as $meta) {
                 $parserResult = $this->parserRepo->parseMeta($meta, $content);
+                dd($parserResult);
                 /*TODO save data to meta data and historical prices*/
                 if ($parserResult !== false && is_array($parserResult) && count($parserResult) > 0) {
                     $firstConf = array_first($parserResult);

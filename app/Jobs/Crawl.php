@@ -4,6 +4,19 @@ namespace App\Jobs;
 
 use App\Contracts\Repositories\UrlManagement\CrawlerContract;
 use App\Contracts\Repositories\UrlManagement\ParserContract;
+use App\Events\Jobs\Crawl\AfterCrawlUrl;
+use App\Events\Jobs\Crawl\AfterFetchUrl;
+use App\Events\Jobs\Crawl\AfterParseMeta;
+use App\Events\Jobs\Crawl\AfterProcessItem;
+use App\Events\Jobs\Crawl\AfterSaveMeta;
+use App\Events\Jobs\Crawl\BeforeCrawlUrl;
+use App\Events\Jobs\Crawl\BeforeFetchUrl;
+use App\Events\Jobs\Crawl\BeforeParseMeta;
+use App\Events\Jobs\Crawl\BeforeProcessItem;
+use App\Events\Jobs\Crawl\BeforeSaveMeta;
+use App\Events\Jobs\Crawl\NoFirstResult;
+use App\Events\Jobs\Crawl\NoFormatResult;
+use App\Events\Jobs\Crawl\NoParseResult;
 use App\Models\Crawler;
 use App\Models\Url;
 use Illuminate\Bus\Queueable;
@@ -39,39 +52,58 @@ class Crawl implements ShouldQueue
      */
     public function handle(CrawlerContract $crawlerRepo, ParserContract $parserRepo)
     {
+        event(new BeforeCrawlUrl($this->url));
+
         $crawler = $this->url->crawler;
 
         /* fetch */
+        event(new BeforeFetchUrl($this->url));
         $content = $crawlerRepo->fetch($crawler);
+        event(new AfterFetchUrl($this->url, $content));
 
-        /* TODO parse for each item */
         $items = $this->url->items;
 
+        /* parse each item */
         foreach ($items as $item) {
+            event(new BeforeProcessItem($item));
+
             if ($this->test) {
                 dump("Item {$item->getKey()} - {$item->name}:");
             }
             foreach ($item->metas as $meta) {
+                event(new BeforeParseMeta($meta));
                 $parserResult = $parserRepo->parseMeta($meta, $content);
+                event(new AfterParseMeta($meta));
+
+                /*TODO move test to test controller*/
                 if ($this->test) {
                     dump("Meta {$meta->element}:");
                     if ($parserResult !== false && is_array($parserResult) && count($parserResult) > 0) {
-                        $firstConf = array_first($parserResult);
-                        $firstConfResult = array_get($firstConf, 'result');
-                        if (!is_null($firstConfResult) && is_array($firstConfResult)) {
-                            $firstResult = array_first($firstConfResult);
-                            if (!is_null($firstResult) && is_array($firstResult)) {
-                                $resultFirstPart = array_first($firstResult);
-                                if (!is_null($resultFirstPart)) {
-                                    $resultFirstPart = $parserRepo->formatMetaValue([
-                                        'strip_text', 'currency'
-                                    ], $resultFirstPart);
-                                    if (!empty($resultFirstPart)) {
-                                        dump("Result: ");
-                                        dump($resultFirstPart);
-                                    }
+                        if (count($parserResult) == 1) {
+                            $firstResult = array_first($parserResult);
+                            if (!is_null($firstResult)) {
+                                /* format result */
+                                switch ($meta->historical_type) {
+                                    case "price":
+                                        $firstResult = $parserRepo->formatMetaValue([
+                                            'strip_text', 'currency'
+                                        ], $firstResult);
+                                        break;
+                                    default:
                                 }
+                                /* save result */
+                                if (!empty($firstResult)) {
+                                    dump("Result:");
+                                    dump($firstResult);
+                                } else {
+                                    dump("Result is empty after formatted.");
+                                }
+                            } else {
+                                dump("First result is null.");
                             }
+                        } else {
+                            dump("There are multiple results:");
+                            dump($parserResult);
                         }
                     } else {
                         dump("Parser has no result.");
@@ -79,39 +111,54 @@ class Crawl implements ShouldQueue
                 } else {
                     /*TODO save data to meta data and historical prices*/
                     if ($parserResult !== false && is_array($parserResult) && count($parserResult) > 0) {
-                        $firstConf = array_first($parserResult);
-                        $firstConfResult = array_get($firstConf, 'result');
-                        if (!is_null($firstConfResult) && is_array($firstConfResult)) {
-                            $firstResult = array_first($firstConfResult);
-                            if (!is_null($firstResult) && is_array($firstResult)) {
-                                $resultFirstPart = array_first($firstResult);
-                                if (!is_null($resultFirstPart)) {
-                                    /* format result */
-                                    switch ($meta->historical_type) {
-                                        case "price":
-                                            $resultFirstPart = $parserRepo->formatMetaValue([
-                                                'strip_text', 'currency'
-                                            ], $resultFirstPart);
-                                            break;
-                                        default:
-                                    }
-
-                                    /* save result */
-                                    if (!empty($resultFirstPart)) {
-                                        $meta->value = $resultFirstPart;
-                                        $meta->save();
-                                        $meta->createHistoricalData($resultFirstPart);
-                                    }
+                        if (count($parserResult) == 1) {
+                            $firstResult = array_first($parserResult);
+                            if (!is_null($firstResult)) {
+                                /* format result */
+                                switch ($meta->historical_type) {
+                                    case "price":
+                                        $firstResult = $parserRepo->formatMetaValue([
+                                            'strip_text', 'currency'
+                                        ], $firstResult);
+                                        break;
+                                    default:
                                 }
+
+                                /* save result */
+                                if (!empty($firstResult)) {
+
+                                    event(new BeforeSaveMeta($meta));
+                                    $meta->value = $firstResult;
+                                    $meta->save();
+                                    $meta->createHistoricalData($firstResult);
+                                    event(new AfterSaveMeta($meta));
+
+                                } else {
+                                    /* empty result after formatted */
+                                    event(new NoFormatResult($meta));
+                                }
+                            } else {
+                                /* first result is null */
+                                event(new NoFirstResult($meta));
                             }
+                        } else {
+                            /* there are multiple results/nodes */
+                            /* json-ise the result */
                         }
                     } else {
                         /* parser has no result*/
+                        event(new NoParseResult($meta));
                     }
                 }
             }
+
+            event(new AfterProcessItem($item));
         }
 
+        /* crawler finished */
+
         dump("End of Crawl");
+
+        event(new AfterCrawlUrl($this->url));
     }
 }

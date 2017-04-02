@@ -35,19 +35,19 @@ class ParserRepository implements ParserContract
         }
         $parserClass = app()->make("{$this->parserClassPath}{$parserClassName}");
         $xpathConfs = $itemMeta->getConfs('XPATH');
-        $extractions = [];
+        $extraction = null;
         foreach ($xpathConfs as $index => $xpathConf) {
             $parserClass->setContent($content);
             $parserClass->setOptions([
                 "xpath" => $xpathConf->value,
             ]);
             $parserClass->extract();
-            $extractions[] = [
-                'conf' => $xpathConf->value,
-                'result' => $parserClass->getExtractions()
-            ];
+            $extraction = $parserClass->getExtractions();
+            if (!is_null($extraction) && !empty($extraction)) {
+                break;
+            }
         }
-        return $extractions;
+        return $extraction;
     }
 
     /**

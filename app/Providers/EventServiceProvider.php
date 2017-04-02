@@ -241,8 +241,20 @@ class EventServiceProvider extends ServiceProvider
         /**
          * Jobs
          */
-        'App\Events\Jobs\Crawl\BeforeFetch' => [],
-        'App\Events\Jobs\Crawl\AfterFetch' => [],
+        'App\Events\Jobs\Crawl\BeforeCrawlUrl' => [],
+        'App\Events\Jobs\Crawl\BeforeFetchUrl' => [],
+        'App\Events\Jobs\Crawl\AfterFetchUrl' => [],
+        'App\Events\Jobs\Crawl\BeforeProcessItem' => [],
+        'App\Events\Jobs\Crawl\AfterProcessItem' => [],
+        'App\Events\Jobs\Crawl\BeforeParseMeta' => [],
+        'App\Events\Jobs\Crawl\AfterParseMeta' => [],
+        'App\Events\Jobs\Crawl\BeforeSaveMeta' => [],
+        'App\Events\Jobs\Crawl\AfterSaveMeta' => [],
+        'App\Events\Jobs\Crawl\AfterCrawlUrl' => [],
+        /* error events */
+        'App\Events\Jobs\Crawl\NoFormatResult' => [],
+        'App\Events\Jobs\Crawl\NoFirstResult' => [],
+        'App\Events\Jobs\Crawl\NoParseResult' => [],
 
 
         /**

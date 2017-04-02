@@ -306,16 +306,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ketchol/parser.git",
-                "reference": "2f4bdea6d22013209cc2838967ddee3cf5f5514a"
+                "reference": "5e245f6912f3688de4ddf01d5b9c946ac762d437"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ketchol/parser/zipball/2f4bdea6d22013209cc2838967ddee3cf5f5514a",
-                "reference": "2f4bdea6d22013209cc2838967ddee3cf5f5514a",
+                "url": "https://api.github.com/repos/ketchol/parser/zipball/5e245f6912f3688de4ddf01d5b9c946ac762d437",
+                "reference": "5e245f6912f3688de4ddf01d5b9c946ac762d437",
                 "shasum": ""
             },
             "require": {
                 "illuminate/cache": "~5.0",
+                "ixudra/curl": "6.*",
                 "php": ">=5.5.0",
                 "symfony/dom-crawler": "^3.2"
             },
@@ -345,7 +346,7 @@
                 "source": "https://github.com/ketchol/parser/tree/master",
                 "issues": "https://github.com/ketchol/parser/issues"
             },
-            "time": "2017-03-21T12:03:58+00:00"
+            "time": "2017-04-02T14:14:41+00:00"
         },
         {
             "name": "ivancli/um",
