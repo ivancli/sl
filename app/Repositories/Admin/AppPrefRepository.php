@@ -14,7 +14,7 @@ use App\Models\AppPref;
 
 class AppPrefRepository implements AppPrefContract
 {
-    var $appPref;
+    protected $appPref;
 
     public function __construct(AppPref $appPref)
     {

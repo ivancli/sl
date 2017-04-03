@@ -15,7 +15,7 @@ use App\Models\ItemMetaConf;
 
 class ItemMetaConfRepository implements ItemMetaConfContract
 {
-    var $itemMetaConf;
+    protected $itemMetaConf;
 
     public function __construct(ItemMetaConf $itemMetaConf)
     {

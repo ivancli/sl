@@ -25,8 +25,8 @@ use App\Http\Controllers\Controller;
 
 class ItemMetaController extends Controller
 {
-    var $request;
-    var $itemRepo, $itemMetaRepo;
+    protected $request;
+    protected $itemRepo, $itemMetaRepo;
 
     public function __construct(Request $request,
                                 ItemContract $itemContract, ItemMetaContract $itemMetaContract)

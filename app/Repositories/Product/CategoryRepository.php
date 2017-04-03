@@ -13,7 +13,7 @@ use App\Models\User;
  */
 class CategoryRepository implements CategoryContract
 {
-    var $category;
+    protected $category;
 
     public function __construct(Category $category)
     {

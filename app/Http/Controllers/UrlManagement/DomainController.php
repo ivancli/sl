@@ -24,8 +24,8 @@ use Illuminate\Http\Request;
 
 class DomainController extends Controller
 {
-    var $request;
-    var $domainRepo;
+    protected $request;
+    protected $domainRepo;
 
     public function __construct(Request $request, DomainContract $domainContract)
     {

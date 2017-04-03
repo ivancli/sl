@@ -15,8 +15,8 @@ use Illuminate\Http\Request;
 
 class UrlRepository implements UrlContract
 {
-    var $url;
-    var $request;
+    protected $url;
+    protected $request;
 
     public function __construct(Url $url, Request $request)
     {

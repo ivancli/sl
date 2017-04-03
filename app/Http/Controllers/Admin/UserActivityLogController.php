@@ -23,8 +23,8 @@ use App\Http\Controllers\Controller;
 
 class UserActivityLogController extends Controller
 {
-    var $request;
-    var $userActivityLogRepo;
+    protected $request;
+    protected $userActivityLogRepo;
 
     public function __construct(Request $request, UserActivityLogContract $userActivityLogContract)
     {

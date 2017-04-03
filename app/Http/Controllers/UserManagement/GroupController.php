@@ -25,8 +25,8 @@ use Illuminate\Http\Request;
 
 class GroupController extends Controller
 {
-    var $request;
-    var $groupRepo;
+    protected $request;
+    protected $groupRepo;
 
     public function __construct(Request $request,
                                 GroupContract $groupContract)

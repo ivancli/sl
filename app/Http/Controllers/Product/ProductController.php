@@ -25,8 +25,8 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    var $request;
-    var $productRepo, $categoryRepo;
+    protected $request;
+    protected $productRepo, $categoryRepo;
 
     public function __construct(Request $request, ProductContract $productContract, CategoryContract $categoryContract)
     {

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class AlertController extends Controller
 {
-    var $request;
+    protected $request;
 
     public function __construct(Request $request)
     {

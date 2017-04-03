@@ -15,8 +15,8 @@ use Illuminate\Http\Request;
 
 class DomainRepository implements DomainContract
 {
-    var $request;
-    var $domain;
+    protected $request;
+    protected $domain;
 
     public function __construct(Domain $domain, Request $request)
     {

@@ -2,7 +2,7 @@
 
 namespace App\Events\Jobs\Crawl;
 
-use App\Models\Url;
+use App\Models\ItemMeta;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -11,26 +11,20 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class AfterFetchUrl
+class MetaChanged
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $url;
-    public $status;
-    public $content;
+    public $itemMeta;
 
     /**
      * Create a new event instance.
      *
-     * @param Url $url
-     * @param int $status
-     * @param String $content
+     * @param ItemMeta $itemMeta
      */
-    public function __construct(Url $url, String $content, Integer $status = null)
+    public function __construct(ItemMeta $itemMeta)
     {
-        $this->url = $url;
-        $this->content = $content;
-        $this->status = $status;
+        $this->itemMeta = $itemMeta;
     }
 
     /**

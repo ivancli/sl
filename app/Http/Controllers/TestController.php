@@ -16,8 +16,8 @@ use Illuminate\Http\Request;
 
 class TestController extends Controller
 {
-    var $request;
-    var $crawlerRepo, $parserRepo, $urlRepo;
+    protected $request;
+    protected $crawlerRepo, $parserRepo, $urlRepo;
 
     public function __construct(Request $request,
                                 CrawlerContract $crawlerContract,

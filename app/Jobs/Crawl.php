@@ -14,6 +14,7 @@ use App\Events\Jobs\Crawl\BeforeFetchUrl;
 use App\Events\Jobs\Crawl\BeforeParseMeta;
 use App\Events\Jobs\Crawl\BeforeProcessItem;
 use App\Events\Jobs\Crawl\BeforeSaveMeta;
+use App\Events\Jobs\Crawl\MetaChanged;
 use App\Events\Jobs\Crawl\NoFirstResult;
 use App\Events\Jobs\Crawl\NoFormatResult;
 use App\Events\Jobs\Crawl\NoParseResult;
@@ -128,9 +129,15 @@ class Crawl implements ShouldQueue
                                 if (!empty($firstResult)) {
 
                                     event(new BeforeSaveMeta($meta));
+                                    $valueDifferent = $meta->value != $firstResult;
                                     $meta->value = $firstResult;
                                     $meta->save();
                                     $meta->createHistoricalData($firstResult);
+
+                                    if ($valueDifferent) {
+                                        event(new MetaChanged($meta));
+                                    }
+
                                     event(new AfterSaveMeta($meta));
 
                                 } else {

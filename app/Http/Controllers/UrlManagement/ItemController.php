@@ -25,9 +25,9 @@ use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
-    var $request;
-    var $urlRepo;
-    var $itemRepo;
+    protected $request;
+    protected $urlRepo;
+    protected $itemRepo;
 
     public function __construct(Request $request,
                                 UrlContract $urlContract,

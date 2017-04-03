@@ -16,8 +16,8 @@ use Illuminate\Http\Request;
 
 class ItemRepository implements ItemContract
 {
-    var $item;
-    var $request;
+    protected $item;
+    protected $request;
 
     public function __construct(Item $item, Request $request)
     {

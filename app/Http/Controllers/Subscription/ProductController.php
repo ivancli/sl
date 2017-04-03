@@ -16,8 +16,8 @@ use Illuminate\Http\Request;
  */
 class ProductController extends Controller
 {
-    var $request;
-    var $subscriptionManagementRepo;
+    protected $request;
+    protected $subscriptionManagementRepo;
 
     public function __construct(Request $request, SubscriptionManagementContract $subscriptionManagementContract)
     {

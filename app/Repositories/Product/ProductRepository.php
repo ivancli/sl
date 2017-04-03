@@ -15,7 +15,7 @@ use App\Models\User;
 
 class ProductRepository implements ProductContract
 {
-    var $product;
+    protected $product;
 
     public function __construct(Product $product)
     {

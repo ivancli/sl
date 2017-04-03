@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class DomainConfController extends Controller
 {
-    var $request;
+    protected $request;
 
     public function __construct(Request $request)
     {

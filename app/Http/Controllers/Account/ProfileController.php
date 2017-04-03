@@ -14,8 +14,8 @@ use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
-    var $request;
-    var $userRepo;
+    protected $request;
+    protected $userRepo;
 
     public function __construct(Request $request, UserContract $userContract)
     {

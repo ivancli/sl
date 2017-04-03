@@ -24,8 +24,8 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    var $request;
-    var $categoryRepo;
+    protected $request;
+    protected $categoryRepo;
 
     public function __construct(Request $request,
                                 CategoryContract $categoryContract)

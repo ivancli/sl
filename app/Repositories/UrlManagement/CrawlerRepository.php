@@ -14,7 +14,7 @@ use App\Models\Crawler;
 
 class CrawlerRepository implements CrawlerContract
 {
-    var $crawler;
+    protected $crawler;
 
     public function __construct(Crawler $crawler)
     {
