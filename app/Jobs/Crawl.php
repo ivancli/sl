@@ -31,18 +31,15 @@ class Crawl implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $url;
-    protected $test;
 
     /**
      * Create a new job instance.
      *
      * @param Url $url
-     * @param bool $test
      */
-    public function __construct(Url $url, bool $test)
+    public function __construct(Url $url)
     {
         $this->url = $url;
-        $this->test = $test;
     }
 
     /**
@@ -57,114 +54,98 @@ class Crawl implements ShouldQueue
 
         $crawler = $this->url->crawler;
 
-        /* fetch */
+        $crawler->statusPicked();
+
+        #region crawling
         event(new BeforeFetchUrl($this->url));
+
+        $crawler->statusCrawling();
+
         $content = $crawlerRepo->fetch($crawler);
+
+        $crawler->statusCrawled();
+
         event(new AfterFetchUrl($this->url, $content));
+        #endregion
 
         $items = $this->url->items;
 
-        /* parse each item */
+        $crawler->statusParsing();
+
         foreach ($items as $item) {
+
             event(new BeforeProcessItem($item));
 
-            if ($this->test) {
-                dump("Item {$item->getKey()} - {$item->name}:");
-            }
             foreach ($item->metas as $meta) {
+
+                #region parsing
                 event(new BeforeParseMeta($meta));
                 $parserResult = $parserRepo->parseMeta($meta, $content);
                 event(new AfterParseMeta($meta));
+                #endregion
 
-                /*TODO move test to test controller*/
-                if ($this->test) {
-                    dump("Meta {$meta->element}:");
-                    if ($parserResult !== false && is_array($parserResult) && count($parserResult) > 0) {
-                        if (count($parserResult) == 1) {
-                            $firstResult = array_first($parserResult);
-                            if (!is_null($firstResult)) {
-                                /* format result */
-                                switch ($meta->historical_type) {
-                                    case "price":
-                                        $firstResult = $parserRepo->formatMetaValue([
-                                            'strip_text', 'currency'
-                                        ], $firstResult);
-                                        break;
-                                    default:
+                if ($parserResult !== false && is_array($parserResult) && count($parserResult) > 0) {
+                    if (count($parserResult) == 1) {
+                        $firstResult = array_first($parserResult);
+                        if (!is_null($firstResult)) {
+
+                            #region format parsed data
+                            switch ($meta->historical_type) {
+                                case "price":
+                                    $firstResult = $parserRepo->formatMetaValue([
+                                        'strip_text', 'currency'
+                                    ], $firstResult);
+                                    break;
+                                default:
+                            }
+                            #endregion
+
+
+                            if (!empty($firstResult)) {
+
+                                #region save final result
+                                event(new BeforeSaveMeta($meta));
+
+                                $valueDifferent = $meta->value != $firstResult;
+                                $meta->value = $firstResult;
+                                $meta->save();
+                                $meta->createHistoricalData($firstResult);
+
+                                if ($valueDifferent) {
+                                    event(new MetaChanged($meta));
                                 }
-                                /* save result */
-                                if (!empty($firstResult)) {
-                                    dump("Result:");
-                                    dump($firstResult);
-                                } else {
-                                    dump("Result is empty after formatted.");
-                                }
+
+                                event(new AfterSaveMeta($meta));
+                                #endregion
+
                             } else {
-                                dump("First result is null.");
+                                /* empty result after formatted */
+                                event(new NoFormatResult($meta));
                             }
                         } else {
-                            dump("There are multiple results:");
-                            dump($parserResult);
+                            /* first result is null */
+                            event(new NoFirstResult($meta));
                         }
                     } else {
-                        dump("Parser has no result.");
+                        /* there are multiple results/nodes */
+                        /* json-ise the result */
                     }
                 } else {
-                    /*TODO save data to meta data and historical prices*/
-                    if ($parserResult !== false && is_array($parserResult) && count($parserResult) > 0) {
-                        if (count($parserResult) == 1) {
-                            $firstResult = array_first($parserResult);
-                            if (!is_null($firstResult)) {
-                                /* format result */
-                                switch ($meta->historical_type) {
-                                    case "price":
-                                        $firstResult = $parserRepo->formatMetaValue([
-                                            'strip_text', 'currency'
-                                        ], $firstResult);
-                                        break;
-                                    default:
-                                }
-
-                                /* save result */
-                                if (!empty($firstResult)) {
-
-                                    event(new BeforeSaveMeta($meta));
-                                    $valueDifferent = $meta->value != $firstResult;
-                                    $meta->value = $firstResult;
-                                    $meta->save();
-                                    $meta->createHistoricalData($firstResult);
-
-                                    if ($valueDifferent) {
-                                        event(new MetaChanged($meta));
-                                    }
-
-                                    event(new AfterSaveMeta($meta));
-
-                                } else {
-                                    /* empty result after formatted */
-                                    event(new NoFormatResult($meta));
-                                }
-                            } else {
-                                /* first result is null */
-                                event(new NoFirstResult($meta));
-                            }
-                        } else {
-                            /* there are multiple results/nodes */
-                            /* json-ise the result */
-                        }
-                    } else {
-                        /* parser has no result*/
-                        event(new NoParseResult($meta));
-                    }
+                    /* parser has no result*/
+                    event(new NoParseResult($meta));
                 }
             }
 
             event(new AfterProcessItem($item));
         }
 
+        $crawler->statusParsed();
+
         /* crawler finished */
 
         dump("End of Crawl");
+
+        $crawler->statusNull();
 
         event(new AfterCrawlUrl($this->url));
     }
