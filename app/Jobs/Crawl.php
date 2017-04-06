@@ -61,7 +61,13 @@ class Crawl implements ShouldQueue
 
         $crawler->statusCrawling();
 
-        $content = $crawlerRepo->fetch($crawler);
+        $result = $crawlerRepo->fetch($crawler);
+
+        if($result['status'] != 200){
+
+        }
+
+        $content = $result['content'];
 
         $crawler->statusCrawled();
 

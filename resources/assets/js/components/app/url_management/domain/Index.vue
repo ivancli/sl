@@ -167,14 +167,14 @@
             }
         },
         computed: {
-            currentPageUrl: function () {
+            currentPageUrl() {
                 return '/url-management/domain?page=' + this.paginationData.current_page
                     + '&orderBy=' + this.orderByData.column
                     + '&direction=' + this.orderByData.direction
                     + '&per_page=' + this.paginationData.per_page
                     + '&key=' + this.filterText;
             },
-            nextPageUrl: function () {
+            nextPageUrl() {
                 if (this.paginationData.next_page_url == null) {
                     return null;
                 } else {
@@ -185,7 +185,7 @@
                         + '&key=' + this.filterText;
                 }
             },
-            prevPageUrl: function () {
+            prevPageUrl() {
                 if (this.paginationData.prev_page_url == null) {
                     return null;
                 } else {
@@ -196,13 +196,13 @@
                         + '&key=' + this.filterText;
                 }
             },
-            firstPageUrl: function () {
+            firstPageUrl() {
                 return '/url-management/domain?page=1&orderBy=' + this.orderByData.column
                     + '&direction=' + this.orderByData.direction
                     + '&per_page=' + this.paginationData.per_page
                     + '&key=' + this.filterText;
             },
-            lastPageUrl: function () {
+            lastPageUrl() {
                 return '/url-management/domain?page=' + this.paginationData.last_page
                     + '&orderBy=' + this.orderByData.column
                     + '&direction=' + this.orderByData.direction

@@ -42,6 +42,7 @@ class Item extends Model
     public function getUrlsAttribute()
     {
         return [
+            'index' => route('item.index', ['url_id' => $this->url_id]),
             'show' => route('item.show', $this->getKey()),
             'store' => route('item.store'),
             'edit' => route('item.edit', $this->getKey()),

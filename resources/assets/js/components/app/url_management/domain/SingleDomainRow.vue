@@ -64,7 +64,7 @@
             console.info('SingleDomainRow component is mounted');
         },
         computed: {
-            domain: function () {
+            domain() {
                 return this.currentDomain;
             },
             dateFormat(){

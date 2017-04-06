@@ -13,7 +13,14 @@
             <default-sidebar slot="default-sidebar"></default-sidebar>
             <default-content slot="default-content">
                 <content-header slot="content-header">
-                    <span slot="content-header-title">Item Metas for {{$item->name}}</span>
+                    <span slot="content-header-title">
+                        Item Metas for
+                        @if(!is_null($item->name))
+                            {{$item->name}}
+                        @else
+                            Unnamed Item
+                        @endif
+                    </span>
                 </content-header>
                 <content-body slot="content-body"></content-body>
             </default-content>

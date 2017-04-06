@@ -55,7 +55,8 @@ class CrawlerRepository implements CrawlerContract
         $crawlerClass->fetch();
 
         $content = $crawlerClass->getContent();
-        return $content;
+        $status = $crawlerClass->getStatus();
+        return compact(['status', 'content']);
     }
 
 }

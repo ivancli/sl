@@ -21,10 +21,9 @@ class ParserRepository implements ParserContract
      * Parse an item meta with its configuration
      * @param ItemMeta $itemMeta
      * @param $content
-     * @param bool $save
      * @return mixed
      */
-    public function parseMeta(ItemMeta $itemMeta, $content, $save = false)
+    public function parseMeta(ItemMeta $itemMeta, $content)
     {
         $parserClassConfs = $itemMeta->getConfs('PARSER_CLASS');
         if ($parserClassConfs->count() == 0) {

@@ -11,6 +11,7 @@
 |
 */
 
+#region Authentication
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login.get');
 Route::post('login', 'Auth\LoginController@login')->name('login.post');
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register.get');
@@ -18,9 +19,12 @@ Route::post('register', 'Auth\RegisterController@register')->name('register.post
 Route::get('forgot', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('forgot.get');
 Route::post('forgot', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('forgot.post');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout.get');
+#endregion
 
+#region Subscription Routes
 Route::get('subscription/product', 'Subscription\ProductController@index')->name('subscription.product.index');
 Route::resource('subscription/subscription', 'Subscription\SubscriptionController');
+#endregion
 
 
 Route::group(['middleware' => ['auth', 'subs']], function () {
@@ -28,10 +32,13 @@ Route::group(['middleware' => ['auth', 'subs']], function () {
         return view('app.product.index');
     })->name('home.get');
 
+    #region User Account Client Routes
     Route::resource('account_settings', 'Account\AccountSettingsController');
     Route::resource('user/profile', 'Account\ProfileController');
     Route::resource('user/preference', 'Account\PreferenceController');
+    #endregion
 
+    #region Product Related Routes
     Route::resource('category', 'Product\CategoryController', ['except' => [
         'create'
     ]]);
@@ -43,42 +50,56 @@ Route::group(['middleware' => ['auth', 'subs']], function () {
     Route::resource('site', 'Product\SiteController', ['except' => [
         'create'
     ]]);
+    #endregion
 
+    #region Product Side Features Related Routes
     Route::resource('alert', 'Alert\AlertController');
     Route::resource('report', 'Report\ReportController');
+    #endregion
 
-
-    /**
-     * ADMINISTRATION ROUTES
-     */
+    #region Administration Routes
     Route::resource('app-preference', 'Admin\AppPrefController');
 
     Route::resource('log/user-activity-log', 'Admin\UserActivityLogController');
+    #endregion
 
-    Route::resource('url-management/domain', 'UrlManagement\DomainController');
-    Route::resource('url-management/domain-meta', 'UrlManagement\DomainMetaController', [
-        'parameters' => [
-            'domain-meta' => 'domainMeta'
-        ]
-    ]);
-    Route::resource('url-management/domain-conf', 'UrlManagement\DomainConfController');
-    Route::resource('url-management/url', 'UrlManagement\UrlController');
-    Route::resource('url-management/item', 'UrlManagement\ItemController');
-    Route::resource('url-management/item-meta', 'UrlManagement\ItemMetaController', [
-        'parameters' => [
-            'item-meta' => 'itemMeta'
-        ]
-    ]);
-    Route::resource('url-management/item-meta-conf', 'UrlManagement\ItemMetaConfController');
+    #region URL Management
+    Route::group(['prefix' => 'url-management'], function () {
+        Route::resource('domain', 'UrlManagement\DomainController');
+        Route::resource('domain-meta', 'UrlManagement\DomainMetaController', [
+            'parameters' => [
+                'domain-meta' => 'domainMeta'
+            ]
+        ]);
+        Route::resource('domain-conf', 'UrlManagement\DomainConfController');
+        Route::resource('url', 'UrlManagement\UrlController');
+        Route::resource('item', 'UrlManagement\ItemController');
+        Route::resource('item-meta', 'UrlManagement\ItemMetaController', [
+            'parameters' => [
+                'item-meta' => 'itemMeta'
+            ]
+        ]);
+        Route::resource('item-meta-conf', 'UrlManagement\ItemMetaConfController');
 
-    /*user management*/
-    Route::resource('user-management/user', 'UserManagement\UserController');
-    Route::resource('user-management/group', 'UserManagement\GroupController');
-    Route::resource('user-management/role', 'UserManagement\RoleController');
-    Route::resource('user-management/permission', 'UserManagement\PermissionController');
+        Route::group(['prefix' => 'test'], function () {
+            Route::post('crawl-parse-item-meta/{itemMeta}', 'UrlManagement\TestController@crawlParseItemMeta')->name('item_meta.test');
+            Route::post('crawl-parse-item/{item}', 'UrlManagement\TestController@crawlParseItem')->name('item.test');
+            Route::post('crawl-parse-url/url', 'UrlManagement\TestController@crawlParseUrl')->name('url.test');
+        });
+    });
+    #endregion
+
+    #region User Management
+    Route::group(['prefix' => 'user-management'], function(){
+        Route::resource('user', 'UserManagement\UserController');
+        Route::resource('group', 'UserManagement\GroupController');
+        Route::resource('role', 'UserManagement\RoleController');
+        Route::resource('permission', 'UserManagement\PermissionController');
+    });
+    #endregion
 });
 
-
+#region Error Handling Routes
 /*
 |--------------------------------------------------------------------------
 | Errors Routes
@@ -97,7 +118,8 @@ Route::group(['prefix' => 'errors'], function () {
         return view('errors.cookie_disabled');
     })->name('errors.cookie_disabled');
 });
+#endregion
 
-
-
+#region Internal Testing/Debug Route
 Route::any('test', 'TestController@test');
+#endregion
