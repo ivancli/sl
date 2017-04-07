@@ -26,8 +26,8 @@ use Illuminate\Http\Request;
 
 class SiteController extends Controller
 {
-    var $request;
-    var $productRepo, $siteRepo, $urlRepo;
+    protected $request;
+    protected $productRepo, $siteRepo, $urlRepo;
 
     public function __construct(Request $request,
                                 ProductContract $productContract,

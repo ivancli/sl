@@ -21,10 +21,10 @@ use Illuminate\Http\Request;
 
 class SubscriptionController extends Controller
 {
-    var $request;
-    var $subscriptionRepo;
-    var $productRepo;
-    var $userRepo;
+    protected $request;
+    protected $subscriptionRepo;
+    protected $productRepo;
+    protected $userRepo;
 
     public function __construct(Request $request,
                                 SubscriptionContract $subscriptionContract,

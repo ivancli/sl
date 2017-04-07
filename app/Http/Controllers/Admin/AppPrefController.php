@@ -8,8 +8,8 @@ use Illuminate\Http\Request;
 
 class AppPrefController extends Controller
 {
-    var $request;
-    var $appPrefRepo;
+    protected $request;
+    protected $appPrefRepo;
 
     public function __construct(Request $request,
                                 AppPrefContract $appPrefContract)

@@ -24,9 +24,9 @@ use Illuminate\Http\Request;
 
 class DomainMetaController extends Controller
 {
-    var $request;
-    var $domainRepo;
-    var $domainMetaRepo;
+    protected $request;
+    protected $domainRepo;
+    protected $domainMetaRepo;
 
     public function __construct(Request $request,
                                 DomainContract $domainContract,
