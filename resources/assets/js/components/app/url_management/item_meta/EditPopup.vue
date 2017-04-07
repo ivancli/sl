@@ -49,13 +49,13 @@
             <footer class="modal-card-foot">
                 <div class="row">
                     <div class="col-sm-12 text-right">
-                        <button class="btn btn-primary btn-flat" @click.prevent="updateMeta" :disabled="isUpdatingMeta">CONFIRM</button>
+                        <button class="btn btn-primary btn-flat" @click.prevent="updateMeta" :disabled="isEditingMeta">CONFIRM</button>
                         <button class="btn btn-default btn-flat" @click.prevent="cancelUpdate">CANCEL</button>
                     </div>
                 </div>
             </footer>
         </div>
-        <loading v-if="isCreatingMeta"></loading>
+        <loading v-if="isEditingMeta"></loading>
     </div>
 </template>
 

@@ -17,10 +17,9 @@ interface ParserContract
      * Parse an item meta with its configuration
      * @param ItemMeta $itemMeta
      * @param $content
-     * @param bool $save
      * @return mixed
      */
-    public function parseMeta(ItemMeta $itemMeta, $content, $save = false);
+    public function parseMeta(ItemMeta $itemMeta, $content);
 
     /**
      * format the provided value as per provided type

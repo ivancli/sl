@@ -27,8 +27,8 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    var $request;
-    var $userRepo, $roleRepo;
+    protected $request;
+    protected $userRepo, $roleRepo;
 
     public function __construct(Request $request,
                                 UserContract $userContract,

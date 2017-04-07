@@ -14,7 +14,7 @@ use App\Models\Crawler;
 
 class CrawlerRepository implements CrawlerContract
 {
-    var $crawler;
+    protected $crawler;
 
     public function __construct(Crawler $crawler)
     {
@@ -55,7 +55,8 @@ class CrawlerRepository implements CrawlerContract
         $crawlerClass->fetch();
 
         $content = $crawlerClass->getContent();
-        return $content;
+        $status = $crawlerClass->getStatus();
+        return compact(['status', 'content']);
     }
 
 }

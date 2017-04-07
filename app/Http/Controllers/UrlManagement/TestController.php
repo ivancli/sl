@@ -1,0 +1,149 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: ivan.li
+ * Date: 4/6/2017
+ * Time: 11:44 AM
+ */
+
+namespace App\Http\Controllers\UrlManagement;
+
+
+use App\Contracts\Repositories\UrlManagement\CrawlerContract;
+use App\Contracts\Repositories\UrlManagement\ParserContract;
+use App\Http\Controllers\Controller;
+use App\Models\Item;
+use App\Models\ItemMeta;
+use App\Models\Url;
+use Illuminate\Http\Request;
+
+class TestController extends Controller
+{
+    protected $request;
+    protected $crawlerRepo;
+    protected $parserRepo;
+
+    public function __construct(Request $request,
+                                CrawlerContract $crawlerContract, ParserContract $parserContract)
+    {
+        $this->request = $request;
+        $this->crawlerRepo = $crawlerContract;
+        $this->parserRepo = $parserContract;
+    }
+
+    /**
+     * @param ItemMeta $itemMeta
+     * @return array
+     */
+    public function crawlParseItemMeta(ItemMeta $itemMeta)
+    {
+        $crawlResult = $this->crawlerRepo->fetch($itemMeta->item->url->crawler);
+
+        if ($crawlResult['status'] != 200) {
+            $error = "Target URL respond with status {$crawlResult['status']}";
+            $status = false;
+            return compact(['status', 'error']);
+        }
+
+        $content = $crawlResult['content'];
+
+        $results = $this->parserRepo->parseMeta($itemMeta, $content);
+
+        foreach ($results as $index => $result) {
+            switch ($itemMeta->historical_type) {
+                case "price":
+                    $results[$index] = $this->parserRepo->formatMetaValue([
+                        'strip_text', 'currency'
+                    ], $result);
+                    break;
+                default:
+            }
+        }
+        $status = true;
+        return compact(['results', 'status']);
+    }
+
+    public function crawlParseItem(Item $item)
+    {
+        /*
+         * TODO find a way to refine $item->url->crawler
+         */
+        $crawlResult = $this->crawlerRepo->fetch($item->url->crawler);
+
+        if ($crawlResult['status'] != 200) {
+            $error = "Target URL respond with status {$crawlResult['status']}";
+            $status = false;
+            return compact(['status', 'error']);
+        }
+
+        $content = $crawlResult['content'];
+
+        $results = [];
+
+        foreach ($item->metas as $metaIndex => $meta) {
+            $parseResults = $this->parserRepo->parseMeta($meta, $content);
+            foreach ($parseResults as $index => $parseResult) {
+                switch ($meta->historical_type) {
+                    case "price":
+                        $parseResults[$index] = $this->parserRepo->formatMetaValue([
+                            'strip_text', 'currency'
+                        ], $parseResult);
+                        break;
+                    default:
+                }
+            }
+            $results[$meta->getKey()] = [
+                'item_meta' => $meta,
+                'results' => $parseResults,
+            ];
+        }
+        $status = true;
+        return compact(['status', 'results']);
+    }
+
+    public function crawlParseUrl(Url $url)
+    {
+        /*
+         * TODO find a way to refine $item->url->crawler
+         */
+        $crawlResult = $this->crawlerRepo->fetch($url->crawler);
+
+        if ($crawlResult['status'] != 200) {
+            $error = "Target URL respond with status {$crawlResult['status']}";
+            $status = false;
+            return compact(['status', 'error']);
+        }
+
+        $content = $crawlResult['content'];
+
+        $results = [];
+
+        foreach ($url->items as $itemIndex => $item) {
+            $itemResults = [];
+            foreach ($item->metas as $metaIndex => $meta) {
+                $parseResults = $this->parserRepo->parseMeta($meta, $content);
+                foreach ($parseResults as $index => $parseResult) {
+                    switch ($meta->historical_type) {
+                        case "price":
+                            $parseResults[$index] = $this->parserRepo->formatMetaValue([
+                                'strip_text', 'currency'
+                            ], $parseResult);
+                            break;
+                        default:
+                    }
+                }
+                $itemResults[$meta->getKey()] = [
+                    'item_meta' => $meta,
+                    'results' => $parseResults,
+                ];
+            }
+            $results[$item->getKey()] = [
+                'item' => $item,
+                'results' => $itemResults
+            ];
+        }
+
+        $status = true;
+        return compact(['status', 'results']);
+    }
+}

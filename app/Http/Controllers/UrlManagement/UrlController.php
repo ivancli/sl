@@ -23,8 +23,8 @@ use Illuminate\Http\Request;
 
 class UrlController extends Controller
 {
-    var $request;
-    var $urlRepo;
+    protected $request;
+    protected $urlRepo;
 
     public function __construct(Request $request,
                                 UrlContract $urlContract)

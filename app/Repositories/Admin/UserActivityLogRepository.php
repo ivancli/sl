@@ -15,8 +15,8 @@ use Illuminate\Http\Request;
 
 class UserActivityLogRepository implements UserActivityLogContract
 {
-    var $request;
-    var $userActivityLog;
+    protected $request;
+    protected $userActivityLog;
 
     public function __construct(Request $request, UserActivityLog $userActivityLog)
     {

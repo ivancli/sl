@@ -17,9 +17,9 @@ use Illuminate\Support\Facades\Cache;
 
 class SubscriptionManagementRepository implements SubscriptionManagementContract
 {
-    var $productFamilyRepo;
-    var $productRepo;
-    var $subscriptionRepo;
+    protected $productFamilyRepo;
+    protected $productRepo;
+    protected $subscriptionRepo;
 
     public function __construct(ProductFamilyContract $productFamilyContract, ProductContract $productContract, SubscriptionContract $subscriptionContract)
     {

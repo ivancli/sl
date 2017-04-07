@@ -66,6 +66,7 @@ class ItemMeta extends Model
             'delete' => route('item-meta.destroy', $this->getKey()),
             'conf_index' => route('item-meta-conf.index', ['item_meta_id' => $this->getKey()]),
             'conf_store' => route('item-meta-conf.store', ['item_meta_id' => $this->getKey()]),
+            'test_crawl_parse' => route('item_meta.test', $this->getKey()),
         ];
     }
 

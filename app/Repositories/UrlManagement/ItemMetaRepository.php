@@ -16,8 +16,8 @@ use Illuminate\Http\Request;
 
 class ItemMetaRepository implements ItemMetaContract
 {
-    var $request;
-    var $itemMeta;
+    protected $request;
+    protected $itemMeta;
 
     public function __construct(Request $request, ItemMeta $itemMeta)
     {

@@ -25,8 +25,8 @@ use Illuminate\Http\Request;
 
 class PermissionController extends Controller
 {
-    var $request;
-    var $permissionRepo;
+    protected $request;
+    protected $permissionRepo;
 
     public function __construct(Request $request,
                                 PermissionContract $permissionContract)

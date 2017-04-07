@@ -20,8 +20,8 @@ use IvanCLI\Chargify\Chargify;
 
 class ProductRepository implements ProductContract
 {
-    var $productFamilyRepo;
-    var $subscriptionRepo;
+    protected $productFamilyRepo;
+    protected $subscriptionRepo;
 
     public function __construct(ProductFamilyContract $productFamilyContract, SubscriptionContract $subscriptionContract)
     {

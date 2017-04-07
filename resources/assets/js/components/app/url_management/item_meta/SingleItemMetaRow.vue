@@ -19,20 +19,26 @@
                 <i class="glyphicon glyphicon-cog"></i>
             </a>
             &nbsp;
+            <a href="#" class="text-muted" title="test crawl/parse" @click.prevent="onClickTestCrawlParseItemMeta">
+                <i class="glyphicon glyphicon-refresh"></i>
+            </a>
+            &nbsp;
             <a href="#" class="text-danger" @click.prevent="onClickDeleteItemMeta" title="delete">
                 <i class="glyphicon glyphicon-trash"></i>
             </a>
         </td>
         <edit-popup :is-active="isEditingItemMeta" :item-meta="itemMeta" @hide-modal="hideEditPopup" @updated-item-meta="updatedItemMeta"></edit-popup>
         <edit-confs-popup :is-active="isEditingItemMetaConfs" :item-meta="itemMeta" @hide-modal="hideEditItemMetaConfsPopup" @updated-item-meta-confs="updatedItemMetaConfs"></edit-confs-popup>
+        <crawl-parse-result-popup v-if="crawlParseResult != null" :crawl-parse-result="crawlParseResult" @hide-modal="hideCrawlParseResultPopup"></crawl-parse-result-popup>
         <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
-        <loading v-if="isDeletingItemMeta"></loading>
+        <loading v-if="isDeletingItemMeta || isTestingCrawlParseItemMeta"></loading>
     </tr>
 </template>
 
 <script>
     import editPopup from './EditPopup.vue';
     import editConfsPopup from '../item_meta_conf/EditPopup.vue';
+    import crawlParseResultPopup from './CrawlParseResultPopup.vue';
 
     import deleteConfirmation from '../../../fragments/modals/DeleteConfirmation.vue';
     import loading from '../../../Loading.vue';
@@ -43,6 +49,7 @@
         components: {
             editPopup,
             editConfsPopup,
+            crawlParseResultPopup,
             deleteConfirmation,
             loading,
         },
@@ -56,9 +63,11 @@
                     ],
                     active: false
                 },
+                crawlParseResult: null,
                 isDeletingItemMeta: false,
                 isEditingItemMeta: false,
                 isEditingItemMetaConfs: false,
+                isTestingCrawlParseItemMeta: false,
             }
         },
         props: [
@@ -122,6 +131,18 @@
                 }).catch(error => {
                     this.isDeletingItemMeta = false;
                 })
+            },
+            onClickTestCrawlParseItemMeta(){
+                this.isTestingCrawlParseItemMeta = true;
+                axios.post(this.itemMeta.urls.test_crawl_parse).then(response => {
+                    this.isTestingCrawlParseItemMeta = false;
+                    this.crawlParseResult = response.data;
+                }).catch(error => {
+                    this.isTestingCrawlParseItemMeta = false;
+                })
+            },
+            hideCrawlParseResultPopup(){
+                this.crawlParseResult = null;
             }
         }
     }

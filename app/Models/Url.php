@@ -79,6 +79,7 @@ class Url extends Model
     public function getUrlsAttribute()
     {
         return [
+            'index' => route('url.index'),
             'show' => route('url.show', $this->getKey()),
             'store' => route('url.store'),
             'edit' => route('url.edit', $this->getKey()),

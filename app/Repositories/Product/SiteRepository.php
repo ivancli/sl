@@ -15,7 +15,7 @@ use App\Models\User;
 
 class SiteRepository implements SiteContract
 {
-    var $site;
+    protected $site;
 
     public function __construct(Site $site)
     {

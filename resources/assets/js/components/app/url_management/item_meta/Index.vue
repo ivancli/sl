@@ -41,7 +41,8 @@
                                     </tr>
                                     </thead>
                                     <tbody v-if="itemMetas.length > 0">
-                                    <single-item-meta-row v-for="itemMeta in itemMetas" :current-item-meta="itemMeta" :item="item" @reloadItemMetas="loadItemMetas(currentPageUrl)"></single-item-meta-row>
+                                    <single-item-meta-row v-for="itemMeta in itemMetas" :current-item-meta="itemMeta" :item="item"
+                                                          @reloadItemMetas="loadItemMetas(currentPageUrl)"></single-item-meta-row>
                                     </tbody>
                                     <tbody v-else>
                                     <tr>
@@ -55,6 +56,10 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
+                                <a :href="viewItemsUrl" class="btn btn-default btn-sm btn-flat">
+                                    <i class="fa fa-caret-left"></i>
+                                    VIEW ITEMS
+                                </a>
                                 <a href="#" class="btn btn-primary btn-sm btn-flat" @click.prevent="showCreateNewItemMeta">CREATE NEW ITEM META</a>
                             </div>
                             <div class="col-sm-6 text-right">
@@ -176,47 +181,54 @@
             }
         },
         computed: {
-            currentPageUrl: function () {
+            currentPageUrl() {
                 return this.item.urls.meta_index + '&page=' + this.paginationData.current_page
-                        + '&orderBy=' + this.orderByData.column
-                        + '&direction=' + this.orderByData.direction
-                        + '&per_page=' + this.paginationData.per_page
-                        + '&key=' + this.filterText;
+                    + '&orderBy=' + this.orderByData.column
+                    + '&direction=' + this.orderByData.direction
+                    + '&per_page=' + this.paginationData.per_page
+                    + '&key=' + this.filterText;
             },
-            nextPageUrl: function () {
+            nextPageUrl() {
                 if (this.paginationData.next_page_url == null) {
                     return null;
                 } else {
                     return this.paginationData.next_page_url
-                            + '&orderBy=' + this.orderByData.column
-                            + '&direction=' + this.orderByData.direction
-                            + '&per_page=' + this.paginationData.per_page
-                            + '&key=' + this.filterText;
-                }
-            },
-            prevPageUrl: function () {
-                if (this.paginationData.prev_page_url == null) {
-                    return null;
-                } else {
-                    return this.paginationData.prev_page_url
-                            + '&orderBy=' + this.orderByData.column
-                            + '&direction=' + this.orderByData.direction
-                            + '&per_page=' + this.paginationData.per_page
-                            + '&key=' + this.filterText;
-                }
-            },
-            firstPageUrl: function () {
-                return this.item.urls.meta_index + '&page=1&orderBy=' + this.orderByData.column
-                        + '&direction=' + this.orderByData.direction
-                        + '&per_page=' + this.paginationData.per_page
-                        + '&key=' + this.filterText;
-            },
-            lastPageUrl: function () {
-                return this.item.urls.meta_index + '&page=' + this.paginationData.last_page
                         + '&orderBy=' + this.orderByData.column
                         + '&direction=' + this.orderByData.direction
                         + '&per_page=' + this.paginationData.per_page
                         + '&key=' + this.filterText;
+                }
+            },
+            prevPageUrl() {
+                if (this.paginationData.prev_page_url == null) {
+                    return null;
+                } else {
+                    return this.paginationData.prev_page_url
+                        + '&orderBy=' + this.orderByData.column
+                        + '&direction=' + this.orderByData.direction
+                        + '&per_page=' + this.paginationData.per_page
+                        + '&key=' + this.filterText;
+                }
+            },
+            firstPageUrl() {
+                return this.item.urls.meta_index + '&page=1&orderBy=' + this.orderByData.column
+                    + '&direction=' + this.orderByData.direction
+                    + '&per_page=' + this.paginationData.per_page
+                    + '&key=' + this.filterText;
+            },
+            lastPageUrl() {
+                return this.item.urls.meta_index + '&page=' + this.paginationData.last_page
+                    + '&orderBy=' + this.orderByData.column
+                    + '&direction=' + this.orderByData.direction
+                    + '&per_page=' + this.paginationData.per_page
+                    + '&key=' + this.filterText;
+            },
+            viewItemsUrl(){
+                if (this.item != null) {
+                    return this.item.urls.index;
+                } else {
+                    return null;
+                }
             }
         }
     }

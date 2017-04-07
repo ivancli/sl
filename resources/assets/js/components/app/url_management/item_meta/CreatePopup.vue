@@ -75,6 +75,7 @@
                 element: '',
                 value: '',
                 isCreatingMeta: false,
+                historical_type: null,
                 errors: [],
             }
         },
@@ -108,6 +109,7 @@
                 let data = {
                     item_id: this.item.id,
                     element: this.element,
+                    historical_type: this.historical_type,
                 };
                 if (this.value) {
                     data.value = this.value;
