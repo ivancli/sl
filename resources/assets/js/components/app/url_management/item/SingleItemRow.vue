@@ -18,18 +18,24 @@
                 <i class="glyphicon glyphicon-qrcode"></i>
             </a>
             &nbsp;
+            <a href="#" class="text-muted" title="test crawl/parse" @click.prevent="onClickTestCrawlParseItem">
+                <i class="glyphicon glyphicon-refresh"></i>
+            </a>
+            &nbsp;
             <a href="#" class="text-danger" @click.prevent="onClickDeleteItem" title="delete">
                 <i class="glyphicon glyphicon-trash"></i>
             </a>
         </td>
         <edit-popup :is-active="isEditingItem" :item="item" @hide-modal="hideEditPopup" @updated-item="updatedItem"></edit-popup>
         <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
-        <loading v-if="isDeletingItem"></loading>
+        <crawl-parse-result-popup v-if="crawlParseResult != null" :item="item" :crawl-parse-result="crawlParseResult" @hide-modal="hideCrawlParseResultPopup" @pushed-to-queue="pushedToQueue"></crawl-parse-result-popup>
+        <loading v-if="isDeletingItem || isTestingCrawlParseItem"></loading>
     </tr>
 </template>
 
 <script>
     import editPopup from './EditPopup.vue';
+    import crawlParseResultPopup from './CrawlParseResultPopup.vue';
 
     import deleteConfirmation from '../../../fragments/modals/DeleteConfirmation.vue';
     import loading from '../../../Loading.vue';
@@ -40,6 +46,7 @@
         components: {
             editPopup,
             deleteConfirmation,
+            crawlParseResultPopup,
             loading,
         },
         data(){
@@ -54,6 +61,8 @@
                 },
                 isDeletingItem: false,
                 isEditingItem: false,
+                isTestingCrawlParseItem: false,
+                crawlParseResult: null,
             }
         },
         props: [
@@ -108,6 +117,26 @@
                 }).catch(error => {
                     this.isDeletingItem = false;
                 })
+            },
+            onClickTestCrawlParseItem(){
+                this.testCrawlParseItemMeta();
+            },
+            testCrawlParseItemMeta()
+            {
+                this.isTestingCrawlParseItem = true;
+                axios.post(this.item.urls.test_crawl_parse).then(response => {
+                    this.isTestingCrawlParseItem = false;
+                    this.crawlParseResult = response.data;
+                }).catch(error => {
+                    this.isTestingCrawlParseItem = false;
+                })
+            },
+            pushedToQueue(){
+                this.hideCrawlParseResultPopup();
+                /*reload this item*/
+            },
+            hideCrawlParseResultPopup(){
+                this.crawlParseResult = null;
             }
         }
     }

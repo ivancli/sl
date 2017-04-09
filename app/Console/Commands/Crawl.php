@@ -50,40 +50,43 @@ class Crawl extends Command
             // get URL by URL ID
             $url = $this->urlRepo->get($url_id);
 
-            // check activeness of URL
-            if ($this->validate($url)) {
-
-                // make sure the URL has corresponding crawler in DB
-                if (!is_null($crawler = $url->crawler)) {
-
-                    $this->pushToQueue($url);
-                    $this->info("URL-{$url->getKey()} {$url->domainFullPath} has been pushed to queue.");
-                } else {
-                    $this->error("URL-{$url->getKey()} {$url->domainFullPath} does not have a crawler in DB.");
-                }
-            }
+            $this->processSingleUrl($url);
         } else { // if URL ID is not provided
 
             // process all URLs
             $urls = $this->urlRepo->all();
 
-            $urls->each(function ($url, $index) {
+            $progressBar = $this->output->createProgressBar($urls->count());
 
-                // check activeness of URL
-                if ($this->validate($url)) {
+            $urls->each(function ($url, $index) use ($progressBar) {
 
-                    // make sure the URL has corresponding crawler in DB and it's not the ones being processed
-                    if (!is_null($crawler = $url->crawler) && is_null($crawler->status)) {
-
-                        // push crawler to queue
-                        $this->pushToQueue($crawler);
-
-                        $this->info("URL-{$url->getKey()} {$url->domainFullPath} has been pushed to queue.");
-                    } else {
-                        $this->error("URL-{$url->getKey()} {$url->domainFullPath} does not have a crawler in DB.");
-                    }
-                }
+                $progressBar->advance();
+                $this->processSingleUrl($url);
             });
+
+            $progressBar->finish();
+        }
+    }
+
+    protected function processSingleUrl($url)
+    {
+        // check activeness of URL
+        if ($this->validate($url)) {
+
+            // make sure the URL has corresponding crawler in DB and it's not the ones being processed
+            $crawler = $url->crawler;
+            if (!is_null($crawler)) {
+                if (!is_null($crawler->status)) {
+                    $this->warn("URL-{$url->getKey()} {$url->domainFullPath} is currently being processed.");
+                } else {
+                    // push crawler to queue
+                    $this->pushToQueue($url);
+
+                    $this->info("URL-{$url->getKey()} {$url->domainFullPath} has been pushed to queue.");
+                }
+            } else {
+                $this->error("URL-{$url->getKey()} {$url->domainFullPath} does not have a crawler in DB.");
+            }
         }
     }
 
@@ -108,7 +111,7 @@ class Crawl extends Command
     protected function pushToQueue(Url $url)
     {
         $delay = rand(config('crawl.delay.min'), config('crawl.delay.max'));
-        dispatch((new CrawlJob($url, $this->option('test')))->onQueue("crawl")->delay($delay));
+        dispatch((new CrawlJob($url))->onQueue("crawl")->delay($delay));
         $crawler = $url->crawler;
         $crawler->statusQueuing();
     }

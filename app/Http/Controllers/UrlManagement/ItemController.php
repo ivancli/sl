@@ -20,6 +20,7 @@ use App\Events\UrlManagement\Item\AfterUpdate;
 use App\Events\UrlManagement\Item\BeforeDestroy;
 use App\Events\UrlManagement\Item\AfterDestroy;
 use App\Models\Item;
+use App\Jobs\Crawl as CrawlJob;
 use App\Validators\UrlManagement\Item\StoreValidator;
 use Illuminate\Http\Request;
 
@@ -146,6 +147,16 @@ class ItemController extends Controller
         event(new BeforeDestroy($item));
         $status = $this->itemRepo->destroy($item);
         event(new AfterDestroy());
+        return compact(['status']);
+    }
+
+    public function queue(Item $item)
+    {
+        $url = $item->url;
+        $this->dispatch((new CrawlJob($url))->onQueue("crawl"));
+        $crawler = $url->crawler;
+        $crawler->statusQueuing();
+        $status = true;
         return compact(['status']);
     }
 }

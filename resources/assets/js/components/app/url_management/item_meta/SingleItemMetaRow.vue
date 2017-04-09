@@ -29,7 +29,7 @@
         </td>
         <edit-popup :is-active="isEditingItemMeta" :item-meta="itemMeta" @hide-modal="hideEditPopup" @updated-item-meta="updatedItemMeta"></edit-popup>
         <edit-confs-popup :is-active="isEditingItemMetaConfs" :item-meta="itemMeta" @hide-modal="hideEditItemMetaConfsPopup" @updated-item-meta-confs="updatedItemMetaConfs"></edit-confs-popup>
-        <crawl-parse-result-popup v-if="crawlParseResult != null" :crawl-parse-result="crawlParseResult" @hide-modal="hideCrawlParseResultPopup"></crawl-parse-result-popup>
+        <crawl-parse-result-popup v-if="crawlParseResult != null" :item-meta="itemMeta" :crawl-parse-result="crawlParseResult" @hide-modal="hideCrawlParseResultPopup" @pushed-to-queue="pushedToQueue"></crawl-parse-result-popup>
         <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
         <loading v-if="isDeletingItemMeta || isTestingCrawlParseItemMeta"></loading>
     </tr>
@@ -133,6 +133,10 @@
                 })
             },
             onClickTestCrawlParseItemMeta(){
+                this.testCrawlParseItemMeta();
+            },
+            testCrawlParseItemMeta()
+            {
                 this.isTestingCrawlParseItemMeta = true;
                 axios.post(this.itemMeta.urls.test_crawl_parse).then(response => {
                     this.isTestingCrawlParseItemMeta = false;
@@ -140,6 +144,10 @@
                 }).catch(error => {
                     this.isTestingCrawlParseItemMeta = false;
                 })
+            },
+            pushedToQueue(){
+                this.hideCrawlParseResultPopup();
+                /*reload this item*/
             },
             hideCrawlParseResultPopup(){
                 this.crawlParseResult = null;

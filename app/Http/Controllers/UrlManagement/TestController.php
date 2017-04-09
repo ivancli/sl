@@ -82,14 +82,16 @@ class TestController extends Controller
 
         foreach ($item->metas as $metaIndex => $meta) {
             $parseResults = $this->parserRepo->parseMeta($meta, $content);
-            foreach ($parseResults as $index => $parseResult) {
-                switch ($meta->historical_type) {
-                    case "price":
-                        $parseResults[$index] = $this->parserRepo->formatMetaValue([
-                            'strip_text', 'currency'
-                        ], $parseResult);
-                        break;
-                    default:
+            if (!is_null($parseResults)) {
+                foreach ($parseResults as $index => $parseResult) {
+                    switch ($meta->historical_type) {
+                        case "price":
+                            $parseResults[$index] = $this->parserRepo->formatMetaValue([
+                                'strip_text', 'currency'
+                            ], $parseResult);
+                            break;
+                        default:
+                    }
                 }
             }
             $results[$meta->getKey()] = [

@@ -64,9 +64,10 @@ class ItemMeta extends Model
             'edit' => route('item-meta.edit', $this->getKey()),
             'update' => route('item-meta.update', $this->getKey()),
             'delete' => route('item-meta.destroy', $this->getKey()),
+            'queue' => route('item-meta.queue', $this->getKey()),
             'conf_index' => route('item-meta-conf.index', ['item_meta_id' => $this->getKey()]),
             'conf_store' => route('item-meta-conf.store', ['item_meta_id' => $this->getKey()]),
-            'test_crawl_parse' => route('item_meta.test', $this->getKey()),
+            'test_crawl_parse' => route('item-meta.test', $this->getKey()),
         ];
     }
 

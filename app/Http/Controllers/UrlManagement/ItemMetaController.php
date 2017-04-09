@@ -20,6 +20,7 @@ use App\Events\UrlManagement\ItemMeta\AfterUpdate;
 use App\Events\UrlManagement\ItemMeta\BeforeDestroy;
 use App\Events\UrlManagement\ItemMeta\AfterDestroy;
 use App\Validators\UrlManagement\ItemMeta\StoreValidator;
+use App\Jobs\Crawl as CrawlJob;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -146,6 +147,16 @@ class ItemMetaController extends Controller
         event(new BeforeDestroy($itemMeta));
         $status = $this->itemMetaRepo->destroy($itemMeta);
         event(new AfterDestroy());
+        return compact(['status']);
+    }
+
+    public function queue(ItemMeta $itemMeta)
+    {
+        $url = $itemMeta->item->url;
+        $this->dispatch((new CrawlJob($url))->onQueue("crawl"));
+        $crawler = $url->crawler;
+        $crawler->statusQueuing();
+        $status = true;
         return compact(['status']);
     }
 }

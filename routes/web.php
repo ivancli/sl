@@ -72,20 +72,35 @@ Route::group(['middleware' => ['auth', 'subs']], function () {
             ]
         ]);
         Route::resource('domain-conf', 'UrlManagement\DomainConfController');
+
+        #region URL
         Route::resource('url', 'UrlManagement\UrlController');
+        Route::post('url/queue/{url}', 'UrlManagement\UrlController@queue')->name('url.queue');
+        #endregion
+
+        #region Item
         Route::resource('item', 'UrlManagement\ItemController');
+        Route::post('item/queue/{item}', 'UrlManagement\ItemController@queue')->name('item.queue');
+        #endregion
+
+        #region ItemMeta
         Route::resource('item-meta', 'UrlManagement\ItemMetaController', [
             'parameters' => [
                 'item-meta' => 'itemMeta'
             ]
         ]);
+        Route::post('item-meta/queue/{itemMeta}', 'UrlManagement\ItemMetaController@queue')->name('item-meta.queue');
+        #endregion
+
         Route::resource('item-meta-conf', 'UrlManagement\ItemMetaConfController');
 
+        #region Test Crawl Parse
         Route::group(['prefix' => 'test'], function () {
-            Route::post('crawl-parse-item-meta/{itemMeta}', 'UrlManagement\TestController@crawlParseItemMeta')->name('item_meta.test');
+            Route::post('crawl-parse-item-meta/{itemMeta}', 'UrlManagement\TestController@crawlParseItemMeta')->name('item-meta.test');
             Route::post('crawl-parse-item/{item}', 'UrlManagement\TestController@crawlParseItem')->name('item.test');
             Route::post('crawl-parse-url/url', 'UrlManagement\TestController@crawlParseUrl')->name('url.test');
         });
+        #endregion
     });
     #endregion
 

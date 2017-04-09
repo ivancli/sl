@@ -51,7 +51,7 @@
         },
         props: [
             'is-active',
-            'item-meta',
+            'item',
             'crawl-parse-result'
         ],
         data(){
@@ -65,7 +65,7 @@
             },
             pushToQueue(){
                 this.isPushingToQueue = true;
-                axios.post(this.itemMeta.urls.queue).then(response => {
+                axios.post(this.item.urls.queue).then(response => {
                     this.isPushingToQueue = false;
                     if (response.data.status == true) {
                         this.confirmPushToQueue();

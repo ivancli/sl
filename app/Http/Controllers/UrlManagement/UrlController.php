@@ -19,6 +19,7 @@ use App\Events\UrlManagement\Url\BeforeUpdate;
 use App\Events\UrlManagement\Url\AfterUpdate;
 use App\Events\UrlManagement\Url\BeforeDestroy;
 use App\Events\UrlManagement\Url\AfterDestroy;
+use App\Jobs\Crawl as CrawlJob;
 use Illuminate\Http\Request;
 
 class UrlController extends Controller
@@ -132,6 +133,15 @@ class UrlController extends Controller
         $status = $this->urlRepo->destroy($url);
 
         event(new AfterDestroy());
+        return compact(['status']);
+    }
+
+    public function queue(Url $url)
+    {
+        $this->dispatch((new CrawlJob($url))->onQueue("crawl"));
+        $crawler = $url->crawler;
+        $crawler->statusQueuing();
+        $status = true;
         return compact(['status']);
     }
 }
