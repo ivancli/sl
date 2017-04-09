@@ -14,29 +14,42 @@
                             <tr v-for="(result, index) in crawlParseResultContent">
                                 <td v-text="index"></td>
                                 <td>
-                                    <div v-if="typeof result == 'object' || typeof result == 'array'">
+                                    <div>
                                         <table class="table table-bordered table-striped table-condensed table-hover">
                                             <tbody>
-                                            <tr v-for="(nested_val, nested_prop) in result">
-                                                <th v-text="nested_prop"></th>
+                                            <tr>
+                                                <th>
+                                                    <div v-if="result.item.name == null">{{ result.item.id }}</div>
+                                                    <div v-else>{{ result.item.name }}</div>
+                                                </th>
                                                 <td>
-                                                    <div v-if="typeof nested_val == 'object' || typeof nested_val == 'array'">
+                                                    <div v-if="typeof result.results == 'object' || typeof result.results == 'array'">
                                                         <table class="table table-bordered table-striped table-condensed table-hover">
                                                             <tbody>
-                                                            <tr v-for="(innerNested_val, innerNested_prop) in nested_val">
-                                                                <th v-text="innerNested_prop"></th>
-                                                                <td v-text="innerNested_val"></td>
+                                                            <tr v-for="item_result in result.results">
+                                                                <th v-text="item_result.item_meta.element"></th>
+                                                                <td>
+                                                                    <div v-if="typeof item_result.results == 'object' || typeof item_result.results == 'array'">
+                                                                        <table class="table table-bordered table-striped table-condensed table-hover">
+                                                                            <tbody>
+                                                                            <tr v-for="(item_meta_result, item_meta_index) in item_result.results">
+                                                                                <th v-text="item_meta_index"></th>
+                                                                                <td v-text="item_meta_result"></td>
+                                                                            </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </td>
                                                             </tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
-                                                    <div v-else v-text="nested_val"></div>
+                                                    <div v-else v-text="result.results"></div>
                                                 </td>
                                             </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div v-else v-text="result"></div>
                                 </td>
                             </tr>
                             </tbody>
@@ -75,7 +88,7 @@
         },
         props: [
             'is-active',
-            'item-meta',
+            'url',
             'crawl-parse-result'
         ],
         data(){
@@ -89,7 +102,7 @@
             },
             pushToQueue(){
                 this.isPushingToQueue = true;
-                axios.post(this.itemMeta.urls.queue).then(response => {
+                axios.post(this.url.urls.queue).then(response => {
                     this.isPushingToQueue = false;
                     if (response.data.status == true) {
                         this.confirmPushToQueue();

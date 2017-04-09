@@ -33,7 +33,7 @@
                                 <th :class="orderByClass('status')" @click.prevent="setOrdering('status')">Status</th>
                                 <th :class="orderByClass('created_at')" @click.prevent="setOrdering('created_at')">Created at</th>
                                 <th :class="orderByClass('updated_at')" @click.prevent="setOrdering('updated_at')">Updated at</th>
-                                <th></th>
+                                <th width="150"></th>
                             </tr>
                             </thead>
                             <tbody v-if="urls.length > 0">

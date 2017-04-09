@@ -42,7 +42,7 @@
                                         <th :class="orderByClass('updated_at')" @click.prevent="setOrdering('updated_at')">
                                             Updated at
                                         </th>
-                                        <th></th>
+                                        <th width="150"></th>
                                     </tr>
                                     </thead>
                                     <tbody v-if="items.length > 0">
@@ -238,5 +238,39 @@
 </script>
 
 <style>
+    table.table-paginated th {
+        padding-right: 20px !important;
+        cursor: pointer;
+        position: relative;
+    }
 
+    .table-paginated th.order-asc:after {
+        content: "\F160";
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: inherit;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        right: 5px;
+        position: absolute;
+        color: #aaa;
+        top: 50%;
+        margin-top: -7px;
+    }
+
+    .table-paginated th.order-desc:after {
+        content: "\F161";
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: inherit;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        right: 5px;
+        position: absolute;
+        color: #aaa;
+        top: 50%;
+        margin-top: -7px;
+    }
 </style>

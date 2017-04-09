@@ -11,7 +11,8 @@
                     <div class="col-sm-12">
                         <div class="row">
                             <div class="col-sm-offset-3 col-sm-9">
-                                <ul class="text-danger errors-container p-b-10 p-l-20" v-if="Object.keys(errors).length > 0">
+                                <ul class="text-danger errors-container p-b-10 p-l-20"
+                                    v-if="Object.keys(errors).length > 0">
                                     <li v-for="error in errors">
                                         <div v-if="error.constructor != Array" v-text="error"></div>
                                         <div v-else v-for="message in error" v-text="message"></div>
@@ -33,11 +34,31 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label for="sel-format-type" class="control-label col-sm-3">Format Type</label>
+                                <div class="col-sm-9">
+                                    <select id="sel-format-type" class="form-control" v-model="format_type">
+                                        <option value="">Text</option>
+                                        <option value="decimal">Decimal</option>
+                                        <option value="boolean">Boolean</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label for="sel-historical-type" class="control-label col-sm-3">Historical Type</label>
                                 <div class="col-sm-9">
                                     <select id="sel-historical-type" class="form-control" v-model="historical_type">
                                         <option value="">None</option>
                                         <option value="price">Price</option>
+                                        <option value="boolean">Yes/No</option>
+                                        <!--TODO more will be coming such as stock, colour and size etc-->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="sel-status" class="control-label col-sm-3">Status</label>
+                                <div class="col-sm-9">
+                                    <select id="sel-status" class="form-control" v-model="status">
+                                        <option value="standby">Standby</option>
                                         <!--TODO more will be coming such as stock, colour and size etc-->
                                     </select>
                                 </div>
@@ -49,7 +70,9 @@
             <footer class="modal-card-foot">
                 <div class="row">
                     <div class="col-sm-12 text-right">
-                        <button class="btn btn-primary btn-flat" @click.prevent="updateMeta" :disabled="isEditingMeta">CONFIRM</button>
+                        <button class="btn btn-primary btn-flat" @click.prevent="updateMeta" :disabled="isEditingMeta">
+                            CONFIRM
+                        </button>
                         <button class="btn btn-default btn-flat" @click.prevent="cancelUpdate">CANCEL</button>
                     </div>
                 </div>
@@ -74,7 +97,9 @@
             return {
                 element: '',
                 value: '',
-                historical_type: '',
+                format_type: "",
+                historical_type: "",
+                status: "standby",
                 isEditingMeta: false,
                 errors: [],
             }
@@ -87,7 +112,9 @@
             initSetMeta(){
                 this.element = this.itemMeta.element;
                 this.value = this.itemMeta.value;
-                this.historical_type = this.itemMeta.historical_type;
+                this.format_type = this.itemMeta.format_type == null ? '' : this.itemMeta.format_type;
+                this.historical_type = this.itemMeta.historical_type == null ? '' : this.itemMeta.historical_type;
+                this.status = this.itemMeta.status;
             },
             updateMeta(){
                 this.isEditingMeta = true;
@@ -118,8 +145,16 @@
                 if (this.value) {
                     data.value = this.value;
                 }
-                if(this.historical_type){
+                if (this.format_type) {
+                    data.format_type = this.format_type;
+                }
+                if (this.historical_type) {
                     data.historical_type = this.historical_type;
+                }
+                if (this.status) {
+                    data.status = this.status;
+                } else {
+                    data.status = 'standby';
                 }
                 return data;
             }

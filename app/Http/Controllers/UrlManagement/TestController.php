@@ -48,7 +48,7 @@ class TestController extends Controller
         $content = $crawlResult['content'];
 
         $results = $this->parserRepo->parseMeta($itemMeta, $content);
-
+        
         foreach ($results as $index => $result) {
             switch ($itemMeta->historical_type) {
                 case "price":
@@ -124,14 +124,16 @@ class TestController extends Controller
             $itemResults = [];
             foreach ($item->metas as $metaIndex => $meta) {
                 $parseResults = $this->parserRepo->parseMeta($meta, $content);
-                foreach ($parseResults as $index => $parseResult) {
-                    switch ($meta->historical_type) {
-                        case "price":
-                            $parseResults[$index] = $this->parserRepo->formatMetaValue([
-                                'strip_text', 'currency'
-                            ], $parseResult);
-                            break;
-                        default:
+                if (!is_null($parseResults)) {
+                    foreach ($parseResults as $index => $parseResult) {
+                        switch ($meta->historical_type) {
+                            case "price":
+                                $parseResults[$index] = $this->parserRepo->formatMetaValue([
+                                    'strip_text', 'currency'
+                                ], $parseResult);
+                                break;
+                            default:
+                        }
                     }
                 }
                 $itemResults[$meta->getKey()] = [

@@ -33,11 +33,31 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label for="sel-format-type" class="control-label col-sm-3">Format Type</label>
+                                <div class="col-sm-9">
+                                    <select id="sel-format-type" class="form-control" v-model="format_type">
+                                        <option value="">Text</option>
+                                        <option value="decimal">Decimal</option>
+                                        <option value="boolean">Boolean</option>
+                                        <!--TODO more will be coming such as stock, colour and size etc-->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label for="sel-historical-type" class="control-label col-sm-3">Historical Type</label>
                                 <div class="col-sm-9">
                                     <select id="sel-historical-type" class="form-control" v-model="historical_type">
                                         <option value="">None</option>
                                         <option value="price">Price</option>
+                                        <!--TODO more will be coming such as stock, colour and size etc-->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="sel-status" class="control-label col-sm-3">Status</label>
+                                <div class="col-sm-9">
+                                    <select id="sel-status" class="form-control" v-model="status">
+                                        <option value="standby">Standby</option>
                                         <!--TODO more will be coming such as stock, colour and size etc-->
                                     </select>
                                 </div>
@@ -75,7 +95,9 @@
                 element: '',
                 value: '',
                 isCreatingMeta: false,
-                historical_type: null,
+                format_type: "",
+                historical_type: "",
+                status: "standby",
                 errors: [],
             }
         },
@@ -109,7 +131,9 @@
                 let data = {
                     item_id: this.item.id,
                     element: this.element,
+                    format_type: this.format_type,
                     historical_type: this.historical_type,
+                    status: this.status,
                 };
                 if (this.value) {
                     data.value = this.value;

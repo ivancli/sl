@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 class ItemMeta extends Model
 {
     protected $fillable = [
-        'element', 'value', 'historical_type'
+        'element', 'value', 'format_type', 'historical_type', 'status'
     ];
 
     protected $with = [

@@ -98,7 +98,7 @@ Route::group(['middleware' => ['auth', 'subs']], function () {
         Route::group(['prefix' => 'test'], function () {
             Route::post('crawl-parse-item-meta/{itemMeta}', 'UrlManagement\TestController@crawlParseItemMeta')->name('item-meta.test');
             Route::post('crawl-parse-item/{item}', 'UrlManagement\TestController@crawlParseItem')->name('item.test');
-            Route::post('crawl-parse-url/url', 'UrlManagement\TestController@crawlParseUrl')->name('url.test');
+            Route::post('crawl-parse-url/url/{url}', 'UrlManagement\TestController@crawlParseUrl')->name('url.test');
         });
         #endregion
     });

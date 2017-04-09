@@ -20059,6 +20059,16 @@ table.text-center th {
   vertical-align: middle !important;
 }
 
+.word-wrap-break-word {
+  -ms-word-wrap: break-word !important;
+  word-wrap: break-word !important;
+}
+
+.word-break-break-all {
+  -ms-word-break: break-all !important;
+  word-break: break-all !important;
+}
+
 .pre-box-body {
   max-width: 1200px;
   margin: 0 auto;
@@ -20301,4 +20311,4 @@ div {
 }
 
 
-/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiIvY3NzL2F1dGguMzA5YjNiZmQ0ZWVkZDZjNmMxZTMuY3NzIiwic291cmNlUm9vdCI6IiJ9*/
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiIvY3NzL2F1dGguM2UwZjc2MTViZjQwMjQ0MjVhODQuY3NzIiwic291cmNlUm9vdCI6IiJ9*/

@@ -121,8 +121,7 @@
             onClickTestCrawlParseItem(){
                 this.testCrawlParseItemMeta();
             },
-            testCrawlParseItemMeta()
-            {
+            testCrawlParseItemMeta(){
                 this.isTestingCrawlParseItem = true;
                 axios.post(this.item.urls.test_crawl_parse).then(response => {
                     this.isTestingCrawlParseItem = false;

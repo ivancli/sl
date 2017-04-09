@@ -3,7 +3,9 @@
         <td v-text="itemMeta.id"></td>
         <td v-text="itemMeta.element"></td>
         <td v-text="itemMeta.value"></td>
-        <td v-text="itemMeta.historical_type"></td>
+        <td>{{ itemMeta.format_type | capitalise }}</td>
+        <td>{{ itemMeta.historical_type | capitalise }}</td>
+        <td>{{ itemMeta.status | capitalise }}</td>
         <td>{{ itemMeta.created_at | formatDateTime(datetimeFormat) }}</td>
         <td>{{ itemMeta.updated_at | formatDateTime(datetimeFormat) }}</td>
         <td class="text-center">
@@ -44,6 +46,7 @@
     import loading from '../../../Loading.vue';
 
     import formatDateTime from '../../../../filters/formatDateTime';
+    import capitalise from '../../../../filters/capitalise';
 
     export default{
         components: {
@@ -135,8 +138,7 @@
             onClickTestCrawlParseItemMeta(){
                 this.testCrawlParseItemMeta();
             },
-            testCrawlParseItemMeta()
-            {
+            testCrawlParseItemMeta(){
                 this.isTestingCrawlParseItemMeta = true;
                 axios.post(this.itemMeta.urls.test_crawl_parse).then(response => {
                     this.isTestingCrawlParseItemMeta = false;

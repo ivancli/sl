@@ -59,8 +59,8 @@ class UrlObserver
             }
         } else {
             /* price */
-            $priceMeta = $item->setMeta('PRICE', null);
-            $availabilityMeta = $item->setMeta('AVAILABILITY', null);
+            $priceMeta = $item->setMeta('PRICE', null, 'decimal', 'price');
+            $availabilityMeta = $item->setMeta('AVAILABILITY', null, 'boolean');
         }
         /* TODO check common crawler configuration */
 

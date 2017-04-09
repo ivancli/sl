@@ -4,7 +4,7 @@
 import Vue from 'vue';
 
 Vue.filter('currency', function (number) {
-    if (typeof number == 'undefined') {
+    if (typeof number == 'undefined' || number == null) {
         return null;
     }
     var c = 2,

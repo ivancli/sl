@@ -71,13 +71,19 @@ class Item extends Model
      * Create new meta data
      * @param $element
      * @param $value
+     * @param null $format_type
+     * @param null $historical_type
+     * @param string $status
      * @return Model
      */
-    public function setMeta($element, $value)
+    public function setMeta($element, $value, $format_type = null, $historical_type = null, $status = 'standby')
     {
         $meta = $this->metas()->create([
             'element' => $element,
-            'value' => $value
+            'value' => $value,
+            'format_type' => $format_type,
+            'historical_type' => $historical_type,
+            'status' => $status,
         ]);
         return $meta;
     }

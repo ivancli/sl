@@ -32,12 +32,14 @@
                                     <thead>
                                     <tr>
                                         <th :class="orderByClass('id')" @click.prevent="setOrdering('id')">ID</th>
-                                        <th :class="orderByClass('element')" @click.prevent="setOrdering('name')">Element</th>
+                                        <th :class="orderByClass('element')" @click.prevent="setOrdering('element')">Element</th>
                                         <th :class="orderByClass('value')" @click.prevent="setOrdering('value')">Value</th>
+                                        <th :class="orderByClass('format_type')" @click.prevent="setOrdering('format_type')">Format Type</th>
                                         <th :class="orderByClass('historical_type')" @click.prevent="setOrdering('historical_type')">Historical Type</th>
+                                        <th :class="orderByClass('status')" @click.prevent="setOrdering('status')">Status</th>
                                         <th :class="orderByClass('created_at')" @click.prevent="setOrdering('created_at')">Created at</th>
                                         <th :class="orderByClass('updated_at')" @click.prevent="setOrdering('updated_at')">Updated at</th>
-                                        <th></th>
+                                        <th width="150"></th>
                                     </tr>
                                     </thead>
                                     <tbody v-if="itemMetas.length > 0">
@@ -46,7 +48,7 @@
                                     </tbody>
                                     <tbody v-else>
                                     <tr>
-                                        <td colspan="7" class="text-center">
+                                        <td colspan="9" class="text-center">
                                             No item meta data available
                                         </td>
                                     </tr>
@@ -235,5 +237,39 @@
 </script>
 
 <style>
+    table.table-paginated th {
+        padding-right: 20px !important;
+        cursor: pointer;
+        position: relative;
+    }
 
+    .table-paginated th.order-asc:after {
+        content: "\F160";
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: inherit;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        right: 5px;
+        position: absolute;
+        color: #aaa;
+        top: 50%;
+        margin-top: -7px;
+    }
+
+    .table-paginated th.order-desc:after {
+        content: "\F161";
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: inherit;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        right: 5px;
+        position: absolute;
+        color: #aaa;
+        top: 50%;
+        margin-top: -7px;
+    }
 </style>

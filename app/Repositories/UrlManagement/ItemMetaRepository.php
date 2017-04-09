@@ -84,6 +84,9 @@ class ItemMetaRepository implements ItemMetaContract
         $itemMeta = new $this->itemMeta;
         $itemMeta->element = $data['element'];
         $itemMeta->value = isset($data['value']) ? $data['value'] : null;
+        $itemMeta->format_type = isset($data['format_type']) ? $data['format_type'] : null;
+        $itemMeta->historical_type = isset($data['historical_type']) ? $data['historical_type'] : null;
+        $itemMeta->status = isset($data['status']) ? $data['status'] : null;
         $itemMeta->save();
         return $itemMeta;
     }
