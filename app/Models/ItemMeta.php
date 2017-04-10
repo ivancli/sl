@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 class ItemMeta extends Model
 {
     protected $fillable = [
-        'element', 'value', 'format_type', 'historical_type', 'status'
+        'element', 'value', 'format_type', 'historical_type', 'status', 'parsed_at',
     ];
 
     protected $with = [
@@ -126,5 +126,36 @@ class ItemMeta extends Model
         }
 
         return $historicalData;
+    }
+
+    /*----------------------------------------------------------------------*/
+    /* Helpers                                                              */
+    /*----------------------------------------------------------------------*/
+
+    /**
+     * Set status to standby
+     */
+    public function statusStandby()
+    {
+        $this->status = 'standby';
+        $this->save();
+    }
+
+    /**
+     * Set status to format_failed
+     */
+    public function statusFormatFailed()
+    {
+        $this->status = 'format_failed';
+        $this->save();
+    }
+
+    /**
+     * Set status to parse_failed
+     */
+    public function statusParseFailed()
+    {
+        $this->status = 'parse_failed';
+        $this->save();
     }
 }

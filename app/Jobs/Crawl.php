@@ -47,6 +47,7 @@ class Crawl implements ShouldQueue
      *
      * @param CrawlerContract $crawlerRepo
      * @param ParserContract $parserRepo
+     * @return mixed
      */
     public function handle(CrawlerContract $crawlerRepo, ParserContract $parserRepo)
     {
@@ -63,8 +64,9 @@ class Crawl implements ShouldQueue
 
         $result = $crawlerRepo->fetch($crawler);
 
-        if($result['status'] != 200){
-
+        if ($result['status'] != 200) {
+            $this->url->statusCrawlFailed();
+            return false;
         }
 
         $content = $result['content'];
@@ -121,15 +123,18 @@ class Crawl implements ShouldQueue
                                     event(new MetaChanged($meta));
                                 }
 
+                                $meta->statusStandby();
                                 event(new AfterSaveMeta($meta));
                                 #endregion
 
                             } else {
                                 /* empty result after formatted */
+                                $meta->statusFormatFailed();
                                 event(new NoFormatResult($meta));
                             }
                         } else {
                             /* first result is null */
+                            $meta->statusParseFailed();
                             event(new NoFirstResult($meta));
                         }
                     } else {
@@ -138,6 +143,7 @@ class Crawl implements ShouldQueue
                     }
                 } else {
                     /* parser has no result*/
+                    $meta->statusParseFailed();
                     event(new NoParseResult($meta));
                 }
             }
@@ -152,6 +158,8 @@ class Crawl implements ShouldQueue
         dump("End of Crawl");
 
         $crawler->statusNull();
+
+        $this->url->statusStandby();
 
         event(new AfterCrawlUrl($this->url));
     }

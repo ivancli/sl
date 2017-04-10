@@ -18,6 +18,7 @@ class CreateUrlsTable extends Migration
             $table->text('full_path');
             $table->string('status')->default('waiting');
             $table->char('is_active', 1)->default('y');
+            $table->timestamp('crawled_at')->nullable();
             $table->timestamps();
         });
     }

@@ -18,7 +18,7 @@ class Url extends Model
     ];
 
     protected $appends = [
-        'domain', 'domainFullPath', 'urls', 'active'
+        'domain', 'domainFullPath', 'urls', 'active', 'crawled_at',
     ];
 
     /**
@@ -106,4 +106,30 @@ class Url extends Model
         $this->save();
     }
 
+    /**
+     * Set status to standby
+     */
+    public function statusStandby()
+    {
+        $this->status = 'standby';
+        $this->save();
+    }
+
+    /**
+     * Set status to waiting
+     */
+    public function statusWaiting()
+    {
+        $this->status = 'waiting';
+        $this->save();
+    }
+
+    /**
+     * Set status to crawl_failed
+     */
+    public function statusCrawlFailed()
+    {
+        $this->status = 'crawl_failed';
+        $this->save();
+    }
 }

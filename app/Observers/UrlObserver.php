@@ -63,7 +63,6 @@ class UrlObserver
             $availabilityMeta = $item->setMeta('AVAILABILITY', null, 'boolean');
         }
         /* TODO check common crawler configuration */
-
     }
 
     public function saving()

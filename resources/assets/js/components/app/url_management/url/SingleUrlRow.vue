@@ -4,7 +4,7 @@
         <td class="word-wrap-break-word word-break-break-all">
             <a :href="url.full_path" v-text="url.full_path" target="_blank"></a>
         </td>
-        <td v-text="url.status"></td>
+        <td>{{ url.status | capitalise }}</td>
         <td>{{ url.created_at | formatDateTime(datetimeFormat) }}</td>
         <td>{{ url.updated_at | formatDateTime(datetimeFormat) }}</td>
         <td class="text-center">
@@ -42,6 +42,7 @@
     import loading from '../../../Loading.vue';
 
     import formatDateTime from '../../../../filters/formatDateTime';
+    import capitalise from '../../../../filters/capitalise';
 
     export default{
         components: {
