@@ -15,6 +15,7 @@ use App\Events\Jobs\Crawl\BeforeParseMeta;
 use App\Events\Jobs\Crawl\BeforeProcessItem;
 use App\Events\Jobs\Crawl\BeforeSaveMeta;
 use App\Events\Jobs\Crawl\MetaChanged;
+use App\Events\Jobs\Crawl\NoConfiguration;
 use App\Events\Jobs\Crawl\NoFirstResult;
 use App\Events\Jobs\Crawl\NoFormatResult;
 use App\Events\Jobs\Crawl\NoParseResult;
@@ -86,66 +87,93 @@ class Crawl implements ShouldQueue
 
             foreach ($item->metas as $meta) {
 
+                if ($meta->confs()->count() == 0) {
+                    $meta->statusConfigFailed();
+                    event(new NoConfiguration($meta));
+                    continue;
+                }
+
                 #region parsing
                 event(new BeforeParseMeta($meta));
                 $parserResult = $parserRepo->parseMeta($meta, $content);
                 event(new AfterParseMeta($meta));
                 #endregion
 
-                if ($parserResult !== false && is_array($parserResult) && count($parserResult) > 0) {
-                    if (count($parserResult) == 1) {
-                        $firstResult = array_first($parserResult);
-                        if (!is_null($firstResult)) {
+                if ($meta->format_type == 'boolean') {
+                    #region Boolean Meta
+                    $boolean = $parserResult !== false && is_array($parserResult) && count($parserResult) > 0;
 
-                            #region format parsed data
-                            switch ($meta->historical_type) {
-                                case "price":
-                                    $firstResult = $parserRepo->formatMetaValue([
-                                        'strip_text', 'currency'
-                                    ], $firstResult);
-                                    break;
-                                default:
-                            }
-                            #endregion
+                    event(new BeforeSaveMeta($meta));
 
+                    $valueDifferent = $meta->value != $boolean;
+                    $meta->value = $boolean;
+                    $meta->save();
+                    $meta->createHistoricalData($boolean);
 
-                            if (!empty($firstResult)) {
+                    if ($valueDifferent) {
+                        event(new MetaChanged($meta));
+                    }
 
-                                #region save final result
-                                event(new BeforeSaveMeta($meta));
+                    $meta->statusStandby();
+                    event(new AfterSaveMeta($meta));
+                    #endregion
+                } else {
+                    if ($parserResult !== false && is_array($parserResult) && count($parserResult) > 0) {
+                        if (count($parserResult) == 1) {
+                            $firstResult = array_first($parserResult);
+                            if (!is_null($firstResult)) {
 
-                                $valueDifferent = $meta->value != $firstResult;
-                                $meta->value = $firstResult;
-                                $meta->save();
-                                $meta->createHistoricalData($firstResult);
-
-                                if ($valueDifferent) {
-                                    event(new MetaChanged($meta));
+                                #region format parsed data
+                                switch ($meta->format_type) {
+                                    case "decimal":
+                                        $firstResult = $parserRepo->formatMetaValue([
+                                            'strip_text', 'currency'
+                                        ], $firstResult);
+                                        break;
+                                    default:
                                 }
-
-                                $meta->statusStandby();
-                                event(new AfterSaveMeta($meta));
                                 #endregion
 
+                                if (!empty($firstResult)) {
+
+                                    #region save final result
+                                    event(new BeforeSaveMeta($meta));
+
+                                    $valueDifferent = $meta->value != $firstResult;
+                                    $meta->value = $firstResult;
+                                    $meta->save();
+                                    $meta->createHistoricalData($firstResult);
+
+                                    if ($valueDifferent) {
+                                        event(new MetaChanged($meta));
+                                    }
+
+                                    $meta->statusStandby();
+                                    event(new AfterSaveMeta($meta));
+                                    #endregion
+
+                                } else {
+                                    /* empty result after formatted */
+                                    $meta->statusFormatFailed();
+                                    event(new NoFormatResult($meta));
+                                }
                             } else {
-                                /* empty result after formatted */
-                                $meta->statusFormatFailed();
-                                event(new NoFormatResult($meta));
+                                /* first result is null */
+                                $meta->statusParseFailed();
+                                event(new NoFirstResult($meta));
                             }
                         } else {
-                            /* first result is null */
-                            $meta->statusParseFailed();
-                            event(new NoFirstResult($meta));
+                            /* there are multiple results/nodes */
+                            /* json-ise the result */
                         }
                     } else {
-                        /* there are multiple results/nodes */
-                        /* json-ise the result */
+                        /* parser has no result*/
+                        $meta->statusParseFailed();
+                        event(new NoParseResult($meta));
                     }
-                } else {
-                    /* parser has no result*/
-                    $meta->statusParseFailed();
-                    event(new NoParseResult($meta));
                 }
+
+
             }
 
             event(new AfterProcessItem($item));

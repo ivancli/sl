@@ -20,7 +20,6 @@ class CreateItemsTable extends Migration
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->string('name')->nullable();
             $table->char('is_active', 1)->default('y');
-            $table->string('status')->nullable();
             $table->timestamp('processed_at')->nullable();
             $table->timestamps();
         });

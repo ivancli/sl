@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 class Item extends Model
 {
     protected $fillable = [
-        'name', 'is_active', 'status', 'processed_at',
+        'name', 'is_active', 'processed_at',
     ];
 
     protected $appends = [

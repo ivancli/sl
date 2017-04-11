@@ -253,6 +253,7 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Jobs\Crawl\AfterCrawlUrl' => [],
         /* error events */
         'App\Events\Jobs\Crawl\MetaChanged' => [],
+        'App\Events\Jobs\Crawl\NoConfiguration' => [],
         'App\Events\Jobs\Crawl\NoFormatResult' => [],
         'App\Events\Jobs\Crawl\NoFirstResult' => [],
         'App\Events\Jobs\Crawl\NoParseResult' => [],

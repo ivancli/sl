@@ -49,7 +49,6 @@
                                     <select id="sel-historical-type" class="form-control" v-model="historical_type">
                                         <option value="">None</option>
                                         <option value="price">Price</option>
-                                        <option value="boolean">Yes/No</option>
                                         <!--TODO more will be coming such as stock, colour and size etc-->
                                     </select>
                                 </div>

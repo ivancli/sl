@@ -4,7 +4,8 @@
         <td class="word-wrap-break-word word-break-break-all">
             <a :href="url.full_path" v-text="url.full_path" target="_blank"></a>
         </td>
-        <td>{{ url.status | capitalise }}</td>
+        <td>{{ url.status }}</td>
+        <td>{{ url.crawled_at | formatDateTime(datetimeFormat) }}</td>
         <td>{{ url.created_at | formatDateTime(datetimeFormat) }}</td>
         <td>{{ url.updated_at | formatDateTime(datetimeFormat) }}</td>
         <td class="text-center">

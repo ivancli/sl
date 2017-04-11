@@ -31,6 +31,7 @@
                                 <th :class="orderByClass('id')" @click.prevent="setOrdering('id')">ID</th>
                                 <th :class="orderByClass('full_path')" @click.prevent="setOrdering('full_path')">Full path</th>
                                 <th :class="orderByClass('status')" @click.prevent="setOrdering('status')">Status</th>
+                                <th :class="orderByClass('crawled_at')" @click.prevent="setOrdering('crawled_at')">Crawled at</th>
                                 <th :class="orderByClass('created_at')" @click.prevent="setOrdering('created_at')">Created at</th>
                                 <th :class="orderByClass('updated_at')" @click.prevent="setOrdering('updated_at')">Updated at</th>
                                 <th width="150"></th>

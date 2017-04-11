@@ -32,6 +32,15 @@ class Site extends Model
         return $this->belongsTo('App\Models\Url', 'url_id', 'id');
     }
 
+    /**
+     * relationship with item
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function item()
+    {
+        return $this->belongsTo('App\Models\Item', 'item_id', 'id');
+    }
+
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/

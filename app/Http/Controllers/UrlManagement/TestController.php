@@ -48,18 +48,26 @@ class TestController extends Controller
         $content = $crawlResult['content'];
 
         $results = $this->parserRepo->parseMeta($itemMeta, $content);
-        
-        foreach ($results as $index => $result) {
-            switch ($itemMeta->historical_type) {
-                case "price":
-                    $results[$index] = $this->parserRepo->formatMetaValue([
-                        'strip_text', 'currency'
-                    ], $result);
-                    break;
-                default:
+
+        if ($results != false && is_array($results) && count($results) > 0) {
+            if ($itemMeta->format_type == 'boolean') {
+                $results = [true];
+            } else {
+                foreach ($results as $index => $result) {
+                    switch ($itemMeta->format_type) {
+                        case "decimal":
+                            $results[$index] = $this->parserRepo->formatMetaValue([
+                                'strip_text', 'currency'
+                            ], $result);
+                            break;
+                        default:
+                    }
+                }
             }
+            $status = true;
+        } else {
+            $status = false;
         }
-        $status = true;
         return compact(['results', 'status']);
     }
 
@@ -82,7 +90,7 @@ class TestController extends Controller
 
         foreach ($item->metas as $metaIndex => $meta) {
             $parseResults = $this->parserRepo->parseMeta($meta, $content);
-            if (!is_null($parseResults)) {
+            if ($results != false && is_array($results) && count($results) > 0) {
                 foreach ($parseResults as $index => $parseResult) {
                     switch ($meta->historical_type) {
                         case "price":
@@ -126,12 +134,13 @@ class TestController extends Controller
                 $parseResults = $this->parserRepo->parseMeta($meta, $content);
                 if (!is_null($parseResults)) {
                     foreach ($parseResults as $index => $parseResult) {
-                        switch ($meta->historical_type) {
-                            case "price":
+                        switch ($meta->format_type) {
+                            case "decimal":
                                 $parseResults[$index] = $this->parserRepo->formatMetaValue([
                                     'strip_text', 'currency'
                                 ], $parseResult);
                                 break;
+                            case "boolean":
                             default:
                         }
                     }

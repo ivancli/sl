@@ -132,6 +132,12 @@ class ItemMeta extends Model
     /* Helpers                                                              */
     /*----------------------------------------------------------------------*/
 
+    public function statusConfigFailed()
+    {
+        $this->status = 'config_failed';
+        $this->save();
+    }
+
     /**
      * Set status to standby
      */

@@ -14,11 +14,11 @@ use Illuminate\Database\Eloquent\Model;
 class Url extends Model
 {
     protected $fillable = [
-        'full_path', 'status', 'is_active'
+        'full_path', 'status', 'is_active', 'crawled_at'
     ];
 
     protected $appends = [
-        'domain', 'domainFullPath', 'urls', 'active', 'crawled_at',
+        'domain', 'domainFullPath', 'urls', 'active',
     ];
 
     /**
