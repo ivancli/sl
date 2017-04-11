@@ -48,11 +48,10 @@ class TestController extends Controller
         $content = $crawlResult['content'];
 
         $results = $this->parserRepo->parseMeta($itemMeta, $content);
-
-        if ($results != false && is_array($results) && count($results) > 0) {
-            if ($itemMeta->format_type == 'boolean') {
-                $results = [true];
-            } else {
+        if ($itemMeta->format_type == 'boolean') {
+            $results = [$results != false && is_array($results) && count($results) > 0];
+        } else {
+            if ($results != false && is_array($results) && count($results) > 0) {
                 foreach ($results as $index => $result) {
                     switch ($itemMeta->format_type) {
                         case "decimal":
@@ -64,10 +63,8 @@ class TestController extends Controller
                     }
                 }
             }
-            $status = true;
-        } else {
-            $status = false;
         }
+        $status = true;
         return compact(['results', 'status']);
     }
 
@@ -90,16 +87,23 @@ class TestController extends Controller
 
         foreach ($item->metas as $metaIndex => $meta) {
             $parseResults = $this->parserRepo->parseMeta($meta, $content);
-            if ($results != false && is_array($results) && count($results) > 0) {
-                foreach ($parseResults as $index => $parseResult) {
-                    switch ($meta->historical_type) {
-                        case "price":
-                            $parseResults[$index] = $this->parserRepo->formatMetaValue([
-                                'strip_text', 'currency'
-                            ], $parseResult);
-                            break;
-                        default:
+
+            if ($meta->format_type == 'boolean') {
+                $parseResults = [$parseResults != false && is_array($parseResults) && count($parseResults) > 0];
+            } else {
+                if ($parseResults != false && is_array($parseResults) && count($parseResults) > 0) {
+                    foreach ($parseResults as $index => $parseResult) {
+                        switch ($meta->format_type) {
+                            case "decimal":
+                                $parseResults[$index] = $this->parserRepo->formatMetaValue([
+                                    'strip_text', 'currency'
+                                ], $parseResult);
+                                break;
+                            default:
+                        }
                     }
+                } else {
+                    $parseResults = false;
                 }
             }
             $results[$meta->getKey()] = [
@@ -132,17 +136,22 @@ class TestController extends Controller
             $itemResults = [];
             foreach ($item->metas as $metaIndex => $meta) {
                 $parseResults = $this->parserRepo->parseMeta($meta, $content);
-                if (!is_null($parseResults)) {
-                    foreach ($parseResults as $index => $parseResult) {
-                        switch ($meta->format_type) {
-                            case "decimal":
-                                $parseResults[$index] = $this->parserRepo->formatMetaValue([
-                                    'strip_text', 'currency'
-                                ], $parseResult);
-                                break;
-                            case "boolean":
-                            default:
+                if ($meta->format_type == 'boolean') {
+                    $parseResults = [$parseResults != false && is_array($parseResults) && count($parseResults) > 0];
+                } else {
+                    if ($parseResults != false && is_array($parseResults) && count($parseResults) > 0) {
+                        foreach ($parseResults as $index => $parseResult) {
+                            switch ($meta->format_type) {
+                                case "decimal":
+                                    $parseResults[$index] = $this->parserRepo->formatMetaValue([
+                                        'strip_text', 'currency'
+                                    ], $parseResult);
+                                    break;
+                                default:
+                            }
                         }
+                    } else {
+                        $parseResults = false;
                     }
                 }
                 $itemResults[$meta->getKey()] = [
