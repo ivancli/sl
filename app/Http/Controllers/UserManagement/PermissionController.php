@@ -19,6 +19,7 @@ use App\Events\UserManagement\Permission\AfterUpdate;
 use App\Events\UserManagement\Permission\AfterDestroy;
 use App\Http\Controllers\Controller;
 use App\Models\Permission;
+use App\Services\UserManagement\PermissionService;
 use App\Validators\UserManagement\Permission\StoreValidator;
 use App\Validators\UserManagement\Permission\UpdateValidator;
 use Illuminate\Http\Request;
@@ -26,13 +27,12 @@ use Illuminate\Http\Request;
 class PermissionController extends Controller
 {
     protected $request;
-    protected $permissionRepo;
+    protected $permissionService;
 
-    public function __construct(Request $request,
-                                PermissionContract $permissionContract)
+    public function __construct(Request $request, PermissionService $permissionService)
     {
         $this->request = $request;
-        $this->permissionRepo = $permissionContract;
+        $this->permissionService = $permissionService;
     }
 
     /**
@@ -44,11 +44,8 @@ class PermissionController extends Controller
     {
         event(new BeforeIndex());
 
-        if (!$this->request->has('page')) {
-            $permissions = $this->permissionRepo->all();
-        } else {
-            $permissions = $this->permissionRepo->filterAll($this->request->all());
-        }
+        $permissions = $this->permissionService->load($this->request->all());
+
         $status = true;
 
         event(new AfterIndex());

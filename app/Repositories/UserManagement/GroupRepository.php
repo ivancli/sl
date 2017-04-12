@@ -11,7 +11,9 @@ namespace App\Repositories\UserManagement;
 
 use App\Contracts\Repositories\UserManagement\GroupContract;
 use App\Models\Group;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class GroupRepository implements GroupContract
 {
@@ -81,14 +83,18 @@ class GroupRepository implements GroupContract
      * Create new group
      * @param array $data
      * @return Group
+     * @throws Exception
      */
     public function store(Array $data)
     {
-        $group = new $this->group;
-        $group->name = array_get($data, 'name');
-        $group->display_name = array_get($data, 'display_name');
-        $group->description = array_get($data, 'description');
-        $group->save();
+        DB::beginTransaction();
+        try {
+            $group = $this->group->create($data);
+        } catch (Exception $exception) {
+            DB::rollback();
+            throw $exception;
+        }
+        DB::commit();
         return $group;
     }
 
@@ -97,10 +103,18 @@ class GroupRepository implements GroupContract
      * @param Group $group
      * @param array $data
      * @return Group
+     * @throws Exception
      */
     public function update(Group $group, Array $data)
     {
-        $group->update($data);
+        DB::beginTransaction();
+        try {
+            $group->update($data);
+        } catch (Exception $exception) {
+            DB::rollback();
+            throw $exception;
+        }
+        DB::commit();
         return $group;
     }
 
@@ -108,9 +122,18 @@ class GroupRepository implements GroupContract
      * Remove an existing group
      * @param Group $group
      * @return bool|null
+     * @throws Exception
      */
     public function destroy(Group $group)
     {
-        return $group->delete();
+        DB::beginTransaction();
+        try {
+            $result = $group->delete();
+        } catch (Exception $exception) {
+            DB::rollback();
+            throw $exception;
+        }
+        DB::commit();
+        return $result;
     }
 }

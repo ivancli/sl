@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\UserManagement;
 
-use App\Contracts\Repositories\UserManagement\RoleContract;
-use App\Contracts\Repositories\UserManagement\UserContract;
 use App\Events\UserManagement\User\AfterCreate;
 use App\Events\UserManagement\User\AfterDestroy;
 use App\Events\UserManagement\User\AfterEdit;
@@ -20,24 +18,21 @@ use App\Events\UserManagement\User\BeforeStore;
 use App\Events\UserManagement\User\BeforeUpdate;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Validators\UserManagement\User\StoreValidator;
-use App\Validators\UserManagement\User\UpdateValidator;
+use App\Services\UserManagement\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     protected $request;
-    protected $userRepo, $roleRepo;
 
-    public function __construct(Request $request,
-                                UserContract $userContract,
-                                RoleContract $roleContract)
+    protected $userService;
+
+    public function __construct(Request $request, UserService $userService)
     {
         $this->request = $request;
 
-        $this->userRepo = $userContract;
-        $this->roleRepo = $roleContract;
+        $this->userService = $userService;
     }
 
     /**
@@ -49,11 +44,8 @@ class UserController extends Controller
     {
         event(new BeforeIndex());
 
-        if (!$this->request->has('page')) {
-            $users = $this->userRepo->all();
-        } else {
-            $users = $this->userRepo->filterAll($this->request->all());
-        }
+        $users = $this->userService->load($this->request->all());
+
         $status = true;
 
         event(new AfterIndex());
@@ -75,33 +67,25 @@ class UserController extends Controller
         event(new BeforeCreate());
 
         event(new AfterCreate());
+
         return view('app.user_management.user.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreValidator $storeValidator
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreValidator $storeValidator)
+    public function store()
     {
         event(new BeforeStore());
 
-        $storeValidator->validate($this->request->all());
-        $user = $this->userRepo->store($this->request->all());
+        $user = $this->userService->store($this->request->all());
 
-        if ($this->request->has('role_ids')) {
-            $roles = array();
-            foreach ($this->request->get('role_ids') as $role_id) {
-                $role = $this->roleRepo->get($role_id);
-                $roles[] = $role;
-            }
-            $this->userRepo->updateRoles($user, $roles);
-        }
         $status = true;
 
         event(new AfterStore($user));
+
         return compact(['user', 'status']);
     }
 
@@ -114,9 +98,12 @@ class UserController extends Controller
     public function show(User $user)
     {
         event(new BeforeShow($user));
+
         $user->selectedRoles = $user->roles;
         $status = true;
+
         event(new AfterShow($user));
+
         if ($this->request->ajax()) {
             return compact(['status', 'user']);
         } else {
@@ -134,8 +121,11 @@ class UserController extends Controller
     public function edit(User $user)
     {
         event(new BeforeEdit($user));
+
         $status = true;
+
         event(new AfterEdit($user));
+
         return view('app.user_management.user.edit')->with(compact(['user', 'status']));
     }
 
@@ -143,29 +133,19 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param User $user
-     * @param UpdateValidator $updateValidator
      * @return \Illuminate\Http\Response
      * @internal param int $id
      */
-    public function update(User $user, UpdateValidator $updateValidator)
+    public function update(User $user)
     {
         event(new BeforeUpdate($user));
-        $id = $user->getKey();
-        $this->request->merge(compact(['id']));
-        $updateValidator->validate($this->request->all());
-        $user = $this->userRepo->update($user, $this->request->all());
 
-        if ($this->request->has('role_ids')) {
-            $roles = array();
-            foreach ($this->request->get('role_ids') as $role_id) {
-                $role = $this->roleRepo->get($role_id);
-                $roles[] = $role;
-            }
-            $this->userRepo->updateRoles($user, $roles);
-        }
+        $user = $this->userService->update($user, $this->request->all());
 
         $status = true;
+
         event(new AfterUpdate($user));
+
         return compact(['user', 'status']);
     }
 
@@ -178,8 +158,11 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         event(new BeforeDestroy($user));
-        $status = $this->userRepo->destroy($user);
+
+        $status = $this->userService->destroy($user);
+
         event(new AfterDestroy());
+
         return compact(['status']);
     }
 }

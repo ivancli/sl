@@ -3,7 +3,10 @@ namespace App\Repositories\UserManagement;
 
 use App\Contracts\Repositories\UserManagement\UserContract;
 use App\Models\User;
+use App\Models\UserMeta;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Created by PhpStorm.
@@ -79,16 +82,20 @@ class UserRepository implements UserContract
     /**
      * Create new user
      * @param array $data
-     * @return mixed
+     * @return User
+     * @throws Exception
      */
     public function store(Array $data)
     {
-        $user = new $this->user;
-        $user->first_name = array_get($data, 'first_name');
-        $user->last_name = array_get($data, 'last_name');
-        $user->email = array_get($data, 'email');
-        $user->password = bcrypt(array_get($data, 'password', 'secret'));
-        $user->save();
+        DB::beginTransaction();
+        try {
+            array_set($data, 'password', bcrypt(array_get($data, 'password', 'secret')));
+            $user = $this->user->create($data);
+        } catch (Exception $exception) {
+            DB::rollback();
+            throw $exception;
+        }
+        DB::commit();
         return $user;
     }
 
@@ -96,16 +103,24 @@ class UserRepository implements UserContract
      * Update existing user
      * @param User $user
      * @param array $data
-     * @return mixed
+     * @return User
+     * @throws Exception
      */
     public function update(User $user, Array $data)
     {
-        $data = array_except($data, ['email']);
-        if (array_has($data, 'password') && !empty(array_get($data, 'password'))) {
-            array_set($data, 'password', bcrypt(array_get($data, 'password')));
-        }
+        DB::beginTransaction();
+        try {
+            $data = array_except($data, ['email']);
+            if (array_has($data, 'password') && !empty(array_get($data, 'password'))) {
+                array_set($data, 'password', bcrypt(array_get($data, 'password')));
+            }
 
-        $user->update($data);
+            $user->update($data);
+        } catch (Exception $exception) {
+            DB::rollback();
+            throw $exception;
+        }
+        DB::commit();
         return $user;
     }
 
@@ -113,22 +128,39 @@ class UserRepository implements UserContract
      * update user meta info
      * @param User $user
      * @param array $data
-     * @return mixed
+     * @return UserMeta
+     * @throws Exception
      */
     public function updateMetas(User $user, Array $data)
     {
-        $metas = $user->metas->update($data);
+        DB::beginTransaction();
+        try {
+            $metas = $user->metas->update($data);
+        } catch (Exception $exception) {
+            DB::rollback();
+            throw $exception;
+        }
+        DB::commit();
         return $metas;
     }
 
     /**
      * Remove an existing user
      * @param User $user
-     * @return bool|null|void
+     * @return bool|void
+     * @throws Exception
      */
     public function destroy(User $user)
     {
-        return $user->delete();
+        DB::beginTransaction();
+        try {
+            $result = $user->delete();
+        } catch (Exception $exception) {
+            DB::rollback();
+            throw $exception;
+        }
+        DB::commit();
+        return $result;
     }
 
     /**
