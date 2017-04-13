@@ -74,7 +74,9 @@ class UserService
             $roles = [];
             foreach (array_get($data, 'role_ids') as $role_id) {
                 $role = $this->roleRepo->get($role_id);
-                $roles[] = $role;
+                if (!is_null($role)) {
+                    $roles[] = $role;
+                }
             }
             $this->userRepo->updateRoles($user, $roles);
         }
@@ -97,7 +99,9 @@ class UserService
             $roles = [];
             foreach (array_get($data, 'role_ids') as $role_id) {
                 $role = $this->roleRepo->get($role_id);
-                $roles[] = $role;
+                if (!is_null($role)) {
+                    $roles[] = $role;
+                }
             }
             $this->userRepo->updateRoles($user, $roles);
         }

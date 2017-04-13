@@ -48,6 +48,7 @@ class TestController extends Controller
         $content = $crawlResult['content'];
 
         $results = $this->parserRepo->parseMeta($itemMeta, $content);
+        $status = true;
         if ($itemMeta->format_type == 'boolean') {
             $results = [$results != false && is_array($results) && count($results) > 0];
         } else {
@@ -62,10 +63,12 @@ class TestController extends Controller
                         default:
                     }
                 }
+            } else {
+                $status = false;
+                $error = "Parser could not find target element.";
             }
         }
-        $status = true;
-        return compact(['results', 'status']);
+        return compact(['results', 'status', 'error']);
     }
 
     public function crawlParseItem(Item $item)

@@ -42,16 +42,26 @@ class PermissionService
         #endregion
     }
 
+    /**
+     * Load all/filtered permissions
+     * @param array $data
+     * @return mixed
+     */
     public function load(array $data = [])
     {
         if (array_has($data, 'page')) {
-            $permissions = $this->permissionRepo->all();
-        } else {
             $permissions = $this->permissionRepo->filterAll($data);
+        } else {
+            $permissions = $this->permissionRepo->all();
         }
         return $permissions;
     }
 
+    /**
+     * Create a new permission
+     * @param array $data
+     * @return Permission
+     */
     public function store(array $data)
     {
         $this->storeValidator->validate($data);
@@ -59,6 +69,12 @@ class PermissionService
         return $permission;
     }
 
+    /**
+     * Update an existing permission
+     * @param Permission $permission
+     * @param array $data
+     * @return Permission
+     */
     public function update(Permission $permission, array $data)
     {
         $data = array_set($data, 'id', $permission->getKey());
@@ -67,6 +83,11 @@ class PermissionService
         return $permission;
     }
 
+    /**
+     * Delete an existing permission
+     * @param Permission $permission
+     * @return mixed
+     */
     public function destroy(Permission $permission)
     {
         $result = $this->permissionRepo->destroy($permission);

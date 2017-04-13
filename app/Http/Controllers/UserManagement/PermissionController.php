@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\UserManagement;
 
-use App\Contracts\Repositories\UserManagement\PermissionContract;
 use App\Events\UserManagement\Permission\BeforeIndex;
 use App\Events\UserManagement\Permission\BeforeCreate;
 use App\Events\UserManagement\Permission\BeforeStore;
@@ -20,8 +19,6 @@ use App\Events\UserManagement\Permission\AfterDestroy;
 use App\Http\Controllers\Controller;
 use App\Models\Permission;
 use App\Services\UserManagement\PermissionService;
-use App\Validators\UserManagement\Permission\StoreValidator;
-use App\Validators\UserManagement\Permission\UpdateValidator;
 use Illuminate\Http\Request;
 
 class PermissionController extends Controller
@@ -45,7 +42,6 @@ class PermissionController extends Controller
         event(new BeforeIndex());
 
         $permissions = $this->permissionService->load($this->request->all());
-
         $status = true;
 
         event(new AfterIndex());
@@ -73,16 +69,17 @@ class PermissionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreValidator $storeValidator
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreValidator $storeValidator)
+    public function store()
     {
         event(new BeforeStore());
-        $storeValidator->validate($this->request->all());
-        $permission = $this->permissionRepo->store($this->request->all());
+
+        $permission = $this->permissionService->store($this->request->all());
         $status = true;
+
         event(new AfterStore($permission));
+
         return compact(['status', 'permission']);
     }
 
@@ -95,7 +92,9 @@ class PermissionController extends Controller
     public function show(Permission $permission)
     {
         event(new BeforeShow($permission));
+
         $status = true;
+
         event(new AfterShow($permission));
 
         if ($this->request->ajax()) {
@@ -114,8 +113,11 @@ class PermissionController extends Controller
     public function edit(Permission $permission)
     {
         event(new BeforeEdit($permission));
+
         $status = true;
+
         event(new AfterEdit($permission));
+
         return view('app.user_management.permission.edit')->with(compact(['permission', 'status']));
     }
 
@@ -123,18 +125,17 @@ class PermissionController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Models\Permission $permission
-     * @param UpdateValidator $updateValidator
      * @return \Illuminate\Http\Response
      */
-    public function update(Permission $permission, UpdateValidator $updateValidator)
+    public function update(Permission $permission)
     {
         event(new BeforeUpdate($permission));
-        $id = $permission->getKey();
-        $this->request->merge(compact(['id']));
-        $updateValidator->validate($this->request->all());
-        $permission = $this->permissionRepo->update($permission, $this->request->all());
+
+        $permission = $this->permissionService->update($permission, $this->request->all());
         $status = true;
+
         event(new AfterUpdate($permission));
+
         return compact(['permission', 'status']);
     }
 
@@ -147,9 +148,11 @@ class PermissionController extends Controller
     public function destroy(Permission $permission)
     {
         event(new BeforeDestroy($permission));
-        $this->permissionRepo->destroy($permission);
-        $status = true;
+
+        $status = $this->permissionService->destroy($permission);
+
         event(new AfterDestroy());
+
         return compact(['status']);
     }
 }

@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\UserManagement;
 
-use App\Contracts\Repositories\UserManagement\PermissionContract;
-use App\Contracts\Repositories\UserManagement\RoleContract;
 use App\Events\UserManagement\Role\AfterCreate;
 use App\Events\UserManagement\Role\AfterDestroy;
 use App\Events\UserManagement\Role\AfterEdit;
@@ -20,22 +18,19 @@ use App\Events\UserManagement\Role\BeforeStore;
 use App\Events\UserManagement\Role\BeforeUpdate;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
-use App\Validators\UserManagement\Role\StoreValidator;
-use App\Validators\UserManagement\Role\UpdateValidator;
+use App\Services\UserManagement\RoleService;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
     protected $request;
-    protected $roleRepo, $permissionRepo;
 
-    public function __construct(Request $request,
-                                RoleContract $roleContract,
-                                PermissionContract $permissionContract)
+    protected $roleService;
+
+    public function __construct(Request $request, RoleService $roleService)
     {
         $this->request = $request;
-        $this->roleRepo = $roleContract;
-        $this->permissionRepo = $permissionContract;
+        $this->roleService = $roleService;
     }
 
     /**
@@ -47,14 +42,11 @@ class RoleController extends Controller
     {
         event(new BeforeIndex());
 
-        if (!$this->request->has('page')) {
-            $roles = $this->roleRepo->all();
-        } else {
-            $roles = $this->roleRepo->filterAll($this->request->all());
-        }
+        $roles = $this->roleService->load($this->request->all());
         $status = true;
 
         event(new AfterIndex());
+
         if ($this->request->ajax()) {
             return compact(['status', 'roles']);
         } else {
@@ -78,25 +70,17 @@ class RoleController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreValidator $storeValidator
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreValidator $storeValidator)
+    public function store()
     {
         event(new BeforeStore());
-        $storeValidator->validate($this->request->all());
-        $role = $this->roleRepo->store($this->request->all());
 
-        /* update permission */
-        if ($this->request->has('permission_ids')) {
-            $permissions = array();
-            foreach ($this->request->get('permission_ids') as $permission_id) {
-                $permissions[] = $this->permissionRepo->get($permission_id);
-            }
-            $this->roleRepo->updatePermissions($role, $permissions);
-        }
+        $role = $this->roleService->store($this->request->all());
         $status = true;
+
         event(new AfterStore($role));
+
         return compact(['status', 'role']);
     }
 
@@ -109,8 +93,10 @@ class RoleController extends Controller
     public function show(Role $role)
     {
         event(new BeforeShow($role));
+
         $status = true;
         $role->selectedPermissions = $role->perms;
+
         event(new AfterShow($role));
 
         if ($this->request->ajax()) {
@@ -129,8 +115,11 @@ class RoleController extends Controller
     public function edit(Role $role)
     {
         event(new BeforeEdit($role));
+
         $status = true;
+
         event(new AfterEdit($role));
+
         return view('app.user_management.role.edit')->with(compact(['role', 'status']));
     }
 
@@ -138,31 +127,19 @@ class RoleController extends Controller
      * Update the specified resource in storage.
      *
      * @param Role $role
-     * @param UpdateValidator $updateValidator
      * @return \Illuminate\Http\Response
      * @internal param int $id
      */
-    public function update(Role $role, UpdateValidator $updateValidator)
+    public function update(Role $role)
     {
         event(new BeforeUpdate($role));
-        $id = $role->getKey();
-        $this->request->merge(compact(['id']));
-        $updateValidator->validate($this->request->all());
 
-        /* update role itself */
-        $role = $this->roleRepo->update($role, $this->request->all());
-
-        /* update permission */
-        if ($this->request->has('permission_ids')) {
-            $permissions = array();
-            foreach ($this->request->get('permission_ids') as $permission_id) {
-                $permissions[] = $this->permissionRepo->get($permission_id);
-            }
-            $this->roleRepo->updatePermissions($role, $permissions);
-        }
+        $role = $this->roleService->update($role, $this->request->all());
 
         $status = true;
+
         event(new AfterUpdate($role));
+
         return compact(['role', 'status']);
     }
 
@@ -175,8 +152,9 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         event(new BeforeDestroy($role));
-        $this->roleRepo->destroy($role);
-        $status = true;
+
+        $status = $this->roleService->destroy($role);
+
         event(new AfterDestroy());
 
         return compact(['status']);

@@ -189,6 +189,8 @@ class Crawl implements ShouldQueue
 
         $this->url->statusStandby();
 
+        $crawler->setCrawledAt();
+
         event(new AfterCrawlUrl($this->url));
     }
 }

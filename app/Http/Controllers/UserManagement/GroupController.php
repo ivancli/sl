@@ -41,6 +41,7 @@ class GroupController extends Controller
     public function index()
     {
         event(new BeforeIndex());
+
         $groups = $this->groupService->load($this->request->all());
         $status = true;
 

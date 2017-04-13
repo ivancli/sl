@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 class Url extends Model
 {
     protected $fillable = [
-        'full_path', 'status', 'is_active', 'crawled_at'
+        'full_path', 'status', 'is_active'
     ];
 
     protected $appends = [

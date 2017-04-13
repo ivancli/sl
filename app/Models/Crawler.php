@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Crawler extends Model
 {
     protected $fillable = [
-        'status', 'last_active_at'
+        'status'
     ];
 
     protected $with = [
@@ -95,6 +96,19 @@ class Crawler extends Model
     public function statusNull()
     {
         $this->status = null;
+        $this->save();
+    }
+
+    /**
+     * Set crawled_at to particular/current date time
+     * @param string|null $dateTime
+     */
+    public function setCrawledAt(string $dateTime = null)
+    {
+        if (is_null($dateTime)) {
+            $dateTime = Carbon::now()->toDateTimeString();
+        }
+        $this->crawled_at = $dateTime;
         $this->save();
     }
 }

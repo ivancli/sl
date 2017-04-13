@@ -19,7 +19,7 @@ class CreateCrawlersTable extends Migration
             $table->foreign('url_id')->references('id')->on('urls')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->string('status')->nullable();
-            $table->timestamp('last_active_at')->nullable();
+            $table->timestamp('crawled_at')->nullable();
             $table->timestamps();
         });
     }

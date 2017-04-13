@@ -11,9 +11,11 @@ namespace App\Repositories\UserManagement;
 
 use App\Contracts\Repositories\UserManagement\PermissionContract;
 use App\Models\Permission;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class PermissionRepository implements PermissionContract 
+class PermissionRepository implements PermissionContract
 {
     var $permission;
     var $request;
@@ -80,14 +82,18 @@ class PermissionRepository implements PermissionContract
      * Create new permission
      * @param array $data
      * @return Permission
+     * @throws Exception
      */
     public function store(Array $data)
     {
-        $permission = new $this->permission;
-        $permission->name = array_get($data, 'name');
-        $permission->display_name = array_get($data, 'display_name');
-        $permission->description = array_get($data, 'description');
-        $permission->save();
+        DB::beginTransaction();
+        try {
+            $permission = $this->permission->create($data);
+        } catch (Exception $exception) {
+            DB::rollback();
+            throw $exception;
+        }
+        DB::commit();
         return $permission;
     }
 
@@ -96,19 +102,37 @@ class PermissionRepository implements PermissionContract
      * @param Permission $permission
      * @param array $data
      * @return Permission
+     * @throws Exception
      */
     public function update(Permission $permission, Array $data)
     {
-        $permission->update($data);
+        DB::beginTransaction();
+        try {
+            $permission->update($data);
+        } catch (Exception $exception) {
+            DB::rollback();
+            throw $exception;
+        }
+        DB::commit();
         return $permission;
     }
 
     /**
      * Remove an existing permission
      * @param Permission $permission
+     * @return bool|null
+     * @throws Exception
      */
     public function destroy(Permission $permission)
     {
-        $permission->delete();
+        DB::beginTransaction();
+        try {
+            $result = $permission->delete();
+        } catch (Exception $exception) {
+            DB::rollback();
+            throw $exception;
+        }
+        DB::commit();
+        return $result;
     }
 }

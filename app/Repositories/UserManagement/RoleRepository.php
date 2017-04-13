@@ -11,7 +11,9 @@ namespace App\Repositories\UserManagement;
 
 use App\Contracts\Repositories\UserManagement\RoleContract;
 use App\Models\Role;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RoleRepository implements RoleContract
 {
@@ -80,14 +82,18 @@ class RoleRepository implements RoleContract
      * Create new role
      * @param array $data
      * @return Role
+     * @throws Exception
      */
     public function store(Array $data)
     {
-        $role = new $this->role;
-        $role->name = array_get($data, 'name');
-        $role->display_name = array_get($data, 'display_name');
-        $role->description = array_get($data, 'description');
-        $role->save();
+        DB::beginTransaction();
+        try {
+            $role = $this->role->create($data);
+        } catch (Exception $exception) {
+            DB::rollback();
+            throw $exception;
+        }
+        DB::commit();
         return $role;
     }
 
@@ -96,20 +102,38 @@ class RoleRepository implements RoleContract
      * @param Role $role
      * @param array $data
      * @return Role
+     * @throws Exception
      */
     public function update(Role $role, Array $data)
     {
-        $role->update($data);
+        DB::beginTransaction();
+        try {
+            $role->update($data);
+        } catch (Exception $exception) {
+            DB::rollback();
+            throw $exception;
+        }
+        DB::commit();
         return $role;
     }
 
     /**
      * Remove an existing role
      * @param Role $role
+     * @return bool
+     * @throws Exception
      */
     public function destroy(Role $role)
     {
-        $role->delete();
+        DB::beginTransaction();
+        try {
+            $result = $role->delete();
+        } catch (Exception $exception) {
+            DB::rollback();
+            throw $exception;
+        }
+        DB::commit();
+        return $result;
     }
 
     /**
