@@ -11,6 +11,8 @@ namespace App\Repositories\UrlManagement;
 
 use App\Contracts\Repositories\UrlManagement\DomainMetaContract;
 use App\Models\Domain;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class DomainMetaRepository implements DomainMetaContract
 {
@@ -20,19 +22,27 @@ class DomainMetaRepository implements DomainMetaContract
      * @param Domain $domain
      * @param array $data
      * @return mixed
+     * @throws Exception
      */
     public function update(Domain $domain, Array $data)
     {
-        $domain->clearMeta();
-        foreach ($data as $domainMeta) {
-            $meta = $domain->setMeta($domainMeta['name'], $domainMeta['type']);
-            $meta->clearConf();
-            if (isset($domainMeta['confs']) && is_array($domainMeta['confs']) && !empty($domainMeta['confs'])) {
-                foreach ($domainMeta['confs'] as $key => $metaConf) {
-                    $conf = $meta->setConf($metaConf['element'], $metaConf['value'], $key);
+        DB::beginTransaction();
+        try {
+            $domain->clearMeta();
+            foreach ($data as $domainMeta) {
+                $meta = $domain->setMeta($domainMeta['name'], $domainMeta['type']);
+                $meta->clearConf();
+                if (isset($domainMeta['confs']) && is_array($domainMeta['confs']) && !empty($domainMeta['confs'])) {
+                    foreach ($domainMeta['confs'] as $key => $metaConf) {
+                        $conf = $meta->setConf($metaConf['element'], $metaConf['value'], $key);
+                    }
                 }
             }
+        } catch (Exception $exception) {
+            DB::rollback();
+            throw $exception;
         }
+        DB::commit();
         return $domain;
     }
 }

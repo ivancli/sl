@@ -11,7 +11,9 @@ namespace App\Repositories\UrlManagement;
 
 use App\Contracts\Repositories\UrlManagement\DomainContract;
 use App\Models\Domain;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DomainRepository implements DomainContract
 {
@@ -94,11 +96,18 @@ class DomainRepository implements DomainContract
      * @param Domain $domain
      * @param array $data
      * @return mixed
+     * @throws Exception
      */
     public function update(Domain $domain, Array $data)
     {
-        $domain->name = $data['name'];
-        $domain->save();
+        DB::beginTransaction();
+        try {
+            $domain->update($data);
+        } catch (Exception $exception) {
+            DB::rollback();
+            throw $exception;
+        }
+        DB::commit();
         return $domain;
     }
 
@@ -106,9 +115,18 @@ class DomainRepository implements DomainContract
      * Remove an existing domain
      * @param Domain $domain
      * @return mixed
+     * @throws Exception
      */
     public function destroy(Domain $domain)
     {
-        return $domain->delete();
+        DB::beginTransaction();
+        try {
+            $result = $domain->delete();
+        } catch (Exception $exception) {
+            DB::rollback();
+            throw $exception;
+        }
+        DB::commit();
+        return $result;
     }
 }

@@ -60,6 +60,15 @@ class ItemRepository implements ItemContract
     }
 
     /**
+     * Load all items
+     * @return mixed
+     */
+    public function all()
+    {
+        return $this->item->all();
+    }
+
+    /**
      * Load an item by item ID
      * @param $item_id
      * @param bool $throw

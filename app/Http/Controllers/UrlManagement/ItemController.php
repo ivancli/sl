@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\UrlManagement;
 
-use App\Contracts\Repositories\UrlManagement\ItemContract;
-use App\Contracts\Repositories\UrlManagement\UrlContract;
+use App\Events\UrlManagement\Item\AfterQueue;
+use App\Events\UrlManagement\Item\BeforeQueue;
 use App\Http\Controllers\Controller;
 use App\Events\UrlManagement\Item\BeforeIndex;
 use App\Events\UrlManagement\Item\AfterIndex;
@@ -20,24 +20,19 @@ use App\Events\UrlManagement\Item\AfterUpdate;
 use App\Events\UrlManagement\Item\BeforeDestroy;
 use App\Events\UrlManagement\Item\AfterDestroy;
 use App\Models\Item;
-use App\Jobs\Crawl as CrawlJob;
-use App\Validators\UrlManagement\Item\StoreValidator;
+use App\Services\UrlManagement\ItemService;
 use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
     protected $request;
-    protected $urlRepo;
-    protected $itemRepo;
+    protected $itemService;
 
-    public function __construct(Request $request,
-                                UrlContract $urlContract,
-                                ItemContract $itemContract)
+    public function __construct(Request $request, ItemService $itemService)
     {
         $this->request = $request;
 
-        $this->urlRepo = $urlContract;
-        $this->itemRepo = $itemContract;
+        $this->itemService = $itemService;
     }
 
     /**
@@ -48,12 +43,11 @@ class ItemController extends Controller
     public function index()
     {
         event(new BeforeIndex());
-        $url = null;
-        if ($this->request->has('url_id')) {
-            $url = $this->urlRepo->get($this->request->get('url_id'));
-        }
-        $items = $this->itemRepo->filterAll($this->request->all(), $url);
+
+        $url = $this->itemService->getUrlById($this->request->get('url_id'));
+        $items = $this->itemService->load($this->request->all());
         $status = true;
+
         event(new AfterIndex());
 
         if ($this->request->ajax()) {
@@ -77,22 +71,18 @@ class ItemController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreValidator $storeValidator
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreValidator $storeValidator)
+    public function store()
     {
-
         event(new BeforeStore());
-        $storeValidator->validate($this->request->all());
 
-        $url = $this->urlRepo->get($this->request->get('url_id'));
-        $item = $this->itemRepo->store($this->request->all());
-        $url->items()->save($item);
+        $item = $this->itemService->store($this->request->all());
         $status = true;
-        event(new AfterStore($item));
-        return compact(['status', 'item']);
 
+        event(new AfterStore($item));
+
+        return compact(['status', 'item']);
     }
 
     /**
@@ -104,8 +94,11 @@ class ItemController extends Controller
     public function show(Item $item)
     {
         event(new BeforeShow($item));
+
         $status = true;
+
         event(new AfterShow($item));
+
         return compact(['status', 'item']);
     }
 
@@ -130,9 +123,12 @@ class ItemController extends Controller
     public function update(Item $item)
     {
         event(new BeforeUpdate($item));
-        $item = $this->itemRepo->update($item, $this->request->all());
+
+        $item = $this->itemService->update($item, $this->request->all());
         $status = true;
+
         event(new AfterUpdate($item));
+
         return compact(['status', 'item']);
     }
 
@@ -145,18 +141,29 @@ class ItemController extends Controller
     public function destroy(Item $item)
     {
         event(new BeforeDestroy($item));
-        $status = $this->itemRepo->destroy($item);
+
+        $status = $this->itemService->destroy($item);
+
         event(new AfterDestroy());
+
         return compact(['status']);
     }
 
+    /**
+     * Push URL of the item to queue
+     *
+     * @param Item $item
+     * @return array
+     */
     public function queue(Item $item)
     {
-        $url = $item->url;
-        $this->dispatch((new CrawlJob($url))->onQueue("crawl"));
-        $crawler = $url->crawler;
-        $crawler->statusQueuing();
+        event(new BeforeQueue($item));
+
+        $this->itemService->queue($item);
         $status = true;
+
+        event(new AfterQueue($item));
+
         return compact(['status']);
     }
 }

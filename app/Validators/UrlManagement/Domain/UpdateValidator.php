@@ -13,6 +13,20 @@ use App\Validators\ValidatorAbstract;
 
 class UpdateValidator extends ValidatorAbstract
 {
+    public function validate(array $data, $throw = true)
+    {
+        $rules = $this->getRules($data['id']);
+        $validation = $this->validator->make($data, $rules);
+        if ($validation->fails()) {
+            if ($throw) {
+                $this->throwValidationException($validation);
+            } else {
+                return $validation->messages();
+            }
+
+        }
+        return true;
+    }
 
     /**
      * Get pre-set validation rules
@@ -23,7 +37,7 @@ class UpdateValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return [
-            'name' => 'required|max:255'
+            'name' => "required|max:255|unique:domains,full_path,{$id},id",
         ];
     }
 }

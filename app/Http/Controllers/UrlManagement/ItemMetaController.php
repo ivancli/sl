@@ -4,6 +4,8 @@ namespace App\Http\Controllers\UrlManagement;
 
 use App\Contracts\Repositories\UrlManagement\ItemContract;
 use App\Contracts\Repositories\UrlManagement\ItemMetaContract;
+use App\Events\UrlManagement\ItemMeta\AfterQueue;
+use App\Events\UrlManagement\ItemMeta\BeforeQueue;
 use App\Models\ItemMeta;
 use App\Events\UrlManagement\ItemMeta\BeforeIndex;
 use App\Events\UrlManagement\ItemMeta\AfterIndex;
@@ -19,6 +21,7 @@ use App\Events\UrlManagement\ItemMeta\BeforeUpdate;
 use App\Events\UrlManagement\ItemMeta\AfterUpdate;
 use App\Events\UrlManagement\ItemMeta\BeforeDestroy;
 use App\Events\UrlManagement\ItemMeta\AfterDestroy;
+use App\Services\UrlManagement\ItemMetaService;
 use App\Validators\UrlManagement\ItemMeta\StoreValidator;
 use App\Jobs\Crawl as CrawlJob;
 use Illuminate\Http\Request;
@@ -27,14 +30,12 @@ use App\Http\Controllers\Controller;
 class ItemMetaController extends Controller
 {
     protected $request;
-    protected $itemRepo, $itemMetaRepo;
+    protected $itemMetaService;
 
-    public function __construct(Request $request,
-                                ItemContract $itemContract, ItemMetaContract $itemMetaContract)
+    public function __construct(Request $request, ItemMetaService $itemMetaService)
     {
         $this->request = $request;
-        $this->itemRepo = $itemContract;
-        $this->itemMetaRepo = $itemMetaContract;
+        $this->itemMetaService = $itemMetaService;
     }
 
     /**
@@ -45,12 +46,11 @@ class ItemMetaController extends Controller
     public function index()
     {
         event(new BeforeIndex());
-        $item = null;
-        if ($this->request->has('item_id')) {
-            $item = $this->itemRepo->get($this->request->get('item_id'));
-        }
-        $itemMetas = $this->itemMetaRepo->filterAll($this->request->all(), $item);
+
+        $item = $this->itemMetaService->getItemById($this->request->get('item_id'));
+        $itemMetas = $this->itemMetaService->load($this->request->all());
         $status = true;
+
         event(new AfterIndex());
 
         if ($this->request->ajax()) {
@@ -74,22 +74,13 @@ class ItemMetaController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreValidator $storeValidator
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreValidator $storeValidator)
+    public function store()
     {
         event(new BeforeStore());
 
-        $storeValidator->validate($this->request->all());
-
-        $itemMeta = $this->itemMetaRepo->store($this->request->all());
-
-        if ($this->request->has('item_id')) {
-            $item = $this->itemRepo->get($this->request->get('item_id'));
-            $item->metas()->save($itemMeta);
-        }
-
+        $itemMeta = $this->itemMetaService->store($this->request->all());
         $status = true;
 
         event(new AfterStore($itemMeta));
@@ -130,9 +121,12 @@ class ItemMetaController extends Controller
     public function update(ItemMeta $itemMeta)
     {
         event(new BeforeUpdate($itemMeta));
-        $itemMeta = $this->itemMetaRepo->update($itemMeta, $this->request->all());
+
+        $itemMeta = $this->itemMetaService->update($itemMeta, $this->request->all());
         $status = true;
+
         event(new AfterUpdate($itemMeta));
+
         return compact(['itemMeta', 'status']);
     }
 
@@ -145,18 +139,29 @@ class ItemMetaController extends Controller
     public function destroy(ItemMeta $itemMeta)
     {
         event(new BeforeDestroy($itemMeta));
-        $status = $this->itemMetaRepo->destroy($itemMeta);
+
+        $status = $this->itemMetaService->destroy($itemMeta);
+
         event(new AfterDestroy());
+
         return compact(['status']);
     }
 
+    /**
+     * Push URL of the item meta to queue
+     *
+     * @param ItemMeta $itemMeta
+     * @return array
+     */
     public function queue(ItemMeta $itemMeta)
     {
-        $url = $itemMeta->item->url;
-        $this->dispatch((new CrawlJob($url))->onQueue("crawl"));
-        $crawler = $url->crawler;
-        $crawler->statusQueuing();
+        event(new BeforeQueue($itemMeta));
+
+        $this->itemMetaService->queue($itemMeta);
         $status = true;
+
+        event(new AfterQueue($itemMeta));
+
         return compact(['status']);
     }
 }

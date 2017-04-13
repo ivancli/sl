@@ -122,6 +122,8 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\UrlManagement\Item\AfterUpdate' => [],
         'App\Events\UrlManagement\Item\BeforeDestroy' => [],
         'App\Events\UrlManagement\Item\AfterDestroy' => [],
+        'App\Events\UrlManagement\Item\BeforeQueue' => [],
+        'App\Events\UrlManagement\Item\AfterQueue' => [],
 
         /* item meta */
         'App\Events\UrlManagement\ItemMeta\BeforeIndex' => [],
@@ -138,6 +140,8 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\UrlManagement\ItemMeta\AfterUpdate' => [],
         'App\Events\UrlManagement\ItemMeta\BeforeDestroy' => [],
         'App\Events\UrlManagement\ItemMeta\AfterDestroy' => [],
+        'App\Events\UrlManagement\ItemMeta\BeforeQueue' => [],
+        'App\Events\UrlManagement\ItemMeta\AfterQueue' => [],
 
         /* item meta conf */
         'App\Events\UrlManagement\ItemMetaConf\BeforeIndex' => [],
@@ -170,6 +174,8 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\UrlManagement\Url\AfterUpdate' => [],
         'App\Events\UrlManagement\Url\BeforeDestroy' => [],
         'App\Events\UrlManagement\Url\AfterDestroy' => [],
+        'App\Events\UrlManagement\Url\BeforeQueue' => [],
+        'App\Events\UrlManagement\Url\AfterQueue' => [],
 
         /**
          * User management

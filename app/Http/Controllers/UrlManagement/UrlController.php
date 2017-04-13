@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\UrlManagement;
 
 use App\Contracts\Repositories\UrlManagement\UrlContract;
+use App\Events\UrlManagement\Url\AfterQueue;
+use App\Events\UrlManagement\Url\BeforeQueue;
 use App\Http\Controllers\Controller;
 use App\Models\Url;
 use App\Events\UrlManagement\Url\BeforeIndex;
@@ -20,18 +22,18 @@ use App\Events\UrlManagement\Url\AfterUpdate;
 use App\Events\UrlManagement\Url\BeforeDestroy;
 use App\Events\UrlManagement\Url\AfterDestroy;
 use App\Jobs\Crawl as CrawlJob;
+use App\Services\UrlManagement\UrlService;
 use Illuminate\Http\Request;
 
 class UrlController extends Controller
 {
     protected $request;
-    protected $urlRepo;
+    protected $urlService;
 
-    public function __construct(Request $request,
-                                UrlContract $urlContract)
+    public function __construct(Request $request, UrlService $urlService)
     {
         $this->request = $request;
-        $this->urlRepo = $urlContract;
+        $this->urlService = $urlService;
     }
 
     /**
@@ -42,14 +44,12 @@ class UrlController extends Controller
     public function index()
     {
         event(new BeforeIndex());
-        if (!$this->request->has('page')) {
-            $urls = $this->urlRepo->all();
-        } else {
-            $urls = $this->urlRepo->filterAll($this->request->all());
-        }
+
+        $urls = $this->urlService->load($this->request->all());
         $status = true;
 
         event(new AfterIndex());
+
         if ($this->request->ajax()) {
             return compact(['status', 'urls']);
         } else {
@@ -90,8 +90,11 @@ class UrlController extends Controller
     public function show(Url $url)
     {
         event(new BeforeShow($url));
+
         $status = true;
+
         event(new AfterShow($url));
+
         return compact(['status', 'url']);
     }
 
@@ -104,8 +107,11 @@ class UrlController extends Controller
     public function edit(Url $url)
     {
         event(new BeforeEdit($url));
+
         $status = true;
+
         event(new AfterEdit($url));
+
         return view('app.url_management.url.edit')->with(compact(['url']));
     }
 
@@ -130,18 +136,23 @@ class UrlController extends Controller
     public function destroy(Url $url)
     {
         event(new BeforeDestroy($url));
-        $status = $this->urlRepo->destroy($url);
+
+        $status = $this->urlService->destroy($url);
 
         event(new AfterDestroy());
+
         return compact(['status']);
     }
 
     public function queue(Url $url)
     {
-        $this->dispatch((new CrawlJob($url))->onQueue("crawl"));
-        $crawler = $url->crawler;
-        $crawler->statusQueuing();
+        event(new BeforeQueue($url));
+
+        $this->urlService->queue($url);
         $status = true;
+
+        event(new AfterQueue($url));
+
         return compact(['status']);
     }
 }

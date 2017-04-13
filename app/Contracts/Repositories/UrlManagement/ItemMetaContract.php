@@ -23,6 +23,12 @@ interface ItemMetaContract
     public function filterAll(Array $data = [], Item $item = null);
 
     /**
+     * Load all item metas
+     * @return mixed
+     */
+    public function all();
+
+    /**
      * Load an item meta by id
      * @param $item_meta_id
      * @param bool $throw

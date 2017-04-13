@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\UrlManagement;
 
-use App\Contracts\Repositories\UrlManagement\DomainContract;
 use App\Http\Controllers\Controller;
 use App\Models\Domain;
 use App\Events\UrlManagement\Domain\BeforeIndex;
@@ -19,18 +18,19 @@ use App\Events\UrlManagement\Domain\AfterShow;
 use App\Events\UrlManagement\Domain\AfterEdit;
 use App\Events\UrlManagement\Domain\AfterUpdate;
 use App\Events\UrlManagement\Domain\AfterDestroy;
-use App\Validators\UrlManagement\Domain\UpdateValidator;
+use App\Services\UrlManagement\DomainService;
 use Illuminate\Http\Request;
 
 class DomainController extends Controller
 {
     protected $request;
-    protected $domainRepo;
+    protected $domainService;
 
-    public function __construct(Request $request, DomainContract $domainContract)
+    public function __construct(Request $request, DomainService $domainService)
     {
         $this->request = $request;
-        $this->domainRepo = $domainContract;
+
+        $this->domainService = $domainService;
     }
 
     /**
@@ -41,14 +41,12 @@ class DomainController extends Controller
     public function index()
     {
         event(new BeforeIndex());
-        if (!$this->request->has('page')) {
-            $domains = $this->domainRepo->all();
-        } else {
-            $domains = $this->domainRepo->filterAll($this->request->all());
-        }
+
+        $domains = $this->domainService->load($this->request->all());
         $status = true;
 
         event(new AfterIndex());
+
         if ($this->request->ajax()) {
             return compact(['status', 'domains']);
         } else {
@@ -87,8 +85,11 @@ class DomainController extends Controller
     public function show(Domain $domain)
     {
         event(new BeforeShow($domain));
+
         $status = true;
+
         event(new AfterShow($domain));
+
         if ($this->request->ajax()) {
             return compact(['status', 'domain']);
         } else {
@@ -105,8 +106,11 @@ class DomainController extends Controller
     public function edit(Domain $domain)
     {
         event(new BeforeEdit($domain));
+
         $status = true;
+
         event(new AfterEdit($domain));
+
         return view('app.url_management.domain.edit')->with(compact(['domain']));
     }
 
@@ -114,15 +118,15 @@ class DomainController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Models\Domain $domain
-     * @param UpdateValidator $updateValidator
      * @return \Illuminate\Http\Response
      */
-    public function update(Domain $domain, UpdateValidator $updateValidator)
+    public function update(Domain $domain)
     {
         event(new BeforeUpdate($domain));
-        $updateValidator->validate($this->request->all());
-        $domain = $this->domainRepo->update($domain, $this->request->all());
+
+        $domain = $this->domainService->update($domain, $this->request->all());
         $status = true;
+
         event(new AfterUpdate($domain));
 
         return compact(['domain', 'status']);
@@ -137,8 +141,11 @@ class DomainController extends Controller
     public function destroy(Domain $domain)
     {
         event(new BeforeDestroy($domain));
-        $status = $this->domainRepo->destroy($domain);
+
+        $status = $this->domainService->destroy($domain);
+
         event(new AfterDestroy());
+
         return compact(['status']);
     }
 }

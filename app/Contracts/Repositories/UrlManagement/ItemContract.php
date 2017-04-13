@@ -16,10 +16,17 @@ interface ItemContract
 {
     /**
      * Load all item (according to provided URL)
+     * @param array $data
      * @param Url|null $url
      * @return mixed
      */
-    public function filterAll(Array $data = [], Url $url = null);
+    public function filterAll(array $data = [], Url $url = null);
+
+    /**
+     * Load all items
+     * @return mixed
+     */
+    public function all();
 
     /**
      * Load an item by item ID

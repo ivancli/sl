@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\UrlManagement;
 
-use App\Contracts\Repositories\UrlManagement\DomainContract;
-use App\Contracts\Repositories\UrlManagement\DomainMetaContract;
 use App\Events\UrlManagement\DomainMeta\BeforeIndex;
 use App\Events\UrlManagement\DomainMeta\AfterIndex;
 use App\Events\UrlManagement\DomainMeta\BeforeCreate;
@@ -19,22 +17,18 @@ use App\Events\UrlManagement\DomainMeta\AfterUpdate;
 use App\Events\UrlManagement\DomainMeta\BeforeDestroy;
 use App\Events\UrlManagement\DomainMeta\AfterDestroy;
 use App\Http\Controllers\Controller;
-use App\Validators\UrlManagement\DomainMeta\UpdateValidator;
+use App\Services\UrlManagement\DomainMetaService;
 use Illuminate\Http\Request;
 
 class DomainMetaController extends Controller
 {
     protected $request;
-    protected $domainRepo;
-    protected $domainMetaRepo;
+    protected $domainMetaService;
 
-    public function __construct(Request $request,
-                                DomainContract $domainContract,
-                                DomainMetaContract $domainMetaContract)
+    public function __construct(Request $request, DomainMetaService $domainMetaService)
     {
         $this->request = $request;
-        $this->domainRepo = $domainContract;
-        $this->domainMetaRepo = $domainMetaContract;
+        $this->domainMetaService = $domainMetaService;
     }
 
     /**
@@ -75,12 +69,13 @@ class DomainMetaController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param $domain_id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($domain_id)
     {
-        $domain = $this->domainRepo->get($id);
+        $domain = $this->domainMetaService->getDomainById($domain_id);
+
         event(new BeforeShow($domain));
         event(new AfterShow($domain));
     }
@@ -88,46 +83,52 @@ class DomainMetaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param $domain_id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function edit($id)
+    public function edit($domain_id)
     {
-        $domain = $this->domainRepo->get($id);
+        $domain = $this->domainMetaService->getDomainById($domain_id);
+
         event(new BeforeEdit($domain));
+
         $status = true;
+
         event(new AfterEdit($domain));
+
         return view('app.url_management.domain_meta.edit')->with(compact(['status', 'domain']));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  int $id
-     * @param UpdateValidator $updateValidator
+     * @param $domain_id
      * @return \Illuminate\Http\Response
      */
-    public function update($id, UpdateValidator $updateValidator)
+    public function update($domain_id)
     {
-        $domain = $this->domainRepo->get($id);
-        event(new BeforeUpdate($domain));
-        $updateValidator->validate($this->request->all());
+        $domain = $this->domainMetaService->getDomainById($domain_id);
 
-        $domain = $this->domainMetaRepo->update($domain, $this->request->get('metas'));
+        event(new BeforeUpdate($domain));
+
+        $domain = $this->domainMetaService->update($domain, $this->request->all());
         $status = true;
+
         event(new AfterUpdate($domain));
+
         return compact(['status', 'domain']);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param $domain_id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($domain_id)
     {
-        $domain = $this->domainRepo->get($id);
+        $domain = $this->domainMetaService->getDomainById($domain_id);
+
         event(new BeforeDestroy($domain));
         event(new AfterDestroy());
     }

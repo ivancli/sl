@@ -60,6 +60,15 @@ class ItemMetaRepository implements ItemMetaContract
     }
 
     /**
+     * Load all item metas
+     * @return mixed
+     */
+    public function all()
+    {
+        return $this->itemMeta->all();
+    }
+
+    /**
      * Load an item meta by id
      * @param $item_meta_id
      * @param bool $throw
