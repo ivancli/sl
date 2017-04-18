@@ -21,7 +21,12 @@ class PreferenceControllerEventSubscriber
     public function onAfterUpdate()
     {
         $activity = "Updated Account Preferences";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
+    }
+
+    protected function dispatchUserActivityLog($activity)
+    {
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log")->onConnection('sync'));
     }
 
 

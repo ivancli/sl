@@ -23,7 +23,7 @@ class ItemControllerEventSubscriber
     public function onAfterIndex($event)
     {
         $activity = "Visited Items Page";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeShow($event)
@@ -35,7 +35,7 @@ class ItemControllerEventSubscriber
     {
         $item = $event->item;
         $activity = "Loaded Item {$item->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeCreate($event)
@@ -57,7 +57,7 @@ class ItemControllerEventSubscriber
     {
         $item = $event->item;
         $activity = "Created Item {$item->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeEdit($event)
@@ -79,20 +79,25 @@ class ItemControllerEventSubscriber
     {
         $item = $event->item;
         $activity = "Updated Item {$item->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeDestroy($event)
     {
         $item = $event->item;
         $activity = "Deleting Item {$item->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onAfterDestroy($event)
     {
         $activity = "Deleted Item";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
+    }
+
+    protected function dispatchUserActivityLog($activity)
+    {
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log")->onConnection('sync'));
     }
 
     public function subscribe($events)

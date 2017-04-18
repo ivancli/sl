@@ -9,6 +9,8 @@
 namespace App\Listeners\UserManagement;
 
 
+use App\Jobs\Log\UserActivity;
+
 class GroupControllerEventSubscriber
 {
 
@@ -19,7 +21,8 @@ class GroupControllerEventSubscriber
 
     public function onAfterIndex($event)
     {
-
+        $activity = "Visited Groups Page";
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeShow($event)
@@ -30,6 +33,8 @@ class GroupControllerEventSubscriber
     public function onAfterShow($event)
     {
         $group = $event->group;
+        $activity = "Loaded Group {$group->getKey()}";
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeCreate($event)
@@ -50,6 +55,8 @@ class GroupControllerEventSubscriber
     public function onAfterStore($event)
     {
         $group = $event->group;
+        $activity = "Created Group {$group->getKey()}";
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeEdit($event)
@@ -60,6 +67,8 @@ class GroupControllerEventSubscriber
     public function onAfterEdit($event)
     {
         $group = $event->group;
+        $activity = "Editing Group {$group->getKey()}";
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeUpdate($event)
@@ -70,16 +79,27 @@ class GroupControllerEventSubscriber
     public function onAfterUpdate($event)
     {
         $group = $event->group;
+        $activity = "Updated Group {$group->getKey()}";
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeDestroy($event)
     {
         $group = $event->group;
+        $activity = "Deleting Group {$group->getKey()}";
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onAfterDestroy($event)
     {
 
+        $activity = "Loaded Group";
+        $this->dispatchUserActivityLog($activity);
+    }
+
+    protected function dispatchUserActivityLog($activity)
+    {
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log")->onConnection('sync'));
     }
 
     public function subscribe($events)

@@ -21,7 +21,7 @@ class SiteControllerEventSubscriber
     public function onAfterIndex()
     {
         $activity = "Loaded Sites";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeShow($event)
@@ -53,7 +53,7 @@ class SiteControllerEventSubscriber
     {
         $site = $event->site;
         $activity = "Created Site {$site->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeEdit($event)
@@ -75,20 +75,25 @@ class SiteControllerEventSubscriber
     {
         $site = $event->site;
         $activity = "Updated Site {$site->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeDestroy($event)
     {
         $site = $event->site;
         $activity = "Deleting Site {$site->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onAfterDestroy()
     {
         $activity = "Deleted Site";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
+    }
+
+    protected function dispatchUserActivityLog($activity)
+    {
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log")->onConnection('sync'));
     }
 
     public function subscribe($events)

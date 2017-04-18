@@ -20,7 +20,7 @@ class ProductControllerEventSubscriber
     public function onAfterIndex()
     {
         $activity = "Visited Products Page";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeShow($event)
@@ -52,7 +52,7 @@ class ProductControllerEventSubscriber
     {
         $product = $event->product;
         $activity = "Created Product {$product->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeEdit($event)
@@ -64,7 +64,7 @@ class ProductControllerEventSubscriber
     {
         $product = $event->product;
         $activity = "Editing Product {$product->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeUpdate($event)
@@ -76,20 +76,25 @@ class ProductControllerEventSubscriber
     {
         $product = $event->product;
         $activity = "Updated Product {$product->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeDestroy($event)
     {
         $product = $event->product;
         $activity = "Deleting Product {$product->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onAfterDestroy()
     {
         $activity = "Deleted Product";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
+    }
+
+    protected function dispatchUserActivityLog($activity)
+    {
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log")->onConnection('sync'));
     }
 
     public function subscribe($events)

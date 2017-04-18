@@ -23,7 +23,7 @@ class ItemMetaControllerEventSubscriber
     public function onAfterIndex($event)
     {
         $activity = "Visited Item Metas Page";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeShow($event)
@@ -35,7 +35,7 @@ class ItemMetaControllerEventSubscriber
     {
         $itemMeta = $event->itemMeta;
         $activity = "Loaded item meta {$itemMeta->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeCreate($event)
@@ -57,7 +57,7 @@ class ItemMetaControllerEventSubscriber
     {
         $itemMeta = $event->itemMeta;
         $activity = "Created item meta {$itemMeta->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeEdit($event)
@@ -69,7 +69,7 @@ class ItemMetaControllerEventSubscriber
     {
         $itemMeta = $event->itemMeta;
         $activity = "Editing item meta {$itemMeta->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeUpdate($event)
@@ -81,21 +81,27 @@ class ItemMetaControllerEventSubscriber
     {
         $itemMeta = $event->itemMeta;
         $activity = "Updated item meta {$itemMeta->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeDestroy($event)
     {
         $itemMeta = $event->itemMeta;
         $activity = "Deleting item meta {$itemMeta->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onAfterDestroy($event)
     {
         $activity = "Deleted item meta";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
+
+    protected function dispatchUserActivityLog($activity)
+    {
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log")->onConnection('sync'));
+    }
+
 
     public function subscribe($events)
     {

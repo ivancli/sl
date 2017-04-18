@@ -23,7 +23,7 @@ class UrlControllerEventSubscriber
     public function onAfterIndex($event)
     {
         $activity = "Visited URLs Page";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeShow($event)
@@ -35,7 +35,7 @@ class UrlControllerEventSubscriber
     {
         $url = $event->url;
         $activity = "Loaded URL {$url->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeCreate($event)
@@ -67,7 +67,7 @@ class UrlControllerEventSubscriber
     {
         $url = $event->url;
         $activity = "Editing Item {$url->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeUpdate($event)
@@ -84,14 +84,20 @@ class UrlControllerEventSubscriber
     {
         $url = $event->url;
         $activity = "Deleting URL {$url->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onAfterDestroy($event)
     {
         $activity = "Deleted URL";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
+
+    protected function dispatchUserActivityLog($activity)
+    {
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log")->onConnection('sync'));
+    }
+
 
     public function subscribe($events)
     {

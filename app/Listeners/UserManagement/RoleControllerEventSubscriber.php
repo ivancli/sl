@@ -9,6 +9,8 @@
 namespace App\Listeners\UserManagement;
 
 
+use App\Jobs\Log\UserActivity;
+
 class RoleControllerEventSubscriber
 {
 
@@ -19,7 +21,8 @@ class RoleControllerEventSubscriber
 
     public function onAfterIndex($event)
     {
-
+        $activity = "Visited Roles Page";
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeShow($event)
@@ -30,6 +33,8 @@ class RoleControllerEventSubscriber
     public function onAfterShow($event)
     {
         $role = $event->role;
+        $activity = "Loaded Role {$role->getKey()}";
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeCreate($event)
@@ -50,6 +55,8 @@ class RoleControllerEventSubscriber
     public function onAfterStore($event)
     {
         $role = $event->role;
+        $activity = "Created Role {$role->getKey()}";
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeEdit($event)
@@ -60,6 +67,8 @@ class RoleControllerEventSubscriber
     public function onAfterEdit($event)
     {
         $role = $event->role;
+        $activity = "Editing Role {$role->getKey()}";
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeUpdate($event)
@@ -70,16 +79,26 @@ class RoleControllerEventSubscriber
     public function onAfterUpdate($event)
     {
         $role = $event->role;
+        $activity = "Updated Role {$role->getKey()}";
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeDestroy($event)
     {
         $role = $event->role;
+        $activity = "Deleting Role {$role->getKey()}";
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onAfterDestroy($event)
     {
+        $activity = "Deleted Role";
+        $this->dispatchUserActivityLog($activity);
+    }
 
+    protected function dispatchUserActivityLog($activity)
+    {
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log")->onConnection('sync'));
     }
 
     public function subscribe($events)

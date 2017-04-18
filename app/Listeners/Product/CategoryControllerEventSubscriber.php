@@ -21,7 +21,7 @@ class CategoryControllerEventSubscriber
     public function onAfterIndex()
     {
         $activity = "Loaded Categories";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeShow()
@@ -53,7 +53,7 @@ class CategoryControllerEventSubscriber
     {
         $category = $event->category;
         $activity = "Created Category {$category->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeEdit($event)
@@ -65,7 +65,7 @@ class CategoryControllerEventSubscriber
     {
         $category = $event->category;
         $activity = "Editing Category {$category->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeUpdate($event)
@@ -77,20 +77,25 @@ class CategoryControllerEventSubscriber
     {
         $category = $event->category;
         $activity = "Updated Category {$category->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeDestroy($event)
     {
         $category = $event->category;
         $activity = "Deleting Category {$category->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onAfterDestroy()
     {
         $activity = "Deleted Category";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
+    }
+
+    protected function dispatchUserActivityLog($activity)
+    {
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log")->onConnection('sync'));
     }
 
     public function subscribe($events)

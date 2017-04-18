@@ -23,7 +23,7 @@ class ItemMetaConfControllerEventSubscriber
     public function onAfterIndex($event)
     {
         $activity = "Visited Items Page";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeShow($event)
@@ -35,7 +35,7 @@ class ItemMetaConfControllerEventSubscriber
     {
         $item = $event->item;
         $activity = "Loaded Item {$item->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeCreate($event)
@@ -56,7 +56,7 @@ class ItemMetaConfControllerEventSubscriber
     public function onAfterStore($event)
     {
         $activity = "Created Item Meta Configuration";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeEdit($event)
@@ -78,20 +78,25 @@ class ItemMetaConfControllerEventSubscriber
     {
         $item = $event->item;
         $activity = "Updated Item Meta Configuration {$item->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeDestroy($event)
     {
         $item = $event->item;
         $activity = "Deleting Item Meta Configuration {$item->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onAfterDestroy($event)
     {
         $activity = "Deleted Item Meta Configuration";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
+    }
+
+    protected function dispatchUserActivityLog($activity)
+    {
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log")->onConnection('sync'));
     }
 
     public function subscribe($events)

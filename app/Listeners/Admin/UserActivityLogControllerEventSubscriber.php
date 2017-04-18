@@ -21,7 +21,7 @@ class UserActivityLogControllerEventSubscriber
     public function onAfterIndex()
     {
         $activity = "Visited User Activity Logs";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeShow()
@@ -82,6 +82,11 @@ class UserActivityLogControllerEventSubscriber
     public function onAfterDestroy()
     {
 
+    }
+
+    protected function dispatchUserActivityLog($activity)
+    {
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log")->onConnection('sync'));
     }
 
     public function subscribe($events)

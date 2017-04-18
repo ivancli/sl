@@ -21,7 +21,7 @@ class DomainControllerEventSubscriber
     public function onAfterIndex($event)
     {
         $activity = "Visited Domains Page";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeShow($event)
@@ -33,7 +33,7 @@ class DomainControllerEventSubscriber
     {
         $domain = $event->domain;
         $activity = "Loaded Domain {$domain->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeCreate($event)
@@ -65,7 +65,7 @@ class DomainControllerEventSubscriber
     {
         $domain = $event->domain;
         $activity = "Editing Domain {$domain->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeUpdate($event)
@@ -77,20 +77,25 @@ class DomainControllerEventSubscriber
     {
         $domain = $event->domain;
         $activity = "Updated Domain {$domain->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeDestroy($event)
     {
         $domain = $event->domain;
         $activity = "Deleting Domain {$domain->getKey()}";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onAfterDestroy($event)
     {
         $activity = "Deleted Domain";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
+    }
+
+    protected function dispatchUserActivityLog($activity)
+    {
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log")->onConnection('sync'));
     }
 
     public function subscribe($events)

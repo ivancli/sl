@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Contracts\Repositories\Admin\UserActivityLogContract;
 use App\Events\Admin\UserActivityLog\BeforeIndex;
 use App\Events\Admin\UserActivityLog\AfterIndex;
 use App\Events\Admin\UserActivityLog\BeforeCreate;
@@ -18,18 +17,19 @@ use App\Events\Admin\UserActivityLog\AfterUpdate;
 use App\Events\Admin\UserActivityLog\BeforeDestroy;
 use App\Events\Admin\UserActivityLog\AfterDestroy;
 use App\Models\LoggingModels\UserActivityLog;
+use App\Services\Admin\UserActivityLogService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class UserActivityLogController extends Controller
 {
     protected $request;
-    protected $userActivityLogRepo;
+    protected $userActivityLogService;
 
-    public function __construct(Request $request, UserActivityLogContract $userActivityLogContract)
+    public function __construct(Request $request, UserActivityLogService $userActivityLogService)
     {
         $this->request = $request;
-        $this->userActivityLogRepo = $userActivityLogContract;
+        $this->userActivityLogService = $userActivityLogService;
     }
 
     /**
@@ -40,8 +40,9 @@ class UserActivityLogController extends Controller
     public function index()
     {
         event(new BeforeIndex());
+
         if ($this->request->ajax()) {
-            $userActivityLogs = $this->userActivityLogRepo->filterAll($this->request->all());
+            $userActivityLogs = $this->userActivityLogService->load($this->request->all());
             $status = true;
         }
 

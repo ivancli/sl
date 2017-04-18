@@ -19,7 +19,7 @@ class ProfileControllerEventSubscriber
     {
         $user = $event->user;
         $activity = "Visited Account Profile";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeUpdate($event)
@@ -31,7 +31,12 @@ class ProfileControllerEventSubscriber
     {
         $user = $event->user;
         $activity = "Updated Account Profile";
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log"));
+        $this->dispatchUserActivityLog($activity);
+    }
+
+    protected function dispatchUserActivityLog($activity)
+    {
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log")->onConnection('sync'));
     }
 
 

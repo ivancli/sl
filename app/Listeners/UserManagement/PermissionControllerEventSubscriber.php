@@ -9,12 +9,15 @@
 namespace App\Listeners\UserManagement;
 
 
+use App\Jobs\Log\UserActivity;
+
 class PermissionControllerEventSubscriber
 {
 
     public function onBeforeIndex($event)
     {
-
+        $activity = "Visited Permissions Page";
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onAfterIndex($event)
@@ -30,6 +33,8 @@ class PermissionControllerEventSubscriber
     public function onAfterShow($event)
     {
         $permission = $event->permission;
+        $activity = "Loaded Permission {$permission->getKey()}";
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeCreate($event)
@@ -50,6 +55,8 @@ class PermissionControllerEventSubscriber
     public function onAfterStore($event)
     {
         $permission = $event->permission;
+        $activity = "Created Permission {$permission->getKey()}";
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeEdit($event)
@@ -60,6 +67,8 @@ class PermissionControllerEventSubscriber
     public function onAfterEdit($event)
     {
         $permission = $event->permission;
+        $activity = "Editing Permission {$permission->getKey()}";
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeUpdate($event)
@@ -70,17 +79,28 @@ class PermissionControllerEventSubscriber
     public function onAfterUpdate($event)
     {
         $permission = $event->permission;
+        $activity = "Updated Permission {$permission->getKey()}";
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeDestroy($event)
     {
         $permission = $event->permission;
+        $activity = "Deleting Permission {$permission->getKey()}";
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onAfterDestroy($event)
     {
-
+        $activity = "Deleted Permission";
+        $this->dispatchUserActivityLog($activity);
     }
+
+    protected function dispatchUserActivityLog($activity)
+    {
+        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log")->onConnection('sync'));
+    }
+
 
     public function subscribe($events)
     {
