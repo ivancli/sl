@@ -1,28 +1,141 @@
 <template>
     <header class="main-header">
-        <!-- Logo -->
-        <a href="#" class="logo">
-            <span class="logo-mini">
-                <img src="/images/favicon.png" alt="SpotLite Logo Icon">
-            </span>
-            <span class="logo-lg">
-                <img src="/images/logo_transparent_white_text.png" alt="SpotLite Logo">
-            </span>
-        </a>
-        <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
-            <!-- Sidebar toggle button-->
-            <a href="#" class="sidebar-toggle" @click.prevent="toggleSidebar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
+            <div class="navbar-header">
+                <a href="/" class="navbar-brand">
+                    <img src="/images/favicon.png" alt="SpotLite" style="max-height: 40px;">
+                </a>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="">
+                        <a href="/dashboard">
+                            <i class="fa fa-dashboard"></i>&nbsp;DASHBOARDS
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="/product">
+                            <i class="fa fa-tag"></i>&nbsp;PRODUCTS
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="/positioning">
+                            <i class="fa fa-street-view"></i>&nbsp;POSITIONING
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="/alert">
+                            <i class="fa fa-bell-o"></i>&nbsp;ALERTS
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="/report">
+                            <i class="fa fa-envelope-o"></i>&nbsp;REPORTS
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="/app-preference">
+                            <i class="fa fa-gears"></i>
+                            <span class="hidden-lg hidden-md hidden-sm">App Preferences</span>
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-files-o"></i>&nbsp;<span class="hidden-lg hidden-md hidden-sm">Manage Crawler</span>&nbsp;<i class="fa fa-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="">
+                                <a href="/url-management/domain">
+                                    <i class="fa fa-circle-o"></i> Domains
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="/url-management/url">
+                                    <i class="fa fa-circle-o"></i> Sites
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown ">
+                        <a href="#" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-users"></i>&nbsp;<span class="hidden-lg hidden-md hidden-sm">Manage Users</span>&nbsp;<i class="fa fa-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="">
+                                <a href="/user-management/user">
+                                    <i class="fa fa-user"></i>
+                                    <span>Users</span>
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="/user-management/group">
+                                    <i class="fa fa-users"></i>
+                                    <span>Groups</span>
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="/user-management/role">
+                                    <i class="fa fa-tags"></i>
+                                    <span>Roles</span>
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="/user-management/permission">
+                                    <i class="fa fa-key"></i>
+                                    <span>Permissions</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown ">
+                        <a href="#" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-file-text-o"></i>&nbsp;<span class="hidden-lg hidden-md hidden-sm">System Logs</span>&nbsp;<i class="fa fa-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="">
+                                <a href="#">
+                                    <i class="fa fa-gear"></i>
+                                    <span>Crawler Logs</span>
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="/log/user-activity-log">
+                                    <i class="fa fa-map-o"></i>
+                                    <span>User Activity Logs</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown  ">
+                        <a href="#" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-file-archive-o"></i>&nbsp;<span class="hidden-lg hidden-md hidden-sm">Manage Legals</span>&nbsp;<i class="fa fa-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="">
+                                <a href="https://login.spotlite.com.au/term_and_condition">
+                                    <i class="fa fa-square"></i>
+                                    <span>Terms and Conditions</span>
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="https://login.spotlite.com.au/privacy_policy">
+                                    <i class="fa fa-square"></i>
+                                    <span>Privacy Policies</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+
+            </div>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <li :class="dropdownToggle['need_help'] == true ? 'open' : ''">
-                        <a href="#" class="dropdown-toggle lnk-drop-down-need-help"
-                           @click.prevent="toggleDropdown('need_help')">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle lnk-drop-down-need-help" data-toggle="dropdown" aria-expanded="false">
                             &nbsp;
                             <i class="fa fa-question-circle"></i>
                             <span class="hidden-xs">
@@ -73,14 +186,14 @@
 
 <script>
     import {
-            TOGGLE_SIDEBAR
+        TOGGLE_SIDEBAR
     } from '../../actions/action-types';
 
     export default {
         mounted() {
             console.log('Header component mounted.')
         },
-        data: ()=> {
+        data: () => {
             return {
                 dropdownToggle: {
                     'need_help': false,
@@ -104,6 +217,18 @@
 </script>
 
 <style>
+    .skin-black-light .main-header .navbar-brand {
+        border-right: 1px solid #8cdacb;
+    }
+
+    .skin-black-light .main-header .navbar .navbar-nav > li > a {
+        border-right: 1px solid #8cdacb;
+    }
+
+    .skin-black-light .main-header .navbar .navbar-custom-menu .navbar-nav > li > a, .skin-black-light .main-header .navbar .navbar-right > li > a {
+        border-left: 1px solid #8cdacb;
+    }
+
     .skin-black-light .main-header {
         -webkit-box-shadow: none;
         -moz-box-shadow: none;
@@ -180,19 +305,7 @@
         color: #fff;
     }
 
-    @media (min-width: 991px) {
-        .navbar-custom-menu {
-            padding-top: 35px;
-            padding-bottom: 35px;
-        }
-    }
-
     @media (min-width: 768px) {
-        .navbar-nav > li > a {
-            padding-top: 5px;
-            padding-bottom: 5px;
-        }
-
         .skin-black-light .main-header .navbar > .sidebar-toggle {
             padding-top: 40px;
             padding-bottom: 40px;

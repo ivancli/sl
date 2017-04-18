@@ -10,7 +10,6 @@
     <div id="sl">
         <default-template v-cloak>
             <default-header slot="default-header"></default-header>
-            <default-sidebar slot="default-sidebar"></default-sidebar>
             <default-content slot="default-content">
                 <content-header slot="content-header">
                     <span slot="content-header-title">

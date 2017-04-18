@@ -7,6 +7,16 @@ window._ = require('lodash');
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
+window.$ = window.jQuery = require('jquery');
+
+require('bootstrap-sass');
+
+/**
+ * Vue is a modern JavaScript library for building interactive web interfaces
+ * using reactive data binding and reusable components. Vue's API is clean
+ * and simple, leaving you to focus on building your next great project.
+ */
+
 window.axios = require('axios');
 
 window.axios.defaults.headers.common = {

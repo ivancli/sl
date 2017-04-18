@@ -27,7 +27,7 @@
     @component('components.variable_setter')
     @endcomponent
 </head>
-<body class="skin-black-light">
+<body class="skin-black-light layout-top-nav">
 @yield('body')
 @yield('scripts')
 </body>
