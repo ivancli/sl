@@ -2,59 +2,59 @@
 
 namespace App\Http\Controllers\Account;
 
-use App\Contracts\Repositories\UserManagement\UserContract;
 use App\Events\Account\Profile\AfterShow;
 use App\Events\Account\Profile\AfterUpdate;
 use App\Events\Account\Profile\BeforeShow;
 use App\Events\Account\Profile\BeforeUpdate;
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Validators\Account\Profile\UpdateValidator;
+use App\Services\Account\ProfileService;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
     protected $request;
-    protected $userRepo;
+    protected $profileService;
 
-    public function __construct(Request $request, UserContract $userContract)
+    public function __construct(Request $request, ProfileService $profileService)
     {
         $this->request = $request;
-        $this->userRepo = $userContract;
+        $this->profileService = $profileService;
     }
 
-    public function show($id)
+    public function show($user_id)
     {
-        if ($id != auth()->user()->getKey()) {
+        if ($user_id != auth()->user()->getKey()) {
             abort(403);
             return false;
         }
-        $user = $this->userRepo->get($id);
+        $user = $this->profileService->getUserById($user_id);
+
         event(new BeforeShow($user));
-        $user = auth()->user();
+
         $status = true;
+
         event(new AfterShow($user));
+
         return compact(['user', 'status']);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param $id
-     * @param UpdateValidator $updateValidator
+     * @param $user_id
      * @return bool|\Illuminate\Http\Response
      */
-    public function update($id, UpdateValidator $updateValidator)
+    public function update($user_id)
     {
-        if ($id != auth()->user()->getKey()) {
+        if ($user_id != auth()->user()->getKey()) {
             abort(403);
             return false;
         }
-        $user = $this->userRepo->get($id);
+        $user = $this->profileService->getUserById($user_id);
+
         event(new BeforeUpdate($user));
-        $updateValidator->validate($this->request->all());
-        $this->userRepo->update($user, $this->request->all());
-        $this->userRepo->updateMetas($user, $this->request->all());
+
+        $this->profileService->update($user_id, $this->request->all());
         $status = true;
 
         event(new AfterUpdate($user));

@@ -268,6 +268,22 @@ class EventServiceProvider extends ServiceProvider
         /**
          * Admin
          */
+        /* app preference */
+        'App\Events\Admin\AppPref\BeforeIndex' => [],
+        'App\Events\Admin\AppPref\AfterIndex' => [],
+        'App\Events\Admin\AppPref\BeforeShow' => [],
+        'App\Events\Admin\AppPref\AfterShow' => [],
+        'App\Events\Admin\AppPref\BeforeCreate' => [],
+        'App\Events\Admin\AppPref\AfterCreate' => [],
+        'App\Events\Admin\AppPref\BeforeStore' => [],
+        'App\Events\Admin\AppPref\AfterStore' => [],
+        'App\Events\Admin\AppPref\BeforeEdit' => [],
+        'App\Events\Admin\AppPref\AfterEdit' => [],
+        'App\Events\Admin\AppPref\BeforeUpdate' => [],
+        'App\Events\Admin\AppPref\AfterUpdate' => [],
+        'App\Events\Admin\AppPref\BeforeDestroy' => [],
+        'App\Events\Admin\AppPref\AfterDestroy' => [],
+
         /* user activity log */
         'App\Events\Admin\UserActivityLog\BeforeIndex' => [],
         'App\Events\Admin\UserActivityLog\AfterIndex' => [],

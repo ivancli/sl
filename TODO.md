@@ -5,7 +5,8 @@
 5. Report function
 6. UI layout update with Inspire
 7. UI JS update to make drop down to be able to un-focus
-8. Catch up new features
+8. Enable user activity logging
+9. Catch up new features
     1. bulk import
     2. positioning table
     3. ebay my site recognition

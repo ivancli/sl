@@ -9,41 +9,38 @@
 namespace App\Http\Controllers\Account;
 
 
-use App\Contracts\Repositories\UserManagement\UserContract;
 use App\Events\Account\Preference\AfterUpdate;
 use App\Events\Account\Preference\BeforeUpdate;
 use App\Http\Controllers\Controller;
-use App\Validators\Account\Preference\UpdateValidator;
+use App\Services\Account\PreferenceService;
 use Illuminate\Http\Request;
 
 class PreferenceController extends Controller
 {
     protected $request;
-    protected $userRepo;
+    protected $preferenceService;
 
-    public function __construct(Request $request, UserContract $userContract)
+    public function __construct(Request $request, PreferenceService $preferenceService)
     {
         $this->request = $request;
-        $this->userRepo = $userContract;
+        $this->preferenceService = $preferenceService;
     }
 
     /**
-     * @param $id
-     * @param UpdateValidator $updateValidator
+     * @param $user_id
      * @return array
      */
-    public function update($id, UpdateValidator $updateValidator)
+    public function update($user_id)
     {
-        $user = $this->userRepo->get($id);
-        event(new BeforeUpdate($user));
-        $updateValidator->validate($this->request->all());
+        $user = $this->preferenceService->getUserById($user_id);
 
-        foreach ($this->request->all() as $element => $value) {
-            $user->setPreference($element, $value);
-        }
+        event(new BeforeUpdate($user));
+
+        $this->preferenceService->update($user_id, $this->request->all());
         $status = true;
 
         event(new AfterUpdate($user));
+
         return compact(['status']);
     }
 }

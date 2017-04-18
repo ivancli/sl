@@ -24,6 +24,7 @@ class DomainMetaService
     #endregion
 
     #region validators
+
     protected $updateValidator;
 
     #endregion
@@ -41,12 +42,23 @@ class DomainMetaService
         #endregion
     }
 
+    /**
+     * get domain by domain id
+     * @param $domain_id
+     * @return mixed
+     */
     public function getDomainById($domain_id)
     {
         $domain = $this->domainRepo->get($domain_id);
         return $domain;
     }
 
+    /**
+     * update domain meta data
+     * @param $domain_id
+     * @param array $data
+     * @return mixed
+     */
     public function update($domain_id, array $data)
     {
         $domain = $this->domainRepo->get($domain_id);

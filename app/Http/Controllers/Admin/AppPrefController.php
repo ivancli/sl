@@ -2,20 +2,35 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Contracts\Repositories\Admin\AppPrefContract;
+
+use App\Events\Admin\AppPref\AfterCreate;
+use App\Events\Admin\AppPref\AfterDestroy;
+use App\Events\Admin\AppPref\AfterEdit;
+use App\Events\Admin\AppPref\AfterIndex;
+use App\Events\Admin\AppPref\AfterShow;
+use App\Events\Admin\AppPref\AfterStore;
+use App\Events\Admin\AppPref\AfterUpdate;
+use App\Events\Admin\AppPref\BeforeCreate;
+use App\Events\Admin\AppPref\BeforeDestroy;
+use App\Events\Admin\AppPref\BeforeEdit;
+use App\Events\Admin\AppPref\BeforeIndex;
+use App\Events\Admin\AppPref\BeforeShow;
+use App\Events\Admin\AppPref\BeforeStore;
+use App\Events\Admin\AppPref\BeforeUpdate;
 use App\Http\Controllers\Controller;
+use App\Services\Admin\AppPrefService;
 use Illuminate\Http\Request;
 
 class AppPrefController extends Controller
 {
     protected $request;
-    protected $appPrefRepo;
+    protected $appPrefService;
 
     public function __construct(Request $request,
-                                AppPrefContract $appPrefContract)
+                                AppPrefService $appPrefService)
     {
         $this->request = $request;
-        $this->appPrefRepo = $appPrefContract;
+        $this->appPrefService = $appPrefService;
     }
 
     /**
@@ -25,10 +40,15 @@ class AppPrefController extends Controller
      */
     public function index()
     {
+        event(new BeforeIndex());
+
         if ($this->request->ajax()) {
-            $appPrefs = $this->appPrefRepo->all();
+            $appPrefs = $this->appPrefService->load();
             $status = true;
         }
+
+        event(new AfterIndex());
+
         if ($this->request->ajax()) {
             return compact(['status', 'appPrefs']);
         } else {
@@ -43,7 +63,8 @@ class AppPrefController extends Controller
      */
     public function create()
     {
-        //
+        event(new BeforeCreate());
+        event(new AfterCreate());
     }
 
     /**
@@ -53,11 +74,15 @@ class AppPrefController extends Controller
      */
     public function store()
     {
+        event(new BeforeStore());
+
         /*TODO add validation to appPrefs*/
-        foreach ($this->request->get('appPrefs') as $appPref) {
-            $pref = $this->appPrefRepo->store($appPref);
-        }
+
+        $this->appPrefService->store($this->request->all());
         $status = true;
+
+        event(new AfterStore());
+
         return compact(['status']);
     }
 
@@ -69,7 +94,8 @@ class AppPrefController extends Controller
      */
     public function show($id)
     {
-        //
+        event(new BeforeShow());
+        event(new AfterShow());
     }
 
     /**
@@ -80,7 +106,8 @@ class AppPrefController extends Controller
      */
     public function edit($id)
     {
-        //
+        event(new BeforeEdit());
+        event(new AfterEdit());
     }
 
     /**
@@ -91,7 +118,8 @@ class AppPrefController extends Controller
      */
     public function update($id)
     {
-        //
+        event(new BeforeUpdate());
+        event(new AfterUpdate());
     }
 
     /**
@@ -102,6 +130,7 @@ class AppPrefController extends Controller
      */
     public function destroy($id)
     {
-        //
+        event(new BeforeDestroy());
+        event(new AfterDestroy());
     }
 }
