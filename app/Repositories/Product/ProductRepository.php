@@ -90,6 +90,6 @@ class ProductRepository implements ProductContract
      */
     public function destroy(Product $product)
     {
-        $product->delete();
+        return $product->delete();
     }
 }

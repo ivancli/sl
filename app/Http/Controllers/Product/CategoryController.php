@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Product;
 
-use App\Contracts\Repositories\Product\CategoryContract;
 use App\Events\Product\Category\AfterDestroy;
 use App\Events\Product\Category\AfterEdit;
 use App\Events\Product\Category\AfterIndex;
@@ -18,8 +17,6 @@ use App\Events\Product\Category\BeforeUpdate;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Services\Product\CategoryService;
-use App\Validators\Product\Category\StoreValidator;
-use App\Validators\Product\Category\UpdateValidator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

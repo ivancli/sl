@@ -19,6 +19,7 @@ use App\Events\Product\Site\BeforeStore;
 use App\Events\Product\Site\BeforeUpdate;
 use App\Http\Controllers\Controller;
 use App\Models\Site;
+use App\Services\Product\SiteService;
 use App\Validators\Product\Site\StoreValidator;
 use App\Validators\Product\Site\UpdateValidator;
 use Illuminate\Http\JsonResponse;
@@ -27,17 +28,12 @@ use Illuminate\Http\Request;
 class SiteController extends Controller
 {
     protected $request;
-    protected $productRepo, $siteRepo, $urlRepo;
+    protected $siteService;
 
-    public function __construct(Request $request,
-                                ProductContract $productContract,
-                                SiteContract $siteContract,
-                                UrlContract $urlContract)
+    public function __construct(Request $request, SiteService $siteService)
     {
         $this->request = $request;
-        $this->productRepo = $productContract;
-        $this->siteRepo = $siteContract;
-        $this->urlRepo = $urlContract;
+        $this->siteService = $siteService;
     }
 
     /**
@@ -48,12 +44,14 @@ class SiteController extends Controller
     public function index()
     {
         event(new BeforeIndex());
+
         if ($this->request->has('product_id')) {
-            $product = $this->productRepo->get($this->request->get('product_id'));
-            $sites = $product->sites;
+            $sites = $this->siteService->load($this->request->all());
             $status = true;
         }
+
         event(new AfterIndex());
+
         if ($this->request->ajax()) {
             return compact(['status', 'sites']);
         } else {
@@ -64,24 +62,17 @@ class SiteController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreValidator $storeValidator
      * @return JsonResponse|\Illuminate\Http\Response
      */
-    public function store(StoreValidator $storeValidator)
+    public function store()
     {
         event(new BeforeStore());
-        $storeValidator->validate($this->request->all());
 
-        $site = $this->siteRepo->store($this->request->all());
-        $url = $this->urlRepo->getByFullPathOrCreate($this->request->all());
-
-        $url->sites()->save($site);
-        $product = $this->productRepo->get($this->request->get('product_id'));
-        $product->sites()->save($site);
-
+        $site = $this->siteService->store($this->request->all());
         $status = true;
 
         event(new AfterStore($site));
+
         if ($this->request->ajax()) {
             return compact(['status', 'site']);
         } else {
@@ -119,24 +110,13 @@ class SiteController extends Controller
      * Update the specified resource in storage.
      *
      * @param Site $site
-     * @param UpdateValidator $updateValidator
      * @return \Illuminate\Http\Response
      */
-    public function update(Site $site, UpdateValidator $updateValidator)
+    public function update(Site $site)
     {
         event(new BeforeUpdate($site));
-        $id = $site->getKey();
-        $this->request->merge(compact(['id']));
-        $updateValidator->validate($this->request->all());
 
-
-        $site = $this->siteRepo->update($site, $this->request->all());
-        $url = $this->urlRepo->getByFullPathOrCreate($this->request->all());
-
-        $url->sites()->save($site);
-        $product = $this->productRepo->get($this->request->get('product_id'));
-        $product->sites()->save($site);
-
+        $site = $this->siteService->update($site, $this->request->all());
         $status = true;
 
         event(new AfterUpdate($site));
@@ -157,8 +137,9 @@ class SiteController extends Controller
     public function destroy(Site $site)
     {
         event(new BeforeDestroy($site));
-        $this->siteRepo->destroy($site);
-        $status = true;
+
+        $status = $this->siteService->destroy($site);
+
         event(new AfterDestroy());
 
         if ($this->request->ajax()) {

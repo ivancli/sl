@@ -87,6 +87,6 @@ class CategoryRepository implements CategoryContract
      */
     public function destroy(Category $category)
     {
-        $category->delete();
+        return $category->delete();
     }
 }

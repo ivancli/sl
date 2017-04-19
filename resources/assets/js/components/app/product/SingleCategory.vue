@@ -42,12 +42,12 @@
                 </div>
             </th>
         </tr>
-        <tr>
-            <th></th>
-            <th colspan="3" class="category-th action-cell add-item-cell">
-                <add-product :category="category" @added-product="addedProduct"></add-product>
-            </th>
-        </tr>
+        <!--<tr>-->
+            <!--<th></th>-->
+            <!--<th colspan="3" class="category-th action-cell add-item-cell">-->
+                <!--<add-product :category="category" @added-product="addedProduct"></add-product>-->
+            <!--</th>-->
+        <!--</tr>-->
         </thead>
         <tbody>
         <tr>
@@ -56,6 +56,9 @@
                 <div class="collapsible-category-div collapse" :class="isCollapsed ? '' : 'in'">
                     <single-product v-for="product in products" :current-product="product" @reload-products="reloadProducts"
                                     @added-site="reloadCategories" @deleted-site="reloadCategories"></single-product>
+                    <div class="m-t-20">
+                        <add-product :category="category" @added-product="addedProduct"></add-product>
+                    </div>
                 </div>
             </td>
         </tr>
@@ -258,10 +261,6 @@
     .category-th {
         vertical-align: middle !important;
         height: 40px !important;
-    }
-
-    th.category-th.action-cell.add-item-cell {
-        padding-right: 20px !important;
     }
 
     .collapsible-category-div table.product-wrapper {

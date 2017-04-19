@@ -86,6 +86,6 @@ class SiteRepository implements SiteContract
      */
     public function destroy(Site $site)
     {
-        $site->delete();
+        return $site->delete();
     }
 }
