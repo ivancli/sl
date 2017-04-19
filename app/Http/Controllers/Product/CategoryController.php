@@ -17,6 +17,7 @@ use App\Events\Product\Category\BeforeStore;
 use App\Events\Product\Category\BeforeUpdate;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Services\Product\CategoryService;
 use App\Validators\Product\Category\StoreValidator;
 use App\Validators\Product\Category\UpdateValidator;
 use Illuminate\Http\JsonResponse;
@@ -25,14 +26,13 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     protected $request;
-    protected $categoryRepo;
+    protected $categoryService;
 
-    public function __construct(Request $request,
-                                CategoryContract $categoryContract)
+    public function __construct(Request $request, CategoryService $categoryService)
     {
         $this->request = $request;
 
-        $this->categoryRepo = $categoryContract;
+        $this->categoryService = $categoryService;
     }
 
     /**
@@ -43,11 +43,14 @@ class CategoryController extends Controller
     public function index()
     {
         event(new BeforeIndex());
-        $user = auth()->user();
-        $categories = $this->categoryRepo->all($user);
-        $status = true;
+
+        if ($this->request->ajax()) {
+            $categories = $this->categoryService->load();
+            $status = true;
+        }
 
         event(new AfterIndex());
+
         if ($this->request->ajax()) {
             return compact(['categories', 'status']);
         } else {
@@ -58,20 +61,17 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreValidator $storeValidator
      * @return JsonResponse|\Illuminate\Http\Response
      */
-    public function store(StoreValidator $storeValidator)
+    public function store()
     {
         event(new BeforeStore());
 
-        $storeValidator->validate($this->request->all());
-        $user = auth()->user();
-        $category = $this->categoryRepo->store($this->request->all());
-        $user->categories()->save($category);
+        $category = $this->categoryService->store($this->request->all());
         $status = true;
 
         event(new AfterStore($category));
+
         if ($this->request->ajax()) {
             return compact(['category', 'status']);
         } else {
@@ -112,20 +112,17 @@ class CategoryController extends Controller
      * Update the specified resource in storage.
      *
      * @param Category $category
-     * @param UpdateValidator $updateValidator
      * @return JsonResponse|\Illuminate\Http\Response
      */
-    public function update(Category $category, UpdateValidator $updateValidator)
+    public function update(Category $category)
     {
         event(new BeforeUpdate($category));
-        $id = $category->getKey();
-        $this->request->merge(compact(['id']));
-        $updateValidator->validate($this->request->all());
 
-        $category = $this->categoryRepo->update($category, $this->request->all());
+        $category = $this->categoryService->update($category, $this->request->all());
         $status = true;
 
         event(new AfterUpdate($category));
+
         if ($this->request->ajax()) {
             return compact(['category', 'status']);
         } else {
@@ -142,8 +139,9 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         event(new BeforeDestroy($category));
-        $this->categoryRepo->destroy($category);
-        $status = true;
+
+        $status = $this->categoryService->destroy($category);
+
         event(new AfterDestroy());
 
         if ($this->request->ajax()) {

@@ -54,7 +54,7 @@
                             </li>
                             <li class="">
                                 <a href="/url-management/url">
-                                    <i class="fa fa-circle-o"></i> Sites
+                                    <i class="fa fa-circle-o"></i> URLs
                                 </a>
                             </li>
                         </ul>
