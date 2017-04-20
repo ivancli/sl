@@ -52,7 +52,7 @@ class UrlObserver
         if ($domain->metas->count() > 0) {
             /* REPLICATE DOMAIN META IN URL ITEM META*/
             foreach ($url->domain->metas as $domainMeta) {
-                $itemMeta = $item->setMeta($domainMeta->name, null);
+                $itemMeta = $item->setMeta($domainMeta->element, null, $domainMeta->format_type, $domainMeta->historical_type);
                 foreach ($domainMeta->confs as $domainMetaConf) {
                     $itemMeta->setConf($domainMetaConf->element, $domainMetaConf->value);
                 }

@@ -18,8 +18,9 @@ class CreateDomainMetasTable extends Migration
             $table->integer('domain_id')->unsigned()->nullable();
             $table->foreign('domain_id')->references('id')->on('domains')
                 ->onUpdate('cascade')->onDelete('cascade');
-            $table->string('name');
-            $table->string('type');
+            $table->string('element');
+            $table->string('format_type')->nullable();
+            $table->string('historical_type')->nullable();
             $table->timestamps();
         });
     }

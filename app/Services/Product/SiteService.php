@@ -12,6 +12,7 @@ namespace App\Services\Product;
 use App\Contracts\Repositories\Product\ProductContract;
 use App\Contracts\Repositories\Product\SiteContract;
 use App\Contracts\Repositories\UrlManagement\UrlContract;
+use App\Jobs\Crawl as CrawlJob;
 use App\Models\Site;
 use App\Validators\Product\Site\StoreValidator;
 use App\Validators\Product\Site\UpdateValidator;
@@ -68,10 +69,15 @@ class SiteService
     public function store(array $data)
     {
         $this->storeValidators->validate($data);
+
         $site = $this->siteRepo->store($data);
+
         $url = $this->urlRepo->getByFullPathOrCreate($data);
+
         $url->sites()->save($site);
         $product = $this->productRepo->get(array_get($data, 'product_id'));
+        //run crawler immediately
+        dispatch((new CrawlJob($url))->onQueue("crawl")->onConnection('sync'));
         $product->sites()->save($site);
         return $site;
     }

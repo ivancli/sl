@@ -96,22 +96,29 @@ class Domain extends Model
 
     /**
      * Create new meta data
-     * @param $name
-     * @param $type
+     * @param $element
+     * @param $format_type
+     * @param $historical_type
      * @return Model
      */
-    public function setMeta($name, $type)
+    public function setMeta($element, $format_type = null, $historical_type = null)
     {
         $meta = $this->metas()->create([
-            'name' => $name,
-            'type' => $type
+            'element' => $element,
+            'format_type' => $format_type,
+            'historical_type' => $historical_type
         ]);
         return $meta;
     }
 
-    public function getMeta($name)
+    /**
+     * retrieve meta by element
+     * @param $element
+     * @return mixed
+     */
+    public function getMeta($element)
     {
-        return $this->metas()->where('name', $name)->first();
+        return $this->metas()->where('element', $element)->first();
     }
 
     /**

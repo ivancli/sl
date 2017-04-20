@@ -1,20 +1,25 @@
 <template>
     <div class="form-group required">
-        <label class="col-sm-2 control-label">
+        <label class="col-md-2 control-label">
             Meta
         </label>
-        <div class="col-sm-4">
-            <input type="text" class="form-control" v-model="editingMeta.name">
+        <div class="col-md-2">
+            <input type="text" class="form-control" v-model="editingMeta.element">
         </div>
-        <div class="col-sm-4">
-            <select class="form-control" v-model="editingMeta.type">
-                <option value="">meta type</option>
-                <option value="STATIC">Static Text</option>
-                <option value="SELECT">Drop Down</option>
-                <option value="BUTTON">Multiple Buttons</option>
+        <div class="col-md-3">
+            <select class="form-control" v-model="editingMeta.format_type">
+                <option value="">Format Type (Default: Text)</option>
+                <option value="decimal">Decimal</option>
+                <option value="boolean">Boolean</option>
             </select>
         </div>
-        <div class="col-sm-2">
+        <div class="col-md-3">
+            <select class="form-control" v-model="editingMeta.historical_type">
+                <option value="">Historical Type</option>
+                <option value="price">Price</option>
+            </select>
+        </div>
+        <div class="col-md-2">
             <p class="form-control-static">
                 <a href="#" class="text-muted" @click.prevent="updateMetaConf">
                     <i class="glyphicon glyphicon-cog"></i>
@@ -43,8 +48,9 @@
             return {
                 isMetaConfActive: false,
                 editingMeta: {
-                    name: null,
-                    type: null,
+                    element: null,
+                    format_type: null,
+                    historical_type: null,
                     confs: []
                 },
             };

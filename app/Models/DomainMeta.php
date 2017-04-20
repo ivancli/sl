@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 class DomainMeta extends Model
 {
     protected $fillable = [
-        'name', 'type'
+        'element', 'format_type', 'historical_type'
     ];
 
     protected $with = [

@@ -68,6 +68,7 @@ class SiteController extends Controller
     {
         event(new BeforeStore());
 
+        /*TODO enhance add site process*/
         $site = $this->siteService->store($this->request->all());
         $status = true;
 
