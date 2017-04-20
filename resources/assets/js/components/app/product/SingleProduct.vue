@@ -52,13 +52,10 @@
                         <thead>
                         <tr>
                             <th>Site</th>
-                            <th class="text-center hidden-xs hidden-sm" width="10%">My Site</th>
                             <th class="text-right">Current Price</th>
-                            <th width="10%" class="hidden-xs hidden-sm text-right">Previous Price</th>
+                            <th class="hidden-xs hidden-sm text-right">Previous Price</th>
                             <th class="text-right hidden-xs hidden-sm">Change</th>
-                            <th width="10%" class="hidden-xs hidden-sm" style="padding-left: 20px;">Last Changed</th>
-                            <th class="hidden-xs hidden-sm">Updated</th>
-                            <th class="hidden-xs hidden-sm">Tracked Since</th>
+                            <th class="hidden-xs hidden-sm" style="padding-left: 20px;">Last Changed</th>
                             <th width="100"></th>
                         </tr>
                         </thead>

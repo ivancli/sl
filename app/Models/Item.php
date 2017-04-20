@@ -18,7 +18,7 @@ class Item extends Model
     ];
 
     protected $appends = [
-        'urls'
+        'recentPrice', 'previousPrice', 'priceChange', 'lastChangedAt', 'urls'
     ];
 
     /**
@@ -38,6 +38,57 @@ class Item extends Model
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/
+
+    /**
+     * an attribute of latest price from selected item
+     * @return null
+     */
+    public function getRecentPriceAttribute()
+    {
+        $priceItemMeta = $this->metas()->where('element', 'PRICE')->first();
+        if (!is_null($priceItemMeta)) {
+            return $priceItemMeta->value;
+        }
+        return null;
+    }
+
+    public function getPreviousPriceAttribute()
+    {
+        $priceItemMeta = $this->metas()->where('element', 'PRICE')->first();
+        if (!is_null($priceItemMeta)) {
+            $previousPrice = $priceItemMeta->historicalPrices()->where('amount', '<>', $priceItemMeta->value)->orderBy('id', 'desc')->first();
+            if (!is_null($previousPrice)) {
+                return $previousPrice->amount;
+            }
+        }
+        return null;
+    }
+
+    public function getPriceChangeAttribute()
+    {
+        if (!is_null($this->recentPrice) && !is_null($this->previousPrice)) {
+            return floatval($this->recentPrice) - floatval($this->previousPrice);
+        }
+        return null;
+    }
+
+    public function getLastChangedAtAttribute()
+    {
+        $priceItemMeta = $this->metas()->where('element', 'PRICE')->first();
+        if (!is_null($priceItemMeta)) {
+            $previousPrice = $priceItemMeta->historicalPrices()->where('amount', '<>', $priceItemMeta->value)->orderBy('id', 'desc')->first();
+            if (!is_null($previousPrice)) {
+                $lastChangedPrice = $priceItemMeta->historicalPrices()
+                    ->where('amount', $priceItemMeta->value)
+                    ->where('id', '>', $previousPrice->getKey())
+                    ->orderBy('id')->first();
+                if (!is_null($lastChangedPrice) && !is_null($lastChangedPrice->created_at)) {
+                    return $lastChangedPrice->created_at->toDateTimeString();
+                }
+            }
+        }
+        return null;
+    }
 
     public function getUrlsAttribute()
     {

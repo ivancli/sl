@@ -10,44 +10,50 @@
             <edit-site :editing-site="site" @edited-site="editedSite" @edit-site-url="goingToEditSiteURL"
                        @cancel-edit-site-url="cancelEditSiteURL"></edit-site>
         </td>
-        <td align="center" class="vertical-align-middle hidden-xs hidden-sm">
-            <a href="#" class="btn-my-price">
-                <i class="fa fa-check-circle-o text-primary"></i>
-            </a>
-        </td>
         <td class="vertical-align-middle">
             <div class="text-right">
-                <!--$368.00-->
-            </div>
-        </td>
-        <td class="vertical-align-middle hidden-xs hidden-sm">
-            <div class="text-right">
-                <div class="p-r-30">
-                    <strong><i class="fa fa-minus"></i></strong>
+                <div v-if="site.item != null && site.item.recentPrice != null">
+                    ${{ site.item.recentPrice | currency }}
+                </div>
+                <div v-else>
+                    <div class="p-r-30">
+                        <strong><i class="fa fa-minus"></i></strong>
+                    </div>
                 </div>
             </div>
         </td>
         <td class="vertical-align-middle hidden-xs hidden-sm">
             <div class="text-right">
-                <div class="p-r-10">
-                    <strong><i class="fa fa-minus"></i></strong>
+                <div v-if="site.item != null && site.item.previousPrice != null">
+                    ${{ site.item.previousPrice | currency }}
+                </div>
+                <div v-else>
+                    <div class="p-r-30">
+                        <strong><i class="fa fa-minus"></i></strong>
+                    </div>
+                </div>
+            </div>
+        </td>
+        <td class="vertical-align-middle hidden-xs hidden-sm">
+            <div class="text-right">
+                <div v-if="site.item != null && site.item.priceChange != null">
+                    ${{ site.item.priceChange | currency }}
+                </div>
+                <div v-else>
+                    <div class="p-r-10">
+                        <strong><i class="fa fa-minus"></i></strong>
+                    </div>
                 </div>
             </div>
         </td>
         <td class="hidden-xs vertical-align-middle hidden-xs hidden-sm" style="padding-left: 20px;">
-            <div class="p-l-30">
-                <strong><i class="fa fa-minus"></i></strong>
+            <div v-if="site.item != null && site.item.lastChangedAt != null">
+                {{ site.item.lastChangedAt | formatDateTime(dateFormat) }}
             </div>
-        </td>
-        <td class="vertical-align-middle hidden-xs hidden-sm">
-            <span title="2017-02-14 3:10 pm" data-toggle="tooltip">
-                2017-02-14
-                <span class="hidden-xs hidden-sm">3:10 pm</span>
-            </span>
-        </td>
-        <td class="vertical-align-middle hidden-xs hidden-sm">
-            <div :title="site.created_at | formatDateTime(datetimeFormat)">
-                {{site.created_at | formatDateTime(dateFormat)}}
+            <div v-else>
+                <div class="p-l-30">
+                    <strong><i class="fa fa-minus"></i></strong>
+                </div>
             </div>
         </td>
         <td class="text-right action-cell vertical-align-middle">
@@ -87,12 +93,14 @@
             </table>
         </td>
     </tr>
-    <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
+    <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete"
+                         @confirmDelete="confirmDelete"></delete-confirmation>
     </tbody>
 </template>
 
 <script>
     import formatDateTime from '../../../filters/formatDateTime';
+    import currency from '../../../filters/currency';
     import domain from '../../../filters/domain';
 
     import editSite from './EditSite.vue';
@@ -157,12 +165,12 @@
             },
             deleteSite(){
                 this.isDeletingSite = true;
-                axios.delete(this.site.urls.delete).then(response=> {
+                axios.delete(this.site.urls.delete).then(response => {
                     this.isDeletingSite = false;
                     if (response.data.status == true) {
                         this.$emit('deleted-site');
                     }
-                }).catch(error=> {
+                }).catch(error => {
                     this.isDeletingSite = false;
                 })
             }

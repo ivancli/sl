@@ -56,8 +56,10 @@ class SiteService
      */
     public function load(array $data = [])
     {
+        /* TODO make this function to accept parameters and dynamic */
+
         $product = $this->productRepo->get(array_get($data, 'product_id'));
-        $sites = $product->sites;
+        $sites = $product->sites()->with('item')->get();
         return $sites;
     }
 
