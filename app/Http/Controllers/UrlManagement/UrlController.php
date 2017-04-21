@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\UrlManagement;
 
 use App\Contracts\Repositories\UrlManagement\UrlContract;
+use App\Events\UrlManagement\Url\AfterAssign;
 use App\Events\UrlManagement\Url\AfterQueue;
+use App\Events\UrlManagement\Url\BeforeAssign;
 use App\Events\UrlManagement\Url\BeforeQueue;
 use App\Http\Controllers\Controller;
 use App\Models\Url;
@@ -144,6 +146,11 @@ class UrlController extends Controller
         return compact(['status']);
     }
 
+    /**
+     * Push URL to queue
+     * @param Url $url
+     * @return array
+     */
     public function queue(Url $url)
     {
         event(new BeforeQueue($url));
@@ -152,6 +159,19 @@ class UrlController extends Controller
         $status = true;
 
         event(new AfterQueue($url));
+
+        return compact(['status']);
+    }
+
+
+    public function assign(Url $url)
+    {
+        event(new BeforeAssign($url));
+
+        $this->urlService->assign($url);
+        $status = true;
+
+        event(new AfterAssign($url));
 
         return compact(['status']);
     }

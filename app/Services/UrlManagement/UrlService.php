@@ -58,4 +58,20 @@ class UrlService
         $crawler = $url->crawler;
         $crawler->statusQueuing();
     }
+
+    /**
+     * Assign referencing sites with Url's only item
+     * @param Url $url
+     */
+    public function assign(Url $url)
+    {
+        if ($url->itemsCount != 1) {
+            abort(402, 'Unable to assign multiple items to a site.');
+        }
+        $item = $url->items()->first();
+        $sitesWithoutItem = $url->sites()->whereNull('item_id')->get();
+        foreach ($sitesWithoutItem as $siteWithoutItem) {
+            $item->sites()->save($siteWithoutItem);
+        }
+    }
 }

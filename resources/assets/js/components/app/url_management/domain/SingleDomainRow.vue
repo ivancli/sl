@@ -20,7 +20,7 @@
                 <i class="glyphicon glyphicon-qrcode"></i>
             </a>
             &nbsp;
-            <a :href="domain.modelUrls.conf_edit" class="text-muted" title="edit configuration">
+            <a :href="domain.modelUrls.conf_edit" class="text-muted" title="edit configuration" @click.prevent="onClickEditConfiguration">
                 <i class="glyphicon glyphicon-cog"></i>
             </a>
             &nbsp;
@@ -28,12 +28,14 @@
                 <i class="glyphicon glyphicon-trash"></i>
             </a>
         </td>
+        <edit-popup :is-active="isConfActive" :confs="domain.confs" @hide-modal="hideEditPopup" @set-confs="setConfs"></edit-popup>
         <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
         <loading v-if="isDeletingDomain"></loading>
     </tr>
 </template>
 
 <script>
+    import editPopup from '../domain_conf/EditPopup.vue';
     import deleteConfirmation from '../../../fragments/modals/DeleteConfirmation.vue';
     import loading from '../../../Loading.vue';
 
@@ -41,6 +43,7 @@
 
     export default {
         components: {
+            editPopup,
             deleteConfirmation,
             loading,
         },
@@ -49,16 +52,17 @@
                 deleteParams: {
                     title: 'domain',
                     list: [
-                        'All domain related categories, products and URLs',
-                        'All domain related pricing information',
+                    'All domain related categories, products and URLs',
+                    'All domain related pricing information',
                     ],
                     active: false
                 },
                 isDeletingDomain: false,
+                isConfActive: false,
             }
         },
         props: [
-            'current-domain'
+        'current-domain'
         ],
         mounted() {
             console.info('SingleDomainRow component is mounted');
@@ -98,6 +102,15 @@
                 }).catch(error=> {
                     this.isDeletingDomain = false;
                 })
+            },
+            onClickEditConfiguration(){
+                this.isConfActive = true;
+            },
+            hideEditPopup(){
+                this.isConfActive = false;
+            },
+            setConfs(){
+                this.$emit('reloadDomains');
             }
         }
     }

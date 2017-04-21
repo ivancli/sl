@@ -176,6 +176,8 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\UrlManagement\Url\AfterDestroy' => [],
         'App\Events\UrlManagement\Url\BeforeQueue' => [],
         'App\Events\UrlManagement\Url\AfterQueue' => [],
+        'App\Events\UrlManagement\Url\BeforeAssign' => [],
+        'App\Events\UrlManagement\Url\AfterAssign' => [],
 
         /**
          * User management

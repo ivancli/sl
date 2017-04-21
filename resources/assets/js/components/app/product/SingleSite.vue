@@ -22,6 +22,16 @@
                 </div>
             </div>
         </td>
+        <td class="vertical-align-middle">
+            <div class="text-center">
+                <div v-if="site.item != null && site.item.availability != null">
+                    {{ site.item.availability == true ? 'Yes' : 'No' }}
+                </div>
+                <div v-else>
+                    <strong><i class="fa fa-minus"></i></strong>
+                </div>
+            </div>
+        </td>
         <td class="vertical-align-middle hidden-xs hidden-sm">
             <div class="text-right">
                 <div v-if="site.item != null && site.item.previousPrice != null">
@@ -61,6 +71,9 @@
                @click.prevent="toggleSiteDetails">
                 <i class="fa fa-info-circle"></i>
             </a>
+            <a href="#" class="btn-action" title="choose item" v-if="site.url.itemsCount > 1">
+                <i class="fa fa-list-ul"></i>
+            </a>
             <a href="#" class="btn-action" title="chart">
                 <i class="fa fa-line-chart"></i>
             </a>
@@ -87,7 +100,16 @@
                 </tr>
                 <tr>
                     <th>Current price:</th>
-                    <td>$123.45</td>
+                    <td>
+                        <div v-if="site.item != null && site.item.recentPrice != null">
+                            ${{ site.item.recentPrice | currency }}
+                        </div>
+                        <div v-else>
+                            <div class="p-l-30">
+                                <strong><i class="fa fa-minus"></i></strong>
+                            </div>
+                        </div>
+                    </td>
                 </tr>
                 </tbody>
             </table>

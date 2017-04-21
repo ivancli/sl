@@ -76,6 +76,7 @@ Route::group(['middleware' => ['auth', 'subs']], function () {
         #region URL
         Route::resource('url', 'UrlManagement\UrlController');
         Route::post('url/queue/{url}', 'UrlManagement\UrlController@queue')->name('url.queue');
+        Route::post('url/assign/{url}', 'UrlManagement\UrlController@assign')->name('url.assign');
         #endregion
 
         #region Item

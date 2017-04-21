@@ -101,7 +101,7 @@
             },
             addNewMeta(){
                 this.domain.metas.push({
-                    name: '',
+                    element: '',
                     format_type: '',
                     historical_type: '',
                     confs: []

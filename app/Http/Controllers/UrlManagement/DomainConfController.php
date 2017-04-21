@@ -42,7 +42,7 @@ class DomainConfController extends Controller
      */
     public function store()
     {
-        //
+        dd($this->request->all());
     }
 
     /**

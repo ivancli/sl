@@ -18,7 +18,7 @@ class Item extends Model
     ];
 
     protected $appends = [
-        'recentPrice', 'previousPrice', 'priceChange', 'lastChangedAt', 'urls'
+        'recentPrice', 'availability', 'previousPrice', 'priceChange', 'lastChangedAt', 'urls'
     ];
 
     /**
@@ -30,9 +30,22 @@ class Item extends Model
         return $this->belongsTo('App\Models\Url', 'url_id', 'id');
     }
 
+    /**
+     * relationship with meta
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function metas()
     {
         return $this->hasMany('App\Models\ItemMeta', 'item_id', 'id');
+    }
+
+    /**
+     * relationship with site
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function sites()
+    {
+        return $this->hasMany('App\Models\Site', 'item_id', 'id');
     }
 
     /*----------------------------------------------------------------------*/
@@ -52,6 +65,32 @@ class Item extends Model
         return null;
     }
 
+    /**
+     * an attribute of item availability
+     * @return bool|null
+     */
+    public function getAvailabilityAttribute()
+    {
+        $priceItemMeta = $this->metas()->where('element', 'AVAILABILITY')->first();
+        if (!is_null($priceItemMeta)) {
+            switch ($priceItemMeta->value) {
+                case '0':
+                    return false;
+                    break;
+                case '1':
+                    return true;
+                    break;
+                default:
+                    return null;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * get previous price
+     * @return float|null
+     */
     public function getPreviousPriceAttribute()
     {
         $priceItemMeta = $this->metas()->where('element', 'PRICE')->first();
@@ -64,6 +103,10 @@ class Item extends Model
         return null;
     }
 
+    /**
+     * get the price difference
+     * @return float|null
+     */
     public function getPriceChangeAttribute()
     {
         if (!is_null($this->recentPrice) && !is_null($this->previousPrice)) {
@@ -72,6 +115,10 @@ class Item extends Model
         return null;
     }
 
+    /**
+     * get last price change date and time
+     * @return string|null
+     */
     public function getLastChangedAtAttribute()
     {
         $priceItemMeta = $this->metas()->where('element', 'PRICE')->first();
@@ -90,6 +137,10 @@ class Item extends Model
         return null;
     }
 
+    /**
+     * get all related routes
+     * @return array
+     */
     public function getUrlsAttribute()
     {
         return [

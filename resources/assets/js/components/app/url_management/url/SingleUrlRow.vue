@@ -23,15 +23,20 @@
             <a href="#" class="text-muted" title="test crawl/parse" @click.prevent="onClickTestCrawlParseUrl">
                 <i class="glyphicon glyphicon-refresh"></i>
             </a>
+            <a href="#" class="text-muted" title="assign item to referencing sites" v-if="url.sitesNoItemCount > 0 && url.itemsCount == 1" @click.prevent="assignItemToSites">
+                &nbsp;
+                <i class="glyphicon glyphicon-hand-down"></i>
+            </a>
             &nbsp;
             <a href="#" class="text-danger" @click.prevent="onClickDeleteUrl" title="delete">
                 <i class="glyphicon glyphicon-trash"></i>
             </a>
         </td>
-        <crawl-parse-result-popup v-if="crawlParseResult != null" :url="url" :crawl-parse-result="crawlParseResult" @hide-modal="hideCrawlParseResultPopup" @pushed-to-queue="pushedToQueue"></crawl-parse-result-popup>
+        <crawl-parse-result-popup v-if="crawlParseResult != null" :url="url" :crawl-parse-result="crawlParseResult" @hide-modal="hideCrawlParseResultPopup"
+                                  @pushed-to-queue="pushedToQueue"></crawl-parse-result-popup>
         <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete"
                              @confirmDelete="confirmDelete"></delete-confirmation>
-        <loading v-if="isDeletingUrl || isTestingCrawlParseUrl"></loading>
+        <loading v-if="isDeletingUrl || isTestingCrawlParseUrl || isAssigningItemToSites"></loading>
     </tr>
 </template>
 
@@ -65,7 +70,8 @@
                 },
                 crawlParseResult: null,
                 isDeletingUrl: false,
-                isTestingCrawlParseUrl: false
+                isTestingCrawlParseUrl: false,
+                isAssigningItemToSites: false,
             };
         },
         mounted(){
@@ -103,7 +109,7 @@
                     this.crawlParseResult = response.data;
                 }).catch(error => {
                     this.isTestingCrawlParseUrl = false;
-                })
+                });
             },
             pushedToQueue(){
                 this.hideCrawlParseResultPopup();
@@ -111,6 +117,15 @@
             },
             hideCrawlParseResultPopup(){
                 this.crawlParseResult = null;
+            },
+            assignItemToSites(){
+                this.isAssigningItemToSites = true;
+                axios.post(this.url.urls.assign).then(response => {
+                    this.isAssigningItemToSites = false;
+                    this.$emit('reloadUrls');
+                }).catch(error  => {
+                    this.isAssigningItemToSites = false;
+                });
             }
         },
         computed: {

@@ -6,14 +6,14 @@
         <div class="col-md-2">
             <input type="text" class="form-control" v-model="editingMeta.element">
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <select class="form-control" v-model="editingMeta.format_type">
                 <option value="">Format Type (Default: Text)</option>
                 <option value="decimal">Decimal</option>
                 <option value="boolean">Boolean</option>
             </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <select class="form-control" v-model="editingMeta.historical_type">
                 <option value="">Historical Type</option>
                 <option value="price">Price</option>

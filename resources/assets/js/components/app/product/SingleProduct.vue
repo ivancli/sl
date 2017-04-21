@@ -53,6 +53,7 @@
                         <tr>
                             <th>Site</th>
                             <th class="text-right">Current Price</th>
+                            <th class="hidden-xs hidden-sm text-center">Available</th>
                             <th class="hidden-xs hidden-sm text-right">Previous Price</th>
                             <th class="text-right hidden-xs hidden-sm">Change</th>
                             <th class="hidden-xs hidden-sm" style="padding-left: 20px;">Last Changed</th>
@@ -62,8 +63,8 @@
                         <single-site v-for="site in sites" :current-site="site" @reload-sites="reloadSites" @deleted-site="deletedSite"></single-site>
                         <tbody>
                         <tr class="empty-message-row" v-if="!hasSites">
-                            <td colspan="9" class="text-center">To start tracking prices, simply copy and paste the URL
-                                of the product page of the website your want to track.
+                            <td colspan="9" class="text-center">
+                                To start tracking prices, simply copy and paste the URL of the product page of the website your want to track.
                             </td>
                         </tr>
                         </tbody>
@@ -93,7 +94,7 @@
     import deleteConfirmation from '../../fragments/modals/DeleteConfirmation.vue';
 
     import {
-            LOAD_USER
+        LOAD_USER
     } from '../../../actions/action-types';
 
     export default {
@@ -142,7 +143,7 @@
                 this.loadSites();
                 this.loadUser();
             },
-            deletedSite: function(){
+            deletedSite: function () {
                 this.reloadSites();
                 this.$emit('deleted-site');
             },
