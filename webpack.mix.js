@@ -38,6 +38,7 @@ mix
 
     /* domain */
     .js('resources/assets/js/app/url_management/domain/index.js', 'public/js/app/domain')
+    .js('resources/assets/js/app/url_management/domain/create.js', 'public/js/app/domain')
     .js('resources/assets/js/app/url_management/domain/show.js', 'public/js/app/domain')
     .js('resources/assets/js/app/url_management/domain/edit.js', 'public/js/app/domain')
 

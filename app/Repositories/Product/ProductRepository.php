@@ -60,7 +60,7 @@ class ProductRepository implements ProductContract
      * @param array $data
      * @return mixed
      */
-    public function store(Array $data)
+    public function store(array $data)
     {
         $product = new $this->product;
         $product->product_name = $data['product_name'];
@@ -76,7 +76,7 @@ class ProductRepository implements ProductContract
      * @return Product
      * @internal param $id
      */
-    public function update(Product $product, Array $data)
+    public function update(Product $product, array $data)
     {
         $product->product_name = $data['product_name'];
         $product->save();

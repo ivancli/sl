@@ -17,6 +17,7 @@ use App\Models\Url;
 
 class UrlObserver
 {
+    const ITEM_GENERATORS_PATH = 'IvanCLI\ItemGenerator\Repositories\\';
     protected $crawlerRepo;
 
     public function __construct(CrawlerContract $crawlerContract)
@@ -41,9 +42,10 @@ class UrlObserver
         /* CREATE CRAWLER */
         $crawlerConf = $url->domain->getConf('CRAWLER');
         $crawlerName = !is_null($crawlerConf) ? $crawlerConf->value : null;
-        $crawler = $url->crawler()->save(new Crawler([
+        $crawler = new Crawler([
             'class' => $crawlerName
-        ]));
+        ]);
+        $url->crawler()->save($crawler);
 
 
         /* TODO check domain configuration */
@@ -54,23 +56,62 @@ class UrlObserver
 
 
         $domain = $url->domain;
-        if (!is_null($domain) && $domain->metas->count() > 0) {
+        if (!is_null($domain)) {
+            $customItemGenerator = $domain->getConf('CUSTOM_ITEM_GENERATOR');
+            if (!is_null($customItemGenerator) && !is_null($customItemGenerator->value) && !empty($customItemGenerator->value)) {
+                $content = $this->crawlerRepo->fetch($crawler);
+                if ($content['status'] == 200) {
+                    $itemGenerator = app(self::ITEM_GENERATORS_PATH . $customItemGenerator->value);
 
+                    $itemGenerator->setContent($content['content']);
+                    $hasMultipleItems = $itemGenerator->extractOptions();
+                    if ($hasMultipleItems) {
+                        $itemGenerator->combinations($itemGenerator->getOptions());
+                        $items = $itemGenerator->getItems();
+                        foreach ($items as $targetItem) {
+                            $names = [];
+                            foreach ($targetItem as $label => $option) {
+                                $names[] = "{$label}: {$option->text}";
+                            }
+                            $item = new Item([
+                                'name' => implode(", ", $names)
+                            ]);
+                            $url->items()->save($item);
+                            foreach ($targetItem as $label => $option) {
+                                $itemMeta = $item->setMeta($label, $option->text);
+                            }
+                            $targetItemOptionValues = array_pluck($targetItem, 'value');
+                            foreach ($url->domain->metas as $domainMeta) {
+                                $itemMeta = $item->setMeta($domainMeta->element, null, $domainMeta->format_type, $domainMeta->historical_type);
+                                foreach ($domainMeta->confs as $domainMetaConf) {
+                                    $itemMeta->setConf($domainMetaConf->element, $domainMetaConf->value);
+                                }
 
-
-            /* CREATE AN ITEM */
-            $item = $url->items()->save(new Item);
-            /* REPLICATE DOMAIN META IN URL ITEM META*/
-            foreach ($url->domain->metas as $domainMeta) {
-                $itemMeta = $item->setMeta($domainMeta->element, null, $domainMeta->format_type, $domainMeta->historical_type);
-                foreach ($domainMeta->confs as $domainMetaConf) {
-                    $itemMeta->setConf($domainMetaConf->element, $domainMetaConf->value);
+                                $customParser = $domain->getConf('CUSTOM_PARSER');
+                                if (!is_null($customParser)) {
+                                    $itemMeta->setConf('PARSER_CLASS', $customParser->value);
+                                    foreach ($targetItemOptionValues as $targetItemOptionValue) {
+                                        $itemMeta->setConf('OPTION_VALUE', $targetItemOptionValue);
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        /* CREATE AN ITEM */
+                        $item = $this->__createItemWithDomainReplication($url);
+                    }
+                } else {
+                    /* CREATE AN ITEM */
+                    $item = $this->__createItemWithDomainReplication($url);
                 }
+            } else {
+                /* CREATE AN ITEM */
+                $item = $this->__createItemWithDomainReplication($url);
             }
         } else {
-
             /* CREATE AN ITEM */
-            $item = $url->items()->save(new Item);
+            $item = new Item;
+            $url->items()->save($item);
             /*standard entities - price and availability*/
             $priceMeta = $item->setMeta('PRICE', null, 'decimal', 'price');
             $availabilityMeta = $item->setMeta('AVAILABILITY', null, 'boolean');
@@ -116,5 +157,24 @@ class UrlObserver
     public function restored(Url $url)
     {
 
+    }
+
+    /**
+     * create an item and replicate domain configuration
+     * @param Url $url
+     * @return Item
+     */
+    private function __createItemWithDomainReplication(Url $url)
+    {
+        $item = new Item;
+        $url->items()->save($item);
+        /* REPLICATE DOMAIN META IN URL ITEM META*/
+        foreach ($url->domain->metas as $domainMeta) {
+            $itemMeta = $item->setMeta($domainMeta->element, null, $domainMeta->format_type, $domainMeta->historical_type);
+            foreach ($domainMeta->confs as $domainMetaConf) {
+                $itemMeta->setConf($domainMetaConf->element, $domainMetaConf->value);
+            }
+        }
+        return $item;
     }
 }

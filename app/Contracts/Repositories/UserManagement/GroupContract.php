@@ -18,7 +18,7 @@ interface GroupContract
      * @param array $data
      * @return mixed
      */
-    public function filterAll(Array $data = []);
+    public function filterAll(array $data = []);
 
     /**
      * Load all groups
@@ -39,7 +39,7 @@ interface GroupContract
      * @param array $data
      * @return Group
      */
-    public function store(Array $data);
+    public function store(array $data);
 
     /**
      * Update existing group
@@ -47,7 +47,7 @@ interface GroupContract
      * @param array $data
      * @return Group
      */
-    public function update(Group $group, Array $data);
+    public function update(Group $group, array $data);
 
     /**
      * Remove an existing group

@@ -3,7 +3,7 @@
         <td v-text="itemMeta.id"></td>
         <td v-text="itemMeta.element"></td>
         <td v-text="itemMeta.value"></td>
-        <td>{{ itemMeta.format_type | capitalise }}</td>
+        <td>{{ itemMeta.format_type ? itemMeta.format_type : "text" | capitalise }}</td>
         <td>{{ itemMeta.historical_type | capitalise }}</td>
         <td>{{ itemMeta.status }}</td>
         <td>{{ itemMeta.created_at | formatDateTime(datetimeFormat) }}</td>

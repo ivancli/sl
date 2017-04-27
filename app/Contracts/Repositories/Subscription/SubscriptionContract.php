@@ -43,7 +43,7 @@ interface SubscriptionContract
      * @param array $data
      * @return mixed
      */
-    public function updateSubscription(Subscription $subscription, Array $data);
+    public function updateSubscription(Subscription $subscription, array $data);
 
     /**
      * Migrate an existing subscription to a new product
@@ -52,7 +52,7 @@ interface SubscriptionContract
      * @param array $data
      * @return mixed
      */
-    public function migrateSubscription(Subscription $subscription, Array $data);
+    public function migrateSubscription(Subscription $subscription, array $data);
 
     /**
      * Get subscription by Subscription ID

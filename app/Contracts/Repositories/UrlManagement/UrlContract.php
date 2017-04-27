@@ -18,7 +18,7 @@ interface UrlContract
      * @param array $data
      * @return mixed
      */
-    public function filterAll(Array $data);
+    public function filterAll(array $data);
 
     /**
      * load all URLs
@@ -48,14 +48,14 @@ interface UrlContract
      * @return mixed
      * @internal param $full_path
      */
-    public function getByFullPathOrCreate(Array $data);
+    public function getByFullPathOrCreate(array $data);
 
     /**
      * Create new URL
      * @param array $data
      * @return mixed
      */
-    public function store(Array $data);
+    public function store(array $data);
 
     /**
      * Update existing URL
@@ -63,7 +63,7 @@ interface UrlContract
      * @param array $data
      * @return mixed
      */
-    public function update(Url $url, Array $data);
+    public function update(Url $url, array $data);
 
     /**
      * Remove an existing URL

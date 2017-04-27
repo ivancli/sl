@@ -20,7 +20,7 @@ interface ItemMetaContract
      * @param Item|null $item
      * @return mixed
      */
-    public function filterAll(Array $data = [], Item $item = null);
+    public function filterAll(array $data = [], Item $item = null);
 
     /**
      * Load all item metas
@@ -41,7 +41,7 @@ interface ItemMetaContract
      * @param array $data
      * @return ItemMeta
      */
-    public function store(Array $data = []);
+    public function store(array $data = []);
 
     /**
      * Update existing item meta
@@ -49,7 +49,7 @@ interface ItemMetaContract
      * @param array $data
      * @return mixed
      */
-    public function update(ItemMeta $itemMeta, Array $data);
+    public function update(ItemMeta $itemMeta, array $data);
 
     /**
      * Delete an item meta

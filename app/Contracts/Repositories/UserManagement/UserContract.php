@@ -17,7 +17,7 @@ interface UserContract
      * @param array $data
      * @return mixed
      */
-    public function filterAll(Array $data = []);
+    public function filterAll(array $data = []);
 
     /**
      * Load all users
@@ -38,7 +38,7 @@ interface UserContract
      * @param array $data
      * @return mixed
      */
-    public function store(Array $data);
+    public function store(array $data);
 
     /**
      * Update existing user
@@ -46,7 +46,7 @@ interface UserContract
      * @param array $data
      * @return mixed
      */
-    public function update(User $user, Array $data);
+    public function update(User $user, array $data);
 
     /**
      * update user meta info
@@ -54,7 +54,7 @@ interface UserContract
      * @param array $data
      * @return mixed
      */
-    public function updateMetas(User $user, Array $data);
+    public function updateMetas(User $user, array $data);
 
     /**
      * Remove an existing user
@@ -69,5 +69,5 @@ interface UserContract
      * @param array $roles
      * @return mixed
      */
-    public function updateRoles(User $user, Array $roles);
+    public function updateRoles(User $user, array $roles);
 }

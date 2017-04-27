@@ -19,6 +19,9 @@
                 <option value="price">Price</option>
             </select>
         </div>
+        <div class="col-md-2 checkbox text-center">
+            <input type="checkbox" value="1" id="chk-multi-item" v-model="editingMeta.multi"> &nbsp; Multi-item Only
+        </div>
         <div class="col-md-2">
             <p class="form-control-static">
                 <a href="#" class="text-muted" @click.prevent="updateMetaConf">
@@ -51,6 +54,7 @@
                     element: null,
                     format_type: null,
                     historical_type: null,
+                    multi: false,
                     confs: []
                 },
             };

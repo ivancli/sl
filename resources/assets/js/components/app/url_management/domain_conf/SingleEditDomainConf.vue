@@ -35,7 +35,7 @@
         },
         watch: {
             editingConf(){
-                this.updatingMetaConf();
+                this.updatingDomainConf();
             },
             /*
              * TODO look into this when we have time
@@ -49,8 +49,8 @@
             initSetEditingConf(){
                 this.editingConf = this.conf;
             },
-            updatingMetaConf(){
-                this.$emit('updating-meta-conf', this.editingConf);
+            updatingDomainConf(){
+                this.$emit('updating-domain-conf', this.editingConf);
             },
             removeConf(){
                 this.$emit('remove-conf')

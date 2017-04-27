@@ -38,7 +38,7 @@ interface ProductContract
      * @param array $data
      * @return Product
      */
-    public function store(Array $data);
+    public function store(array $data);
 
     /**
      * Editing existing product
@@ -47,7 +47,7 @@ interface ProductContract
      * @param array $data
      * @return Product
      */
-    public function update(Product $product, Array $data);
+    public function update(Product $product, array $data);
 
     /**
      * Deleting a product

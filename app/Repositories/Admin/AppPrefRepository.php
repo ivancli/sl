@@ -45,7 +45,7 @@ class AppPrefRepository implements AppPrefContract
      * @param array $data
      * @return mixed
      */
-    public function store(Array $data)
+    public function store(array $data)
     {
         $pref = $this->get($data['element']);
         if (is_null($pref)) {

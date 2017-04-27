@@ -58,7 +58,7 @@ class CategoryRepository implements CategoryContract
      * @param array $data
      * @return Category
      */
-    public function store(Array $data)
+    public function store(array $data)
     {
         $category = new $this->category;
         $category->category_name = $data['category_name'];
@@ -73,7 +73,7 @@ class CategoryRepository implements CategoryContract
      * @param array $data
      * @return Category
      */
-    public function update(Category $category, Array $data)
+    public function update(Category $category, array $data)
     {
         $category->category_name = $data['category_name'];
         $category->save();

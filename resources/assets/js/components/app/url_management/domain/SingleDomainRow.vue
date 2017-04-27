@@ -28,7 +28,7 @@
                 <i class="glyphicon glyphicon-trash"></i>
             </a>
         </td>
-        <edit-popup :is-active="isConfActive" :confs="domain.confs" @hide-modal="hideEditPopup" @set-confs="setConfs"></edit-popup>
+        <edit-popup :is-active="isConfActive" :confs="domain.confs" :editing-domain="domain" @hide-modal="hideEditPopup" @set-confs="setConfs"></edit-popup>
         <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
         <loading v-if="isDeletingDomain"></loading>
     </tr>
@@ -52,8 +52,8 @@
                 deleteParams: {
                     title: 'domain',
                     list: [
-                    'All domain related categories, products and URLs',
-                    'All domain related pricing information',
+                        'All domain related categories, products and URLs',
+                        'All domain related pricing information',
                     ],
                     active: false
                 },
@@ -62,7 +62,7 @@
             }
         },
         props: [
-        'current-domain'
+            'current-domain'
         ],
         mounted() {
             console.info('SingleDomainRow component is mounted');
@@ -94,12 +94,12 @@
             },
             deleteDomain(){
                 this.isDeletingDomain = true;
-                axios.delete(this.domain.modelUrls.delete).then(response=> {
+                axios.delete(this.domain.modelUrls.delete).then(response => {
                     this.isDeletingDomain = false;
                     if (response.data.status == true) {
                         this.$emit('reloadDomains');
                     }
-                }).catch(error=> {
+                }).catch(error => {
                     this.isDeletingDomain = false;
                 })
             },
@@ -110,6 +110,7 @@
                 this.isConfActive = false;
             },
             setConfs(){
+                this.hideEditPopup();
                 this.$emit('reloadDomains');
             }
         }

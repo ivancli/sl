@@ -19,5 +19,5 @@ interface DomainMetaContract
      * @param array $data
      * @return mixed
      */
-    public function update(Domain $domain, Array $data);
+    public function update(Domain $domain, array $data);
 }

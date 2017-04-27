@@ -32,7 +32,7 @@ class GroupRepository implements GroupContract
      * @param array $data
      * @return mixed
      */
-    public function filterAll(Array $data = [])
+    public function filterAll(array $data = [])
     {
         $length = array_get($data, 'per_page', 25);
         $orderByColumn = array_get($data, 'orderBy', 'id');
@@ -85,7 +85,7 @@ class GroupRepository implements GroupContract
      * @return Group
      * @throws Exception
      */
-    public function store(Array $data)
+    public function store(array $data)
     {
         DB::beginTransaction();
         try {
@@ -105,7 +105,7 @@ class GroupRepository implements GroupContract
      * @return Group
      * @throws Exception
      */
-    public function update(Group $group, Array $data)
+    public function update(Group $group, array $data)
     {
         DB::beginTransaction();
         try {

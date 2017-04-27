@@ -18,7 +18,7 @@ interface PermissionContract
      * @param array $data
      * @return mixed
      */
-    public function filterAll(Array $data = []);
+    public function filterAll(array $data = []);
 
     /**
      * Load all permissions
@@ -39,7 +39,7 @@ interface PermissionContract
      * @param array $data
      * @return Permission
      */
-    public function store(Array $data);
+    public function store(array $data);
 
     /**
      * Update existing permission
@@ -47,7 +47,7 @@ interface PermissionContract
      * @param array $data
      * @return Permission
      */
-    public function update(Permission $permission, Array $data);
+    public function update(Permission $permission, array $data);
 
     /**
      * Remove an existing permission

@@ -104,6 +104,7 @@
                     element: '',
                     format_type: '',
                     historical_type: '',
+                    multi: false,
                     confs: []
                 });
             },

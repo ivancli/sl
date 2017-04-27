@@ -31,7 +31,7 @@ class PermissionRepository implements PermissionContract
      * @param array $data
      * @return mixed
      */
-    public function filterAll(Array $data = [])
+    public function filterAll(array $data = [])
     {
         $length = array_get($data, 'per_page', 25);
         $orderByColumn = array_get($data, 'orderBy', 'id');
@@ -84,7 +84,7 @@ class PermissionRepository implements PermissionContract
      * @return Permission
      * @throws Exception
      */
-    public function store(Array $data)
+    public function store(array $data)
     {
         DB::beginTransaction();
         try {
@@ -104,7 +104,7 @@ class PermissionRepository implements PermissionContract
      * @return Permission
      * @throws Exception
      */
-    public function update(Permission $permission, Array $data)
+    public function update(Permission $permission, array $data)
     {
         DB::beginTransaction();
         try {

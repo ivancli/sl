@@ -45,7 +45,7 @@ interface CategoryContract
      * @param array $data
      * @return Category
      */
-    public function update(Category $category, Array $data);
+    public function update(Category $category, array $data);
 
     /**
      * Deleting a category

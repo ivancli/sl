@@ -1,3 +1,4 @@
+1. Work on parser class for lighting
 1. Change design pattern to service-repository
 2. URL item selection when adding new Site
 3. URL item selection after added new site

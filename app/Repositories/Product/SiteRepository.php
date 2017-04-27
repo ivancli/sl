@@ -60,7 +60,7 @@ class SiteRepository implements SiteContract
      * @param array $data
      * @return mixed
      */
-    public function store(Array $data)
+    public function store(array $data)
     {
         $site = new $this->site($data);
         $site->save();
@@ -73,7 +73,7 @@ class SiteRepository implements SiteContract
      * @param array $data
      * @return mixed
      */
-    public function update(Site $site, Array $data)
+    public function update(Site $site, array $data)
     {
         $site->update($data);
         return $site;

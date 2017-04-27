@@ -41,7 +41,7 @@ interface ItemContract
      * @param array $data
      * @return mixed
      */
-    public function store(Array $data);
+    public function store(array $data);
 
     /**
      * Update an existing item
@@ -49,7 +49,7 @@ interface ItemContract
      * @param array $data
      * @return mixed
      */
-    public function update(Item $item, Array $data);
+    public function update(Item $item, array $data);
 
     /**
      * Delete an existing item

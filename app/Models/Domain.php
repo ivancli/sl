@@ -99,14 +99,16 @@ class Domain extends Model
      * @param $element
      * @param $format_type
      * @param $historical_type
+     * @param bool $multi
      * @return Model
      */
-    public function setMeta($element, $format_type = null, $historical_type = null)
+    public function setMeta($element, $format_type = null, $historical_type = null, $multi = false)
     {
         $meta = $this->metas()->create([
             'element' => $element,
             'format_type' => $format_type,
-            'historical_type' => $historical_type
+            'historical_type' => $historical_type,
+            'multi' => $multi ? 'y' : 'n'
         ]);
         return $meta;
     }

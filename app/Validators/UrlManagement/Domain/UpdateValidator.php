@@ -37,7 +37,7 @@ class UpdateValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return [
-            'name' => "required|max:255|unique:domains,full_path,{$id},id",
+            'name' => "required|max:255",
         ];
     }
 }

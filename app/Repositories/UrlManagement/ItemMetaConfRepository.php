@@ -37,7 +37,7 @@ class ItemMetaConfRepository implements ItemMetaConfContract
      * @param array $data
      * @return mixed
      */
-    public function store(ItemMeta $itemMeta, Array $data = [])
+    public function store(ItemMeta $itemMeta, array $data = [])
     {
         $itemMeta->clearConf();
         if (isset($data['confs']) && is_array($data['confs'])) {

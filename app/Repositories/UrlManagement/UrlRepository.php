@@ -29,7 +29,7 @@ class UrlRepository implements UrlContract
      * @param array $data
      * @return mixed
      */
-    public function filterAll(Array $data)
+    public function filterAll(array $data)
     {
 
         $length = array_get($data, 'per_page', 25);
@@ -94,7 +94,7 @@ class UrlRepository implements UrlContract
      * @param array $data
      * @return mixed
      */
-    public function store(Array $data)
+    public function store(array $data)
     {
         $url = new $this->url($data);
         $url->save();
@@ -107,7 +107,7 @@ class UrlRepository implements UrlContract
      * @return mixed
      * @internal param $full_path
      */
-    public function getByFullPathOrCreate(Array $data)
+    public function getByFullPathOrCreate(array $data)
     {
         $urls = $this->getBy('full_path', $data['full_path']);
         if ($urls->count() == 0) {
@@ -124,7 +124,7 @@ class UrlRepository implements UrlContract
      * @param array $data
      * @return mixed
      */
-    public function update(Url $url, Array $data)
+    public function update(Url $url, array $data)
     {
         $url->status = $data['status'];
         $url->save();

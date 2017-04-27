@@ -32,7 +32,7 @@ class DomainRepository implements DomainContract
      * @param array $data
      * @return mixed
      */
-    public function filterAll(Array $data)
+    public function filterAll(array $data)
     {
         $length = array_get($data, 'per_page', 25);
         $orderByColumn = array_get($data, 'orderBy', 'id');
@@ -85,10 +85,19 @@ class DomainRepository implements DomainContract
      * Create new domain
      * @param array $data
      * @return mixed
+     * @throws Exception
      */
-    public function store(Array $data)
+    public function store(array $data)
     {
-
+        DB::beginTransaction();
+        try {
+            $domain = $this->domain->create($data);
+        } catch (Exception $exception) {
+            DB::rollback();
+            throw $exception;
+        }
+        DB::commit();
+        return $domain;
     }
 
     /**
@@ -98,7 +107,7 @@ class DomainRepository implements DomainContract
      * @return mixed
      * @throws Exception
      */
-    public function update(Domain $domain, Array $data)
+    public function update(Domain $domain, array $data)
     {
         DB::beginTransaction();
         try {

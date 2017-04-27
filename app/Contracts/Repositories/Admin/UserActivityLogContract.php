@@ -16,12 +16,12 @@ interface UserActivityLogContract
      * @param array $data
      * @return mixed
      */
-    public function filterAll(Array $data = []);
+    public function filterAll(array $data = []);
 
     /**
      * Create new user activity log
      * @param array $data
      * @return mixed
      */
-    public function store(Array $data = []);
+    public function store(array $data = []);
 }

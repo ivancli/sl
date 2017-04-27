@@ -21,6 +21,7 @@ class CreateDomainMetasTable extends Migration
             $table->string('element');
             $table->string('format_type')->nullable();
             $table->string('historical_type')->nullable();
+            $table->char('multi', 1)->default('n');
             $table->timestamps();
         });
     }

@@ -31,7 +31,7 @@ class UserRepository implements UserContract
      * @param $data
      * @return mixed
      */
-    public function filterAll(Array $data = [])
+    public function filterAll(array $data = [])
     {
         $length = array_get($data, 'per_page', 25);
         $orderByColumn = array_get($data, 'orderBy', 'id');
@@ -85,7 +85,7 @@ class UserRepository implements UserContract
      * @return User
      * @throws Exception
      */
-    public function store(Array $data)
+    public function store(array $data)
     {
         DB::beginTransaction();
         try {
@@ -106,7 +106,7 @@ class UserRepository implements UserContract
      * @return User
      * @throws Exception
      */
-    public function update(User $user, Array $data)
+    public function update(User $user, array $data)
     {
         DB::beginTransaction();
         try {
@@ -131,7 +131,7 @@ class UserRepository implements UserContract
      * @return UserMeta
      * @throws Exception
      */
-    public function updateMetas(User $user, Array $data)
+    public function updateMetas(User $user, array $data)
     {
         DB::beginTransaction();
         try {
@@ -169,7 +169,7 @@ class UserRepository implements UserContract
      * @param array $roles
      * @return mixed|void
      */
-    public function updateRoles(User $user, Array $roles)
+    public function updateRoles(User $user, array $roles)
     {
         $user->detachRoles();
         $user->attachRoles($roles);

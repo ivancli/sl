@@ -37,7 +37,7 @@ interface SiteContract
      * @param array $data
      * @return mixed
      */
-    public function store(Array $data);
+    public function store(array $data);
 
     /**
      * Editing an existing site
@@ -45,7 +45,7 @@ interface SiteContract
      * @param array $data
      * @return mixed
      */
-    public function update(Site $site, Array $data);
+    public function update(Site $site, array $data);
 
     /**
      * Deleting an existing site

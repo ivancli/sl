@@ -29,7 +29,7 @@ class UserActivityLogRepository implements UserActivityLogContract
      * @param array $data
      * @return mixed
      */
-    public function filterAll(Array $data = [])
+    public function filterAll(array $data = [])
     {
         $length = array_get($data, 'per_page', 25);
         $orderByColumn = array_get($data, 'orderBy', 'id');
@@ -57,7 +57,7 @@ class UserActivityLogRepository implements UserActivityLogContract
      * @param array $data
      * @return mixed
      */
-    public function store(Array $data = [])
+    public function store(array $data = [])
     {
         $userActivityLog = new $this->userActivityLog;
         $userActivityLog->activity = $data['activity'];

@@ -10,6 +10,7 @@ namespace App\Services\UrlManagement;
 
 use App\Contracts\Repositories\UrlManagement\DomainContract;
 use App\Models\Domain;
+use App\Validators\UrlManagement\Domain\StoreValidator;
 use App\Validators\UrlManagement\Domain\UpdateValidator;
 
 class DomainService
@@ -23,16 +24,19 @@ class DomainService
     #region validators
 
     protected $updateValidator;
+    protected $storeValidator;
 
     #endregion
 
-    public function __construct(DomainContract $domainContract, UpdateValidator $updateValidator)
+    public function __construct(DomainContract $domainContract,
+                                StoreValidator $storeValidator, UpdateValidator $updateValidator)
     {
         #region repositories binding
         $this->domainRepo = $domainContract;
         #endregion
 
         #region validators binding
+        $this->storeValidator = $storeValidator;
         $this->updateValidator = $updateValidator;
         #endregion
     }
@@ -50,6 +54,26 @@ class DomainService
             $domains = $this->domainRepo->all();
         }
         return $domains;
+    }
+
+    /**
+     * create a new domain
+     * @param array $data
+     * @return mixed
+     */
+    public function store(array $data)
+    {
+        /*parse url into domain*/
+        $parsedUrl = parse_url(array_get($data, 'full_path'));
+        $scheme = array_get($parsedUrl, 'scheme');
+        $host = array_get($parsedUrl, 'host');
+        $domainPath = "{$scheme}://{$host}";
+        $data = array_set($data, 'full_path', $domainPath);
+
+        $this->storeValidator->validate($data);
+
+        $domain = $this->domainRepo->store($data);
+        return $domain;
     }
 
     /**

@@ -121,6 +121,7 @@ return [
         'full_path' => [
             'required' => 'URL is required.',
             'url' => 'Please provide a valid URL.',
+            'unique' => 'Same URL already exists.',
             'unique_per_product' => 'A site with the same URL already exists in this product.'
         ],
         'DATE_FORMAT' => [

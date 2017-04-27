@@ -15,7 +15,7 @@ use App\Models\ItemMeta;
 
 class ParserRepository implements ParserContract
 {
-    protected $parserClassPath = 'IvanCLI\Parser\Repositories\\';
+    const PARSER_CLASS_PATH = 'IvanCLI\Parser\Repositories\\';
 
     /**
      * Parse an item meta with its configuration
@@ -32,7 +32,7 @@ class ParserRepository implements ParserContract
             $parserClassConf = $parserClassConfs->first();
             $parserClassName = $parserClassConf->value;
         }
-        $parserClass = app()->make("{$this->parserClassPath}{$parserClassName}");
+        $parserClass = app()->make(self::PARSER_CLASS_PATH . "{$parserClassName}");
         $xpathConfs = $itemMeta->getConfs('XPATH');
         $extraction = null;
         foreach ($xpathConfs as $index => $xpathConf) {

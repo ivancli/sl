@@ -12,7 +12,8 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <form class="form-horizontal">
-                            <single-edit-domain-conf v-for="(conf, key) in editingConfs" :conf="conf" @remove-conf="removeConf(key)" @updating-meta-conf="setConf(key, $event)"></single-edit-domain-conf>
+                            <single-edit-domain-conf v-for="(conf, key) in editingConfs" :conf="conf" @remove-conf="removeConf(key)"
+                                                     @updating-domain-conf="setConf(key, $event)"></single-edit-domain-conf>
                             <div class="form-group">
                                 <div class="col-sm-12">
                                     <p class="form-control-static">
@@ -28,24 +29,29 @@
             </section>
             <footer class="modal-card-foot">
                 <div class="text-right">
-                    <a class="btn btn-primary btn-flat" href="#" @click.prevent="setMetaConfs">SET</a>
+                    <a class="btn btn-primary btn-flat" href="#" @click.prevent="setDomainConfs">SET</a>
                     <a class="btn btn-default btn-flat" href="#" @click.prevent="hideModal">CANCEL</a>
                 </div>
             </footer>
         </div>
+        <loading v-if="isEditingDomainConf"></loading>
     </div>
 </template>
 
 <script>
     import singleEditDomainConf from './SingleEditDomainConf.vue';
 
+    import loading from '../../../Loading.vue';
+
     export default{
         components: {
-            singleEditDomainConf
+            singleEditDomainConf,
+            loading
         },
         props: [
             'isActive',
-            'confs'
+            'confs',
+            'editingDomain'
         ],
         data(){
             return {
@@ -58,14 +64,14 @@
             this.initSetEditingConfs();
         },
         methods: {
-            setMetaConfs(){
+            setDomainConfs(){
                 this.isEditingDomainConf = true;
-                axios.post('/domain-conf', this.editConfsData).then(response=> {
+                axios.put(this.editingDomain.modelUrls.conf_update, this.editConfsData).then(response => {
                     this.isEditingDomainConf = false;
 
                     this.$emit('set-confs', this.editingConfs);
 
-                }).catch(error=> {
+                }).catch(error => {
                     this.isEditingDomainConf = false;
                 })
             },
@@ -90,9 +96,11 @@
                 this.$emit('hide-modal');
             }
         },
-        components:{
+        computed: {
             editConfsData(){
-                return this.editingConfs;
+                return {
+                    'confs': this.editingConfs
+                };
             }
         }
     }

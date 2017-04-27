@@ -183,6 +183,7 @@ return [
         IvanCLI\UM\UMServiceProvider::class,
         IvanCLI\Crawler\CrawlerServiceProvider::class,
         IvanCLI\Parser\ParserServiceProvider::class,
+        IvanCLI\ItemGenerator\ItemGeneratorServiceProvider::class,
 
         Ixudra\Curl\CurlServiceProvider::class,
     ],
@@ -239,6 +240,7 @@ return [
         'UM' => IvanCLI\UM\UMFacade::class,
         'Crawler' => IvanCLI\Crawler\CrawlerFacade::class,
         'Parser' => IvanCLI\Parser\ParserFacade::class,
+        'ItemGenerator' => \IvanCLI\ItemGenerator\ItemGeneratorFacade::class,
 
         'Curl' => Ixudra\Curl\Facades\Curl::class,
     ],

@@ -54,6 +54,8 @@ class DomainControllerEventSubscriber
     public function onAfterStore($event)
     {
         $domain = $event->domain;
+        $activity = "Created Domain {$domain->getKey()}";
+        $this->dispatchUserActivityLog($activity);
     }
 
     public function onBeforeEdit($event)

@@ -19,7 +19,7 @@ interface RoleContract
      * @param array $data
      * @return mixed
      */
-    public function filterAll(Array $data = []);
+    public function filterAll(array $data = []);
 
     /**
      * Load all roles
@@ -40,7 +40,7 @@ interface RoleContract
      * @param array $data
      * @return Role
      */
-    public function store(Array $data);
+    public function store(array $data);
 
     /**
      * Update existing role
@@ -48,7 +48,7 @@ interface RoleContract
      * @param array $data
      * @return Role
      */
-    public function update(Role $role, Array $data);
+    public function update(Role $role, array $data);
 
     /**
      * Remove an existing role
@@ -63,5 +63,5 @@ interface RoleContract
      * @param array $permissions
      * @return mixed
      */
-    public function updatePermissions(Role $role, Array $permissions);
+    public function updatePermissions(Role $role, array $permissions);
 }

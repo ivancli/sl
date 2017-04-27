@@ -62,7 +62,10 @@ class DomainController extends Controller
     public function create()
     {
         event(new BeforeCreate());
+
         event(new AfterCreate());
+
+        return view('app.url_management.domain.create');
     }
 
     /**
@@ -73,7 +76,13 @@ class DomainController extends Controller
     public function store()
     {
         event(new BeforeStore());
-        event(new AfterStore());
+
+        $domain = $this->domainService->store($this->request->all());
+        $status = true;
+
+        event(new AfterStore($domain));
+
+        return compact(['domain', 'status']);
     }
 
     /**

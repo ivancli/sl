@@ -71,7 +71,9 @@ Route::group(['middleware' => ['auth', 'subs']], function () {
                 'domain-meta' => 'domainMeta'
             ]
         ]);
+        #region Domain Conf
         Route::resource('domain-conf', 'UrlManagement\DomainConfController');
+        #endregion
 
         #region URL
         Route::resource('url', 'UrlManagement\UrlController');
@@ -106,7 +108,7 @@ Route::group(['middleware' => ['auth', 'subs']], function () {
     #endregion
 
     #region User Management
-    Route::group(['prefix' => 'user-management'], function(){
+    Route::group(['prefix' => 'user-management'], function () {
         Route::resource('user', 'UserManagement\UserController');
         Route::resource('group', 'UserManagement\GroupController');
         Route::resource('role', 'UserManagement\RoleController');

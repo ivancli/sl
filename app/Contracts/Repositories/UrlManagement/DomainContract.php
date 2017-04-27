@@ -18,7 +18,7 @@ interface DomainContract
      * @param array $data
      * @return mixed
      */
-    public function filterAll(Array $data);
+    public function filterAll(array $data);
 
     /**
      * Load all domains
@@ -47,7 +47,7 @@ interface DomainContract
      * @param array $data
      * @return mixed
      */
-    public function update(Domain $domain, Array $data);
+    public function update(Domain $domain, array $data);
 
     /**
      * Remove an existing domain

@@ -31,7 +31,7 @@ interface AppPrefContract
      * @param array $data
      * @return mixed
      */
-    public function store(Array $data);
+    public function store(array $data);
 
     /**
      * Remove an existing application preference

@@ -30,7 +30,7 @@ class DomainMetaRepository implements DomainMetaContract
         try {
             $domain->clearMeta();
             foreach ($data as $domainMeta) {
-                $meta = $domain->setMeta(array_get($domainMeta, 'element'), array_get($domainMeta, 'format_type'), array_get($domainMeta, 'historical_type'));
+                $meta = $domain->setMeta(array_get($domainMeta, 'element'), array_get($domainMeta, 'format_type'), array_get($domainMeta, 'historical_type'), array_get($domainMeta, 'multi'));
                 $meta->clearConf();
                 if (array_has($domainMeta, 'confs') && is_array($domainMeta['confs']) && !empty($domainMeta['confs'])) {
                     foreach ($domainMeta['confs'] as $key => $metaConf) {

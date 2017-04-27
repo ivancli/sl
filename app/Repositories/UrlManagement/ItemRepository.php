@@ -31,7 +31,7 @@ class ItemRepository implements ItemContract
      * @param Url|null $url
      * @return mixed
      */
-    public function filterAll(Array $data = [], Url $url = null)
+    public function filterAll(array $data = [], Url $url = null)
     {
         $length = array_get($data, 'per_page', 25);
         $orderByColumn = array_get($data, 'orderBy', 'id');
@@ -88,7 +88,7 @@ class ItemRepository implements ItemContract
      * @param array $data
      * @return mixed
      */
-    public function store(Array $data)
+    public function store(array $data)
     {
         $item = new $this->item;
         $item->name = isset($data['name']) ? $data['name'] : null;
@@ -103,7 +103,7 @@ class ItemRepository implements ItemContract
      * @param array $data
      * @return mixed
      */
-    public function update(Item $item, Array $data)
+    public function update(Item $item, array $data)
     {
         $item->update($data);
         return $item;
