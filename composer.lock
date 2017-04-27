@@ -306,12 +306,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ketchol/item_generator.git",
-                "reference": "77505565c30edac6e8b6aa5996803ed9b3d0bc15"
+                "reference": "73c33242ffda07323133fe955a93036355177962"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ketchol/item_generator/zipball/77505565c30edac6e8b6aa5996803ed9b3d0bc15",
-                "reference": "77505565c30edac6e8b6aa5996803ed9b3d0bc15",
+                "url": "https://api.github.com/repos/ketchol/item_generator/zipball/73c33242ffda07323133fe955a93036355177962",
+                "reference": "73c33242ffda07323133fe955a93036355177962",
                 "shasum": ""
             },
             "type": "library",
@@ -334,7 +334,7 @@
                 "source": "https://github.com/ketchol/item_generator/tree/master",
                 "issues": "https://github.com/ketchol/item_generator/issues"
             },
-            "time": "2017-04-27T05:01:25+00:00"
+            "time": "2017-04-27T05:13:00+00:00"
         },
         {
             "name": "ivancli/parser",

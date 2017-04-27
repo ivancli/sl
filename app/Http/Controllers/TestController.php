@@ -13,7 +13,6 @@ use App\Contracts\Repositories\UrlManagement\CrawlerContract;
 use App\Contracts\Repositories\UrlManagement\ParserContract;
 use App\Contracts\Repositories\UrlManagement\UrlContract;
 use Illuminate\Http\Request;
-use IvanCLI\ItemGenerator\Repositories\WwwDavolucelightingComAu;
 
 class TestController extends Controller
 {
@@ -32,15 +31,11 @@ class TestController extends Controller
 
     public function test()
     {
-        $crawler = $this->crawlerRepo->get(3);
+        $crawler = $this->crawlerRepo->get(7);
         $content = $this->crawlerRepo->fetch($crawler);
         $content = $content['content'];
 
-        $itemGenerator = new WwwDavolucelightingComAu();
-        $itemGenerator->setContent($content);
-        $itemGenerator->extractOptions();
-        $itemGenerator->combinations($itemGenerator->getOptions());
-        $items = $itemGenerator->getItems();
-        dd($items);
+        preg_match_all('#variants\[(.*?)\]\[1\]\[\d+\]=(\d+?);#', $content, $matches);
+        dd($matches);
     }
 }
