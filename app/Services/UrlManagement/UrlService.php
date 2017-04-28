@@ -12,14 +12,31 @@ namespace App\Services\UrlManagement;
 use App\Contracts\Repositories\UrlManagement\UrlContract;
 use App\Jobs\Crawl as CrawlJob;
 use App\Models\Url;
+use App\Validators\UrlManagement\Url\StoreValidator;
 
 class UrlService
 {
+    #region repositories
+
     protected $urlRepo;
 
-    public function __construct(UrlContract $urlContract)
+    #endregion
+
+    #region validators
+
+    protected $storeValidator;
+
+    #endregion
+
+    public function __construct(UrlContract $urlContract, StoreValidator $storeValidator)
     {
+        #region repositories binding
         $this->urlRepo = $urlContract;
+        #endregion
+
+        #region validators binding
+        $this->storeValidator = $storeValidator;
+        #endregion
     }
 
     /**
@@ -36,10 +53,17 @@ class UrlService
         }
         return $urls;
     }
-    
+
+    /**
+     * Create a new URL
+     * @param array $data
+     * @return mixed
+     */
     public function store(array $data)
     {
-        
+        $this->storeValidator->validate($data);
+        $url = $this->urlRepo->store($data);
+        return $url;
     }
 
     /**

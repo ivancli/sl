@@ -86,7 +86,7 @@ class UrlController extends Controller
         $url = $this->urlService->store($this->request->all());
         $status = true;
 
-        event(new AfterStore());
+        event(new AfterStore($url));
 
         return compact(['status', 'url']);
     }

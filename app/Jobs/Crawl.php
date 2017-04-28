@@ -181,10 +181,6 @@ class Crawl implements ShouldQueue
 
         $crawler->statusParsed();
 
-        /* crawler finished */
-
-        dump("End of Crawl");
-
         $crawler->statusNull();
 
         $this->url->statusStandby();

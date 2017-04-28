@@ -91,7 +91,11 @@ class SiteController extends Controller
     {
         event(new BeforeShow($site));
 
+        $status = true;
+
         event(new AfterShow($site));
+
+        return compact(['site', 'status']);
     }
 
     /**

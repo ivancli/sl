@@ -71,7 +71,7 @@
                @click.prevent="toggleSiteDetails">
                 <i class="fa fa-info-circle"></i>
             </a>
-            <a href="#" class="btn-action" title="choose item" v-if="site.url.itemsCount > 1">
+            <a href="#" class="btn-action" title="choose item" v-if="site.url.itemsCount > 1" @click.prevent="onClickSelectItem">
                 <i class="fa fa-list-ul"></i>
             </a>
             <a href="#" class="btn-action" title="chart">
@@ -195,7 +195,10 @@
                 }).catch(error => {
                     this.isDeletingSite = false;
                 })
-            }
+            },
+            onClickSelectItem(){
+                this.$emit('select-item', this.site);
+            },
         },
         computed: {
             site(){

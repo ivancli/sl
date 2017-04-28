@@ -22,6 +22,8 @@ class StoreValidator extends ValidatorAbstract
      */
     protected function getRules($id = null)
     {
-
+        return [
+            'full_path' => 'required|url|unique:urls,full_path',
+        ];
     }
 }

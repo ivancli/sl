@@ -169,11 +169,18 @@ class UrlObserver
         $item = new Item;
         $url->items()->save($item);
         /* REPLICATE DOMAIN META IN URL ITEM META*/
-        foreach ($url->domain->metas as $domainMeta) {
-            $itemMeta = $item->setMeta($domainMeta->element, null, $domainMeta->format_type, $domainMeta->historical_type);
-            foreach ($domainMeta->confs as $domainMetaConf) {
-                $itemMeta->setConf($domainMetaConf->element, $domainMetaConf->value);
+        /* if domain has meta data set up*/
+        if ($url->domain->metas()->count() > 0) {
+            foreach ($url->domain->metas as $domainMeta) {
+                $itemMeta = $item->setMeta($domainMeta->element, null, $domainMeta->format_type, $domainMeta->historical_type);
+                foreach ($domainMeta->confs as $domainMetaConf) {
+                    $itemMeta->setConf($domainMetaConf->element, $domainMetaConf->value);
+                }
             }
+        } else {
+            /*standard entities - price and availability*/
+            $priceMeta = $item->setMeta('PRICE', null, 'decimal', 'price');
+            $availabilityMeta = $item->setMeta('AVAILABILITY', null, 'boolean');
         }
         return $item;
     }

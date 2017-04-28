@@ -23,7 +23,7 @@ class StoreValidator extends ValidatorAbstract
     {
         return [
             'name' => "required|max:255",
-            'full_path' => "required|url||unique:domains,full_path"
+            'full_path' => "required|url|unique:domains,full_path"
         ];
     }
 }

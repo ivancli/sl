@@ -60,7 +60,7 @@
                             <th width="100"></th>
                         </tr>
                         </thead>
-                        <single-site v-for="site in sites" :current-site="site" @reload-sites="reloadSites" @deleted-site="deletedSite"></single-site>
+                        <single-site v-for="site in sites" :current-site="site" @select-item="selectItem" @reload-sites="reloadSites" @deleted-site="deletedSite"></single-site>
                         <tbody>
                         <tr class="empty-message-row" v-if="!hasSites">
                             <td colspan="9" class="text-center">
@@ -80,6 +80,7 @@
             </td>
         </tr>
         </tbody>
+        <select-item-popup v-if="editingSite != null" :editing-site="editingSite"></select-item-popup>
         <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete"
                              @confirmDelete="confirmDelete"></delete-confirmation>
     </table>
@@ -89,6 +90,8 @@
     import addSite from './AddSite.vue';
     import singleSite from './SingleSite.vue';
     import editProduct from './EditProduct.vue';
+    import selectItemPopup from './SelectItemPopup.vue';
+
     import formatDateTime from '../../../filters/formatDateTime';
 
     import deleteConfirmation from '../../fragments/modals/DeleteConfirmation.vue';
@@ -102,6 +105,7 @@
             addSite,
             singleSite,
             editProduct,
+            selectItemPopup,
             deleteConfirmation,
         },
         props: [
@@ -127,10 +131,11 @@
                 },
                 isDeletingProduct: false,
                 isProductCollapsed: false,
+                editingSite: null,
             }
         },
         methods: {
-            loadSites: function () {
+            loadSites(){
                 axios.get('/site', this.loadSitesRequestData).then(response => {
                     if (response.data.status == true) {
                         this.sites = response.data.sites;
@@ -139,43 +144,51 @@
                     console.info(error.response);
                 })
             },
-            reloadSites: function () {
+            reloadSites(){
                 this.loadSites();
                 this.loadUser();
             },
-            deletedSite: function () {
+            deletedSite(){
                 this.reloadSites();
                 this.$emit('deleted-site');
             },
-            goingToEditProductName: function () {
+            goingToEditProductName(){
                 this.editingProductName = true;
             },
-            cancelEditProductName: function () {
+            cancelEditProductName(){
                 this.editingProductName = false;
             },
-            addedSite: function () {
+            addedSite: function (site) {
                 this.$emit('added-site');
                 this.reloadSites();
+                if (site.url.itemsCount > 1) {
+                    this.editingSite = site;
+                }
             },
-            reloadProducts: function () {
+            selectItem(site){
+                if (site.url.itemsCount > 1) {
+                    this.editingSite = site;
+                }
+            },
+            reloadProducts(){
                 this.$emit('reload-products');
             },
-            editedProduct: function () {
+            editedProduct(){
                 this.editingProductName = false;
                 this.reloadProducts();
             },
             /*delete product*/
-            onClickDeleteProduct: function () {
+            onClickDeleteProduct(){
                 this.deleteParams.active = true;
             },
-            cancelDelete: function () {
+            cancelDelete(){
                 this.deleteParams.active = false;
             },
-            confirmDelete: function () {
+            confirmDelete(){
                 this.deleteParams.active = false;
                 this.deleteProduct()
             },
-            deleteProduct: function () {
+            deleteProduct(){
                 this.isDeletingProduct = true;
                 axios.delete(this.product.urls.delete).then(response => {
                     this.isDeletingProduct = false;
@@ -187,10 +200,10 @@
                     this.isDeletingProduct = false;
                 })
             },
-            toggleProductCollapse: function () {
+            toggleProductCollapse(){
                 this.isProductCollapsed = !this.isProductCollapsed;
             },
-            loadUser: function () {
+            loadUser(){
                 this.$store.dispatch(LOAD_USER);
             }
         },
