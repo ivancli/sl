@@ -68,7 +68,10 @@ class UrlController extends Controller
     {
 
         event(new BeforeCreate());
+
         event(new AfterCreate());
+
+        return view('app.url_management.url.create');
     }
 
     /**
@@ -78,9 +81,14 @@ class UrlController extends Controller
      */
     public function store()
     {
-
         event(new BeforeStore());
+
+        $url = $this->urlService->store($this->request->all());
+        $status = true;
+
         event(new AfterStore());
+
+        return compact(['status', 'url']);
     }
 
     /**

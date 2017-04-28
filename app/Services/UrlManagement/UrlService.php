@@ -36,6 +36,11 @@ class UrlService
         }
         return $urls;
     }
+    
+    public function store(array $data)
+    {
+        
+    }
 
     /**
      * Delete an existing URL

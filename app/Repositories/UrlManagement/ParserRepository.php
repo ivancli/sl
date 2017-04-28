@@ -33,18 +33,32 @@ class ParserRepository implements ParserContract
             $parserClassName = $parserClassConf->value;
         }
         $parserClass = app()->make(self::PARSER_CLASS_PATH . "{$parserClassName}");
-        $xpathConfs = $itemMeta->getConfs('XPATH');
+
         $extraction = null;
-        foreach ($xpathConfs as $index => $xpathConf) {
-            $parserClass->setContent($content);
-            $parserClass->setOptions([
-                "xpath" => $xpathConf->value,
-            ]);
-            $parserClass->extract();
-            $extraction = $parserClass->getExtractions();
-            if (!is_null($extraction) && !empty($extraction)) {
+
+        $parserClass->setContent($content);
+
+        switch ($parserClassName) {
+            case "XPathParser":
+                $xpathConfs = $itemMeta->getConfs('XPATH');
+                foreach ($xpathConfs as $index => $xpathConf) {
+                    $parserClass->setOptions([
+                        "xpath" => $xpathConf->value,
+                    ]);
+                    $parserClass->extract();
+                    $extraction = $parserClass->getExtractions();
+                    if (!is_null($extraction) && !empty($extraction)) {
+                        break;
+                    }
+                }
                 break;
-            }
+            default:
+                $itemConfs = $itemMeta->confs;
+                $parserClass->setOptions($itemConfs);
+                $parserClass->extract();
+                $parserClass->extract();
+                $extraction = $parserClass->getExtractions();
+                break;
         }
         return $extraction;
     }

@@ -31,9 +31,10 @@
   "/js/app/report/index.js": "/js/app/report/index.8df23420d8f435f28c86.js",
   "/js/app/alert/index.js": "/js/app/alert/index.ce8ed2404aa2148cb512.js",
   "/js/auth/register.js": "/js/auth/register.75fb6ac042427017db80.js",
+  "/js/app/url/create.js": "/js/app/url/create.9cddb776c9300f9e8ca2.js",
   "/js/auth/login.js": "/js/auth/login.a8c67b935a80e34d47cf.js",
   "/js/auth/forgot.js": "/js/auth/forgot.601bd9830b5be747c120.js",
   "/js/app.js": "/js/app.fac46a4a06c4c47990c0.js",
-  "/css/app.css": "/css/app.83d9133c7c9315971eff.css",
-  "/css/auth.css": "/css/auth.83d9133c7c9315971eff.css"
+  "/css/app.css": "/css/app.4e576ee5bf8d05bfee0d.css",
+  "/css/auth.css": "/css/auth.4e576ee5bf8d05bfee0d.css"
 }

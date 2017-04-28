@@ -342,12 +342,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ketchol/parser.git",
-                "reference": "5e245f6912f3688de4ddf01d5b9c946ac762d437"
+                "reference": "91935d31c36700d1a2e2e73f91aa352e67408b88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ketchol/parser/zipball/5e245f6912f3688de4ddf01d5b9c946ac762d437",
-                "reference": "5e245f6912f3688de4ddf01d5b9c946ac762d437",
+                "url": "https://api.github.com/repos/ketchol/parser/zipball/91935d31c36700d1a2e2e73f91aa352e67408b88",
+                "reference": "91935d31c36700d1a2e2e73f91aa352e67408b88",
                 "shasum": ""
             },
             "require": {
@@ -382,7 +382,7 @@
                 "source": "https://github.com/ketchol/parser/tree/master",
                 "issues": "https://github.com/ketchol/parser/issues"
             },
-            "time": "2017-04-02T14:14:41+00:00"
+            "time": "2017-04-28T04:13:58+00:00"
         },
         {
             "name": "ivancli/um",
@@ -619,16 +619,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.4.19",
+            "version": "v5.4.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "02444b7450350db17a7607c8a52f7268ebdb0dad"
+                "reference": "851aad458bcc904178ded02954d55d36c2c35f8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/02444b7450350db17a7607c8a52f7268ebdb0dad",
-                "reference": "02444b7450350db17a7607c8a52f7268ebdb0dad",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/851aad458bcc904178ded02954d55d36c2c35f8b",
+                "reference": "851aad458bcc904178ded02954d55d36c2c35f8b",
                 "shasum": ""
             },
             "require": {
@@ -744,7 +744,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2017-04-16T13:33:34+00:00"
+            "time": "2017-04-27T13:04:35+00:00"
         },
         {
             "name": "laravel/tinker",
