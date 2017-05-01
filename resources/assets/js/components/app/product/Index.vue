@@ -73,7 +73,7 @@
     import singleCategory from './SingleCategory.vue';
 
     import {
-        TOGGLE_ALL_CATEGORIES, LOAD_USER, SET_CATEGORY_SEARCH_PROMISE
+        TOGGLE_ALL_CATEGORIES, LOAD_USER, SET_CATEGORY_SEARCH_PROMISE, CLEAR_CATEGORY_SEARCH_PROMISE
     } from '../../../actions/action-types';
 
     export default {
@@ -96,7 +96,9 @@
                     clearTimeout(this.categorySearchPromise)
                 }
                 let categoryPromise = setTimeout(()=>{
-                    this.loadCategories();
+                    this.loadCategories(()=>{
+                        this.$store.dispatch(CLEAR_CATEGORY_SEARCH_PROMISE);
+                    });
                 }, 1000);
                 this.$store.dispatch(SET_CATEGORY_SEARCH_PROMISE, {
                     category_search_promise: categoryPromise
@@ -104,23 +106,26 @@
             }
         },
         methods: {
-            loadCategories: function () {
+            loadCategories(callback) {
                 axios.get('/category').then(response => {
                     if (response.data.status == true) {
                         this.categories = response.data.categories;
+                        if(typeof callback == 'function'){
+                            callback();
+                        }
                     }
                 }).catch(error => {
                     console.info(error.response);
                 })
             },
-            reloadCategories: function () {
+            reloadCategories() {
                 this.loadCategories();
                 this.loadUser();
             },
-            toggleAllCategories: function () {
+            toggleAllCategories() {
                 this.$store.dispatch(TOGGLE_ALL_CATEGORIES);
             },
-            loadUser: function () {
+            loadUser() {
                 this.$store.dispatch(LOAD_USER);
             },
         },

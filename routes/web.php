@@ -29,7 +29,7 @@ Route::resource('subscription/subscription', 'Subscription\SubscriptionControlle
 
 Route::group(['middleware' => ['auth', 'subs']], function () {
     Route::get('/', function () {
-        return view('app.product.index');
+        return redirect()->route('product.index');
     })->name('home.get');
 
     #region User Account Client Routes

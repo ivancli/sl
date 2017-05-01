@@ -5,7 +5,8 @@
                 <a href="/" class="navbar-brand">
                     <img src="/images/favicon.png" alt="SpotLite" style="max-height: 40px;">
                 </a>
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#navbar-collapse">
                     <i class="fa fa-bars"></i>
                 </button>
             </div>
@@ -44,7 +45,8 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" data-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-files-o"></i>&nbsp;<span class="hidden-lg hidden-md hidden-sm">Manage Crawler</span>&nbsp;<i class="fa fa-caret-down"></i>
+                            <i class="fa fa-files-o"></i>&nbsp;<span class="hidden-lg hidden-md hidden-sm">Manage Crawler</span>&nbsp;<i
+                                class="fa fa-caret-down"></i>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="">
@@ -61,7 +63,9 @@
                     </li>
                     <li class="dropdown ">
                         <a href="#" data-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-users"></i>&nbsp;<span class="hidden-lg hidden-md hidden-sm">Manage Users</span>&nbsp;<i class="fa fa-caret-down"></i>
+                            <i class="fa fa-users"></i>&nbsp;<span
+                                class="hidden-lg hidden-md hidden-sm">Manage Users</span>&nbsp;<i
+                                class="fa fa-caret-down"></i>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="">
@@ -92,7 +96,8 @@
                     </li>
                     <li class="dropdown ">
                         <a href="#" data-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-file-text-o"></i>&nbsp;<span class="hidden-lg hidden-md hidden-sm">System Logs</span>&nbsp;<i class="fa fa-caret-down"></i>
+                            <i class="fa fa-file-text-o"></i>&nbsp;<span class="hidden-lg hidden-md hidden-sm">System Logs</span>&nbsp;<i
+                                class="fa fa-caret-down"></i>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="">
@@ -111,7 +116,8 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" data-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-file-archive-o"></i>&nbsp;<span class="hidden-lg hidden-md hidden-sm">Manage Legals</span>&nbsp;<i class="fa fa-caret-down"></i>
+                            <i class="fa fa-file-archive-o"></i>&nbsp;<span class="hidden-lg hidden-md hidden-sm">Manage Legals</span>&nbsp;<i
+                                class="fa fa-caret-down"></i>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="">
@@ -134,7 +140,8 @@
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle lnk-drop-down-need-help" data-toggle="dropdown" aria-expanded="false">
+                        <a href="#" class="dropdown-toggle lnk-drop-down-need-help" data-toggle="dropdown"
+                           aria-expanded="false">
                             &nbsp;
                             <i class="fa fa-question-circle"></i>
                             <span class="hidden-xs">
@@ -203,7 +210,11 @@
         methods: {},
         computed: {
             isProductPage(){
-                return window.location.pathname == "/product";
+                if (typeof currentRouteName != 'undefined') {
+                    return currentRouteName == 'product.index';
+                } else {
+                    return window.location.pathname == "/product";
+                }
             }
         }
     }

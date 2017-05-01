@@ -113,8 +113,10 @@
             }
         },
         watch:{
-            productSearchTerm(){
-//                this.loadProducts();
+            categorySearchPromise(){
+                if(this.categorySearchPromise == null){
+                    this.loadProducts();
+                }
             }
         },
         methods: {
@@ -211,7 +213,10 @@
             },
             productSearchTerm(){
                 return this.$store.getters.productSearchTerm;
-            }
+            },
+            categorySearchPromise(){
+                return this.$store.getters.categorySearchPromise;
+            },
         }
     }
 </script>
