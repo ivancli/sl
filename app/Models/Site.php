@@ -69,6 +69,7 @@ class Site extends Model
             'edit' => route('site.edit', $this->getKey()),
             'update' => route('site.update', $this->getKey()),
             'delete' => route('site.destroy', $this->getKey()),
+            'item_update' => route('site.item.update', $this->getKey()),
         );
     }
 

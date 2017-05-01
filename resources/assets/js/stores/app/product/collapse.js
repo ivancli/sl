@@ -27,28 +27,28 @@ export default{
             }
         },
         [COLLAPSE_ALL_CATEGORIES] (state){
-            for (var category_id in state.categoriesCollapsed) {
+            for (let category_id in state.categoriesCollapsed) {
                 if (state.categoriesCollapsed.hasOwnProperty(category_id)) {
                     state.categoriesCollapsed[category_id] = true;
                 }
             }
         },
         [EXPAND_ALL_CATEGORIES] (state){
-            for (var category_id in state.categoriesCollapsed) {
+            for (let category_id in state.categoriesCollapsed) {
                 if (state.categoriesCollapsed.hasOwnProperty(category_id)) {
                     state.categoriesCollapsed[category_id] = true;
                 }
             }
         },
         [TOGGLE_ALL_CATEGORIES] (state){
-            var shouldCollapse = false;
-            for (var cid in state.categoriesCollapsed) {
+            let shouldCollapse = false;
+            for (let cid in state.categoriesCollapsed) {
                 if (state.categoriesCollapsed.hasOwnProperty(cid) && state.categoriesCollapsed[cid] == false) {
                     shouldCollapse = true;
                     break;
                 }
             }
-            for (var category_id in state.categoriesCollapsed) {
+            for (let category_id in state.categoriesCollapsed) {
                 if (state.categoriesCollapsed.hasOwnProperty(category_id)) {
                     Vue.set(state.categoriesCollapsed, category_id, shouldCollapse)
                 }

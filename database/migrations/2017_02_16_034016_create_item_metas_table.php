@@ -22,6 +22,7 @@ class CreateItemMetasTable extends Migration
             $table->text('value')->nullable();
             $table->string('format_type')->nullable();
             $table->string('historical_type')->nullable();
+            $table->char('is_supportive', 1)->default('n');
             $table->string('status')->nullable();
             $table->timestamp('parsed_at')->nullable();
             $table->timestamps();

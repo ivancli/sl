@@ -64,7 +64,7 @@ class ItemService
         if (array_has($data, 'page')) {
             $items = $this->itemRepo->filterAll($data, $url);
         } else {
-            $items = $this->itemRepo->all();
+            $items = $url->items;
         }
         return $items;
     }

@@ -1,10 +1,17 @@
 <template>
-    <tr>
+    <tr :class="urlRowColour">
         <td v-text="url.id"></td>
         <td class="word-wrap-break-word word-break-break-all">
             <a :href="url.full_path" v-text="url.full_path" target="_blank"></a>
         </td>
         <td>{{ url.status }}</td>
+        <td>{{ url.failMetasCount }}</td>
+        <td>
+            <div v-if="url.crawler.crawled_at != null">
+                {{ url.crawler.crawled_at | formatDateTime(datetimeFormat) }}
+            </div>
+            <div v-else></div>
+        </td>
         <td>{{ url.created_at | formatDateTime(datetimeFormat) }}</td>
         <td>{{ url.updated_at | formatDateTime(datetimeFormat) }}</td>
         <td class="text-center">
@@ -123,7 +130,7 @@
                 axios.post(this.url.urls.assign).then(response => {
                     this.isAssigningItemToSites = false;
                     this.$emit('reloadUrls');
-                }).catch(error  => {
+                }).catch(error => {
                     this.isAssigningItemToSites = false;
                 });
             }
@@ -141,6 +148,15 @@
             datetimeFormat(){
                 return this.dateFormat + ' ' + this.timeFormat;
             },
+            urlRowColour(){
+                if (this.url.failMetasCount == 1) {
+                    return 'warning';
+                } else if (this.url.failMetasCount > 1) {
+                    return 'danger';
+                } else {
+                    return '';
+                }
+            }
         }
     }
 </script>

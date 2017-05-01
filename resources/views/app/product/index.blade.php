@@ -13,7 +13,6 @@
             <default-content slot="default-content">
                 <content-header slot="content-header">
                     <span slot="content-header-title">Products</span>
-                    <product-filter slot="content-header-tool"></product-filter>
                 </content-header>
                 <content-body slot="content-body"></content-body>
             </default-content>

@@ -17,7 +17,7 @@
                     <form>
                         <input type="text" autocomplete="off" name="site_url" class="txt-site-url form-control txt-item" v-model="newSiteURL" ref="txt_new_site" placeholder="Enter a product page URL here">
                         <div class="buttons">
-                            <button class="btn btn-primary btn-flat" @click.prevent="addSite">
+                            <button class="btn btn-primary btn-flat" @click.prevent="addSite" :disabled="isAddingSite">
                                 <span class="hidden-sm hidden-xs">
                                     ADD PRODUCT PAGE URL
                                 </span>
@@ -40,11 +40,13 @@
             </div>
         </div>
         <error-modal :modal-errors="errors" @hideErrorModal="clearErrors"></error-modal>
+        <loading v-if="isAddingSite"></loading>
     </div>
 </template>
 
 <script>
     import errorModal from '../../fragments/modals/Error.vue';
+    import loading from '../../Loading.vue';
 
     export default {
         data() {
@@ -59,7 +61,8 @@
             'product'
         ],
         components: {
-            errorModal
+            errorModal,
+            loading
         },
         mounted(){
             console.info('AddSite component is mounted');

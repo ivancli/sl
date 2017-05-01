@@ -62,6 +62,15 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-3 col-sm-9">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" v-model="is_supportive"> Is supportive
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -97,6 +106,7 @@
                 isCreatingMeta: false,
                 format_type: "",
                 historical_type: "",
+                is_supportive: false,
                 status: "standby",
                 errors: [],
             }
@@ -134,6 +144,7 @@
                     format_type: this.format_type,
                     historical_type: this.historical_type,
                     status: this.status,
+                    is_supportive: this.is_supportive ? 'y' : 'n'
                 };
                 if (this.value) {
                     data.value = this.value;

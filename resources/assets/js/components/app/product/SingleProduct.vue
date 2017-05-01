@@ -60,7 +60,8 @@
                             <th width="100"></th>
                         </tr>
                         </thead>
-                        <single-site v-for="site in sites" :current-site="site" @select-item="selectItem" @reload-sites="reloadSites" @deleted-site="deletedSite"></single-site>
+                        <single-site v-for="site in sites" :current-site="site" :is-newly-created="justAddedSiteId == site.id" @selected-item="selectedItem" @reload-sites="reloadSites"
+                                     @deleted-site="deletedSite"></single-site>
                         <tbody>
                         <tr class="empty-message-row" v-if="!hasSites">
                             <td colspan="9" class="text-center">
@@ -80,7 +81,6 @@
             </td>
         </tr>
         </tbody>
-        <select-item-popup v-if="editingSite != null" :editing-site="editingSite"></select-item-popup>
         <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete"
                              @confirmDelete="confirmDelete"></delete-confirmation>
     </table>
@@ -90,7 +90,6 @@
     import addSite from './AddSite.vue';
     import singleSite from './SingleSite.vue';
     import editProduct from './EditProduct.vue';
-    import selectItemPopup from './SelectItemPopup.vue';
 
     import formatDateTime from '../../../filters/formatDateTime';
 
@@ -105,7 +104,6 @@
             addSite,
             singleSite,
             editProduct,
-            selectItemPopup,
             deleteConfirmation,
         },
         props: [
@@ -131,7 +129,12 @@
                 },
                 isDeletingProduct: false,
                 isProductCollapsed: false,
-                editingSite: null,
+                justAddedSite: null,
+            }
+        },
+        watch:{
+            productSearchTerm(){
+//                this.loadSites();
             }
         },
         methods: {
@@ -162,12 +165,7 @@
                 this.$emit('added-site');
                 this.reloadSites();
                 if (site.url.itemsCount > 1) {
-                    this.editingSite = site;
-                }
-            },
-            selectItem(site){
-                if (site.url.itemsCount > 1) {
-                    this.editingSite = site;
+                    this.justAddedSite = site;
                 }
             },
             reloadProducts(){
@@ -205,6 +203,9 @@
             },
             loadUser(){
                 this.$store.dispatch(LOAD_USER);
+            },
+            selectedItem(item){
+                this.justAddedSite = null;
             }
         },
         computed: {
@@ -229,6 +230,16 @@
             },
             hasSites(){
                 return this.sites.length > 0;
+            },
+            justAddedSiteId(){
+                if (this.justAddedSite != null) {
+                    return this.justAddedSite.id
+                } else {
+                    return null;
+                }
+            },
+            productSearchTerm(){
+                return this.$store.getters.productSearchTerm;
             }
         }
     }

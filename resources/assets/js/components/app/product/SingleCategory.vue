@@ -43,10 +43,10 @@
             </th>
         </tr>
         <!--<tr>-->
-            <!--<th></th>-->
-            <!--<th colspan="3" class="category-th action-cell add-item-cell">-->
-                <!--<add-product :category="category" @added-product="addedProduct"></add-product>-->
-            <!--</th>-->
+        <!--<th></th>-->
+        <!--<th colspan="3" class="category-th action-cell add-item-cell">-->
+        <!--<add-product :category="category" @added-product="addedProduct"></add-product>-->
+        <!--</th>-->
         <!--</tr>-->
         </thead>
         <tbody>
@@ -76,7 +76,7 @@
     import deleteConfirmation from '../../fragments/modals/DeleteConfirmation.vue';
 
     import {
-            SET_CATEGORY_COLLAPSE_STATUS, TOGGLE_COLLAPSE_CATEGORY, LOAD_USER
+        SET_CATEGORY_COLLAPSE_STATUS, TOGGLE_COLLAPSE_CATEGORY, LOAD_USER
     } from '../../../actions/action-types';
 
     export default {
@@ -112,13 +112,18 @@
                 isDeletingCategory: false
             }
         },
+        watch:{
+            productSearchTerm(){
+//                this.loadProducts();
+            }
+        },
         methods: {
             loadProducts: function () {
-                axios.get('/product', this.loadProductsRequestData).then(response=> {
+                axios.get('/product', this.loadProductsRequestData).then(response => {
                     if (response.data.status == true) {
                         this.products = response.data.products;
                     }
-                }).catch(error=> {
+                }).catch(error => {
                     console.info(error.response);
                 })
             },
@@ -167,12 +172,12 @@
             },
             deleteCategory: function () {
                 this.isDeletingCategory = true;
-                axios.delete(this.category.urls.delete).then(response=> {
+                axios.delete(this.category.urls.delete).then(response => {
                     this.isDeletingCategory = false;
                     if (response.data.status == true) {
                         this.$emit('reload-categories');
                     }
-                }).catch(error=> {
+                }).catch(error => {
                     this.isDeletingCategory = false;
                 })
             },
@@ -187,7 +192,8 @@
             loadProductsRequestData(){
                 return {
                     params: {
-                        category_id: this.category.id
+                        category_id: this.category.id,
+                        key: this.productSearchTerm,
                     }
                 }
             },
@@ -202,6 +208,9 @@
             },
             isCollapsed(){
                 return this.$store.getters.categoriesCollapsed[this.category.id];
+            },
+            productSearchTerm(){
+                return this.$store.getters.productSearchTerm;
             }
         }
     }

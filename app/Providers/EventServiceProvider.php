@@ -71,6 +71,8 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Product\Site\AfterUpdate' => [],
         'App\Events\Product\Site\BeforeDestroy' => [],
         'App\Events\Product\Site\AfterDestroy' => [],
+        'App\Events\Product\Site\BeforeAssignItem' => [],
+        'App\Events\Product\Site\AfterAssignItem' => [],
 
         /**
          * URL Management

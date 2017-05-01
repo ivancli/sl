@@ -28,32 +28,35 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <table class="table table-bordered table-hover table-striped table-condensed table-paginated">
-                                    <thead>
-                                    <tr>
-                                        <th :class="orderByClass('id')" @click.prevent="setOrdering('id')">ID</th>
-                                        <th :class="orderByClass('element')" @click.prevent="setOrdering('element')">Element</th>
-                                        <th :class="orderByClass('value')" @click.prevent="setOrdering('value')">Value</th>
-                                        <th :class="orderByClass('format_type')" @click.prevent="setOrdering('format_type')">Format Type</th>
-                                        <th :class="orderByClass('historical_type')" @click.prevent="setOrdering('historical_type')">Historical Type</th>
-                                        <th :class="orderByClass('status')" @click.prevent="setOrdering('status')">Status</th>
-                                        <th :class="orderByClass('created_at')" @click.prevent="setOrdering('created_at')">Created at</th>
-                                        <th :class="orderByClass('updated_at')" @click.prevent="setOrdering('updated_at')">Updated at</th>
-                                        <th width="150"></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody v-if="itemMetas.length > 0">
-                                    <single-item-meta-row v-for="itemMeta in itemMetas" :current-item-meta="itemMeta" :item="item"
-                                                          @reloadItemMetas="loadItemMetas(currentPageUrl)"></single-item-meta-row>
-                                    </tbody>
-                                    <tbody v-else>
-                                    <tr>
-                                        <td colspan="9" class="text-center">
-                                            No item meta data available
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover table-striped table-condensed table-paginated">
+                                        <thead>
+                                        <tr>
+                                            <th :class="orderByClass('id')" @click.prevent="setOrdering('id')">ID</th>
+                                            <th :class="orderByClass('element')" @click.prevent="setOrdering('element')">Element</th>
+                                            <th :class="orderByClass('value')" @click.prevent="setOrdering('value')">Value</th>
+                                            <th :class="orderByClass('format_type')" @click.prevent="setOrdering('format_type')">Format Type</th>
+                                            <th :class="orderByClass('historical_type')" @click.prevent="setOrdering('historical_type')">Historical Type</th>
+                                            <th :class="orderByClass('is_supportive')" @click.prevent="setOrdering('is_supportive')">Supportive</th>
+                                            <th :class="orderByClass('status')" @click.prevent="setOrdering('status')">Status</th>
+                                            <th :class="orderByClass('created_at')" @click.prevent="setOrdering('created_at')">Created at</th>
+                                            <th :class="orderByClass('updated_at')" @click.prevent="setOrdering('updated_at')">Updated at</th>
+                                            <th width="150"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody v-if="itemMetas.length > 0">
+                                        <single-item-meta-row v-for="itemMeta in itemMetas" :current-item-meta="itemMeta" :item="item"
+                                                              @reloadItemMetas="loadItemMetas(currentPageUrl)"></single-item-meta-row>
+                                        </tbody>
+                                        <tbody v-else>
+                                        <tr>
+                                            <td colspan="9" class="text-center">
+                                                No item meta data available
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                         <div class="row">

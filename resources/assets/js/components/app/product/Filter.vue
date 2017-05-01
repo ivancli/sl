@@ -1,73 +1,56 @@
 <template>
-    <div class="search-input">
-        <div class="ico-search">
-            <div class="search-icon">
-                <i class="fa fa-search text-muted"></i>
-            </div>
+    <form class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+            <input type="text" class="form-control general-search-input" placeholder="SEARCH" @input.prevent="setProductSearchTerm" v-model="productSearchTerm">
         </div>
-        <input type="text" class="form-control general-search-input" autocomplete="off"
-               placeholder="ENTER THE CATEGORY OR PRODUCT YOU'D LIKE TO SEARCH">
-        <div class="btn-clear-search">
-            <div class="clear-icon">
-                <a href="#">
-                    <i class="fa fa-times text-muted"></i>
-                </a>
-            </div>
-        </div>
-    </div>
+    </form>
 </template>
 
 <script>
+    import {
+        SET_PRODUCT_SEARCH_TERM
+    } from '../../../actions/action-types';
+
     export default {
+        data(){
+            return {
+                productSearchTerm: '',
+            }
+        },
         mounted() {
             console.info('Filter component mounted.')
+        },
+        methods: {
+            setProductSearchTerm(){
+                this.$store.dispatch(SET_PRODUCT_SEARCH_TERM, {
+                    product_search_term: this.productSearchTerm
+                });
+            }
         }
     }
 </script>
 
 <style>
-    .search-input .ico-search {
-        height: 100%;
-        width: 40px;
-        position: absolute;
-        text-align: center;
-    }
-
-    .search-input .ico-search .search-icon {
-        position: relative;
-        top: 48%;
-        -webkit-transform: translateY(-50%);
-        -moz-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
-        -o-transform: translateY(-50%);
-        transform: translateY(-50%);
-        font-size: 16px;
-    }
-
     .general-search-input {
-        border-radius: 20px;
-        height: 45px;
-        padding-left: 35px;
-        padding-right: 35px;
+        color: #fff !important;
+        background-color: #98dacd !important;
     }
 
-    .search-input .btn-clear-search {
-        height: 100%;
-        width: 70px;
-        position: absolute;
-        text-align: center;
-        top: 0;
-        right: 0;
-        display: none;
+    .general-search-input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+        color: #fff !important;
     }
 
-    .search-input .btn-clear-search .clear-icon {
-        position: relative;
-        top: 48%;
-        -webkit-transform: translateY(-50%);
-        -moz-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
-        -o-transform: translateY(-50%);
-        transform: translateY(-50%);
+    .general-search-input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+        color: #fff !important;
+        opacity: 1 !important;
+    }
+
+    .general-search-input::-moz-placeholder { /* Mozilla Firefox 19+ */
+        color: #fff !important;
+        opacity: 1 !important;
+    }
+
+    .general-search-input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+        color: #fff !important;
     }
 </style>

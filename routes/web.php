@@ -50,6 +50,8 @@ Route::group(['middleware' => ['auth', 'subs']], function () {
     Route::resource('site', 'Product\SiteController', ['except' => [
         'create'
     ]]);
+    Route::put('site/item/{site}', 'Product\SiteController@assignItem')->name('site.item.update');
+
     #endregion
 
     #region Product Side Features Related Routes

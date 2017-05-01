@@ -9,6 +9,7 @@
 namespace App\Models;
 
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Item extends Model
@@ -173,21 +174,35 @@ class Item extends Model
      * Create new meta data
      * @param $element
      * @param $value
+     * @param bool $isSupportive
      * @param null $format_type
      * @param null $historical_type
      * @param string $status
      * @return Model
      */
-    public function setMeta($element, $value, $format_type = null, $historical_type = null, $status = 'standby')
+    public function setMeta($element, $value, $isSupportive = false, $format_type = null, $historical_type = null, $status = 'standby')
     {
         $meta = $this->metas()->create([
             'element' => $element,
             'value' => $value,
             'format_type' => $format_type,
             'historical_type' => $historical_type,
+            'is_supportive' => $isSupportive ? 'y' : 'n',
             'status' => $status,
         ]);
         return $meta;
     }
 
+    /**
+     * Update processed timestamp
+     * @param null $datetime
+     */
+    public function setProcessedAt($datetime = null)
+    {
+        if (is_null($datetime)) {
+            $datetime = Carbon::now()->toDateTimeString();
+        }
+        $this->processed_at = $datetime;
+        $this->save();
+    }
 }

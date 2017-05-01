@@ -37,6 +37,12 @@ class TestController extends Controller
      */
     public function crawlParseItemMeta(ItemMeta $itemMeta)
     {
+        if ($itemMeta->is_supportive == 'y') {
+            $error = "Unable to crawl supportive item meta.";
+            $status = false;
+            return compact(['status', 'error']);
+        }
+
         $crawlResult = $this->crawlerRepo->fetch($itemMeta->item->url->crawler);
 
         if ($crawlResult['status'] != 200) {
@@ -89,6 +95,11 @@ class TestController extends Controller
         $results = [];
 
         foreach ($item->metas as $metaIndex => $meta) {
+
+            if ($meta->is_supportive == 'y') {
+                continue;
+            }
+
             $parseResults = $this->parserRepo->parseMeta($meta, $content);
 
             if ($meta->format_type == 'boolean') {
@@ -138,6 +149,9 @@ class TestController extends Controller
         foreach ($url->items as $itemIndex => $item) {
             $itemResults = [];
             foreach ($item->metas as $metaIndex => $meta) {
+                if ($meta->is_supportive == 'y') {
+                    continue;
+                }
                 $parseResults = $this->parserRepo->parseMeta($meta, $content);
                 if ($meta->format_type == 'boolean') {
                     $parseResults = [$parseResults != false && is_array($parseResults) && count($parseResults) > 0];

@@ -11,9 +11,11 @@ namespace App\Services\Product;
 
 use App\Contracts\Repositories\Product\ProductContract;
 use App\Contracts\Repositories\Product\SiteContract;
+use App\Contracts\Repositories\UrlManagement\ItemContract;
 use App\Contracts\Repositories\UrlManagement\UrlContract;
 use App\Jobs\Crawl as CrawlJob;
 use App\Models\Site;
+use App\Validators\Product\Site\AssignItemValidator;
 use App\Validators\Product\Site\StoreValidator;
 use App\Validators\Product\Site\UpdateValidator;
 
@@ -24,28 +26,32 @@ class SiteService
     protected $productRepo;
     protected $siteRepo;
     protected $urlRepo;
+    protected $itemRepo;
 
     #endregion
 
     #region validators
 
-    protected $storeValidators;
-    protected $updateValidators;
+    protected $storeValidator;
+    protected $updateValidator;
+    protected $assignItemValidator;
 
     #endregion
 
-    public function __construct(ProductContract $productContract, SiteContract $siteContract, UrlContract $urlContract,
-                                StoreValidator $storeValidator, UpdateValidator $updateValidator)
+    public function __construct(ProductContract $productContract, SiteContract $siteContract, UrlContract $urlContract, ItemContract $itemContract,
+                                StoreValidator $storeValidator, UpdateValidator $updateValidator, AssignItemValidator $assignItemValidator)
     {
         #region repositories binding
         $this->productRepo = $productContract;
         $this->siteRepo = $siteContract;
         $this->urlRepo = $urlContract;
+        $this->itemRepo = $itemContract;
         #endregion
 
         #region validators binding
-        $this->storeValidators = $storeValidator;
-        $this->updateValidators = $updateValidator;
+        $this->storeValidator = $storeValidator;
+        $this->updateValidator = $updateValidator;
+        $this->assignItemValidator = $assignItemValidator;
         #endregion
     }
 
@@ -70,7 +76,7 @@ class SiteService
      */
     public function store(array $data)
     {
-        $this->storeValidators->validate($data);
+        $this->storeValidator->validate($data);
 
         $site = $this->siteRepo->store($data);
 
@@ -93,7 +99,7 @@ class SiteService
     public function update(Site $site, array $data)
     {
         $data = array_set($data, 'id', $site->getKey());
-        $this->updateValidators->validate($data);
+        $this->updateValidator->validate($data);
         $site = $this->siteRepo->update($site, $data);
         $url = $this->urlRepo->getByFullPathOrCreate($data);
         $url->sites()->save($site);
@@ -111,5 +117,19 @@ class SiteService
     {
         $result = $this->siteRepo->destroy($site);
         return $result;
+    }
+
+    /**
+     * @param Site $site
+     * @param array $data
+     * @return Site
+     */
+    public function assignItem(Site $site, array $data)
+    {
+        $this->assignItemValidator->validate($data);
+        $item = $this->itemRepo->get(array_get($data, 'item_id'));
+        $item->sites()->save($site);
+        $site->fresh();
+        return $site;
     }
 }

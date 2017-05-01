@@ -1,3 +1,4 @@
+1. finish view item meta
 1. Work on parser class for lighting
 1. Change design pattern to service-repository
 2. URL item selection when adding new Site

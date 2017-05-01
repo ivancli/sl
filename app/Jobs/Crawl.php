@@ -85,7 +85,12 @@ class Crawl implements ShouldQueue
 
             event(new BeforeProcessItem($item));
 
+            $item->setProcessedAt();
+
             foreach ($item->metas as $meta) {
+                if ($meta->is_supportive == 'y') {
+                    continue;
+                }
 
                 if ($meta->confs()->count() == 0) {
                     $meta->statusConfigFailed();
@@ -94,9 +99,15 @@ class Crawl implements ShouldQueue
                 }
 
                 #region parsing
+
                 event(new BeforeParseMeta($meta));
+
+                $meta->setParsedAt();
+
                 $parserResult = $parserRepo->parseMeta($meta, $content);
+
                 event(new AfterParseMeta($meta));
+
                 #endregion
 
                 if ($meta->format_type == 'boolean') {
@@ -172,8 +183,6 @@ class Crawl implements ShouldQueue
                         event(new NoParseResult($meta));
                     }
                 }
-
-
             }
 
             event(new AfterProcessItem($item));

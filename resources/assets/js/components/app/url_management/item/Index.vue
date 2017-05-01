@@ -28,34 +28,36 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <table class="table table-bordered table-hover table-striped table-condensed table-paginated">
-                                    <thead>
-                                    <tr>
-                                        <th :class="orderByClass('id')" @click.prevent="setOrdering('id')">ID</th>
-                                        <th :class="orderByClass('name')" @click.prevent="setOrdering('name')">Name</th>
-                                        <th :class="orderByClass('is_active')" @click.prevent="setOrdering('is_active')">
-                                            Is active
-                                        </th>
-                                        <th :class="orderByClass('created_at')" @click.prevent="setOrdering('created_at')">
-                                            Created at
-                                        </th>
-                                        <th :class="orderByClass('updated_at')" @click.prevent="setOrdering('updated_at')">
-                                            Updated at
-                                        </th>
-                                        <th width="150"></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody v-if="items.length > 0">
-                                    <single-item-row v-for="item in items" :current-item="item" :url="url" @reloadItems="loadItems(currentPageUrl)"></single-item-row>
-                                    </tbody>
-                                    <tbody v-else>
-                                    <tr>
-                                        <td colspan="7" class="text-center">
-                                            No item data available
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover table-striped table-condensed table-paginated">
+                                        <thead>
+                                        <tr>
+                                            <th :class="orderByClass('id')" @click.prevent="setOrdering('id')">ID</th>
+                                            <th :class="orderByClass('name')" @click.prevent="setOrdering('name')">Name</th>
+                                            <th :class="orderByClass('is_active')" @click.prevent="setOrdering('is_active')">
+                                                Is active
+                                            </th>
+                                            <th :class="orderByClass('created_at')" @click.prevent="setOrdering('created_at')">
+                                                Created at
+                                            </th>
+                                            <th :class="orderByClass('updated_at')" @click.prevent="setOrdering('updated_at')">
+                                                Updated at
+                                            </th>
+                                            <th width="150"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody v-if="items.length > 0">
+                                        <single-item-row v-for="item in items" :current-item="item" :url="url" @reloadItems="loadItems(currentPageUrl)"></single-item-row>
+                                        </tbody>
+                                        <tbody v-else>
+                                        <tr>
+                                            <td colspan="7" class="text-center">
+                                                No item data available
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                         <div class="row">

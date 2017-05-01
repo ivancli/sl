@@ -36,6 +36,7 @@ class UrlRepository implements UrlContract
         $orderByColumn = array_get($data, 'orderBy', 'id');
         $orderByDirection = array_get($data, 'direction', 'asc');
         $builder = $this->url;
+        $builder = $builder->with('crawler');
         $builder = $builder->orderBy($orderByColumn, $orderByDirection);
         if (array_has($data, 'key') && !empty(array_get($data, 'key'))) {
             $key = array_get($data, 'key');

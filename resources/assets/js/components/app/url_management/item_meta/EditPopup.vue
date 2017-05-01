@@ -62,6 +62,15 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-3 col-sm-9">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" v-model="is_supportive"> Is supportive
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -99,6 +108,7 @@
                 format_type: "",
                 historical_type: "",
                 status: "standby",
+                is_supportive: false,
                 isEditingMeta: false,
                 errors: [],
             }
@@ -114,6 +124,7 @@
                 this.format_type = this.itemMeta.format_type == null ? '' : this.itemMeta.format_type;
                 this.historical_type = this.itemMeta.historical_type == null ? '' : this.itemMeta.historical_type;
                 this.status = this.itemMeta.status;
+                this.is_supportive = this.itemMeta.is_supportive == 'y';
             },
             updateMeta(){
                 this.isEditingMeta = true;
@@ -155,6 +166,7 @@
                 } else {
                     data.status = 'standby';
                 }
+                data.is_supportive = this.is_supportive ? 'y' : 'n';
                 return data;
             }
         }

@@ -5,6 +5,7 @@
         <td v-text="itemMeta.value"></td>
         <td>{{ itemMeta.format_type ? itemMeta.format_type : "text" | capitalise }}</td>
         <td>{{ itemMeta.historical_type | capitalise }}</td>
+        <td>{{ itemMeta.is_supportive == 'y' ? 'true' : 'false' }}</td>
         <td>{{ itemMeta.status }}</td>
         <td>{{ itemMeta.created_at | formatDateTime(datetimeFormat) }}</td>
         <td>{{ itemMeta.updated_at | formatDateTime(datetimeFormat) }}</td>
@@ -20,8 +21,8 @@
             <a href="#" class="text-muted" title="edit configurations" @click.prevent="onClickEditItemMetaConfs">
                 <i class="glyphicon glyphicon-cog"></i>
             </a>
-            &nbsp;
-            <a href="#" class="text-muted" title="test crawl/parse" @click.prevent="onClickTestCrawlParseItemMeta">
+            <a href="#" class="text-muted" title="test crawl/parse" @click.prevent="onClickTestCrawlParseItemMeta" v-if="itemMeta.is_supportive == 'n'">
+                &nbsp;
                 <i class="glyphicon glyphicon-refresh"></i>
             </a>
             &nbsp;
@@ -31,7 +32,8 @@
         </td>
         <edit-popup :is-active="isEditingItemMeta" :item-meta="itemMeta" @hide-modal="hideEditPopup" @updated-item-meta="updatedItemMeta"></edit-popup>
         <edit-confs-popup :is-active="isEditingItemMetaConfs" :item-meta="itemMeta" @hide-modal="hideEditItemMetaConfsPopup" @updated-item-meta-confs="updatedItemMetaConfs"></edit-confs-popup>
-        <crawl-parse-result-popup v-if="crawlParseResult != null" :item-meta="itemMeta" :crawl-parse-result="crawlParseResult" @hide-modal="hideCrawlParseResultPopup" @pushed-to-queue="pushedToQueue"></crawl-parse-result-popup>
+        <crawl-parse-result-popup v-if="crawlParseResult != null" :item-meta="itemMeta" :crawl-parse-result="crawlParseResult" @hide-modal="hideCrawlParseResultPopup"
+                                  @pushed-to-queue="pushedToQueue"></crawl-parse-result-popup>
         <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
         <loading v-if="isDeletingItemMeta || isTestingCrawlParseItemMeta"></loading>
     </tr>

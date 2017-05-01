@@ -67,12 +67,12 @@
             </div>
         </td>
         <td class="text-right action-cell vertical-align-middle">
-            <a href="#" class="btn-action hidden-md hidden-lg" title="show details"
-               @click.prevent="toggleSiteDetails">
+            <a href="#" class="btn-action hidden-md hidden-lg" title="show details" @click.prevent="toggleSiteDetails">
                 <i class="fa fa-info-circle"></i>
             </a>
             <a href="#" class="btn-action" title="choose item" v-if="site.url.itemsCount > 1" @click.prevent="onClickSelectItem">
-                <i class="fa fa-list-ul"></i>
+                <i class="fa fa-exclamation-triangle" v-if="site.item == null"></i>
+                <i class="fa fa-list-ul" v-else></i>
             </a>
             <a href="#" class="btn-action" title="chart">
                 <i class="fa fa-line-chart"></i>
@@ -115,27 +115,29 @@
             </table>
         </td>
     </tr>
-    <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete"
-                         @confirmDelete="confirmDelete"></delete-confirmation>
+    <select-item-popup v-if="isSelectingItem || isNewlyCreated" :editing-site="site" @selected-item="selectedItem" @hide-modal="cancelSelectingItem"></select-item-popup>
+    <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
     </tbody>
 </template>
 
 <script>
+    import editSite from './EditSite.vue';
+    import selectItemPopup from './SelectItemPopup.vue';
+    import deleteConfirmation from '../../fragments/modals/DeleteConfirmation.vue';
+
     import formatDateTime from '../../../filters/formatDateTime';
     import currency from '../../../filters/currency';
     import domain from '../../../filters/domain';
 
-    import editSite from './EditSite.vue';
-
-    import deleteConfirmation from '../../fragments/modals/DeleteConfirmation.vue';
-
     export default {
         components: {
             editSite,
+            selectItemPopup,
             deleteConfirmation,
         },
         props: [
-            'current-site'
+            'current-site',
+            'is-newly-created',
         ],
         data() {
             return {
@@ -151,7 +153,8 @@
                     ],
                     active: false
                 },
-                isDeletingSite: false
+                isDeletingSite: false,
+                isSelectingItem: false,
             }
         },
         mounted() {
@@ -197,8 +200,17 @@
                 })
             },
             onClickSelectItem(){
-                this.$emit('select-item', this.site);
+                this.isSelectingItem = true;
             },
+            selectedItem(item){
+                this.$emit('reload-sites');
+                this.$emit('selected-item', item);
+                this.cancelSelectingItem();
+            },
+            cancelSelectingItem(){
+                this.$emit('selected-item');
+                this.isSelectingItem = false;
+            }
         },
         computed: {
             site(){

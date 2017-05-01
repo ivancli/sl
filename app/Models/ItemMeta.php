@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 class ItemMeta extends Model
 {
     protected $fillable = [
-        'element', 'value', 'format_type', 'historical_type', 'status', 'parsed_at',
+        'element', 'value', 'format_type', 'historical_type', 'status', 'parsed_at', 'is_supportive',
     ];
 
     protected $with = [
@@ -162,6 +162,19 @@ class ItemMeta extends Model
     public function statusParseFailed()
     {
         $this->status = 'parse_failed';
+        $this->save();
+    }
+
+    /**
+     * Set parsed timestamp
+     * @param null $datetime
+     */
+    public function setParsedAt($datetime = null)
+    {
+        if (is_null($datetime)) {
+            $datetime = Carbon::now()->toDateTimeString();
+        }
+        $this->parsed_at = $datetime;
         $this->save();
     }
 }

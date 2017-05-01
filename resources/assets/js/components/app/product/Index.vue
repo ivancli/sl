@@ -73,7 +73,7 @@
     import singleCategory from './SingleCategory.vue';
 
     import {
-            TOGGLE_ALL_CATEGORIES, LOAD_USER
+        TOGGLE_ALL_CATEGORIES, LOAD_USER, SET_CATEGORY_SEARCH_PROMISE
     } from '../../../actions/action-types';
 
     export default {
@@ -89,6 +89,19 @@
         mounted() {
             console.info('Index component is mounted');
             this.loadCategories();
+        },
+        watch: {
+            productSearchTerm(){
+                if (this.categorySearchPromise != null) {
+                    clearTimeout(this.categorySearchPromise)
+                }
+                let categoryPromise = setTimeout(()=>{
+                    this.loadCategories();
+                }, 1000);
+                this.$store.dispatch(SET_CATEGORY_SEARCH_PROMISE, {
+                    category_search_promise: categoryPromise
+                });
+            }
         },
         methods: {
             loadCategories: function () {
@@ -155,6 +168,12 @@
                     return this.user.subscription.subscriptionPlan;
                 }
                 return null;
+            },
+            productSearchTerm(){
+                return this.$store.getters.productSearchTerm;
+            },
+            categorySearchPromise(){
+                return this.$store.getters.categorySearchPromise;
             }
         }
     }

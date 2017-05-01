@@ -109,7 +109,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="dropdown  ">
+                    <li class="dropdown">
                         <a href="#" data-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-file-archive-o"></i>&nbsp;<span class="hidden-lg hidden-md hidden-sm">Manage Legals</span>&nbsp;<i class="fa fa-caret-down"></i>
                         </a>
@@ -120,7 +120,7 @@
                                     <span>Terms and Conditions</span>
                                 </a>
                             </li>
-                            <li class="">
+                            <li>
                                 <a href="https://login.spotlite.com.au/privacy_policy">
                                     <i class="fa fa-square"></i>
                                     <span>Privacy Policies</span>
@@ -129,8 +129,7 @@
                         </ul>
                     </li>
                 </ul>
-
-
+                <product-filter v-if="isProductPage"></product-filter>
             </div>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
@@ -185,33 +184,27 @@
 </template>
 
 <script>
+    import productFilter from '../app/product/Filter.vue'
+
     import {
         TOGGLE_SIDEBAR
     } from '../../actions/action-types';
 
     export default {
+        components: {
+            productFilter
+        },
         mounted() {
             console.log('Header component mounted.')
         },
-        data: () => {
-            return {
-                dropdownToggle: {
-                    'need_help': false,
-                }
-            }
+        data(){
+            return {}
         },
-        methods: {
-            toggleDropdown: function (current_index) {
-                for (var index in this.dropdownToggle) {
-                    if (index != current_index && this.dropdownToggle.hasOwnProperty(index)) {
-                        this.dropdownToggle[index] = false;
-                    }
-                }
-                this.dropdownToggle[current_index] = !this.dropdownToggle[current_index];
-            },
-            toggleSidebar: function () {
-                this.$store.dispatch(TOGGLE_SIDEBAR);
-            },
+        methods: {},
+        computed: {
+            isProductPage(){
+                return window.location.pathname == "/product";
+            }
         }
     }
 </script>

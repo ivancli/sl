@@ -27,35 +27,37 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        <table class="table table-bordered table-hover table-striped table-condensed table-paginated">
-                            <thead>
-                            <tr>
-                                <th :class="orderByClass('id')" @click.prevent="setOrdering('id')">ID</th>
-                                <th :class="orderByClass('name')" @click.prevent="setOrdering('name')">Name</th>
-                                <th :class="orderByClass('full_path')" @click.prevent="setOrdering('full_path')">
-                                    Full path
-                                </th>
-                                <th :class="orderByClass('created_at')" @click.prevent="setOrdering('created_at')">
-                                    Created at
-                                </th>
-                                <th :class="orderByClass('updated_at')" @click.prevent="setOrdering('updated_at')">
-                                    Updated at
-                                </th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody v-if="domains.length > 0">
-                            <single-domain-row v-for="domain in domains" :current-domain="domain"
-                                               @reloadDomains="loadDomains(currentPageUrl)"></single-domain-row>
-                            </tbody>
-                            <tbody v-else>
-                            <tr>
-                                <td colspan="7" class="text-center">
-                                    No domain data available
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover table-striped table-condensed table-paginated">
+                                <thead>
+                                <tr>
+                                    <th :class="orderByClass('id')" @click.prevent="setOrdering('id')">ID</th>
+                                    <th :class="orderByClass('name')" @click.prevent="setOrdering('name')">Name</th>
+                                    <th :class="orderByClass('full_path')" @click.prevent="setOrdering('full_path')">
+                                        Full path
+                                    </th>
+                                    <th :class="orderByClass('created_at')" @click.prevent="setOrdering('created_at')">
+                                        Created at
+                                    </th>
+                                    <th :class="orderByClass('updated_at')" @click.prevent="setOrdering('updated_at')">
+                                        Updated at
+                                    </th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody v-if="domains.length > 0">
+                                <single-domain-row v-for="domain in domains" :current-domain="domain"
+                                                   @reloadDomains="loadDomains(currentPageUrl)"></single-domain-row>
+                                </tbody>
+                                <tbody v-else>
+                                <tr>
+                                    <td colspan="7" class="text-center">
+                                        No domain data available
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <div class="row">

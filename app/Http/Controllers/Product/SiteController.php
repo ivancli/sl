@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Product;
 use App\Contracts\Repositories\Product\ProductContract;
 use App\Contracts\Repositories\Product\SiteContract;
 use App\Contracts\Repositories\UrlManagement\UrlContract;
+use App\Events\Product\Site\AfterAssignItem;
 use App\Events\Product\Site\AfterDestroy;
 use App\Events\Product\Site\AfterEdit;
 use App\Events\Product\Site\AfterIndex;
 use App\Events\Product\Site\AfterShow;
 use App\Events\Product\Site\AfterStore;
 use App\Events\Product\Site\AfterUpdate;
+use App\Events\Product\Site\BeforeAssignItem;
 use App\Events\Product\Site\BeforeDestroy;
 use App\Events\Product\Site\BeforeEdit;
 use App\Events\Product\Site\BeforeIndex;
@@ -152,5 +154,17 @@ class SiteController extends Controller
         } else {
             return redirect()->route('product');
         }
+    }
+
+    public function assignItem(Site $site)
+    {
+        event(new BeforeAssignItem($site));
+
+        $site = $this->siteService->assignItem($site, $this->request->all());
+        $status = true;
+
+        event(new AfterAssignItem($site));
+
+        return compact(['site', 'status']);
     }
 }

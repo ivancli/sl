@@ -48,13 +48,6 @@ class UrlObserver
         $url->crawler()->save($crawler);
 
 
-        /* TODO check domain configuration */
-
-        /* TODO check if there are any domain metas which affect prices on page */
-
-        /* TODO if not, find price meta*/
-
-
         $domain = $url->domain;
         if (!is_null($domain)) {
             $customItemGenerator = $domain->getConf('CUSTOM_ITEM_GENERATOR');
@@ -78,15 +71,15 @@ class UrlObserver
                             ]);
                             $url->items()->save($item);
                             foreach ($targetItem as $label => $option) {
-                                $itemMeta = $item->setMeta($label, $option->text);
+                                /* creating supportive meta */
+                                $itemMeta = $item->setMeta($label, $option->text, true);
                             }
                             $targetItemOptionValues = array_pluck($targetItem, 'value');
                             foreach ($url->domain->metas as $domainMeta) {
-                                $itemMeta = $item->setMeta($domainMeta->element, null, $domainMeta->format_type, $domainMeta->historical_type);
+                                $itemMeta = $item->setMeta($domainMeta->element, null, false, $domainMeta->format_type, $domainMeta->historical_type);
                                 foreach ($domainMeta->confs as $domainMetaConf) {
                                     $itemMeta->setConf($domainMetaConf->element, $domainMetaConf->value);
                                 }
-
                                 $customParser = $domain->getConf('CUSTOM_PARSER');
                                 if (!is_null($customParser)) {
                                     $itemMeta->setConf('PARSER_CLASS', $customParser->value);
@@ -113,8 +106,8 @@ class UrlObserver
             $item = new Item;
             $url->items()->save($item);
             /*standard entities - price and availability*/
-            $priceMeta = $item->setMeta('PRICE', null, 'decimal', 'price');
-            $availabilityMeta = $item->setMeta('AVAILABILITY', null, 'boolean');
+            $priceMeta = $item->setMeta('PRICE', null, false, 'decimal', 'price');
+            $availabilityMeta = $item->setMeta('AVAILABILITY', null, false, 'boolean');
         }
         /* TODO check common crawler configuration */
     }
@@ -172,7 +165,7 @@ class UrlObserver
         /* if domain has meta data set up*/
         if ($url->domain->metas()->count() > 0) {
             foreach ($url->domain->metas as $domainMeta) {
-                $itemMeta = $item->setMeta($domainMeta->element, null, $domainMeta->format_type, $domainMeta->historical_type);
+                $itemMeta = $item->setMeta($domainMeta->element, null, false, $domainMeta->format_type, $domainMeta->historical_type);
                 foreach ($domainMeta->confs as $domainMetaConf) {
                     $itemMeta->setConf($domainMetaConf->element, $domainMetaConf->value);
                 }
@@ -180,7 +173,7 @@ class UrlObserver
         } else {
             /*standard entities - price and availability*/
             $priceMeta = $item->setMeta('PRICE', null, 'decimal', 'price');
-            $availabilityMeta = $item->setMeta('AVAILABILITY', null, 'boolean');
+            $availabilityMeta = $item->setMeta('AVAILABILITY', null, false, 'boolean');
         }
         return $item;
     }
