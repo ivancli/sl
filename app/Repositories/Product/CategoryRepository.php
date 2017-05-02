@@ -4,6 +4,7 @@ namespace App\Repositories\Product;
 use App\Contracts\Repositories\Product\CategoryContract;
 use App\Models\Category;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Created by PhpStorm.
@@ -18,6 +19,38 @@ class CategoryRepository implements CategoryContract
     public function __construct(Category $category)
     {
         $this->category = $category;
+    }
+
+
+    /**
+     * Load filtered/all categories
+     * @param User|null $user
+     * @param array $data
+     * @return mixed
+     */
+    public function filterAll(User $user = null, array $data = [])
+    {
+        $builder = null;
+        if (is_null($user)) {
+            $builder = $this->category;
+        } else {
+            $builder = $user->categories();
+        }
+
+        if (array_has($data, 'key') && !empty(array_get($data, 'key'))) {
+            $key = array_get($data, 'key');
+            //get number of products of each category matching the key
+            $builder->withCount(['products' => function ($query) use ($key) {
+                $query->where('product_name', 'like', "%{$key}%");
+            }]);
+            //category name matches of one or more product names match
+            $builder->having('category_name', 'like', "%{$key}%")
+                ->orHaving('products_count', '>', 0);
+        }
+
+        $categories = $builder->get();
+
+        return $categories;
     }
 
     /**

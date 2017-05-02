@@ -112,9 +112,9 @@
                 isDeletingCategory: false
             }
         },
-        watch:{
+        watch: {
             categorySearchPromise(){
-                if(this.categorySearchPromise == null){
+                if (this.categorySearchPromise == null) {
                     this.loadProducts();
                 }
             }

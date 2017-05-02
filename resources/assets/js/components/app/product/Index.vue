@@ -65,12 +65,14 @@
                 </div>
             </div>
         </div>
+        <loading v-if="isSearchingCategories"></loading>
     </section>
 </template>
 
 <script>
     import addCategory from './AddCategory.vue';
     import singleCategory from './SingleCategory.vue';
+    import loading from '../../Loading.vue';
 
     import {
         TOGGLE_ALL_CATEGORIES, LOAD_USER, SET_CATEGORY_SEARCH_PROMISE, CLEAR_CATEGORY_SEARCH_PROMISE
@@ -79,11 +81,13 @@
     export default {
         components: {
             addCategory,
-            singleCategory
+            singleCategory,
+            loading
         },
         data() {
             return {
-                categories: []
+                categories: [],
+                isSearchingCategories: false
             }
         },
         mounted() {
@@ -95,8 +99,10 @@
                 if (this.categorySearchPromise != null) {
                     clearTimeout(this.categorySearchPromise)
                 }
-                let categoryPromise = setTimeout(()=>{
-                    this.loadCategories(()=>{
+                let categoryPromise = setTimeout(() => {
+                    this.isSearchingCategories = true;
+                    this.loadCategories(() => {
+                        this.isSearchingCategories = false;
                         this.$store.dispatch(CLEAR_CATEGORY_SEARCH_PROMISE);
                     });
                 }, 1000);
@@ -107,10 +113,10 @@
         },
         methods: {
             loadCategories(callback) {
-                axios.get('/category').then(response => {
+                axios.get('/category', this.loadCategoriesRequestData).then(response => {
                     if (response.data.status == true) {
                         this.categories = response.data.categories;
-                        if(typeof callback == 'function'){
+                        if (typeof callback == 'function') {
                             callback();
                         }
                     }
@@ -179,7 +185,14 @@
             },
             categorySearchPromise(){
                 return this.$store.getters.categorySearchPromise;
-            }
+            },
+            loadCategoriesRequestData(){
+                return {
+                    params: {
+                        key: this.$store.getters.productSearchTerm,
+                    }
+                }
+            },
         }
     }
 </script>

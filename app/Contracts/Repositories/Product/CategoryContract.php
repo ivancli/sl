@@ -14,6 +14,14 @@ interface CategoryContract
 {
 
     /**
+     * Load filtered/all categories
+     * @param User|null $user
+     * @param array $data
+     * @return mixed
+     */
+    public function filterAll(User $user = null, array $data = []);
+
+    /**
      * Load all categories
      *
      * @param User $user

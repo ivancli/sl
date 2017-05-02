@@ -50,7 +50,7 @@ class CategoryService
     public function load(array $data = [])
     {
         $user = auth()->user();
-        $categories = $this->categoryRepo->all($user);
+        $categories = $this->categoryRepo->filterAll($user, $data);
         return $categories;
     }
 

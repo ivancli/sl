@@ -42,7 +42,7 @@ class CategoryController extends Controller
         event(new BeforeIndex());
 
         if ($this->request->ajax()) {
-            $categories = $this->categoryService->load();
+            $categories = $this->categoryService->load($this->request->all());
             $status = true;
         }
 
