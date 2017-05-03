@@ -55,9 +55,7 @@ class ProductService
         $category = $this->categoryRepo->get(array_get($data, 'category_id'));
         if (array_has($data, 'key') && !empty(array_get($data, 'key'))) {
             $key = array_get($data, 'key');
-            dd($category->category_name);
-            if (strpos($category->category_name, $key) === false) {
-
+            if (strpos(strtolower($category->category_name), strtolower($key)) === false) {
                 $products = $category->products()->where('product_name', 'like', "%{$key}%")->get();
             } else {
                 $products = $category->products;

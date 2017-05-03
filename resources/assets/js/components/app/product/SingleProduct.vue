@@ -9,12 +9,13 @@
             </th>
             <th class="product-th">
                 <a class="text-muted product-name-link" href="#" v-text="product.product_name"
-                   v-show="!editingProductName"></a>
-                <edit-product :editing-product="product" @edited-product="editedProduct"
-                              @edit-product-name="goingToEditProductName"
-                              @cancel-edit-product-name="cancelEditProductName"></edit-product>
+                   v-show="!editingProduct"></a>
+                <edit-product :editing-product="product" :going-to-edit-product="editingProduct" @edited-product="editedProduct" @cancel-edit-product-name="cancelEditProductName"></edit-product>
             </th>
             <th class="text-right action-cell product-th">
+                <a href="#" class="btn-action" title="edit" @click.prevent="onClickEditProduct" v-if="!editingProduct">
+                    <i class="fa fa-pencil"></i>
+                </a>
                 <a href="#" class="btn-action" title="chart">
                     <i class="fa fa-line-chart"></i>
                 </a>
@@ -115,7 +116,7 @@
         data() {
             return {
                 sites: [],
-                editingProductName: false,
+                editingProduct: false,
                 deleteParams: {
                     title: 'product',
                     list: [
@@ -156,10 +157,10 @@
                 this.$emit('deleted-site');
             },
             goingToEditProductName(){
-                this.editingProductName = true;
+                this.editingProduct = true;
             },
             cancelEditProductName(){
-                this.editingProductName = false;
+                this.editingProduct = false;
             },
             addedSite: function (site) {
                 this.$emit('added-site');
@@ -172,7 +173,7 @@
                 this.$emit('reload-products');
             },
             editedProduct(){
-                this.editingProductName = false;
+                this.editingProduct = false;
                 this.reloadProducts();
             },
             /*delete product*/
@@ -206,6 +207,9 @@
             },
             selectedItem(item){
                 this.justAddedSite = null;
+            },
+            onClickEditProduct(){
+                this.editingProduct = true;
             }
         },
         computed: {
@@ -300,7 +304,7 @@
 
     .product-th.action-cell {
         padding-right: 25px;
-        width: 100px;
+        width: 200px;
     }
 
     .collapsible-category-div table.product-wrapper > thead > tr > th:first-child, .collapsible-category-div table.product-wrapper > tbody > tr > td:first-child {

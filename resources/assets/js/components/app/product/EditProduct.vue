@@ -1,12 +1,7 @@
 <template>
     <div class="edit-category-wrapper">
-        <span class="btn-edit btn-edit-product" @click.prevent="goingToEditProductName" v-show="!editingProductName">
-            <span class="hidden-xs hidden-sm">Edit &nbsp;</span>
-            <i class="fa fa-pencil-square-o"></i>
-        </span>
-
         <form>
-            <div class="input-group sl-input-group" v-show="editingProductName">
+            <div class="input-group sl-input-group" v-show="editingProductAttributes">
                 <input type="text" placeholder="Product Name" autocomplete="off" v-model="newProductName" class="form-control sl-form-control product-name" ref="txt_edit_product" tabindex="-1">
                 <span class="input-group-btn">
                     <button class="btn btn-primary btn-flat" @click.prevent="editProduct">
@@ -30,11 +25,12 @@
             errorModal
         },
         props: [
-            'editing-product'
+            'editing-product',
+            'going-to-edit-product',
         ],
         data() {
             return {
-                editingProductName: false, //determine visibility of panel
+                editingProductAttributes: false, //determine visibility of panel
                 newProductName: '', //product name input value
                 isEditingProduct: false, //promise of form submission,
                 errors: {},
@@ -44,17 +40,20 @@
             this.newProductName = this.currentProduct.product_name;
             console.info('Edit Product component mounted');
         },
-        methods: {
-            goingToEditProductName: function () {
-                this.editingProductName = true;
-                setTimeout(()=> {
+        watch:{
+            goingToEditProduct(val){
+                this.editingProductAttributes = val;
+                if (val == true) {
                     this.$refs['txt_edit_product'].focus();
-                }, 10);
-                this.$emit('edit-product-name');
-            },
+                } else {
+                    this.$refs['txt_edit_product'].blur();
+                }
+            }
+        },
+        methods: {
             cancelEditProductName: function () {
                 this.newProductName = this.currentProduct.product_name;
-                this.editingProductName = false;
+                this.editingProductAttributes = false;
                 this.$refs['txt_edit_product'].blur();
                 this.$emit('cancel-edit-product-name');
             },
@@ -62,7 +61,7 @@
                 // product name same as before, quit
                 if (this.currentProduct.product_name == this.newProductName) {
                     this.isEditingProduct = false;
-                    this.editingProductName = false;
+                    this.editingProductAttributes = false;
                     this.$refs['txt_edit_product'].blur();
                     this.$emit('cancel-edit-product-name');
                     return false;
@@ -73,7 +72,7 @@
                 axios.put('/product/' + this.currentProduct.id, this.editProductData).then(response=> {
                     this.isEditingProduct = false;
                     if (response.data.status == true) {
-                        this.editingProductName = false;
+                        this.editingProductAttributes = false;
                     }
                     this.$emit('edited-product');
                 }).catch(error=> {

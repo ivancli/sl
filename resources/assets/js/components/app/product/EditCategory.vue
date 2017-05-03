@@ -1,10 +1,5 @@
 <template>
     <div class="edit-category-wrapper">
-        <span class="btn-edit btn-edit-category" @click.prevent="goingToEditCategoryName" v-show="!editingCategoryName">
-            <span class="hidden-xs hidden-sm">Edit &nbsp;</span>
-            <i class="fa fa-pencil-square-o"></i>
-        </span>
-
         <div class="input-group sl-input-group" v-show="editingCategoryName">
             <input type="text" placeholder="Category Name" autocomplete="off" v-model="newCategoryName" class="form-control sl-form-control category-name" ref="txt_edit_category" tabindex="-1">
             <span class="input-group-btn">
@@ -28,7 +23,8 @@
             errorModal
         },
         props: [
-            'editing-category'
+            'editing-category',
+            'going-to-edit-category-name'
         ],
         data() {
             return {
@@ -42,14 +38,17 @@
             this.newCategoryName = this.currentCategory.category_name;
             console.info('Edit Category component mounted');
         },
-        methods: {
-            goingToEditCategoryName: function () {
-                this.editingCategoryName = true;
-                setTimeout(()=> {
+        watch:{
+            goingToEditCategoryName(val){
+                this.editingCategoryName = val;
+                if (val == true) {
                     this.$refs['txt_edit_category'].focus();
-                }, 10);
-                this.$emit('edit-category-name');
-            },
+                } else {
+                    this.$refs['txt_edit_category'].blur();
+                }
+            }
+        },
+        methods: {
             cancelEditCategoryName: function () {
                 this.newCategoryName = this.currentCategory.category_name;
                 this.editingCategoryName = false;

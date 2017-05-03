@@ -7,11 +7,14 @@
             </th>
             <th class="category-th">
                 <a class="text-muted category-name-link" href="#" v-text="category.category_name" v-show="!editingCategoryName"></a>
-                <edit-category :editing-category="category" @edited-category="editedCategory" @edit-category-name="goingToEditCategoryName"
+                <edit-category :editing-category="category" :going-to-edit-category-name="editingCategoryName" @edited-category="editedCategory"
                                @cancel-edit-category-name="cancelEditCategoryName"></edit-category>
             </th>
 
             <th class="text-right action-cell category-th">
+                <a href="#" class="btn-action btn-edit" title="edit" @click.prevent="onClickEditCategory" v-if="!editingCategoryName">
+                    <i class="fa fa-pencil"></i>
+                </a>
                 <a href="#" class="btn-action btn-chart" title="chart">
                     <i class="fa fa-line-chart"></i>
                 </a>
@@ -120,7 +123,7 @@
             }
         },
         methods: {
-            loadProducts: function () {
+            loadProducts() {
                 axios.get('/product', this.loadProductsRequestData).then(response => {
                     if (response.data.status == true) {
                         this.products = response.data.products;
@@ -129,50 +132,50 @@
                     console.info(error.response);
                 })
             },
-            reloadProducts: function () {
+            reloadProducts() {
                 this.loadProducts();
                 this.loadUser();
             },
-            addedProduct: function () {
+            addedProduct() {
                 this.setCategoryCollapseStatus(false);
                 this.reloadProducts();
             },
-            goingToEditCategoryName: function () {
+            goingToEditCategoryName() {
                 this.editingCategoryName = true;
             },
-            cancelEditCategoryName: function () {
+            cancelEditCategoryName() {
                 this.editingCategoryName = false;
             },
-            reloadCategories: function () {
+            reloadCategories() {
                 this.$emit('reload-categories');
             },
-            editedCategory: function () {
+            editedCategory() {
                 this.editingCategoryName = false;
                 this.reloadCategories();
             },
-            toggleCategoryCollapse: function () {
+            toggleCategoryCollapse() {
                 this.$store.dispatch(TOGGLE_COLLAPSE_CATEGORY, {
                     category_id: this.category.id
                 });
             },
-            setCategoryCollapseStatus: function (status) {
+            setCategoryCollapseStatus(status) {
                 this.$store.dispatch(SET_CATEGORY_COLLAPSE_STATUS, {
                     category_id: this.category.id,
                     status: status
                 });
             },
             /*delete category*/
-            onClickDeleteCategory: function () {
+            onClickDeleteCategory() {
                 this.deleteParams.active = true;
             },
-            cancelDelete: function () {
+            cancelDelete() {
                 this.deleteParams.active = false;
             },
-            confirmDelete: function () {
+            confirmDelete() {
                 this.deleteParams.active = false;
                 this.deleteCategory()
             },
-            deleteCategory: function () {
+            deleteCategory() {
                 this.isDeletingCategory = true;
                 axios.delete(this.category.urls.delete).then(response => {
                     this.isDeletingCategory = false;
@@ -183,8 +186,11 @@
                     this.isDeletingCategory = false;
                 })
             },
-            loadUser: function () {
+            loadUser() {
                 this.$store.dispatch(LOAD_USER);
+            },
+            onClickEditCategory() {
+                this.editingCategoryName = true;
             }
         },
         computed: {

@@ -101,8 +101,10 @@
                 }
                 let categoryPromise = setTimeout(() => {
                     this.isSearchingCategories = true;
+                    this.txtSearchProductReference.blur();
                     this.loadCategories(() => {
                         this.isSearchingCategories = false;
+                        this.txtSearchProductReference.focus();
                         this.$store.dispatch(CLEAR_CATEGORY_SEARCH_PROMISE);
                     });
                 }, 1000);
@@ -192,6 +194,9 @@
                         key: this.$store.getters.productSearchTerm,
                     }
                 }
+            },
+            txtSearchProductReference(){
+                return this.$store.getters.refTxtSearchProduct;
             },
         }
     }

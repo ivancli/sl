@@ -22,3 +22,5 @@ export const SET_CATEGORY_SEARCH_PROMISE = 'setCategorySearchPromise';
 export const CLEAR_CATEGORY_SEARCH_PROMISE = 'clearCategorySearchPromise';
 export const SET_PRODUCT_SEARCH_PROMISE = 'setProductSearchPromise';
 export const CLEAR_PRODUCT_SEARCH_PROMISE = 'clearProductSearchPromise';
+export const SET_SEARCH_PRODUCT_REFERENCE = 'setSearchProductReference';
+export const CLEAR_SEARCH_PRODUCT_REFERENCE = 'clearSearchProductReference';

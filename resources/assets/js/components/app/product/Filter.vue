@@ -1,14 +1,16 @@
 <template>
     <form class="navbar-form navbar-left" role="search">
         <div class="form-group">
-            <input type="text" class="form-control general-search-input" placeholder="SEARCH" @input.prevent="setProductSearchTerm" v-model="productSearchTerm">
+            <input type="text" class="form-control general-search-input" placeholder="SEARCH"
+                   @input.prevent="setProductSearchTerm" v-model="productSearchTerm" ref="txt_search_product">
         </div>
     </form>
 </template>
 
 <script>
     import {
-        SET_PRODUCT_SEARCH_TERM
+        SET_PRODUCT_SEARCH_TERM,
+        SET_SEARCH_PRODUCT_REFERENCE,
     } from '../../../actions/action-types';
 
     export default {
@@ -18,12 +20,18 @@
             }
         },
         mounted() {
-            console.info('Filter component mounted.')
+            console.info('Filter component mounted.');
+            this.setTxtSearchProductReference();
         },
         methods: {
             setProductSearchTerm(){
                 this.$store.dispatch(SET_PRODUCT_SEARCH_TERM, {
                     product_search_term: this.productSearchTerm
+                });
+            },
+            setTxtSearchProductReference(){
+                this.$store.dispatch(SET_SEARCH_PRODUCT_REFERENCE, {
+                    txt_search_product: this.$refs['txt_search_product']
                 });
             }
         }
