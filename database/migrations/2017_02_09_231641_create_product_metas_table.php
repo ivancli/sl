@@ -21,6 +21,7 @@ class CreateProductMetasTable extends Migration
             $table->string('sku')->nullable();
             $table->string('brand')->nullable();
             $table->string('supplier')->nullable();
+            $table->float('cost_price')->nullable();
             $table->timestamps();
         });
     }

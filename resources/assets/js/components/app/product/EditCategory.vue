@@ -1,16 +1,18 @@
 <template>
     <div class="edit-category-wrapper">
-        <div class="input-group sl-input-group" v-show="editingCategoryName">
-            <input type="text" placeholder="Category Name" autocomplete="off" v-model="newCategoryName" class="form-control sl-form-control category-name" ref="txt_edit_category" tabindex="-1">
-            <span class="input-group-btn">
-                <button class="btn btn-primary btn-flat" @click.prevent="editCategory">
-                    <i class="fa fa-check"></i>
-                </button>
-                <button class="btn btn-default btn-flat" @click.prevent="cancelEditCategoryName">
-                    <i class="fa fa-times"></i>
-                </button>
-            </span>
-        </div>
+        <form>
+            <div class="input-group sl-input-group" v-show="editingCategoryName">
+                <input type="text" placeholder="Category Name" autocomplete="off" v-model="newCategoryName" class="form-control sl-form-control category-name" ref="txt_edit_category" tabindex="-1">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary btn-flat" @click.prevent="editCategory">
+                        <i class="fa fa-check"></i>
+                    </button>
+                    <button class="btn btn-default btn-flat" @click.prevent="cancelEditCategoryName">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </span>
+            </div>
+        </form>
         <error-modal :modal-errors="errors" @hideErrorModal="clearErrors"></error-modal>
     </div>
 </template>
@@ -38,7 +40,7 @@
             this.newCategoryName = this.currentCategory.category_name;
             console.info('Edit Category component mounted');
         },
-        watch:{
+        watch: {
             goingToEditCategoryName(val){
                 this.editingCategoryName = val;
                 if (val == true) {
@@ -67,13 +69,13 @@
 
                 this.isEditingCategory = true;
                 this.errors = {};
-                axios.put('/category/' + this.currentCategory.id, this.editCategoryData).then(response=> {
+                axios.put('/category/' + this.currentCategory.id, this.editCategoryData).then(response => {
                     this.isEditingCategory = false;
                     if (response.data.status == true) {
                         this.editingCategoryName = false;
                     }
                     this.$emit('edited-category');
-                }).catch(error=> {
+                }).catch(error => {
                     this.isEditingCategory = false;
                     if (error.response && error.response.status == 422 && error.response.data) {
                         this.errors = error.response.data;

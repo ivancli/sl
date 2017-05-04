@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProductMeta extends Model
 {
     protected $fillable = [
-        'sku', 'brand', 'supplier'
+        'sku', 'brand', 'supplier', 'cost_price'
     ];
 
     /**

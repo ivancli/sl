@@ -156,6 +156,11 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'meta.brand' => 'product brand name',
+        'meta.supplier' => 'product supplier name',
+        'meta.sku' => 'product SKU',
+        'meta.cost_price' => 'product cost price',
+    ],
 
 ];

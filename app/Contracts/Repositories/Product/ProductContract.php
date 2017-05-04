@@ -55,4 +55,12 @@ interface ProductContract
      * @return mixed
      */
     public function destroy(Product $product);
+
+    /**
+     * Update product meta data
+     * @param Product $product
+     * @param array $data
+     * @return mixed
+     */
+    public function updateMeta(Product $product, array $data);
 }

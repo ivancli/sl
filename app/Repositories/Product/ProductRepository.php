@@ -11,6 +11,7 @@ namespace App\Repositories\Product;
 
 use App\Contracts\Repositories\Product\ProductContract;
 use App\Models\Product;
+use App\Models\ProductMeta;
 use App\Models\User;
 
 class ProductRepository implements ProductContract
@@ -91,5 +92,21 @@ class ProductRepository implements ProductContract
     public function destroy(Product $product)
     {
         return $product->delete();
+    }
+
+    /**
+     * Update product meta data
+     * @param Product $product
+     * @param array $data
+     * @return mixed
+     */
+    public function updateMeta(Product $product, array $data)
+    {
+        $meta = $product->meta;
+        if (is_null($meta)) {
+            $meta = $product->meta()->save(new ProductMeta);
+        }
+        $meta->update($data);
+        return $meta;
     }
 }

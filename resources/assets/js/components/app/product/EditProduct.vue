@@ -1,16 +1,53 @@
 <template>
     <div class="edit-category-wrapper">
-        <form>
-            <div class="input-group sl-input-group" v-show="editingProductAttributes">
-                <input type="text" placeholder="Product Name" autocomplete="off" v-model="newProductName" class="form-control sl-form-control product-name" ref="txt_edit_product" tabindex="-1">
-                <span class="input-group-btn">
-                    <button class="btn btn-primary btn-flat" @click.prevent="editProduct">
-                        <i class="fa fa-check"></i>
-                    </button>
-                    <button class="btn btn-default btn-flat" @click.prevent="cancelEditProductName">
+        <form class="form-horizontal form-sl-horizontal">
+            <input type="text" autocomplete="off" class="form-control txt-item txt-product-name" ref="txt_new_product" tabindex="=-1" v-model="newProductName"
+                   placeholder="Enter a product name">
+
+            <div class="form-group">
+                <label class="control-label col-sm-3">Brand</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control txt-product-meta" v-model="brand">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">Supplier</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control txt-product-meta" v-model="supplier">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">SKU</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control txt-product-meta" v-model="sku">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">Cost price</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control txt-product-meta" v-model="costPrice">
+                </div>
+            </div>
+
+
+            <div class="buttons text-right">
+                <button class="btn btn-primary btn-flat btn-sm" @click.prevent="addProduct">
+                    <span class="hidden-sm hidden-xs">
+                        CONFIRM
+                    </span>
+                    <span class="visible-sm visible-xs">
+                        <i class="fa fa-plus"></i>
+                    </span>
+                </button>
+                &nbsp;&nbsp;
+                <button class="btn btn-default btn-flat btn-cancel-add-product btn-sm" @click.prevent="cancelAddProduct">
+                    <span class="hidden-sm hidden-xs">
+                        CANCEL
+                    </span>
+                    <span class="visible-sm visible-xs">
                         <i class="fa fa-times"></i>
-                    </button>
-                </span>
+                    </span>
+                </button>
             </div>
         </form>
         <error-modal :modal-errors="errors" @hideErrorModal="clearErrors"></error-modal>
@@ -32,6 +69,10 @@
             return {
                 editingProductAttributes: false, //determine visibility of panel
                 newProductName: '', //product name input value
+                brand: '',
+                supplier: '',
+                sku: '',
+                costPrice: '',
                 isEditingProduct: false, //promise of form submission,
                 errors: {},
             }

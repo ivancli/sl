@@ -81,6 +81,11 @@ class ProductService
             $category = $this->categoryRepo->get(array_get($data, 'category_id'));
             $category->products()->save($product);
         }
+
+        if (array_has($data, 'meta')) {
+            $this->productRepo->updateMeta($product, array_get($data, 'meta'));
+        }
+
         return $product;
     }
 
@@ -95,6 +100,11 @@ class ProductService
         $data = array_set($data, 'id', $product->getKey());
         $this->updateValidator->validate($data);
         $product = $this->productRepo->update($product, $data);
+
+        if (array_has($data, 'meta')) {
+            $this->productRepo->updateMeta($product, array_get($data, 'meta'));
+        }
+
         return $product;
     }
 

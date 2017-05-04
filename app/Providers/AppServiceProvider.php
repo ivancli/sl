@@ -5,11 +5,15 @@ namespace App\Providers;
 use App\Models\Category;
 use App\Models\Crawler;
 use App\Models\Item;
+use App\Models\Product;
+use App\Models\Site;
 use App\Models\Url;
 use App\Models\User;
 use App\Observers\CategoryObserver;
 use App\Observers\CrawlerObserver;
 use App\Observers\ItemObserver;
+use App\Observers\ProductObserver;
+use App\Observers\SiteObserver;
 use App\Observers\UrlObserver;
 use App\Observers\UserObserver;
 use Illuminate\Support\ServiceProvider;
@@ -25,6 +29,8 @@ class AppServiceProvider extends ServiceProvider
     {
         User::observe(UserObserver::class);
         Category::observe(CategoryObserver::class);
+        Product::observe(ProductObserver::class);
+        Site::observe(SiteObserver::class);
         Url::observe(UrlObserver::class);
         Item::observe(ItemObserver::class);
         Crawler::observe(CrawlerObserver::class);

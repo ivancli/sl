@@ -22,7 +22,7 @@ class StoreValidator extends ValidatorAbstract
      */
     public function validate(array $data, $throw = true)
     {
-        $this->validator->extendImplicit('unique_per_category',  function ($message, $value, $parameters)  use ($data){
+        $this->validator->extendImplicit('unique_per_category', function ($message, $value, $parameters) use ($data) {
             $builder = auth()->user()->products();
             if (isset($data['category_id'])) {
                 $builder->where('category_id', $data['category_id']);
@@ -42,7 +42,11 @@ class StoreValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return [
-            'product_name' => 'required|max:255|unique_per_category'
+            'product_name' => 'required|max:255|unique_per_category',
+            'meta.brand' => 'max:255',
+            'meta.supplier' => 'max:255',
+            'meta.sku' => 'max:255',
+            'meta.cost_price' => 'numeric|nullable',
         ];
     }
 }

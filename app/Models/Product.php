@@ -14,6 +14,10 @@ class Product extends Model
         'owner', 'numberOfSites', 'urls',
     ];
 
+    protected $with = [
+        'meta'
+    ];
+
     /**
      * relationship with user
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -39,6 +43,15 @@ class Product extends Model
     public function sites()
     {
         return $this->hasMany('App\Models\Site', 'product_id', 'id');
+    }
+
+    /**
+     * relationship with product meta
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function meta()
+    {
+        return $this->hasOne('App\Models\ProductMeta', 'product_id', 'id');
     }
 
     /*----------------------------------------------------------------------*/

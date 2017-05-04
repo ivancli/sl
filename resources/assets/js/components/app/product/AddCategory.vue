@@ -10,19 +10,19 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <form>
-                                <input type="text" autocomplete="off" class="form-control txt-item" placeholder="Enter a category name here" v-model="newCategoryName" ref="txt_new_category"
+                                <input type="text" autocomplete="off" class="form-control txt-item input-sm" placeholder="Enter a category name" v-model="newCategoryName" ref="txt_new_category"
                                        tabindex="-1">
                                 <div class="buttons">
-                                    <button class="btn btn-primary btn-flat" @click.prevent="addCategory">
+                                    <button class="btn btn-primary btn-flat btn-sm" @click.prevent="addCategory">
                                         <span class="hidden-sm hidden-xs">
-                                            ADD CATEGORY
+                                            CONFIRM
                                         </span>
                                         <span class="visible-sm visible-xs">
                                             <i class="fa fa-plus"></i>
                                         </span>
                                     </button>
                                     &nbsp;&nbsp;
-                                    <button class="btn btn-default btn-flat" @click.prevent="cancelAddCategory">
+                                    <button class="btn btn-default btn-flat btn-sm" @click.prevent="cancelAddCategory">
                                         <span class="hidden-sm hidden-xs">
                                             CANCEL
                                         </span>
@@ -62,7 +62,7 @@
         methods: {
             goingToAddCategory: function () {
                 this.addingCategory = true;
-                setTimeout(()=> {
+                setTimeout(() => {
                     this.$refs['txt_new_category'].focus();
                 }, 10)
             },
@@ -75,14 +75,14 @@
                 this.$refs['txt_new_category'].blur();
                 this.isAddingCategory = true;
                 this.errors = {};
-                axios.post('/category', this.addCategoryData).then(response=> {
+                axios.post('/category', this.addCategoryData).then(response => {
                     this.isAddingCategory = false;
                     if (response.data.status == true) {
                         this.addingCategory = false;
                     }
                     this.clearNewCategoryname();
                     this.$emit('added-category');
-                }).catch(error=> {
+                }).catch(error => {
                     this.isAddingCategory = false;
                     if (error.response && error.response.status == 422 && error.response.data) {
                         this.errors = error.response.data;
@@ -107,60 +107,65 @@
 </script>
 
 <style>
-    .add-item-block {
+    .add-category-container {
         border: 2px dashed lightgrey;
         border-radius: 5px;
         margin-top: 10px;
         margin-bottom: 10px;
         color: #777;
         font-weight: bold;
-        height: 65px;
         cursor: pointer;
     }
 
-    .add-item-block .add-item-label, .add-item-block .upgrade-for-add-item-controls {
+    .add-category-container {
+        width: 415px;
+        max-width: 100%;
+        height: 60px;
+    }
+
+    .add-category-container .add-item-label, .add-category-container .upgrade-for-add-item-controls {
         padding: 19px 19px 19px 50px;
     }
 
-    .add-item-block i.label-icon {
+    .add-category-container i.label-icon {
         font-size: 25px;
         vertical-align: middle;
     }
 
-    .add-item-block span.add-item-text {
+    .add-category-container span.add-item-text {
         font-size: 14px;
         vertical-align: middle;
     }
 
-    .add-item-block .add-item-controls {
+    .add-category-container .add-item-controls {
         background-color: #fff;
         padding: 13px;
     }
 
-    .add-item-block .add-item-controls .buttons {
+    .add-category-container .add-item-controls .buttons {
         position: absolute;
         right: 20px;
         top: 0;
     }
 
-    .add-item-block .add-item-controls input {
+    .add-category-container .add-item-controls input {
         font-size: 18px;
-        padding-right: 250px;
+        padding-right: 175px;
     }
 
     @media (max-width: 991px) {
-        .add-item-block .add-item-controls input {
+        .add-category-container .add-item-controls input {
             padding-right: 100px;
         }
     }
 
-    .add-item-block .txt-item {
+    .add-category-container .txt-item {
         border: none;
     }
 
     @media (min-width: 768px) {
-        .add-item-block .add-item-controls {
-            padding-left: 50px;
+        .add-category-container .add-item-controls {
+            padding-left: 15px;
         }
     }
 </style>

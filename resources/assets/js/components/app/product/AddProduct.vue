@@ -7,20 +7,47 @@
         <div class="add-item-controls" v-show="addingProduct">
             <div class="row">
                 <div class="col-sm-12">
-                    <form>
+                    <form class="form-horizontal form-sl-horizontal">
                         <input type="text" autocomplete="off" class="form-control txt-item txt-product-name" ref="txt_new_product" tabindex="=-1" v-model="newProductName"
-                               placeholder="Enter a product name here">
-                        <div class="buttons">
-                            <button class="btn btn-primary btn-flat" @click.prevent="addProduct">
+                               placeholder="Enter a product name">
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">Brand</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control txt-product-meta" v-model="brand">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">Supplier</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control txt-product-meta" v-model="supplier">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">SKU</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control txt-product-meta" v-model="sku">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">Cost price</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control txt-product-meta" v-model="costPrice">
+                            </div>
+                        </div>
+
+
+                        <div class="buttons text-right">
+                            <button class="btn btn-primary btn-flat btn-sm" @click.prevent="addProduct">
                                 <span class="hidden-sm hidden-xs">
-                                    ADD PRODUCT
+                                    CONFIRM
                                 </span>
                                 <span class="visible-sm visible-xs">
                                     <i class="fa fa-plus"></i>
                                 </span>
                             </button>
                             &nbsp;&nbsp;
-                            <button class="btn btn-default btn-flat btn-cancel-add-product" @click.prevent="cancelAddProduct">
+                            <button class="btn btn-default btn-flat btn-cancel-add-product btn-sm" @click.prevent="cancelAddProduct">
                                 <span class="hidden-sm hidden-xs">
                                     CANCEL
                                 </span>
@@ -29,6 +56,8 @@
                                 </span>
                             </button>
                         </div>
+
+
                     </form>
                 </div>
             </div>
@@ -54,6 +83,10 @@
             return {
                 addingProduct: false, //determine visibility of panel
                 newProductName: '', //product name input value
+                brand: '',
+                supplier: '',
+                sku: '',
+                costPrice: '',
                 isAddingProduct: false, //promise of form submission,
                 errors: {},
             }
@@ -61,27 +94,27 @@
         methods: {
             goingToAddProduct: function () {
                 this.addingProduct = true;
-                setTimeout(()=> {
+                setTimeout(() => {
                     this.$refs['txt_new_product'].focus();
                 }, 10)
             },
             cancelAddProduct: function () {
                 this.addingProduct = false;
-                this.clearNewProductName();
+                this.clearNewProductForm();
                 this.$refs['txt_new_product'].blur();
             },
             addProduct: function () {
                 this.$refs['txt_new_product'].blur();
                 this.isAddingProduct = true;
                 this.errors = {};
-                axios.post('/product', this.addProductData).then(response=> {
+                axios.post('/product', this.addProductData).then(response => {
                     this.isAddingProduct = false;
                     if (response.data.status == true) {
                         this.addingProduct = false;
                     }
-                    this.clearNewProductName();
+                    this.clearNewProductForm();
                     this.$emit('added-product');
-                }).catch(error=> {
+                }).catch(error => {
                     this.isAddingProduct = false;
                     if (error.response && error.response.status == 422 && error.response.data) {
                         this.errors = error.response.data;
@@ -91,15 +124,25 @@
             clearErrors: function () {
                 this.errors = {};
             },
-            clearNewProductName: function () {
+            clearNewProductForm: function () {
                 this.newProductName = '';
+                this.brand = '';
+                this.supplier = '';
+                this.sku = '';
+                this.costPrice = '';
             }
         },
         computed: {
             addProductData: function () {
                 return {
+                    category_id: this.category.id,
                     product_name: this.newProductName,
-                    category_id: this.category.id
+                    meta: {
+                        brand: this.brand,
+                        supplier: larathis.supplier,
+                        sku: this.sku,
+                        cost_price: this.costPrice,
+                    },
                 };
             }
         }
@@ -107,60 +150,69 @@
 </script>
 
 <style>
-    .add-item-block {
+    .add-product-container {
         border: 2px dashed lightgrey;
         border-radius: 5px;
         margin-top: 10px;
         margin-bottom: 10px;
         color: #777;
         font-weight: bold;
-        height: 65px;
         cursor: pointer;
+        width: 415px;
+        max-width: 100%;
     }
 
-    .add-item-block .add-item-label, .add-item-block .upgrade-for-add-item-controls {
+    .add-product-container .txt-item.txt-product-name {
+        border: none;
+        border-bottom: 1px solid #7ed0c0;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-bottom: 15px;
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+
+    .add-product-container .txt-product-meta {
+        border: none;
+        border-bottom: 1px solid #73d0c0;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+        font-size: 15px;
+        font-weight: normal;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .add-product-container .add-item-label, .add-product-container .upgrade-for-add-item-controls {
         padding: 19px 19px 19px 50px;
     }
 
-    .add-item-block i.label-icon {
+    .add-product-container i.label-icon {
         font-size: 25px;
         vertical-align: middle;
     }
 
-    .add-item-block span.add-item-text {
+    .add-product-container span.add-item-text {
         font-size: 14px;
         vertical-align: baseline;
     }
 
-    .add-item-block .add-item-controls {
+    .add-product-container .add-item-controls {
         background-color: #fff;
         padding: 13px;
     }
 
-    .add-item-block .add-item-controls .buttons {
-        position: absolute;
-        right: 20px;
-        top: 0;
-    }
-
-    .add-item-block .add-item-controls input {
-        font-size: 18px;
-        padding-right: 250px;
-    }
-
     @media (max-width: 991px) {
-        .add-item-block .add-item-controls input {
+        .add-product-container .add-item-controls input {
             padding-right: 100px;
         }
     }
 
-    .add-item-block .txt-item {
-        border: none;
-    }
-
     @media (min-width: 768px) {
-        .add-item-block .add-item-controls {
-            padding-left: 50px;
+        .add-product-container .add-item-controls {
+            padding-left: 25px;
+            padding-right: 25px;
         }
     }
 </style>
