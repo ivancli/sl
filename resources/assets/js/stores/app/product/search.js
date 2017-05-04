@@ -17,7 +17,7 @@ export default{
     state: {
         productSearchTerm: '',
         categorySearchPromise: null,
-        productSearchPromise: [],
+        productSearchPromise: {},
         refTxtSearchProduct: null,
     },
     mutations: {
@@ -31,7 +31,7 @@ export default{
             state.categorySearchPromise = null;
         },
         [SET_PRODUCT_SEARCH_PROMISE] (state, params){
-            Vue.set(state.productSearchPromise, params.product_id, params.productSearchPromise);
+            Vue.set(state.productSearchPromise, params.product_id, params.product_search_promise);
         },
         [CLEAR_PRODUCT_SEARCH_PROMISE] (state, params){
             Vue.set(state.productSearchPromise, params.product_id, null);

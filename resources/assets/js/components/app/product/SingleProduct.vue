@@ -7,9 +7,8 @@
                     <i class="fa fa-tag"></i>
                 </a>
             </th>
-            <th class="product-th">
-                <a class="text-muted product-name-link" href="#" v-text="product.product_name"
-                   v-show="!editingProduct"></a>
+            <th class="product-th product-name-container">
+                <a class="text-muted product-name-link" href="#" v-text="product.product_name" v-show="!editingProduct"></a>
                 <edit-product :editing-product="product" :going-to-edit-product="editingProduct" @edited-product="editedProduct" @cancel-edit-product-name="cancelEditProductName"></edit-product>
             </th>
             <th class="text-right action-cell product-th">
@@ -26,11 +25,12 @@
                     <i class="glyphicon glyphicon-trash"></i>
                 </a>
             </th>
-            <th class="text-center vertical-align-middle product-collapse-cell" width="70"
-                @click.prevent="toggleProductCollapse">
-                <a class="text-muted btn-collapse" :class="isProductCollapsed ? 'collapsed' : ''">
-                    <i class="fa fa-angle-up"></i>
-                </a>
+            <th class="text-center vertical-align-middle product-collapse-cell" width="70">
+                <div @click.prevent="toggleProductCollapse">
+                    <a class="text-muted btn-collapse" :class="isProductCollapsed ? 'collapsed' : ''">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
             </th>
         </tr>
         </thead>
@@ -97,7 +97,7 @@
     import deleteConfirmation from '../../fragments/modals/DeleteConfirmation.vue';
 
     import {
-        LOAD_USER
+        LOAD_USER, CLEAR_PRODUCT_SEARCH_PROMISE
     } from '../../../actions/action-types';
 
     export default {
@@ -133,9 +133,12 @@
                 justAddedSite: null,
             }
         },
-        watch:{
-            productSearchTerm(){
-//                this.loadSites();
+        watch: {
+            productSearchPromise(val){
+                if (val == true) {
+                    this.clearProductSearchPromise();
+                    this.reloadSites();
+                }
             }
         },
         methods: {
@@ -210,7 +213,12 @@
             },
             onClickEditProduct(){
                 this.editingProduct = true;
-            }
+            },
+            clearProductSearchPromise(){
+                this.$store.dispatch(CLEAR_PRODUCT_SEARCH_PROMISE, {
+                    product_id: this.product.id
+                });
+            },
         },
         computed: {
             product(){
@@ -244,12 +252,24 @@
             },
             productSearchTerm(){
                 return this.$store.getters.productSearchTerm;
+            },
+            productSearchPromise(){
+                return this.$store.getters.productSearchPromise[this.product.id] == true;
             }
         }
     }
 </script>
 
 <style>
+    .product-wrapper th.product-th {
+        vertical-align: top;
+        padding-top: 20px;
+    }
+
+    .product-wrapper th.product-th.product-name-container {
+        padding-top: 10px;
+    }
+
     .btn-collapse i.fa-angle-up {
         transform: rotate(-360deg);
         -moz-transform: rotate(-360deg);
@@ -263,11 +283,16 @@
         -webkit-transition: -webkit-transform 550ms ease;
     }
 
-    .product-collapse-cell {
+    .product-wrapper th.product-collapse-cell {
+        padding: 0;
+    }
+
+    .product-collapse-cell div {
+        cursor: pointer;
         background-color: #e8e8e8;
+        height: 65px;
         padding-top: 10px;
         padding-bottom: 10px;
-        cursor: pointer;
     }
 
     .product-collapse-cell .btn-collapse {
@@ -309,10 +334,6 @@
 
     .collapsible-category-div table.product-wrapper > thead > tr > th:first-child, .collapsible-category-div table.product-wrapper > tbody > tr > td:first-child {
         padding-left: 15px !important;
-    }
-
-    .collapsible-category-div table.product-wrapper thead tr:first-child th {
-        padding-top: 10px;
     }
 
     tr.empty-message-row td {

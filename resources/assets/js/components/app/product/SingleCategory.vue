@@ -45,12 +45,6 @@
                 </div>
             </th>
         </tr>
-        <!--<tr>-->
-        <!--<th></th>-->
-        <!--<th colspan="3" class="category-th action-cell add-item-cell">-->
-        <!--<add-product :category="category" @added-product="addedProduct"></add-product>-->
-        <!--</th>-->
-        <!--</tr>-->
         </thead>
         <tbody>
         <tr>
@@ -79,7 +73,7 @@
     import deleteConfirmation from '../../fragments/modals/DeleteConfirmation.vue';
 
     import {
-        SET_CATEGORY_COLLAPSE_STATUS, TOGGLE_COLLAPSE_CATEGORY, LOAD_USER
+        SET_CATEGORY_COLLAPSE_STATUS, TOGGLE_COLLAPSE_CATEGORY, LOAD_USER, SET_PRODUCT_SEARCH_PROMISE
     } from '../../../actions/action-types';
 
     export default {
@@ -118,15 +112,25 @@
         watch: {
             categorySearchPromise(){
                 if (this.categorySearchPromise == null) {
-                    this.loadProducts();
+                    this.loadProducts(() => {
+                        this.products.forEach((product) => {
+                            this.$store.dispatch(SET_PRODUCT_SEARCH_PROMISE, {
+                                product_id: product.id,
+                                product_search_promise: true
+                            });
+                        })
+                    });
                 }
             }
         },
         methods: {
-            loadProducts() {
+            loadProducts(callback) {
                 axios.get('/product', this.loadProductsRequestData).then(response => {
                     if (response.data.status == true) {
                         this.products = response.data.products;
+                        if (typeof callback == 'function') {
+                            callback();
+                        }
                     }
                 }).catch(error => {
                     console.info(error.response);
@@ -228,7 +232,7 @@
 </script>
 
 <style>
-    .category-th, .product-th {
+    .category-th {
         vertical-align: middle !important;
         height: 40px !important;
     }

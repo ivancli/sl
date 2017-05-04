@@ -1,21 +1,10 @@
 <template>
     <!-- Main content -->
     <section class="content">
-        <p class="text-muted f-s-17">
-            You can set up all Categories and Products you want to keep an eye on and SpotLite will update the prices
-            for you automatically. Simply add a Category name, then a Product name. Now all you have to do is copy and
-            paste the Product Page URLs of the prices you want to track on the Product Page URL field within each
-            Product section, as shown below.
-        </p>
-        <p class="text-muted m-b-20">
-            Note: you can find the Product Page URLs on your competitors' website, usually on the product details page
-            or where the pricing is located within their website.
-        </p>
-
         <div class="box box-solid">
             <div class="box-body p-20">
                 <div class="row m-b-20">
-                    <div class="col-md-8">
+                    <div class="col-md-12">
                         <div class="text-muted f-w-bold l-h-30" v-if="user.subscription">
                             {{ subscriptionPlan.name }} Plan:
                             &nbsp;&nbsp;&nbsp;&nbsp;
@@ -31,23 +20,13 @@
                             products
                         </div>
                     </div>
-                    <div class="col-md-4 text-right">
-                        <a href="#" class="btn btn-purple btn-flat" v-if="hasCategories">
-                            <i class="fa fa-bell-o"></i>
-                            &nbsp;
-                            SET UP ALERT
-                        </a>
-                    </div>
                 </div>
                 <div class="row m-b-10">
-                    <div class="col-sm-12">
+                    <div class="col-md-8">
                         <add-category @added-category="reloadCategories"></add-category>
                     </div>
-                </div>
-                <div class="row m-b-20" v-if="hasCategories">
-                    <div class="col-sm-12 text-right">
-                        <a href="#" class="text-muted btn-collapse-all" @click.prevent="toggleAllCategories"
-                           v-text="shouldExpandAll ? 'Expand All' : 'Collapse All'"></a>
+                    <div class="col-md-4 text-right" v-if="hasCategories">
+                        <a href="#" class="text-muted btn-collapse-all" @click.prevent="toggleAllCategories" v-text="shouldExpandAll ? 'Expand All' : 'Collapse All'"></a>
                     </div>
                 </div>
                 <div class="row">

@@ -139,7 +139,7 @@
                     product_name: this.newProductName,
                     meta: {
                         brand: this.brand,
-                        supplier: larathis.supplier,
+                        supplier: this.supplier,
                         sku: this.sku,
                         cost_price: this.costPrice,
                     },
