@@ -1,15 +1,7 @@
 <template>
-    <div class="edit-category-wrapper">
-        <div class="btn-edit btn-edit-site pull-right" @click.prevent="goingToEditSiteURL" v-show="!editingSiteURL">
-            <div class="btn-edit-align-middle">
-                <span class="hidden-xs hidden-sm">Edit &nbsp;</span>
-                <i class="fa fa-pencil-square-o"></i>
-            </div>
-        </div>
-
-        <div class="input-group sl-input-group" v-show="editingSiteURL">
-            <input type="text" placeholder="Product Page URL" v-model="newSiteURL" autocomplete="off"
-                   class="form-control sl-form-control txt-edit-site-url input-sm" ref="txt_edit_site" tabindex="-1">
+    <div class="edit-category-wrapper" v-show="goingToEditSite">
+        <div class="input-group sl-input-group">
+            <input type="text" placeholder="Product Page URL" v-model="newSiteURL" autocomplete="off" class="form-control sl-form-control txt-edit-site-url input-sm" ref="txt_edit_site" tabindex="-1">
             <span class="input-group-btn input-group-sm">
                 <button class="btn btn-primary btn-flat btn-sm" @click.prevent="editSite">
                     <i class="fa fa-check"></i>
@@ -19,7 +11,6 @@
                 </button>
             </span>
         </div>
-
         <error-modal :modal-errors="errors" @hideErrorModal="clearErrors"></error-modal>
     </div>
 </template>
@@ -32,7 +23,8 @@
             errorModal
         },
         props: [
-            'editing-site'
+            'editing-site',
+            'going-to-edit-site'
         ],
         data() {
             return {
@@ -46,14 +38,17 @@
             this.newSiteURL = this.currentSite.siteUrl;
             console.info('Edit Site component mounted');
         },
-        methods: {
-            goingToEditSiteURL: function () {
-                this.editingSiteURL = true;
-                setTimeout(()=> {
+        watch: {
+            goingToEditSite(val){
+                this.editingSiteURL = val;
+                if (val == true) {
                     this.$refs['txt_edit_site'].focus();
-                }, 10);
-                this.$emit('edit-site-url');
-            },
+                } else {
+                    this.$refs['txt_edit_site'].blur();
+                }
+            }
+        },
+        methods: {
             cancelEditSiteURL: function () {
                 this.newSiteURL = this.currentSite.siteUrl;
                 this.editingSiteURL = false;
@@ -72,13 +67,13 @@
 
                 this.isEditingSite = true;
                 this.clearErrors();
-                axios.put('/site/' + this.currentSite.id, this.editSiteData).then(response=> {
+                axios.put('/site/' + this.currentSite.id, this.editSiteData).then(response => {
                     this.isEditingSite = false;
                     if (response.data.status == true) {
                         this.editingSiteURL = false;
                     }
                     this.$emit('edited-site');
-                }).catch(error=> {
+                }).catch(error => {
                     this.isEditingSite = false;
                     if (error.response && error.response.status == 422 && error.response.data) {
                         this.errors = error.response.data;

@@ -45,7 +45,7 @@ class ProfileService
      */
     public function getUserById($user_id)
     {
-        $user = $this->userRepo->get($user_id);
+        $user = $this->userRepo->get($user_id, true, ['subscription']);
         return $user;
     }
 

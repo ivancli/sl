@@ -38,7 +38,7 @@
     import crawlParseResultPopup from './CrawlParseResultPopup.vue';
 
     import deleteConfirmation from '../../../fragments/modals/DeleteConfirmation.vue';
-    import loading from '../../../Loading.vue';
+    import loading from '../../../fragments/loading/Loading.vue';
 
     import formatDateTime from '../../../../filters/formatDateTime';
 

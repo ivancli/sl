@@ -11,6 +11,7 @@ namespace App\Listeners\Auth;
 
 use App\Jobs\Log\UserActivity;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 
 class AuthenticationEventSubscriber
@@ -33,7 +34,7 @@ class AuthenticationEventSubscriber
 
     public function onAuthLockout($event)
     {
-
+        /*TODO log IP and requested email address*/
     }
 
     public function onAuthLogin($event)
@@ -41,7 +42,7 @@ class AuthenticationEventSubscriber
         $user = $event->user;
 
         $activity = "User -- {$user->fullName} -- Signed In";
-        $this->dispatchUserActivityLog($activity);
+        $this->dispatchUserActivityLog($activity, $user);
 
         if (!is_null($user->subscription)) {
             Cache::forget("chargify.subscriptions.{$user->subscription->api_subscription_id}");
@@ -50,8 +51,10 @@ class AuthenticationEventSubscriber
 
     public function onAuthLogout($event)
     {
+        $user = $event->user;
 
-
+        $activity = "User -- {$user->fullName} -- Logged Out";
+        $this->dispatchUserActivityLog($activity, $user);
     }
 
     public function onAuthRegistered($event)
@@ -59,16 +62,11 @@ class AuthenticationEventSubscriber
         $user = $event->user;
 
         $activity = "User -- {$user->fullName} -- Signed Up";
-        $this->dispatchUserActivityLog($activity);
+        $this->dispatchUserActivityLog($activity, $user);
 
         /* assign registered users to client role */
         $client = Role::where('name', 'client')->first();
         $user->attachRole($client);
-    }
-
-    protected function dispatchUserActivityLog($activity)
-    {
-        dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log")->onConnection('sync'));
     }
 
     /**
@@ -111,5 +109,15 @@ class AuthenticationEventSubscriber
             'Illuminate\Auth\Events\Registered',
             'App\Listeners\Auth\AuthenticationEventSubscriber@onAuthRegistered'
         );
+    }
+
+    protected function dispatchUserActivityLog($activity, User $user = null)
+    {
+        if (is_null($user) && auth()->check()) {
+            $user = auth()->user();
+        } else {
+            return false;
+        }
+        dispatch((new UserActivity($user, $activity))->onQueue("log")->onConnection('sync'));
     }
 }

@@ -110,7 +110,11 @@ class SiteController extends Controller
     {
         event(new BeforeEdit($site));
 
+        $status = true;
+
         event(new AfterEdit($site));
+
+        return compact(['site', 'status']);
     }
 
     /**

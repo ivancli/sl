@@ -61,8 +61,8 @@
                             <th width="100"></th>
                         </tr>
                         </thead>
-                        <single-site v-for="site in sites" :current-site="site" :is-newly-created="justAddedSiteId == site.id" @selected-item="selectedItem" @reload-sites="reloadSites"
-                                     @deleted-site="deletedSite"></single-site>
+                        <single-site v-for="site in sites" :current-site="site" :is-newly-created="justAddedSiteId == site.id" @selected-item="selectedItem" @reload-site="reloadSite(site)"
+                                     @reload-sites="reloadSites" @deleted-site="deletedSite"></single-site>
                         <tbody>
                         <tr class="empty-message-row" v-if="!hasSites">
                             <td colspan="9" class="text-center">
@@ -70,10 +70,28 @@
                             </td>
                         </tr>
                         </tbody>
+                        <!--DOT DOT DOT-->
+                        <tbody v-if="isLoadingSites">
+                        <tr class="loading-row">
+                            <td colspan="9" class="text-center p-t-20">
+                                <dotdotdot></dotdotdot>
+                            </td>
+                        </tr>
+                        </tbody>
+                        <!--/DOT DOT DOT-->
+                        <!--LOAD MORE-->
+                        <tbody>
+                        <tr class="load-more-row" v-if="!isLoadingSites && moreSitesToLoad">
+                            <td colspan="9" class="p-t-20">
+                                <a href="#" class="lnk-load-more text-tiffany" @click.prevent="loadSites">LOAD MORE&hellip;</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                        <!--/LOAD MORE-->
                         <tbody>
                         <tr class="add-site-row">
                             <td colspan="9" class="add-item-cell">
-                                <add-site :product="product" @added-site="addedSite"></add-site>
+                                <add-site :product="product" :number-of-sites="numberOfSites" @added-site="addedSite"></add-site>
                             </td>
                         </tr>
                         </tbody>
@@ -82,8 +100,7 @@
             </td>
         </tr>
         </tbody>
-        <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete"
-                             @confirmDelete="confirmDelete"></delete-confirmation>
+        <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
     </table>
 </template>
 
@@ -94,6 +111,7 @@
 
     import formatDateTime from '../../../filters/formatDateTime';
 
+    import dotdotdot from '../../fragments/loading/DotDotDot.vue';
     import deleteConfirmation from '../../fragments/modals/DeleteConfirmation.vue';
 
     import {
@@ -105,6 +123,7 @@
             addSite,
             singleSite,
             editProduct,
+            dotdotdot,
             deleteConfirmation,
         },
         props: [
@@ -128,9 +147,11 @@
                     ],
                     active: false
                 },
+                isLoadingSites: false,
                 isDeletingProduct: false,
                 isProductCollapsed: false,
                 justAddedSite: null,
+                siteLength: 5,
             }
         },
         watch: {
@@ -143,17 +164,34 @@
         },
         methods: {
             loadSites(){
+                this.isLoadingSites = true;
                 axios.get('/site', this.loadSitesRequestData).then(response => {
+                    this.isLoadingSites = false;
                     if (response.data.status == true) {
-                        this.sites = response.data.sites;
+                        this.sites = this.sites.concat(response.data.sites);
                     }
                 }).catch(error => {
+                    this.isLoadingSites = false;
                     console.info(error.response);
                 })
             },
+            reloadSite(site){
+                console.info("site", site);
+                axios.get(site.urls.show).then(response => {
+                    if (response.data.status == true) {
+                        this.setSite(response.data.site);
+                    }
+                }).catch(error => {
+                    console.info(error)
+                })
+            },
+            setSite(site){
+                index = this.sites.findIndex(site => site.id === site.id);
+                Vue.set(this.sites, index, site);
+            },
             reloadSites(){
+                this.clearSitesList();
                 this.loadSites();
-                this.loadUser();
             },
             deletedSite(){
                 this.reloadSites();
@@ -165,7 +203,7 @@
             cancelEditProductName(){
                 this.editingProduct = false;
             },
-            addedSite: function (site) {
+            addedSite(site) {
                 this.$emit('added-site');
                 this.reloadSites();
                 if (site.url.itemsCount > 1) {
@@ -219,6 +257,9 @@
                     product_id: this.product.id
                 });
             },
+            clearSitesList(){
+                this.sites = [];
+            },
         },
         computed: {
             product(){
@@ -227,6 +268,8 @@
             loadSitesRequestData(){
                 return {
                     params: {
+                        offset: this.sites.length,
+                        length: this.siteLength,
                         product_id: this.product.id
                     }
                 }
@@ -255,6 +298,12 @@
             },
             productSearchPromise(){
                 return this.$store.getters.productSearchPromise[this.product.id] == true;
+            },
+            numberOfSites(){
+                return this.product.numberOfSites;
+            },
+            moreSitesToLoad(){
+                return this.sites.length < this.product.numberOfSites;
             }
         }
     }
@@ -343,7 +392,7 @@
         color: #777;
     }
 
-    tr.add-site-row {
+    tr.add-site-row, tr.loading-row, tr.load-more-row {
         background-color: #fff !important;
     }
 

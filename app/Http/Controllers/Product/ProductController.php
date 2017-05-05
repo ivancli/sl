@@ -88,7 +88,11 @@ class ProductController extends Controller
     {
         event(new BeforeShow($product));
 
+        $status = true;
+
         event(new AfterShow($product));
+
+        return compact(['product', 'status']);
     }
 
     /**

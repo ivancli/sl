@@ -51,8 +51,14 @@
             <td></td>
             <td colspan="3" class="table-container">
                 <div class="collapsible-category-div collapse" :class="isCollapsed ? '' : 'in'">
-                    <single-product v-for="product in products" :current-product="product" @reload-products="reloadProducts"
-                                    @added-site="reloadCategories" @deleted-site="reloadCategories"></single-product>
+                    <single-product v-for="product in products" :current-product="product" @reload-products="reloadProducts" @added-site="reloadCategories"
+                                    @deleted-site="reloadCategories"></single-product>
+                    <div class="text-center m-t-20" v-if="isLoadingProducts">
+                        <dotdotdot></dotdotdot>
+                    </div>
+                    <div class="m-t-20" v-if="!isLoadingProducts && moreProductsToLoad">
+                        <a href="#" class="lnk-load-more text-tiffany" @click.prevent="loadProducts">LOAD MORE&hellip;</a>
+                    </div>
                     <div class="m-t-20">
                         <add-product :category="category" @added-product="addedProduct"></add-product>
                     </div>
@@ -70,6 +76,7 @@
     import editCategory from './EditCategory.vue';
     import formatDateTime from '../../../filters/formatDateTime';
 
+    import dotdotdot from '../../fragments/loading/DotDotDot.vue';
     import deleteConfirmation from '../../fragments/modals/DeleteConfirmation.vue';
 
     import {
@@ -81,6 +88,7 @@
             addProduct,
             singleProduct,
             editCategory,
+            dotdotdot,
             deleteConfirmation
         },
         props: [
@@ -106,7 +114,9 @@
                     ],
                     active: false
                 },
-                isDeletingCategory: false
+                isLoadingProducts: false,
+                isDeletingCategory: false,
+                productLength: 5,
             }
         },
         watch: {
@@ -125,14 +135,17 @@
         },
         methods: {
             loadProducts(callback) {
+                this.isLoadingProducts = true;
                 axios.get('/product', this.loadProductsRequestData).then(response => {
+                    this.isLoadingProducts = false;
                     if (response.data.status == true) {
-                        this.products = response.data.products;
+                        this.products = this.products.concat(response.data.products);
                         if (typeof callback == 'function') {
                             callback();
                         }
                     }
                 }).catch(error => {
+                    this.isLoadingProducts = false;
                     console.info(error.response);
                 })
             },
@@ -141,6 +154,7 @@
                 this.loadUser();
             },
             addedProduct() {
+                this.loadUser();
                 this.setCategoryCollapseStatus(false);
                 this.reloadProducts();
             },
@@ -184,6 +198,7 @@
                 axios.delete(this.category.urls.delete).then(response => {
                     this.isDeletingCategory = false;
                     if (response.data.status == true) {
+                        this.loadUser();
                         this.$emit('reload-categories');
                     }
                 }).catch(error => {
@@ -204,6 +219,8 @@
             loadProductsRequestData(){
                 return {
                     params: {
+                        offset: this.products.length,
+                        length: this.productLength,
                         category_id: this.category.id,
                         key: this.productSearchTerm,
                     }
@@ -227,6 +244,9 @@
             categorySearchPromise(){
                 return this.$store.getters.categorySearchPromise;
             },
+            moreProductsToLoad(){
+                return this.products.length < this.category.numberOfProducts;
+            }
         }
     }
 </script>
@@ -333,5 +353,9 @@
         -ms-transition: -ms-transform 550ms ease;
         -o-transition: -o-transform 550ms ease;
         -webkit-transition: -webkit-transform 550ms ease;
+    }
+
+    .lnk-load-more {
+        text-transform: uppercase;
     }
 </style>

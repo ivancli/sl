@@ -9,7 +9,7 @@
                             {{ subscriptionPlan.name }} Plan:
                             &nbsp;&nbsp;&nbsp;&nbsp;
                             <div class="progress vertical-align-middle product-usage-progress">
-                                <div class="progress-bar progress-bar-success progress-bar-striped"
+                                <div class="progress-bar progress-bar-striped" :class="progressBarClass"
                                      role="progressbar" :aria-valuenow="productUsagePercentage" aria-valuemin="0"
                                      aria-valuemax="100" :style="{width: productUsagePercentage + '%'}">
                                 </div>
@@ -22,11 +22,13 @@
                     </div>
                 </div>
                 <div class="row m-b-10">
-                    <div class="col-md-8">
+                    <div class="col-sm-8">
                         <add-category @added-category="reloadCategories"></add-category>
                     </div>
-                    <div class="col-md-4 text-right" v-if="hasCategories">
-                        <a href="#" class="text-muted btn-collapse-all" @click.prevent="toggleAllCategories" v-text="shouldExpandAll ? 'Expand All' : 'Collapse All'"></a>
+                    <div class="col-sm-4 text-right" v-if="hasCategories">
+                        <div class="collapse-container">
+                            <a href="#" class="text-muted btn-collapse-all" @click.prevent="toggleAllCategories" v-text="shouldExpandAll ? 'Expand All' : 'Collapse All'"></a>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -51,7 +53,7 @@
 <script>
     import addCategory from './AddCategory.vue';
     import singleCategory from './SingleCategory.vue';
-    import loading from '../../Loading.vue';
+    import loading from '../../fragments/loading/Loading.vue';
 
     import {
         TOGGLE_ALL_CATEGORIES, LOAD_USER, SET_CATEGORY_SEARCH_PROMISE, CLEAR_CATEGORY_SEARCH_PROMISE
@@ -148,8 +150,7 @@
                 }
                 return null;
             },
-            productUsagePercentage()
-            {
+            productUsagePercentage(){
                 if (this.maxNumberOfProducts != null) {
                     return this.numberOfProducts / this.maxNumberOfProducts * 100;
                 }
@@ -177,6 +178,15 @@
             txtSearchProductReference(){
                 return this.$store.getters.refTxtSearchProduct;
             },
+            progressBarClass(){
+                if (this.productUsagePercentage < 50) {
+                    return 'progress-bar-success';
+                } else if (this.productUsagePercentage < 90) {
+                    return 'progress-bar-warning';
+                } else {
+                    return 'progress-bar-danger';
+                }
+            }
         }
     }
 </script>
@@ -192,6 +202,10 @@
         background-color: #8b74a9;
         border-color: #9c83bf;
         color: #fff;
+    }
+
+    .collapse-container {
+        padding-top: 30px;
     }
 
     .btn-collapse-all {

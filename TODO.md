@@ -1,3 +1,4 @@
+1. load single category/product to update corresponding information
 1. product meta icon in front-end
 1. finish view item meta
 1. Work on parser class for lighting

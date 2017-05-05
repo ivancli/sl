@@ -37,7 +37,7 @@
 </template>
 
 <script>
-    import loading from '../../Loading.vue';
+    import loading from '../../fragments/loading/Loading.vue';
 
     import currency from '../../../filters/currency';
 

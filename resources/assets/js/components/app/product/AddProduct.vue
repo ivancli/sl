@@ -4,7 +4,7 @@
             <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;
             <span class="add-item-text">ADD PRODUCT</span>
         </div>
-        <div class="add-item-controls" v-show="addingProduct">
+        <div class="add-item-controls" v-show="addingProduct && !reachedProductLimit">
             <div class="row">
                 <div class="col-sm-12">
                     <form class="form-horizontal form-sl-horizontal">
@@ -60,6 +60,12 @@
 
                     </form>
                 </div>
+            </div>
+        </div>
+        <div class="add-item-controls" v-show="addingProduct && reachedProductLimit">
+            <div class="subscription-upgrade-message">
+                You have reached the product limit of {{ subscriptionPlanName }} plan.<br/>
+                Please <a href="#">upgrade your subscription</a> to add more products.
             </div>
         </div>
         <error-modal :modal-errors="errors" @hideErrorModal="clearErrors"></error-modal>
@@ -144,7 +150,44 @@
                         cost_price: this.costPrice,
                     },
                 };
-            }
+            },
+            user(){
+                return this.$store.getters.user
+            },
+            numberOfProducts(){
+                return this.user.numberOfProducts;
+            },
+            maxNumberOfProducts(){
+                return this.user.maxNumberOfProducts;
+            },
+            reachedProductLimit(){
+                if (this.maxNumberOfProducts != null && this.numberOfProducts >= this.maxNumberOfProducts) {
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+            subscription(){
+                if (this.user.hasOwnProperty('subscription')) {
+                    return this.user.subscription
+                } else {
+                    return null;
+                }
+            },
+            subscriptionPlan(){
+                if (this.subscription != null) {
+                    return this.subscription.subscriptionPlan
+                } else {
+                    return null;
+                }
+            },
+            subscriptionPlanName(){
+                if (this.subscriptionPlan != null) {
+                    return this.subscriptionPlan.name;
+                } else {
+                    return null;
+                }
+            },
         }
     }
 </script>

@@ -37,7 +37,7 @@
 <script>
     import editPopup from '../domain_conf/EditPopup.vue';
     import deleteConfirmation from '../../../fragments/modals/DeleteConfirmation.vue';
-    import loading from '../../../Loading.vue';
+    import loading from '../../../fragments/loading/Loading.vue';
 
     import formatDateTime from '../../../../filters/formatDateTime';
 

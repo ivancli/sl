@@ -65,7 +65,17 @@ class SiteService
         /* TODO make this function to accept parameters and dynamic */
 
         $product = $this->productRepo->get(array_get($data, 'product_id'));
-        $sites = $product->sites()->with('item')->get();
+        $sitesBuilder = $product->sites()->with('item');
+
+        if (array_has($data, 'offset') && !empty(array_get($data, 'offset'))) {
+            $sitesBuilder->skip(array_get($data, 'offset'));
+        }
+
+        if (array_has($data, 'length') && !empty(array_get($data, 'length'))) {
+            $sitesBuilder->limit(array_get($data, 'length'));
+        }
+
+        $sites = $sitesBuilder->get();
         return $sites;
     }
 

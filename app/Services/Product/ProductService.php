@@ -56,13 +56,23 @@ class ProductService
         if (array_has($data, 'key') && !empty(array_get($data, 'key'))) {
             $key = array_get($data, 'key');
             if (strpos(strtolower($category->category_name), strtolower($key)) === false) {
-                $products = $category->products()->where('product_name', 'like', "%{$key}%")->get();
+                $productsBuilder = $category->products()->where('product_name', 'like', "%{$key}%");
             } else {
-                $products = $category->products;
+                $productsBuilder = $category->products();
             }
         } else {
-            $products = $category->products;
+            $productsBuilder = $category->products();
         }
+        if (array_has($data, 'offset') && !empty(array_get($data, 'offset'))) {
+            $productsBuilder->skip(array_get($data, 'offset'));
+        }
+
+        if (array_has($data, 'length') && !empty(array_get($data, 'length'))) {
+            $productsBuilder->limit(array_get($data, 'length'));
+        }
+
+        $products = $productsBuilder->get();
+
         return $products;
     }
 

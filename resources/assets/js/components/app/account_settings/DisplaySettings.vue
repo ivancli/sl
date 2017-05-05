@@ -63,7 +63,7 @@
 </template>
 
 <script>
-    import loading from '../../Loading.vue';
+    import loading from '../../fragments/loading/Loading.vue';
     import formatDateTime from '../../../filters/formatDateTime';
 
     export default{

@@ -88,7 +88,11 @@ class CategoryController extends Controller
     {
         event(new BeforeShow($category));
 
+        $status = true;
+
         event(new AfterShow($category));
+
+        return compact(['category', 'status']);
     }
 
     /**

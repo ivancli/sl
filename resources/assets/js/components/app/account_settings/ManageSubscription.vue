@@ -91,7 +91,7 @@
 <script>
     import pricingTable from '../../subscription/PricingTable.vue';
     import confirm from '../../fragments/modals/Confirm.vue';
-    import loading from '../../Loading.vue'
+    import loading from '../../fragments/loading/Loading.vue'
 
     import formatDateTime from '../../../filters/formatDateTime';
     import currency from '../../../filters/currency';

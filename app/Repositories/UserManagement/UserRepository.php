@@ -70,12 +70,20 @@ class UserRepository implements UserContract
      * @param bool $throw
      * @return User
      */
-    public function get($user_id, $throw = true)
+    public function get($user_id, $throw = true, $with = [])
     {
         if ($throw) {
-            return $this->user->findOrFail($user_id);
+            if (!empty($with)) {
+                return $this->user->with($with)->findOrFail($user_id);
+            } else {
+                return $this->user->findOrFail($user_id);
+            }
         } else {
-            return $this->user->find($user_id);
+            if (!empty($with)) {
+                return $this->user->with($with)->find($user_id);
+            } else {
+                return $this->user->find($user_id);
+            }
         }
     }
 

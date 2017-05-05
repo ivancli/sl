@@ -7,8 +7,7 @@
                 {{site.siteUrl | domain}}
             </a>
 
-            <edit-site :editing-site="site" @edited-site="editedSite" @edit-site-url="goingToEditSiteURL"
-                       @cancel-edit-site-url="cancelEditSiteURL"></edit-site>
+            <edit-site :editing-site="site" :going-to-edit-site="editingSiteURL" @edited-site="editedSite" @cancel-edit-site-url="cancelEditSiteURL"></edit-site>
         </td>
         <td class="vertical-align-middle">
             <div class="text-right">
@@ -69,6 +68,9 @@
         <td class="text-right action-cell vertical-align-middle">
             <a href="#" class="btn-action hidden-md hidden-lg" title="show details" @click.prevent="toggleSiteDetails">
                 <i class="fa fa-info-circle"></i>
+            </a>
+            <a href="#" class="btn-action" title="edit" v-if="!editingSiteURL" @click.prevent="goingToEditSiteURL">
+                <i class="fa fa-pencil"></i>
             </a>
             <a href="#" class="btn-action" title="choose item" v-if="site.url.itemsCount > 1" @click.prevent="onClickSelectItem">
                 <i class="fa fa-exclamation-triangle" v-if="site.item == null"></i>
@@ -161,20 +163,23 @@
             console.info('SingleSite component is mounted');
         },
         methods: {
-            goingToEditSiteURL: function () {
+            goingToEditSiteURL() {
                 this.editingSiteURL = true;
             },
-            editedSite: function () {
+            editedSite() {
                 this.editingSiteURL = false;
-                this.reloadSites();
+                this.reloadSite();
             },
-            cancelEditSiteURL: function () {
+            cancelEditSiteURL() {
                 this.editingSiteURL = false;
             },
-            reloadSites: function () {
+            reloadSite(){
+                this.$emit('reload-site', this.site);
+            },
+            reloadSites() {
                 this.$emit('reload-sites');
             },
-            toggleSiteDetails: function () {
+            toggleSiteDetails() {
                 this.showSiteDetails = !this.showSiteDetails;
             },
             /*delete site*/
