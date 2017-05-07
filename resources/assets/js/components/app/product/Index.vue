@@ -27,14 +27,15 @@
                     </div>
                     <div class="col-sm-4 text-right" v-if="hasCategories">
                         <div class="collapse-container">
-                            <a href="#" class="text-muted btn-collapse-all" @click.prevent="toggleAllCategories" v-text="shouldExpandAll ? 'Expand All' : 'Collapse All'"></a>
+                            <a href="#" class="text-muted btn-collapse-all" @click.prevent="toggleAllCategories"
+                               v-text="shouldExpandAll ? 'Expand All' : 'Collapse All'"></a>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
                         <single-category v-for="single_category in categories" :current-category="single_category"
-                                         @reload-categories="reloadCategories"></single-category>
+                                         @reload-category="updateCategory" @reload-categories="reloadCategories"></single-category>
                     </div>
                 </div>
                 <div class="row">
@@ -51,6 +52,8 @@
 </template>
 
 <script>
+    import Vue from 'vue';
+
     import addCategory from './AddCategory.vue';
     import singleCategory from './SingleCategory.vue';
     import loading from '../../fragments/loading/Loading.vue';
@@ -106,6 +109,22 @@
                 }).catch(error => {
                     console.info(error.response);
                 })
+            },
+            updateCategory(category){
+                this.reloadCategory(category);
+            },
+            reloadCategory(category){
+                axios.get(category.urls.show).then(response => {
+                    if (response.data.status == true) {
+                        this.setCategory(response.data.category);
+                    }
+                }).catch(error => {
+                    console.info(error)
+                })
+            },
+            setCategory(newCategory){
+                let index = this.categories.findIndex(category => category.id === newCategory.id);
+                Vue.set(this.categories, index, newCategory);
             },
             reloadCategories() {
                 this.loadCategories();

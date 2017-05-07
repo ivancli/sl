@@ -1,16 +1,20 @@
 <template>
     <div class="add-item-block add-site-container">
         <div class="add-item-label add-site-label" v-show="!addingSite" @click.prevent="goingToAddSite">
-            <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;ADD <span class="hidden-xs hidden-sm">THE</span> PRODUCT PAGE URL
+            <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;ADD <span class="hidden-xs hidden-sm">THE</span> PRODUCT PAGE
+            URL
         </div>
         <div class="add-item-controls" v-show="addingSite && !reachedSiteLimit">
             <div class="row">
                 <div class="col-sm-12">
                     <form>
-                        <input type="text" autocomplete="off" name="site_url" class="txt-site-url form-control txt-item input-sm" v-model="newSiteURL" ref="txt_new_site"
+                        <input type="text" autocomplete="off" name="site_url"
+                               class="txt-site-url form-control txt-item input-sm" v-model="newSiteURL"
+                               ref="txt_new_site"
                                placeholder="Enter a product page URL">
                         <div class="buttons">
-                            <button class="btn btn-primary btn-flat btn-sm" @click.prevent="addSite" :disabled="isAddingSite">
+                            <button class="btn btn-primary btn-flat btn-sm" @click.prevent="addSite"
+                                    :disabled="isAddingSite">
                                 <span class="hidden-sm hidden-xs">
                                     CONFIRM
                                 </span>
@@ -19,7 +23,8 @@
                                 </span>
                             </button>
                             &nbsp;&nbsp;
-                            <button class="btn btn-default btn-flat btn-cancel-add-site btn-sm" @click.prevent="cancelAddSite">
+                            <button class="btn btn-default btn-flat btn-cancel-add-site btn-sm"
+                                    @click.prevent="cancelAddSite">
                                 <span class="hidden-sm hidden-xs">
                                     CANCEL
                                 </span>
@@ -66,18 +71,18 @@
             console.info('AddSite component is mounted');
         },
         methods: {
-            goingToAddSite: function () {
+            goingToAddSite() {
                 this.addingSite = true;
                 setTimeout(() => {
                     this.$refs['txt_new_site'].focus();
                 }, 10)
             },
-            cancelAddSite: function () {
+            cancelAddSite() {
                 this.addingSite = false;
                 this.clearNewSiteURL();
                 this.$refs['txt_new_site'].blur();
             },
-            addSite: function () {
+            addSite() {
                 this.$refs['txt_new_site'].blur();
                 this.isAddingSite = true;
                 this.errors = {};
@@ -85,9 +90,9 @@
                     this.isAddingSite = false;
                     if (response.data.status == true) {
                         this.addingSite = false;
+                        this.clearNewSiteURL();
+                        this.emitAddedSite(response.data.site);
                     }
-                    this.clearNewSiteURL();
-                    this.$emit('added-site', response.data.site);
                 }).catch(error => {
                     this.isAddingSite = false;
                     if (error.response && error.response.status == 422 && error.response.data) {
@@ -95,15 +100,18 @@
                     }
                 })
             },
-            clearErrors: function () {
+            clearErrors() {
                 this.errors = {};
             },
-            clearNewSiteURL: function () {
+            clearNewSiteURL() {
                 this.newSiteURL = '';
-            }
+            },
+            emitAddedSite(site){
+                this.$emit('added-site', site);
+            },
         },
         computed: {
-            addSiteData: function () {
+            addSiteData() {
                 return {
                     full_path: this.newSiteURL,
                     product_id: this.product.id
@@ -111,22 +119,6 @@
             },
             user(){
                 return this.$store.getters.user
-            },
-            maxNumberOfSites(){
-                if (this.user.hasOwnProperty('subscription')) {
-                    if (this.user.subscription.subscriptionCriteria.site == 0) {
-                        return null;
-                    }
-                    return this.user.subscription.subscriptionCriteria.site;
-                }
-                return null;
-            },
-            reachedSiteLimit(){
-                if (this.maxNumberOfSites != null && this.numberOfSites >= this.maxNumberOfSites) {
-                    return true;
-                } else {
-                    return false;
-                }
             },
             subscription(){
                 if (this.user.hasOwnProperty('subscription')) {
@@ -147,6 +139,22 @@
                     return this.subscriptionPlan.name;
                 } else {
                     return null;
+                }
+            },
+            maxNumberOfSites(){
+                if (this.subscription != null) {
+                    if (this.user.subscription.subscriptionCriteria.site == 0) {
+                        return null;
+                    }
+                    return this.user.subscription.subscriptionCriteria.site;
+                }
+                return null;
+            },
+            reachedSiteLimit(){
+                if (this.maxNumberOfSites != null && this.numberOfSites >= this.maxNumberOfSites) {
+                    return true;
+                } else {
+                    return false;
                 }
             },
         }

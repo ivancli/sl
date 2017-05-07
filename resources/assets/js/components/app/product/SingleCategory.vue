@@ -6,13 +6,16 @@
                 <a class="btn-collapse" aria-expanded="true"><i class="fa fa-tag "></i></a>
             </th>
             <th class="category-th">
-                <a class="text-muted category-name-link" href="#" v-text="category.category_name" v-show="!editingCategoryName"></a>
-                <edit-category :editing-category="category" :going-to-edit-category-name="editingCategoryName" @edited-category="editedCategory"
+                <a class="text-muted category-name-link" href="#" v-text="category.category_name"
+                   v-show="!editingCategoryName"></a>
+                <edit-category :editing-category="category" :going-to-edit-category-name="editingCategoryName"
+                               @edited-category="editedCategory"
                                @cancel-edit-category-name="cancelEditCategoryName"></edit-category>
             </th>
 
             <th class="text-right action-cell category-th">
-                <a href="#" class="btn-action btn-edit" title="edit" @click.prevent="onClickEditCategory" v-if="!editingCategoryName">
+                <a href="#" class="btn-action btn-edit" title="edit" @click.prevent="onClickEditCategory"
+                   v-if="!editingCategoryName">
                     <i class="fa fa-pencil"></i>
                 </a>
                 <a href="#" class="btn-action btn-chart" title="chart">
@@ -21,11 +24,13 @@
                 <a href="#" class="btn-action btn-report" title="report">
                     <i class="fa fa-envelope-o"></i>
                 </a>
-                <a href="#" class="btn-action btn-delete-category" title="delete" @click.prevent="onClickDeleteCategory">
+                <a href="#" class="btn-action btn-delete-category" title="delete"
+                   @click.prevent="onClickDeleteCategory">
                     <i class="glyphicon glyphicon-trash"></i>
                 </a>
             </th>
-            <th class="text-center vertical-align-middle cell-category-collapse" width="70" @click.prevent="toggleCategoryCollapse">
+            <th class="text-center vertical-align-middle cell-category-collapse" width="70"
+                @click.prevent="toggleCategoryCollapse">
                 <a class="text-muted btn-collapse btn-category-collapse" :class="isCollapsed ? 'collapsed' : ''">
                     <i class="fa fa-angle-up"></i>
                 </a>
@@ -51,13 +56,15 @@
             <td></td>
             <td colspan="3" class="table-container">
                 <div class="collapsible-category-div collapse" :class="isCollapsed ? '' : 'in'">
-                    <single-product v-for="product in products" :current-product="product" @reload-products="reloadProducts" @added-site="reloadCategories"
-                                    @deleted-site="reloadCategories"></single-product>
+                    <single-product v-for="product in products" :current-product="product"
+                                    @reload-product="updateProduct"
+                                    @reload-products="reloadProducts" @deleted-site="reloadCategories"></single-product>
                     <div class="text-center m-t-20" v-if="isLoadingProducts">
                         <dotdotdot></dotdotdot>
                     </div>
                     <div class="m-t-20" v-if="!isLoadingProducts && moreProductsToLoad">
-                        <a href="#" class="lnk-load-more text-tiffany" @click.prevent="loadProducts">LOAD MORE&hellip;</a>
+                        <a href="#" class="lnk-load-more text-tiffany" @click.prevent="loadProducts">LOAD
+                            MORE&hellip;</a>
                     </div>
                     <div class="m-t-20">
                         <add-product :category="category" @added-product="addedProduct"></add-product>
@@ -66,11 +73,14 @@
             </td>
         </tr>
         </tbody>
-        <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
+        <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete"
+                             @confirmDelete="confirmDelete"></delete-confirmation>
     </table>
 </template>
 
 <script>
+    import Vue from 'vue';
+
     import addProduct from './AddProduct.vue';
     import singleProduct from './SingleProduct.vue';
     import editCategory from './EditCategory.vue';
@@ -149,14 +159,47 @@
                     console.info(error.response);
                 })
             },
+            clearProductsList(){
+                this.products = [];
+            },
+            updateProduct(product){
+                this.reloadProduct(product, product => {
+                    this.setProduct(product);
+                    this.emitReloadCategory();
+                });
+            },
+            reloadProduct(product, callback){
+                axios.get(product.urls.show).then(response => {
+                    if (response.data.status == true) {
+                        if (typeof callback == 'function') {
+                            callback(response.data.product);
+                        }
+                    }
+                }).catch(error => {
+                    console.info(error.response);
+                })
+            },
+            setProduct(product){
+                let index = this.products.findIndex(product => product.id === product.id);
+                Vue.set(this.products, index, product);
+            },
             reloadProducts() {
+                this.clearProductsList();
                 this.loadProducts();
                 this.loadUser();
             },
-            addedProduct() {
+            addedProduct(product) {
                 this.loadUser();
                 this.setCategoryCollapseStatus(false);
                 this.reloadProducts();
+
+                if (!this.moreProductsToLoad) {
+                    this.appendProduct(product);
+                }
+                this.emitReloadCategory();
+            },
+            appendProduct(product){
+                this.products.push(product);
             },
             goingToEditCategoryName() {
                 this.editingCategoryName = true;
@@ -210,6 +253,9 @@
             },
             onClickEditCategory() {
                 this.editingCategoryName = true;
+            }
+            emitReloadCategory() {
+                this.$emit('reload-category', this.category);
             }
         },
         computed: {

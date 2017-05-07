@@ -117,9 +117,9 @@
                     this.isAddingProduct = false;
                     if (response.data.status == true) {
                         this.addingProduct = false;
+                        this.clearNewProductForm();
+                        this.$emit('added-product', response.data.product);
                     }
-                    this.clearNewProductForm();
-                    this.$emit('added-product');
                 }).catch(error => {
                     this.isAddingProduct = false;
                     if (error.response && error.response.status == 422 && error.response.data) {

@@ -7,7 +7,8 @@
                 {{site.siteUrl | domain}}
             </a>
 
-            <edit-site :editing-site="site" :going-to-edit-site="editingSiteURL" @edited-site="editedSite" @cancel-edit-site-url="cancelEditSiteURL"></edit-site>
+            <edit-site :editing-site="site" :going-to-edit-site="editingSiteURL" @edited-site="editedSite"
+                       @cancel-edit-site-url="cancelEditSiteURL"></edit-site>
         </td>
         <td class="vertical-align-middle">
             <div class="text-right">
@@ -72,7 +73,8 @@
             <a href="#" class="btn-action" title="edit" v-if="!editingSiteURL" @click.prevent="goingToEditSiteURL">
                 <i class="fa fa-pencil"></i>
             </a>
-            <a href="#" class="btn-action" title="choose item" v-if="site.url.itemsCount > 1" @click.prevent="onClickSelectItem">
+            <a href="#" class="btn-action" title="choose item" v-if="site.url.itemsCount > 1"
+               @click.prevent="onClickSelectItem">
                 <i class="fa fa-exclamation-triangle" v-if="site.item == null"></i>
                 <i class="fa fa-list-ul" v-else></i>
             </a>
@@ -117,8 +119,10 @@
             </table>
         </td>
     </tr>
-    <select-item-popup v-if="isSelectingItem || isNewlyCreated" :editing-site="site" @selected-item="selectedItem" @hide-modal="cancelSelectingItem"></select-item-popup>
-    <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
+    <select-item-popup v-if="isSelectingItem || isNewlyCreated" :editing-site="site" @selected-item="selectedItem"
+                       @hide-modal="cancelSelectingItem"></select-item-popup>
+    <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete"
+                         @confirmDelete="confirmDelete"></delete-confirmation>
     </tbody>
 </template>
 
@@ -168,16 +172,10 @@
             },
             editedSite() {
                 this.editingSiteURL = false;
-                this.reloadSite();
+                this.emitReloadSite();
             },
             cancelEditSiteURL() {
                 this.editingSiteURL = false;
-            },
-            reloadSite(){
-                this.$emit('reload-site', this.site);
-            },
-            reloadSites() {
-                this.$emit('reload-sites');
             },
             toggleSiteDetails() {
                 this.showSiteDetails = !this.showSiteDetails;
@@ -191,14 +189,18 @@
             },
             confirmDelete(){
                 this.deleteParams.active = false;
-                this.deleteSite()
+                this.deleteSite(() => {
+                    this.emitDeleteSite();
+                })
             },
-            deleteSite(){
+            deleteSite(callback){
                 this.isDeletingSite = true;
                 axios.delete(this.site.urls.delete).then(response => {
                     this.isDeletingSite = false;
                     if (response.data.status == true) {
-                        this.$emit('deleted-site');
+                        if (typeof callback == 'function') {
+                            callback();
+                        }
                     }
                 }).catch(error => {
                     this.isDeletingSite = false;
@@ -208,13 +210,29 @@
                 this.isSelectingItem = true;
             },
             selectedItem(item){
-                this.$emit('reload-sites');
-                this.$emit('selected-item', item);
+                this.emitReloadSites();
+                this.emitSelectedItem(item);
                 this.cancelSelectingItem();
             },
             cancelSelectingItem(){
-                this.$emit('selected-item');
+                this.emitSelectedItem();
                 this.isSelectingItem = false;
+            },
+            emitSelectedItem(item){
+                if (typeof item != 'undefined') {
+                    this.$emit('selected-item', item);
+                } else {
+                    this.$emit('selected-item');
+                }
+            },
+            emitReloadSite(){
+                this.$emit('reload-site', this.site);
+            },
+            emitReloadSites() {
+                this.$emit('reload-sites');
+            },
+            emitDeleteSite(){
+                this.$emit('deleted-site', this.site);
             }
         },
         computed: {

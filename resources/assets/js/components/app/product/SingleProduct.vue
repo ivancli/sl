@@ -8,8 +8,11 @@
                 </a>
             </th>
             <th class="product-th product-name-container">
-                <a class="text-muted product-name-link" href="#" v-text="product.product_name" v-show="!editingProduct"></a>
-                <edit-product :editing-product="product" :going-to-edit-product="editingProduct" @edited-product="editedProduct" @cancel-edit-product-name="cancelEditProductName"></edit-product>
+                <a class="text-muted product-name-link" href="#" v-text="product.product_name"
+                   v-show="!editingProduct"></a>
+                <edit-product :editing-product="product" :going-to-edit-product="editingProduct"
+                              @edited-product="editedProduct"
+                              @cancel-edit-product-name="cancelEditProductName"></edit-product>
             </th>
             <th class="text-right action-cell product-th">
                 <a href="#" class="btn-action" title="edit" @click.prevent="onClickEditProduct" v-if="!editingProduct">
@@ -61,12 +64,15 @@
                             <th width="100"></th>
                         </tr>
                         </thead>
-                        <single-site v-for="site in sites" :current-site="site" :is-newly-created="justAddedSiteId == site.id" @selected-item="selectedItem" @reload-site="reloadSite(site)"
+                        <single-site v-for="site in sites" :current-site="site"
+                                     :is-newly-created="justAddedSiteId == site.id"
+                                     @selected-item="selectedItem" @reload-site="updateSite"
                                      @reload-sites="reloadSites" @deleted-site="deletedSite"></single-site>
                         <tbody>
                         <tr class="empty-message-row" v-if="!hasSites">
                             <td colspan="9" class="text-center">
-                                To start tracking prices, simply copy and paste the URL of the product page of the website your want to track.
+                                To start tracking prices, simply copy and paste the URL of the product page of the
+                                website your want to track.
                             </td>
                         </tr>
                         </tbody>
@@ -83,7 +89,8 @@
                         <tbody>
                         <tr class="load-more-row" v-if="!isLoadingSites && moreSitesToLoad">
                             <td colspan="9" class="p-t-20">
-                                <a href="#" class="lnk-load-more text-tiffany" @click.prevent="loadSites">LOAD MORE&hellip;</a>
+                                <a href="#" class="lnk-load-more text-tiffany" @click.prevent="loadSites">LOAD
+                                    MORE&hellip;</a>
                             </td>
                         </tr>
                         </tbody>
@@ -91,7 +98,8 @@
                         <tbody>
                         <tr class="add-site-row">
                             <td colspan="9" class="add-item-cell">
-                                <add-site :product="product" :number-of-sites="numberOfSites" @added-site="addedSite"></add-site>
+                                <add-site :product="product" :number-of-sites="numberOfSites"
+                                          @added-site="addedSite"></add-site>
                             </td>
                         </tr>
                         </tbody>
@@ -100,11 +108,13 @@
             </td>
         </tr>
         </tbody>
-        <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
+        <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete"
+                             @confirmDelete="confirmDelete"></delete-confirmation>
     </table>
 </template>
 
 <script>
+    import Vue from 'vue';
     import addSite from './AddSite.vue';
     import singleSite from './SingleSite.vue';
     import editProduct from './EditProduct.vue';
@@ -175,27 +185,38 @@
                     console.info(error.response);
                 })
             },
-            reloadSite(site){
-                console.info("site", site);
+            updateSite(site){
+                this.reloadSite(site, newSite => {
+                    this.setSite(newSite);
+                    this.emitReloadProduct();
+                });
+            },
+            reloadSite(site, callback){
                 axios.get(site.urls.show).then(response => {
                     if (response.data.status == true) {
-                        this.setSite(response.data.site);
+                        if (typeof callback == 'function') {
+                            callback(response.data.site);
+                        }
                     }
                 }).catch(error => {
                     console.info(error)
                 })
             },
-            setSite(site){
-                index = this.sites.findIndex(site => site.id === site.id);
-                Vue.set(this.sites, index, site);
+            setSite(newSite){
+                let index = this.sites.findIndex(site => newSite.id === site.id);
+                Vue.set(this.sites, index, newSite);
             },
             reloadSites(){
                 this.clearSitesList();
                 this.loadSites();
             },
-            deletedSite(){
-                this.reloadSites();
-                this.$emit('deleted-site');
+            deletedSite(site){
+                this.spliceSite(site);
+                this.emitReloadProduct();
+            },
+            spliceSite(deletedSite){
+                let index = this.sites.findIndex(site => deletedSite.id === site.id);
+                this.sites.splice(index, 1);
             },
             goingToEditProductName(){
                 this.editingProduct = true;
@@ -204,18 +225,20 @@
                 this.editingProduct = false;
             },
             addedSite(site) {
-                this.$emit('added-site');
-                this.reloadSites();
                 if (site.url.itemsCount > 1) {
                     this.justAddedSite = site;
                 }
+                if (!this.moreSitesToLoad) {
+                    this.appendSite(site);
+                }
+                this.emitReloadProduct();
             },
-            reloadProducts(){
-                this.$emit('reload-products');
+            appendSite(site) {
+                this.sites.push(site);
             },
             editedProduct(){
                 this.editingProduct = false;
-                this.reloadProducts();
+                this.emitReloadProducts();
             },
             /*delete product*/
             onClickDeleteProduct(){
@@ -259,6 +282,13 @@
             },
             clearSitesList(){
                 this.sites = [];
+            },
+            /*emits*/
+            emitReloadProduct(){
+                this.$emit('reload-product', this.product);
+            },
+            emitReloadProducts(){
+                this.$emit('reload-products');
             },
         },
         computed: {
