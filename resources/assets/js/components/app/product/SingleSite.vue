@@ -167,6 +167,11 @@
             console.info('SingleSite component is mounted');
         },
         methods: {
+            toggleSiteDetails() {
+                this.showSiteDetails = !this.showSiteDetails;
+            },
+
+            /*region edit site*/
             goingToEditSiteURL() {
                 this.editingSiteURL = true;
             },
@@ -177,10 +182,8 @@
             cancelEditSiteURL() {
                 this.editingSiteURL = false;
             },
-            toggleSiteDetails() {
-                this.showSiteDetails = !this.showSiteDetails;
-            },
-            /*delete site*/
+            /*endregion*/
+            /*region delete site*/
             onClickDeleteSite(){
                 this.deleteParams.active = true;
             },
@@ -206,11 +209,13 @@
                     this.isDeletingSite = false;
                 })
             },
+            /*endregion*/
+            /*region select item*/
             onClickSelectItem(){
                 this.isSelectingItem = true;
             },
             selectedItem(item){
-                this.emitReloadSites();
+                this.emitReloadSite();
                 this.emitSelectedItem(item);
                 this.cancelSelectingItem();
             },
@@ -225,6 +230,8 @@
                     this.$emit('selected-item');
                 }
             },
+            /*endregion*/
+            /*region emit events*/
             emitReloadSite(){
                 this.$emit('reload-site', this.site);
             },
@@ -234,6 +241,7 @@
             emitDeleteSite(){
                 this.$emit('deleted-site', this.site);
             }
+            /*endregion*/
         },
         computed: {
             site(){

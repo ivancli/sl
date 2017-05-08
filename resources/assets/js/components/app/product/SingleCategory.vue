@@ -57,14 +57,12 @@
             <td colspan="3" class="table-container">
                 <div class="collapsible-category-div collapse" :class="isCollapsed ? '' : 'in'">
                     <single-product v-for="product in products" :current-product="product"
-                                    @reload-product="updateProduct"
-                                    @reload-products="reloadProducts" @deleted-site="reloadCategories"></single-product>
+                                    @reload-product="updateProduct" @reload-products="reloadProducts" @deleted-product="deletedProduct"></single-product>
                     <div class="text-center m-t-20" v-if="isLoadingProducts">
                         <dotdotdot></dotdotdot>
                     </div>
                     <div class="m-t-20" v-if="!isLoadingProducts && moreProductsToLoad">
-                        <a href="#" class="lnk-load-more text-tiffany" @click.prevent="loadProducts">LOAD
-                            MORE&hellip;</a>
+                        <a href="#" class="lnk-load-more text-tiffany" @click.prevent="loadProducts">LOAD MORE&hellip;</a>
                     </div>
                     <div class="m-t-20">
                         <add-product :category="category" @added-product="addedProduct"></add-product>
@@ -73,8 +71,7 @@
             </td>
         </tr>
         </tbody>
-        <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete"
-                             @confirmDelete="confirmDelete"></delete-confirmation>
+        <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
     </table>
 </template>
 
@@ -132,7 +129,7 @@
         watch: {
             categorySearchPromise(){
                 if (this.categorySearchPromise == null) {
-                    this.loadProducts(() => {
+                    this.reloadProducts(() => {
                         this.products.forEach((product) => {
                             this.$store.dispatch(SET_PRODUCT_SEARCH_PROMISE, {
                                 product_id: product.id,
@@ -179,27 +176,37 @@
                     console.info(error.response);
                 })
             },
-            setProduct(product){
-                let index = this.products.findIndex(product => product.id === product.id);
-                Vue.set(this.products, index, product);
+            setProduct(newProduct){
+                let index = this.products.findIndex(product => newProduct.id === product.id);
+                Vue.set(this.products, index, newProduct);
             },
-            reloadProducts() {
+            reloadProducts(callback) {
                 this.clearProductsList();
-                this.loadProducts();
-                this.loadUser();
+                this.loadProducts(() => {
+                    if (typeof callback == 'function') {
+                        callback();
+                    }
+                });
             },
             addedProduct(product) {
-                this.loadUser();
                 this.setCategoryCollapseStatus(false);
-                this.reloadProducts();
-
                 if (!this.moreProductsToLoad) {
                     this.appendProduct(product);
                 }
                 this.emitReloadCategory();
+                this.loadUser();
             },
             appendProduct(product){
                 this.products.push(product);
+            },
+            deletedProduct(product){
+                this.spliceProduct(product);
+                this.emitReloadCategory();
+                this.loadUser();
+            },
+            spliceProduct(deletedProduct){
+                let index = this.products.findIndex(product => deletedProduct.id === product.id);
+                this.products.splice(index, 1);
             },
             goingToEditCategoryName() {
                 this.editingCategoryName = true;
@@ -242,7 +249,6 @@
                     this.isDeletingCategory = false;
                     if (response.data.status == true) {
                         this.loadUser();
-                        this.$emit('reload-categories');
                     }
                 }).catch(error => {
                     this.isDeletingCategory = false;
@@ -253,9 +259,12 @@
             },
             onClickEditCategory() {
                 this.editingCategoryName = true;
-            }
+            },
             emitReloadCategory() {
                 this.$emit('reload-category', this.category);
+            },
+            emitReloadCategories(){
+                this.$emit('reload-categories');
             }
         },
         computed: {

@@ -8,11 +8,8 @@
                 </a>
             </th>
             <th class="product-th product-name-container">
-                <a class="text-muted product-name-link" href="#" v-text="product.product_name"
-                   v-show="!editingProduct"></a>
-                <edit-product :editing-product="product" :going-to-edit-product="editingProduct"
-                              @edited-product="editedProduct"
-                              @cancel-edit-product-name="cancelEditProductName"></edit-product>
+                <a class="text-muted product-name-link" href="#" v-text="product.product_name" v-show="!editingProduct"></a>
+                <edit-product :editing-product="product" :going-to-edit-product="editingProduct" @edited-product="editedProduct" @cancel-edit-product-name="cancelEditProduct"></edit-product>
             </th>
             <th class="text-right action-cell product-th">
                 <a href="#" class="btn-action" title="edit" @click.prevent="onClickEditProduct" v-if="!editingProduct">
@@ -42,9 +39,7 @@
             <td></td>
             <td colspan="3">
                 <div class="text-light">
-                    Created
-                    on {{product.created_at | formatDateTime(dateFormat)}}
-                    <strong class="text-muted"><i>by {{product.owner.fullName}}</i></strong>
+                    Created on {{product.created_at | formatDateTime(dateFormat)}} <strong class="text-muted"><i>by {{product.owner.fullName}}</i></strong>
                 </div>
             </td>
         </tr>
@@ -64,15 +59,12 @@
                             <th width="100"></th>
                         </tr>
                         </thead>
-                        <single-site v-for="site in sites" :current-site="site"
-                                     :is-newly-created="justAddedSiteId == site.id"
-                                     @selected-item="selectedItem" @reload-site="updateSite"
-                                     @reload-sites="reloadSites" @deleted-site="deletedSite"></single-site>
+                        <single-site v-for="site in sites" :current-site="site" :is-newly-created="justAddedSiteId == site.id"
+                                     @selected-item="selectedItem" @reload-site="updateSite" @reload-sites="reloadSites" @deleted-site="deletedSite"></single-site>
                         <tbody>
                         <tr class="empty-message-row" v-if="!hasSites">
                             <td colspan="9" class="text-center">
-                                To start tracking prices, simply copy and paste the URL of the product page of the
-                                website your want to track.
+                                To start tracking prices, simply copy and paste the URL of the product page of the website your want to track.
                             </td>
                         </tr>
                         </tbody>
@@ -89,8 +81,7 @@
                         <tbody>
                         <tr class="load-more-row" v-if="!isLoadingSites && moreSitesToLoad">
                             <td colspan="9" class="p-t-20">
-                                <a href="#" class="lnk-load-more text-tiffany" @click.prevent="loadSites">LOAD
-                                    MORE&hellip;</a>
+                                <a href="#" class="lnk-load-more text-tiffany" @click.prevent="loadSites">LOAD MORE&hellip;</a>
                             </td>
                         </tr>
                         </tbody>
@@ -98,8 +89,7 @@
                         <tbody>
                         <tr class="add-site-row">
                             <td colspan="9" class="add-item-cell">
-                                <add-site :product="product" :number-of-sites="numberOfSites"
-                                          @added-site="addedSite"></add-site>
+                                <add-site :product="product" :number-of-sites="numberOfSites" @added-site="addedSite"></add-site>
                             </td>
                         </tr>
                         </tbody>
@@ -108,8 +98,7 @@
             </td>
         </tr>
         </tbody>
-        <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete"
-                             @confirmDelete="confirmDelete"></delete-confirmation>
+        <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
     </table>
 </template>
 
@@ -173,17 +162,18 @@
             }
         },
         methods: {
-            loadSites(){
-                this.isLoadingSites = true;
-                axios.get('/site', this.loadSitesRequestData).then(response => {
-                    this.isLoadingSites = false;
-                    if (response.data.status == true) {
-                        this.sites = this.sites.concat(response.data.sites);
-                    }
-                }).catch(error => {
-                    this.isLoadingSites = false;
-                    console.info(error.response);
-                })
+            /*region sites related methods*/
+            addedSite(site) {
+                if (site.url.itemsCount > 1) {
+                    this.justAddedSite = site;
+                }
+                if (!this.moreSitesToLoad) {
+                    this.appendSite(site);
+                }
+                this.emitReloadProduct();
+            },
+            appendSite(site) {
+                this.sites.push(site);
             },
             updateSite(site){
                 this.reloadSite(site, newSite => {
@@ -210,6 +200,18 @@
                 this.clearSitesList();
                 this.loadSites();
             },
+            loadSites(){
+                this.isLoadingSites = true;
+                axios.get('/site', this.loadSitesRequestData).then(response => {
+                    this.isLoadingSites = false;
+                    if (response.data.status == true) {
+                        this.sites = this.sites.concat(response.data.sites);
+                    }
+                }).catch(error => {
+                    this.isLoadingSites = false;
+                    console.info(error.response);
+                })
+            },
             deletedSite(site){
                 this.spliceSite(site);
                 this.emitReloadProduct();
@@ -218,29 +220,24 @@
                 let index = this.sites.findIndex(site => deletedSite.id === site.id);
                 this.sites.splice(index, 1);
             },
-            goingToEditProductName(){
+            selectedItem(item){
+                this.justAddedSite = null;
+            },
+            clearSitesList(){
+                this.sites = [];
+            },
+            /*endregion*/
+            /*region product related methods*/
+            onClickEditProduct(){
                 this.editingProduct = true;
             },
-            cancelEditProductName(){
+            cancelEditProduct(){
                 this.editingProduct = false;
-            },
-            addedSite(site) {
-                if (site.url.itemsCount > 1) {
-                    this.justAddedSite = site;
-                }
-                if (!this.moreSitesToLoad) {
-                    this.appendSite(site);
-                }
-                this.emitReloadProduct();
-            },
-            appendSite(site) {
-                this.sites.push(site);
             },
             editedProduct(){
                 this.editingProduct = false;
-                this.emitReloadProducts();
+                this.emitReloadProduct();
             },
-            /*delete product*/
             onClickDeleteProduct(){
                 this.deleteParams.active = true;
             },
@@ -256,8 +253,8 @@
                 axios.delete(this.product.urls.delete).then(response => {
                     this.isDeletingProduct = false;
                     if (response.data.status == true) {
-                        this.$emit('reload-products');
-                        /*TODO deteld-product*/
+                        this.loadUser();
+                        this.emitDeleteProduct();
                     }
                 }).catch(error => {
                     this.isDeletingProduct = false;
@@ -266,30 +263,26 @@
             toggleProductCollapse(){
                 this.isProductCollapsed = !this.isProductCollapsed;
             },
-            loadUser(){
-                this.$store.dispatch(LOAD_USER);
-            },
-            selectedItem(item){
-                this.justAddedSite = null;
-            },
-            onClickEditProduct(){
-                this.editingProduct = true;
-            },
             clearProductSearchPromise(){
                 this.$store.dispatch(CLEAR_PRODUCT_SEARCH_PROMISE, {
                     product_id: this.product.id
                 });
             },
-            clearSitesList(){
-                this.sites = [];
+            /*endregion*/
+            loadUser(){
+                this.$store.dispatch(LOAD_USER);
             },
-            /*emits*/
+            /*region emit events*/
             emitReloadProduct(){
                 this.$emit('reload-product', this.product);
             },
             emitReloadProducts(){
                 this.$emit('reload-products');
             },
+            emitDeleteProduct(){
+                this.$emit('deleted-product', this.product);
+            }
+            /*endregion*/
         },
         computed: {
             product(){
