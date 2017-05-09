@@ -10,7 +10,7 @@
             <edit-site :editing-site="site" :going-to-edit-site="editingSiteURL" @edited-site="editedSite"
                        @cancel-edit-site-url="cancelEditSiteURL"></edit-site>
         </td>
-        <td class="vertical-align-middle">
+        <td class="vertical-align-middle col-recent-price">
             <div class="text-right">
                 <div v-if="site.item != null && site.item.recentPrice != null">
                     ${{ site.item.recentPrice | currency }}
@@ -32,7 +32,7 @@
                 </div>
             </div>
         </td>
-        <td class="vertical-align-middle hidden-xs hidden-sm">
+        <td class="vertical-align-middle hidden-xs hidden-sm col-previous-price">
             <div class="text-right">
                 <div v-if="site.item != null && site.item.previousPrice != null">
                     ${{ site.item.previousPrice | currency }}
@@ -44,7 +44,7 @@
                 </div>
             </div>
         </td>
-        <td class="vertical-align-middle hidden-xs hidden-sm">
+        <td class="vertical-align-middle hidden-xs hidden-sm col-price-change">
             <div class="text-right">
                 <div v-if="site.item != null && site.item.priceChange != null">
                     ${{ site.item.priceChange | currency }}
@@ -303,6 +303,12 @@
         word-wrap: break-word;
         -ms-word-break: break-all;
         word-break: break-all;
+    }
+
+    td.col-recent-price,
+    td.col-previous-price,
+    td.col-price-change {
+        padding-right: 25px;
     }
 
     @media (max-width: 991px) {

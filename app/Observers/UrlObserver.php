@@ -172,7 +172,7 @@ class UrlObserver
             }
         } else {
             /*standard entities - price and availability*/
-            $priceMeta = $item->setMeta('PRICE', null, 'decimal', 'price');
+            $priceMeta = $item->setMeta('PRICE', null, false, 'decimal', 'price');
             $availabilityMeta = $item->setMeta('AVAILABILITY', null, false, 'boolean');
         }
         return $item;

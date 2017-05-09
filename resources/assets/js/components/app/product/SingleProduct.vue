@@ -8,8 +8,11 @@
                 </a>
             </th>
             <th class="product-th product-name-container">
-                <a class="text-muted product-name-link" href="#" v-text="product.product_name" v-show="!editingProduct"></a>
-                <edit-product :editing-product="product" :going-to-edit-product="editingProduct" @edited-product="editedProduct" @cancel-edit-product-name="cancelEditProduct"></edit-product>
+                <a class="text-muted product-name-link" href="#" v-text="product.product_name"
+                   v-show="!editingProduct"></a>
+                <edit-product :editing-product="product" :going-to-edit-product="editingProduct"
+                              @edited-product="editedProduct"
+                              @cancel-edit-product-name="cancelEditProduct"></edit-product>
             </th>
             <th class="text-right action-cell product-th">
                 <a href="#" class="btn-action" title="edit" @click.prevent="onClickEditProduct" v-if="!editingProduct">
@@ -39,7 +42,8 @@
             <td></td>
             <td colspan="3">
                 <div class="text-light">
-                    Created on {{product.created_at | formatDateTime(dateFormat)}} <strong class="text-muted"><i>by {{product.owner.fullName}}</i></strong>
+                    Created on {{product.created_at | formatDateTime(dateFormat)}} <strong class="text-muted"><i>by
+                    {{product.owner.fullName}}</i></strong>
                 </div>
             </td>
         </tr>
@@ -50,21 +54,25 @@
                     <table class="table table-striped table-condensed tbl-site">
                         <thead>
                         <tr>
-                            <th>Site</th>
-                            <th class="text-right">Current Price</th>
-                            <th class="hidden-xs hidden-sm text-center">Available</th>
-                            <th class="hidden-xs hidden-sm text-right">Previous Price</th>
-                            <th class="text-right hidden-xs hidden-sm">Change</th>
-                            <th class="hidden-xs hidden-sm" style="padding-left: 20px;">Last Changed</th>
+                            <th class="sortable" @click.prevent="sortSitesBy('site')" :class="sortSiteClass('site')">Site</th>
+                            <th class="sortable text-right" @click.prevent="sortSitesBy('recent_price')" :class="sortSiteClass('recent_price')">Current Price</th>
+                            <th class="sortable hidden-xs hidden-sm text-center" :class="sortSiteClass('availability')" @click.prevent="sortSitesBy('availability')">Available</th>
+                            <th class="sortable hidden-xs hidden-sm text-right" :class="sortSiteClass('previous_price')" @click.prevent="sortSitesBy('previous_price')">Previous Price</th>
+                            <th class="sortable text-right hidden-xs hidden-sm" :class="sortSiteClass('price_change')" @click.prevent="sortSitesBy('price_change')">Change</th>
+                            <th class="sortable hidden-xs hidden-sm" @click.prevent="sortSitesBy('last_changed_at')" :class="sortSiteClass('last_changed_at')" style="padding-left: 20px;">Last Changed</th>
                             <th width="100"></th>
                         </tr>
                         </thead>
-                        <single-site v-for="site in sites" :current-site="site" :is-newly-created="justAddedSiteId == site.id"
-                                     @selected-item="selectedItem" @reload-site="updateSite" @reload-sites="reloadSites" @deleted-site="deletedSite"></single-site>
+                        <single-site v-for="site in sites" :current-site="site" :is-newly-created="justAddedSiteId == site.id" @selected-item="selectedItem" @reload-site="updateSite" @reload-sites="reloadSites" @deleted-site="deletedSite"></single-site>
                         <tbody>
-                        <tr class="empty-message-row" v-if="!hasSites">
+                        <tr class="empty-message-row" v-if="!hasSites && !isLoadingSites">
                             <td colspan="9" class="text-center">
                                 To start tracking prices, simply copy and paste the URL of the product page of the website your want to track.
+                            </td>
+                        </tr>
+                        <tr class="loading-row loading-row-text" v-if="isLoadingSites && !hasSites">
+                            <td colspan="9" class="text-center">
+                                Please wait while SpotLite is loading your URLs.
                             </td>
                         </tr>
                         </tbody>
@@ -151,6 +159,10 @@
                 isProductCollapsed: false,
                 justAddedSite: null,
                 siteLength: 5,
+                sorting: {
+                    column: 'recent_price',
+                    sequence: 'asc',
+                },
             }
         },
         watch: {
@@ -226,6 +238,19 @@
             clearSitesList(){
                 this.sites = [];
             },
+            sortSitesBy(column){
+                if (this.sorting.column == column) {
+                    if (this.sorting.sequence == 'asc') {
+                        this.sorting.sequence = 'desc';
+                    } else {
+                        this.sorting.sequence = 'asc';
+                    }
+                } else {
+                    this.sorting.column = column;
+                    this.sorting.sequence = 'asc';
+                }
+                this.reloadSites();
+            },
             /*endregion*/
             /*region product related methods*/
             onClickEditProduct(){
@@ -281,6 +306,15 @@
             },
             emitDeleteProduct(){
                 this.$emit('deleted-product', this.product);
+            },
+            /*endregion*/
+            /*region helpers*/
+            sortSiteClass(column){
+                if (this.sorting.column == column) {
+                    return 'sort-' + this.sorting.sequence;
+                } else {
+                    return ''
+                }
             }
             /*endregion*/
         },
@@ -293,7 +327,9 @@
                     params: {
                         offset: this.sites.length,
                         length: this.siteLength,
-                        product_id: this.product.id
+                        product_id: this.product.id,
+                        sorting_column: this.sorting.column,
+                        sorting_sequence: this.sorting.sequence,
                     }
                 }
             },
@@ -415,11 +451,43 @@
         color: #777;
     }
 
+    tr.loading-row-text{
+        font-weight: bold;
+        padding: 20px !important;
+        font-size: 16px;
+        color: #777;
+    }
+
     tr.add-site-row, tr.loading-row, tr.load-more-row {
         background-color: #fff !important;
     }
 
     .table > tbody + tbody {
         border-top: none;
+    }
+
+    th.sortable {
+        cursor: pointer;
+    }
+
+    th.sortable::after {
+        font: normal normal normal 14px/1 FontAwesome;
+        content: "\F0DC";
+        padding-left: 10px;
+        color: #d3d3d3;
+    }
+
+    th.sortable.sort-asc::after {
+        font: normal normal normal 14px/1 FontAwesome;
+        content: "\f0de";
+        padding-left: 10px;
+        color: #868686;
+    }
+
+    th.sortable.sort-desc::after {
+        font: normal normal normal 14px/1 FontAwesome;
+        content: "\f0dd";
+        padding-left: 10px;
+        color: #868686;
     }
 </style>
