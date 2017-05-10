@@ -93,6 +93,7 @@ class SiteController extends Controller
     {
         event(new BeforeShow($site));
 
+        $site = $this->siteService->get($site);
         $status = true;
 
         event(new AfterShow($site));

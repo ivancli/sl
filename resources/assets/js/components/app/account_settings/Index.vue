@@ -21,7 +21,7 @@
                     </a>
                 </li>
                 <li :class="setTabActiveClass('manage-subscription')" v-if="hasSubscription">
-                    <a href="#display-settings" @click.prevent="setActiveTab('manage-subscription')">
+                    <a href="#manage-subscription" @click.prevent="setActiveTab('manage-subscription')">
                         Manage My Subscription
                     </a>
                 </li>
@@ -36,7 +36,8 @@
                 <div class="tab-pane" id="display-settings" :class="setTabActiveClass('display-settings')">
                     <display-settings></display-settings>
                 </div>
-                <div class="tab-pane" id="manage-subscription" :class="setTabActiveClass('manage-subscription')" v-if="hasSubscription">
+                <div class="tab-pane" id="manage-subscription" :class="setTabActiveClass('manage-subscription')"
+                     v-if="hasSubscription">
                     <manage-subscription></manage-subscription>
                 </div>
             </div>
@@ -62,8 +63,13 @@
                 activeTab: 'edit-profile'
             }
         },
+        watch: {
+            locationHash(){
+                this.activeTab = this.locationHash;
+            }
+        },
         methods: {
-            setInitActiveTab: function () {
+            setInitActiveTab() {
                 if (window.location.hash != '') {
                     switch (window.location.hash) {
                         case "#reset-password":
@@ -81,10 +87,15 @@
                     }
                 }
             },
-            setTabActiveClass: function (tabName) {
+            setInitHashWatcher(){
+                window.addEventListener("hashchange", () => {
+                    this.activeTab = window.location.hash.replace('#', '');
+                }, false);
+            },
+            setTabActiveClass(tabName) {
                 return tabName == this.activeTab ? 'active' : '';
             },
-            setActiveTab: function (tabName) {
+            setActiveTab(tabName) {
                 this.activeTab = tabName;
                 location.replace(window.location.href.split('#')[0] + '#' + tabName);
             }
@@ -92,6 +103,7 @@
         mounted() {
             console.info('Index component is mounted');
             this.setInitActiveTab();
+            this.setInitHashWatcher();
         },
         computed: {
             hasSubscription(){

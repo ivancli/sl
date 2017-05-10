@@ -190,7 +190,7 @@
                 this.errors = {};
             },
             setSuccessMsg: function () {
-                this.successMsg = "You have successfully saved your profile"
+                this.successMsg = "Your profile has been updated."
             },
             clearSuccessMsg: function () {
                 this.successMsg = '';

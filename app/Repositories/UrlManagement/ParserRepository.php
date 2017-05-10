@@ -37,7 +37,6 @@ class ParserRepository implements ParserContract
         $extraction = null;
 
         $parserClass->setContent($content);
-
         switch ($parserClassName) {
             case "XPathParser":
                 $xpathConfs = $itemMeta->getConfs('XPATH');

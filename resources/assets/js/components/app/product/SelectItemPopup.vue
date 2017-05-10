@@ -5,8 +5,7 @@
             <section class="modal-card-body">
                 <div class="row">
                     <div class="col-sm-12">
-                        <p>It appears that there are multiple options available in provided Product Page.</p>
-                        <p>Please select from the following options:</p>
+                        <p>Please select the price you want to track from the following options:</p>
                         <div class="row">
                             <div class="col-sm-12">
                                 <form>
@@ -27,7 +26,9 @@
             </section>
             <footer class="modal-card-foot">
                 <div class="text-right">
-                    <button class="btn btn-primary btn-flat" href="#" @click.prevent="updateSite" :disabled="selectedItem == null">CONFIRM</button>
+                    <button class="btn btn-primary btn-flat" href="#" @click.prevent="updateSite"
+                            :disabled="selectedItem == null">CONFIRM
+                    </button>
                     <a class="btn btn-default btn-flat" href="#" @click.prevent="hideModal">CANCEL</a>
                 </div>
             </footer>
@@ -75,7 +76,7 @@
                 axios.put(this.site.urls.item_update, this.updateSiteData).then(response => {
                     this.isUpdatingSite = false;
                     if (response.data.status == true) {
-                        this.$emit('selected-item', this.selectedItem);
+                        this.emitSelectedItem();
                     }
                 }).catch(error => {
                     this.isUpdatingSite = false;
@@ -83,6 +84,12 @@
                 });
             },
             hideModal(){
+                this.emitHideModal()
+            },
+            emitSelectedItem(){
+                this.$emit('selected-item', this.selectedItem);
+            },
+            emitHideModal(){
                 this.$emit('hide-modal');
             }
         },

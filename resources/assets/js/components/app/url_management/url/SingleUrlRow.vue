@@ -4,8 +4,8 @@
         <td class="word-wrap-break-word word-break-break-all">
             <a :href="url.full_path" v-text="url.full_path" target="_blank"></a>
         </td>
-        <td>{{ url.status }}</td>
         <td>{{ url.failMetasCount }}</td>
+        <td>{{ url.status }}</td>
         <td>
             <div v-if="url.crawler.crawled_at != null">
                 {{ url.crawler.crawled_at | formatDateTime(datetimeFormat) }}

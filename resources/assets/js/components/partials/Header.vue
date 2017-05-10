@@ -140,49 +140,33 @@
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle lnk-drop-down-need-help" data-toggle="dropdown"
+                        <a href="#" class="dropdown-toggle lnk-drop-down-account" data-toggle="dropdown"
                            aria-expanded="false">
-                            &nbsp;
-                            <i class="fa fa-question-circle"></i>
-                            <span class="hidden-xs">
-                                &nbsp;NEED HELP ?&nbsp;&nbsp;
-                                <i class="fa fa-caret-down"></i>
-                            </span>&nbsp;
+                            <i class="fa fa-cog"></i>
+                            <span class="hidden-xs">&nbsp;&nbsp;<i class="fa fa-caret-down"></i></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">
-                                SpotLite Tour
-                            </a>
-                            </li>
-                            <li>
-                                <a href="#" target="_blank">Video
-                                    Tutorials</a></li>
-                            <li><a href="#" target="_blank">FAQ</a></li>
-                            <li>
-                                <a href="#" target="_blank">Step by Step Guide</a>
-                            </li>
-                            <li><a href="#">Contact us</a></li>
+                            <li><a href="/account-settings#edit-profile">My Account</a></li>
+                            <li><a href="/account-settings#bulk-import">Bulk Import <span class="icon-new-feature">NEW</span></a></li>
+                            <li><a href="/account-settings#site-names">Site Names</a></li>
+                            <li><a href="/account-settings#reset-password">Reset Password</a></li>
+                            <li><a href="/account-settings#manage-subscription">Manage My Subscription</a></li>
+                            <li><a href="/logout">Logout</a></li>
                         </ul>
                     </li>
-                    <li class="spotlite-user-menu">
-                        <a href="/account_settings">&nbsp;
-                            <i class="fa fa-wrench"></i>
-                            <span class="hidden-xs">
-                                &nbsp;
-                                ACCOUNT SETTINGS
-
-                            </span>&nbsp;
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle lnk-drop-down-need-help" data-toggle="dropdown"
+                           aria-expanded="false">
+                            <i class="fa fa-question-circle"></i>
+                            <span class="hidden-xs">&nbsp;&nbsp;<i class="fa fa-caret-down"></i></span>
                         </a>
-                    </li>
-                    <li>
-                        <a href="/logout">
-                            &nbsp;<i class="fa fa-sign-in"></i>
-                            <span class="hidden-xs">
-                                &nbsp;
-                                SIGN OUT
-                            </span>
-                            &nbsp;
-                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">SpotLite Tour</a></li>
+                            <li><a href="#" target="_blank">Video Tutorials</a></li>
+                            <li><a href="#" target="_blank">FAQ</a></li>
+                            <li><a href="#" target="_blank">Step by Step Guide</a></li>
+                            <li><a href="#">Contact us</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -306,6 +290,18 @@
 
     .skin-black-light .main-header .navbar .nav > li > a:hover, .skin-black-light .main-header .navbar .nav > li > a:active, .skin-black-light .main-header .navbar .nav > li > a:focus, .skin-black-light .main-header .navbar .nav .open > a, .skin-black-light .main-header .navbar .nav .open > a:hover, .skin-black-light .main-header .navbar .nav .open > a:focus, .skin-black-light .main-header .navbar .nav > .active > a {
         background: #7ed0c0;
+        color: #fff;
+    }
+
+    .icon-new-feature {
+        font-size: 10px;
+        color: #00d200;
+        font-weight: bold;
+        position: absolute;
+        padding-left: 3px;
+    }
+
+    .skin-black-light .main-header .navbar-toggle {
         color: #fff;
     }
 

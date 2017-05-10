@@ -60,7 +60,7 @@
                             <th class="sortable hidden-xs hidden-sm text-right" :class="sortSiteClass('previous_price')" @click.prevent="sortSitesBy('previous_price')">Previous Price</th>
                             <th class="sortable text-right hidden-xs hidden-sm" :class="sortSiteClass('price_change')" @click.prevent="sortSitesBy('price_change')">Change</th>
                             <th class="sortable hidden-xs hidden-sm" @click.prevent="sortSitesBy('last_changed_at')" :class="sortSiteClass('last_changed_at')" style="padding-left: 20px;">Last Changed</th>
-                            <th width="100"></th>
+                            <th width="120"></th>
                         </tr>
                         </thead>
                         <single-site v-for="site in sites" :current-site="site" :is-newly-created="justAddedSiteId == site.id" @selected-item="selectedItem" @reload-site="updateSite" @reload-sites="reloadSites" @deleted-site="deletedSite"></single-site>
@@ -86,13 +86,14 @@
                         </tbody>
                         <!--/DOT DOT DOT-->
                         <!--LOAD MORE-->
-                        <tbody>
-                        <tr class="load-more-row" v-if="!isLoadingSites && moreSitesToLoad">
-                            <td colspan="9" class="p-t-20">
-                                <a href="#" class="lnk-load-more text-tiffany" @click.prevent="loadSites">LOAD MORE&hellip;</a>
-                            </td>
-                        </tr>
-                        </tbody>
+                        <!--IMPORTANT: disable load more function for the moment, progressive loading logic conflicts with sorting when added new site-->
+                        <!--<tbody>-->
+                        <!--<tr class="load-more-row" v-if="!isLoadingSites && moreSitesToLoad">-->
+                            <!--<td colspan="9" class="p-t-20">-->
+                                <!--<a href="#" class="lnk-load-more text-tiffany" @click.prevent="loadSites">LOAD MORE&hellip;</a>-->
+                            <!--</td>-->
+                        <!--</tr>-->
+                        <!--</tbody>-->
                         <!--/LOAD MORE-->
                         <tbody>
                         <tr class="add-site-row">
@@ -158,7 +159,7 @@
                 isDeletingProduct: false,
                 isProductCollapsed: false,
                 justAddedSite: null,
-                siteLength: 5,
+                siteLength: null,
                 sorting: {
                     column: 'recent_price',
                     sequence: 'asc',
@@ -179,10 +180,11 @@
                 if (site.url.itemsCount > 1) {
                     this.justAddedSite = site;
                 }
-                if (!this.moreSitesToLoad) {
-                    this.appendSite(site);
-                }
-                this.emitReloadProduct();
+//                if (!this.moreSitesToLoad) {
+//                    this.appendSite(site);
+//                }
+//                this.emitReloadProduct();
+                this.reloadSites();
             },
             appendSite(site) {
                 this.sites.push(site);

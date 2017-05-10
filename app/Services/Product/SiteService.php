@@ -162,6 +162,17 @@ class SiteService
     }
 
     /**
+     * Format a single site
+     * @param Site $site
+     * @return Site
+     */
+    public function get(Site $site)
+    {
+        $site->load('item');
+        return $site;
+    }
+
+    /**
      * create a new site
      * @param array $data
      * @return mixed
@@ -178,7 +189,16 @@ class SiteService
         $product = $this->productRepo->get(array_get($data, 'product_id'));
         //run crawler immediately
         dispatch((new CrawlJob($url))->onQueue("crawl")->onConnection('sync'));
+
+        if ($url->itemsCount == 1) {
+            $theOnlyItem = $url->items->first();
+            if (!is_null($theOnlyItem->recentPrice)) {
+                $theOnlyItem->sites()->save($site);
+            }
+        }
+
         $product->sites()->save($site);
+        $site->load('item');
         return $site;
     }
 

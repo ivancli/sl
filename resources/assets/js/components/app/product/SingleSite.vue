@@ -73,8 +73,7 @@
             <a href="#" class="btn-action" title="edit" v-if="!editingSiteURL" @click.prevent="goingToEditSiteURL">
                 <i class="fa fa-pencil"></i>
             </a>
-            <a href="#" class="btn-action" title="choose item" v-if="site.url.itemsCount > 1"
-               @click.prevent="onClickSelectItem">
+            <a href="#" class="btn-action" title="choose item" v-if="site.url.itemsCount > 1" @click.prevent="onClickSelectItem">
                 <i class="fa fa-exclamation-triangle" v-if="site.item == null"></i>
                 <i class="fa fa-list-ul" v-else></i>
             </a>
@@ -305,9 +304,9 @@
         word-break: break-all;
     }
 
-    td.col-recent-price,
-    td.col-previous-price,
-    td.col-price-change {
+    tr.site-wrapper td.col-recent-price,
+    tr.site-wrapper td.col-previous-price,
+    tr.site-wrapper td.col-price-change {
         padding-right: 25px;
     }
 

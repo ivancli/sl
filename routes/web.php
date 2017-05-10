@@ -33,7 +33,7 @@ Route::group(['middleware' => ['auth', 'subs']], function () {
     })->name('home.get');
 
     #region User Account Client Routes
-    Route::resource('account_settings', 'Account\AccountSettingsController');
+    Route::resource('account-settings', 'Account\AccountSettingsController');
     Route::resource('user/profile', 'Account\ProfileController');
     Route::resource('user/preference', 'Account\PreferenceController');
     #endregion
