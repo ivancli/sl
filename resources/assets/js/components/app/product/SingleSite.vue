@@ -77,7 +77,7 @@
                 <i class="fa fa-exclamation-triangle" v-if="site.item == null"></i>
                 <i class="fa fa-list-ul" v-else></i>
             </a>
-            <a href="#" class="btn-action" title="chart">
+            <a href="#" class="btn-action" v-if="site.item != null" title="chart" @click.prevent="onClickViewChart">
                 <i class="fa fa-line-chart"></i>
             </a>
             <a href="#" class="btn-action" title="delete" @click.prevent="onClickDeleteSite">
@@ -118,16 +118,16 @@
             </table>
         </td>
     </tr>
-    <select-item-popup v-if="isSelectingItem || isNewlyCreated" :editing-site="site" @selected-item="selectedItem"
-                       @hide-modal="cancelSelectingItem"></select-item-popup>
-    <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete"
-                         @confirmDelete="confirmDelete"></delete-confirmation>
+    <select-item-popup v-if="isSelectingItem || isNewlyCreated" :editing-site="site" @selected-item="selectedItem" @hide-modal="cancelSelectingItem"></select-item-popup>
+    <site-chart v-if="isViewingChart" :charting-site="site" @hide-modal="cancelViewingChart"></site-chart>
+    <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
     </tbody>
 </template>
 
 <script>
     import editSite from './EditSite.vue';
     import selectItemPopup from './SelectItemPopup.vue';
+    import siteChart from './chart/SiteChart.vue';
     import deleteConfirmation from '../../fragments/modals/DeleteConfirmation.vue';
 
     import formatDateTime from '../../../filters/formatDateTime';
@@ -138,6 +138,7 @@
         components: {
             editSite,
             selectItemPopup,
+            siteChart,
             deleteConfirmation,
         },
         props: [
@@ -160,6 +161,7 @@
                 },
                 isDeletingSite: false,
                 isSelectingItem: false,
+                isViewingChart: false,
             }
         },
         mounted() {
@@ -180,6 +182,14 @@
             },
             cancelEditSiteURL() {
                 this.editingSiteURL = false;
+            },
+            /*endregion*/
+            /*region view site chart*/
+            onClickViewChart(){
+                this.isViewingChart = true;
+            },
+            cancelViewingChart(){
+                this.isViewingChart = false;
             },
             /*endregion*/
             /*region delete site*/

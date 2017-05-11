@@ -152,6 +152,7 @@ class Item extends Model
             'update' => route('item.update', $this->getKey()),
             'delete' => route('item.destroy', $this->getKey()),
             'queue' => route('item.queue', $this->getKey()),
+            'price' => route('item.price', $this->getKey()),
             'meta_index' => route('item-meta.index', ['item_id' => $this->getKey()]),
             'meta_store' => route('item-meta.store', ['item_id' => $this->getKey()]),
             'test_crawl_parse' => route('item.test', $this->getKey()),

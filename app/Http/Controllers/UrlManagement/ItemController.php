@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\UrlManagement;
 
+use App\Events\UrlManagement\Item\AfterPrices;
 use App\Events\UrlManagement\Item\AfterQueue;
+use App\Events\UrlManagement\Item\BeforePrices;
 use App\Events\UrlManagement\Item\BeforeQueue;
 use App\Http\Controllers\Controller;
 use App\Events\UrlManagement\Item\BeforeIndex;
@@ -165,5 +167,23 @@ class ItemController extends Controller
         event(new AfterQueue($item));
 
         return compact(['status']);
+    }
+
+    /**
+     * Retrieve historical prices of an item
+     *
+     * @param Item $item
+     * @return array
+     */
+    public function prices(Item $item)
+    {
+        event(new BeforePrices($item));
+
+        $historicalPrices = $this->itemService->loadHistoricalPrices($item);
+        $status = !is_null($historicalPrices) && is_array($historicalPrices);
+
+        event(new AfterPrices($item));
+
+        return compact(['status', 'historicalPrices']);
     }
 }

@@ -24,3 +24,7 @@ export const SET_PRODUCT_SEARCH_PROMISE = 'setProductSearchPromise';
 export const CLEAR_PRODUCT_SEARCH_PROMISE = 'clearProductSearchPromise';
 export const SET_SEARCH_PRODUCT_REFERENCE = 'setSearchProductReference';
 export const CLEAR_SEARCH_PRODUCT_REFERENCE = 'clearSearchProductReference';
+
+export const SET_PROFILE = 'setProfile';
+export const SET_COMPANY = 'setCompany';
+export const SET_DISPLAY = 'setDisplay';

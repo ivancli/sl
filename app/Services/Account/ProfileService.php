@@ -10,6 +10,7 @@ namespace App\Services\Account;
 
 
 use App\Contracts\Repositories\UserManagement\UserContract;
+use App\Models\User;
 use App\Validators\Account\Profile\UpdateValidator;
 
 class ProfileService
@@ -51,14 +52,25 @@ class ProfileService
 
     /**
      * update user profile
-     * @param $user_id
+     * @param User $user
      * @param array $data
      */
-    public function update($user_id, array $data)
+    public function update(User $user, array $data)
     {
-        $user = $this->userRepo->get($user_id);
         $this->updateValidator->validate($data);
-        $this->userRepo->update($user, $data);
-        $this->userRepo->updateMetas($user, $data);
+
+        if (array_has($data, 'profile')) {
+            $this->userRepo->update($user, array_get($data, 'profile'));
+        }
+
+        if (array_has($data, 'company')) {
+            $this->userRepo->updateMetas($user, array_get($data, 'company'));
+        }
+
+        if (array_has($data, 'display')) {
+            foreach (array_get($data, 'display') as $element => $value) {
+                $user->setPreference($element, $value);
+            }
+        }
     }
 }

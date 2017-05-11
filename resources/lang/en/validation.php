@@ -161,6 +161,16 @@ return [
         'meta.supplier' => 'product supplier name',
         'meta.sku' => 'product SKU',
         'meta.cost_price' => 'product cost price',
+        'profile.title' => 'title',
+        'profile.first_name' => 'first name',
+        'profile.last_name' => 'last name',
+        'profile.email' => 'email',
+        'company.industry' => 'industry',
+        'company.company_type' => 'company type',
+        'company.company_url' => 'my site URL',
+        'company.ebay_username' => 'eBay username',
+        'display.date_format' => 'date format',
+        'display.time_format' => 'time format',
     ],
 
 ];

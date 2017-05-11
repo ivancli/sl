@@ -7,6 +7,7 @@ use App\Events\Account\Profile\AfterUpdate;
 use App\Events\Account\Profile\BeforeShow;
 use App\Events\Account\Profile\BeforeUpdate;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Services\Account\ProfileService;
 use Illuminate\Http\Request;
 
@@ -21,12 +22,18 @@ class ProfileController extends Controller
         $this->profileService = $profileService;
     }
 
+    /**
+     * Load a user
+     * @param $user_id
+     * @return array|bool
+     */
     public function show($user_id)
     {
         if ($user_id != auth()->user()->getKey()) {
             abort(403);
             return false;
         }
+
         $user = $this->profileService->getUserById($user_id);
 
         event(new BeforeShow($user));
@@ -50,11 +57,12 @@ class ProfileController extends Controller
             abort(403);
             return false;
         }
+
         $user = $this->profileService->getUserById($user_id);
 
         event(new BeforeUpdate($user));
 
-        $this->profileService->update($user_id, $this->request->all());
+        $this->profileService->update($user, $this->request->all());
         $status = true;
 
         event(new AfterUpdate($user));

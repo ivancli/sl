@@ -10,11 +10,18 @@ import loginUserStore from '../../loginUser';
 import defaultStore from '../../default';
 import subscriptionPlans from '../../subscription/subscriptionPlans';
 
+import profile from './profile';
+import display from './display';
+import company from './company';
+
 export default new Vuex.Store({
     modules: {
         loginUserStore,
         defaultStore,
         subscriptionPlans,
+        profile,
+        display,
+        company,
         index: {
             state: {},
             mutations: {},

@@ -95,6 +95,30 @@ class ItemControllerEventSubscriber
         $this->dispatchUserActivityLog($activity);
     }
 
+    public function onBeforeQueue($event)
+    {
+        $item = $event->item;
+    }
+
+    public function onAfterQueue($event)
+    {
+        $item = $event->item;
+        $activity = "Pushed item to queue {$item->getKey()}";
+        $this->dispatchUserActivityLog($activity);
+    }
+
+    public function onBeforePrices($event)
+    {
+        $item = $event->item;
+    }
+
+    public function onAfterPrices($event)
+    {
+        $item = $event->item;
+        $activity = "Get prices of item {$item->getKey()}";
+        $this->dispatchUserActivityLog($activity);
+    }
+
     protected function dispatchUserActivityLog($activity)
     {
         dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log")->onConnection('sync'));
@@ -163,6 +187,24 @@ class ItemControllerEventSubscriber
         $events->listen(
             'App\Events\UrlManagement\Item\AfterDestroy',
             'App\Listeners\UrlManagement\ItemControllerEventSubscriber@onAfterDestroy'
+        );
+
+        $events->listen(
+            'App\Events\UrlManagement\Item\BeforeQueue',
+            'App\Listeners\UrlManagement\ItemControllerEventSubscriber@onBeforeQueue'
+        );
+        $events->listen(
+            'App\Events\UrlManagement\Item\AfterQueue',
+            'App\Listeners\UrlManagement\ItemControllerEventSubscriber@onAfterQueue'
+        );
+
+        $events->listen(
+            'App\Events\UrlManagement\Item\BeforePrices',
+            'App\Listeners\UrlManagement\ItemControllerEventSubscriber@onBeforePrices'
+        );
+        $events->listen(
+            'App\Events\UrlManagement\Item\AfterPrices',
+            'App\Listeners\UrlManagement\ItemControllerEventSubscriber@onAfterPrices'
         );
     }
 }

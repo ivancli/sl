@@ -86,6 +86,7 @@ Route::group(['middleware' => ['auth', 'subs']], function () {
         #region Item
         Route::resource('item', 'UrlManagement\ItemController');
         Route::post('item/queue/{item}', 'UrlManagement\ItemController@queue')->name('item.queue');
+        Route::get('item/price/{item}', 'UrlManagement\ItemController@prices')->name('item.price');
         #endregion
 
         #region ItemMeta

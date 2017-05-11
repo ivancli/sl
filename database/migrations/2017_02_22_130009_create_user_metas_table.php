@@ -20,7 +20,8 @@ class CreateUserMetasTable extends Migration
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->string('industry')->nullable();
             $table->string('company_type')->nullable();
-            $table->string('company_url')->nullable();
+            $table->string('company_url', 2083)->nullable();
+            $table->string('ebay_username')->nullable();
             $table->timestamps();
         });
     }

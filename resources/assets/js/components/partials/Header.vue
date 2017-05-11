@@ -140,8 +140,7 @@
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle lnk-drop-down-account" data-toggle="dropdown"
-                           aria-expanded="false">
+                        <a href="#" class="dropdown-toggle lnk-drop-down-account" data-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-cog"></i>
                             <span class="hidden-xs">&nbsp;&nbsp;<i class="fa fa-caret-down"></i></span>
                         </a>
@@ -150,7 +149,7 @@
                             <li><a href="/account-settings#bulk-import">Bulk Import <span class="icon-new-feature">NEW</span></a></li>
                             <li><a href="/account-settings#site-names">Site Names</a></li>
                             <li><a href="/account-settings#reset-password">Reset Password</a></li>
-                            <li><a href="/account-settings#manage-subscription">Manage My Subscription</a></li>
+                            <li v-if="needSubscription && hasSubscription"><a href="/account-settings#manage-subscription">Manage My Subscription</a></li>
                             <li><a href="/logout">Logout</a></li>
                         </ul>
                     </li>
@@ -199,6 +198,12 @@
                 } else {
                     return window.location.pathname == "/product";
                 }
+            },
+            needSubscription(){
+                return user.needSubscription;
+            },
+            hasSubscription(){
+                return typeof user.subscription != 'undefined' && user.subscription != null;
             }
         }
     }

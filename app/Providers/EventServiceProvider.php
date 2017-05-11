@@ -142,6 +142,8 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\UrlManagement\Item\AfterDestroy' => [],
         'App\Events\UrlManagement\Item\BeforeQueue' => [],
         'App\Events\UrlManagement\Item\AfterQueue' => [],
+        'App\Events\UrlManagement\Item\BeforePrices' => [],
+        'App\Events\UrlManagement\Item\AfterPrices' => [],
 
         /* item meta */
         'App\Events\UrlManagement\ItemMeta\BeforeIndex' => [],
