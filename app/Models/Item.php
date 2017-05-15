@@ -61,7 +61,10 @@ class Item extends Model
     {
         $priceItemMeta = $this->metas()->where('element', 'PRICE')->first();
         if (!is_null($priceItemMeta)) {
-            return $priceItemMeta->value;
+            $price = $priceItemMeta->historicalPrices()->orderBy('id', 'desc')->first();
+            if(!is_null($price)){
+                return $price->amount;
+            }
         }
         return null;
     }
@@ -96,7 +99,7 @@ class Item extends Model
     {
         $priceItemMeta = $this->metas()->where('element', 'PRICE')->first();
         if (!is_null($priceItemMeta)) {
-            $previousPrice = $priceItemMeta->historicalPrices()->where('amount', '<>', $priceItemMeta->value)->orderBy('id', 'desc')->first();
+            $previousPrice = $priceItemMeta->historicalPrices()->where('amount', '<>', $this->recentPrice)->orderBy('id', 'desc')->first();
             if (!is_null($previousPrice)) {
                 return $previousPrice->amount;
             }

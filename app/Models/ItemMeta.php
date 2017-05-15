@@ -11,6 +11,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class ItemMeta extends Model
 {
@@ -41,7 +42,27 @@ class ItemMeta extends Model
      */
     public function historicalPrices()
     {
-        return $this->hasMany('App\Models\HistoricalPrice', 'item_meta_id', 'id');
+        $interval = null;
+        if (auth()->check()) {
+            $user = auth()->user();
+            if (isset($user->subscription) && isset($user->subscription->subscriptionCriteria)) {
+                $subscriptionCriteria = $user->subscription->subscriptionCriteria;
+                if (isset($subscriptionCriteria->frequency) && is_int($subscriptionCriteria->frequency)) {
+                    $interval = $subscriptionCriteria->frequency;
+                }
+            }
+        }
+
+        if (!is_null($interval)) {
+            return $this->hasMany('App\Models\HistoricalPrice', 'item_meta_id', 'id')->whereIn('id', function ($query) use ($interval) {
+                $query->select(DB::raw('MAX(id)'))
+                    ->from(with(new HistoricalPrice)->getTable())
+                    ->where('item_meta_id', $this->getKey())
+                    ->groupBy(DB::raw('CEIL(UNIX_TIMESTAMP(created_at)/(' . $interval . ' * 60 * 60))'));
+            });
+        } else {
+            return $this->hasMany('App\Models\HistoricalPrice', 'item_meta_id', 'id');
+        }
     }
 
     /**
@@ -75,6 +96,25 @@ class ItemMeta extends Model
     /*----------------------------------------------------------------------*/
     /* Helpers                                                              */
     /*----------------------------------------------------------------------*/
+
+//    /**
+//     * Load historical prices by interval
+//     * @param null $interval
+//     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+//     */
+//    public function historicalPricesByInterval($interval = null)
+//    {
+//        if (!is_null($this->interval)) {
+//            return $this->historicalPrices()->whereIn('id', function ($query) {
+//                $query->select(DB::raw('MAX(id)'))
+//                    ->from(with(new HistoricalPrice)->getTable())
+//                    ->where('item_meta_id', $this->getKey())
+//                    ->groupBy(DB::raw('CEIL(UNIX_TIMESTAMP(created_at)/(' . $this->interval . ' * 60 * 60))'));
+//            });
+//        } else {
+//            return $this->historicalPrices();
+//        }
+//    }
 
     /**
      * Remove all configurations

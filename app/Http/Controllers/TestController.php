@@ -10,17 +10,20 @@ namespace App\Http\Controllers;
 
 
 use App\Contracts\Repositories\UrlManagement\CrawlerContract;
+use App\Contracts\Repositories\UrlManagement\ItemContract;
 use App\Contracts\Repositories\UrlManagement\ItemMetaContract;
 use App\Contracts\Repositories\UrlManagement\ParserContract;
 use App\Contracts\Repositories\UrlManagement\UrlContract;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TestController extends Controller
 {
     protected $request;
-    protected $crawlerRepo, $parserRepo, $urlRepo, $itemMetaRepo;
+    protected $crawlerRepo, $parserRepo, $urlRepo, $itemRepo, $itemMetaRepo;
 
     public function __construct(Request $request,
+                                ItemContract $itemContract,
                                 ItemMetaContract $itemMetaContract,
                                 CrawlerContract $crawlerContract,
                                 ParserContract $parserContract,
@@ -29,13 +32,24 @@ class TestController extends Controller
         $this->crawlerRepo = $crawlerContract;
         $this->parserRepo = $parserContract;
         $this->urlRepo = $urlContract;
+        $this->itemRepo = $itemContract;
         $this->itemMetaRepo = $itemMetaContract;
     }
 
     public function test()
     {
-        $itemMeta = $this->itemMetaRepo->get(115);
-        dd($itemMeta->confs->pluck('value', 'element'));
+        $item = $this->itemRepo->get(2);
+
+
+
+        $itemMeta = $item->metas()->where('id', 5)->first();
+
+        DB::enableQueryLog();
+        ($itemMeta->historicalPrices);
+        dd(DB::getQueryLog());
+        dump($item->recentPrice);
+        $item->interval = 12;
+        dd($item->recentPrice);
 
 
         $crawler = $this->crawlerRepo->get(7);
