@@ -13,6 +13,26 @@
                 <edit-product :editing-product="product" :going-to-edit-product="editingProduct"
                               @edited-product="editedProduct"
                               @cancel-edit-product-name="cancelEditProduct"></edit-product>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <i class="fa fa-info-circle text-muted" v-show="!editingProduct"></i>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <span v-show="!editingProduct" class="hidden-xs hidden-sm f-w-normal text-muted f-s-11">
+                    <span>
+                        Cheapest:
+                        <strong>{{cheapestSite.siteUrl | domain}}</strong>
+                    </span>
+                    &nbsp;&nbsp;
+                    <span>
+                        Current Price:
+                        <strong>${{ cheapestSite.item.recentPrice | currency }}</strong>
+                    </span>
+                    &nbsp;&nbsp;
+                    <span>
+                        Price Change:
+                        <strong v-if="cheapestSite.item.priceChange != null">${{ cheapestSite.item.priceChange | currency }}</strong>
+                        <strong v-else><i class="fa fa-minus"></i></strong>
+                    </span>
+                </span>
             </th>
             <th class="text-right action-cell product-th">
                 <a href="#" class="btn-action" title="edit" @click.prevent="onClickEditProduct" v-if="!editingProduct">
@@ -54,20 +74,36 @@
                     <table class="table table-striped table-condensed tbl-site">
                         <thead>
                         <tr>
-                            <th class="sortable" @click.prevent="sortSitesBy('site')" :class="sortSiteClass('site')">Site</th>
-                            <th class="sortable text-right" @click.prevent="sortSitesBy('recent_price')" :class="sortSiteClass('recent_price')">Current Price</th>
-                            <th class="sortable hidden-xs hidden-sm text-center" :class="sortSiteClass('availability')" @click.prevent="sortSitesBy('availability')">Available</th>
-                            <th class="sortable hidden-xs hidden-sm text-right" :class="sortSiteClass('previous_price')" @click.prevent="sortSitesBy('previous_price')">Previous Price</th>
-                            <th class="sortable text-right hidden-xs hidden-sm" :class="sortSiteClass('price_change')" @click.prevent="sortSitesBy('price_change')">Change</th>
-                            <th class="sortable hidden-xs hidden-sm" @click.prevent="sortSitesBy('last_changed_at')" :class="sortSiteClass('last_changed_at')" style="padding-left: 20px;">Last Changed</th>
+                            <th class="sortable" @click.prevent="sortSitesBy('site')" :class="sortSiteClass('site')">
+                                Site
+                            </th>
+                            <th class="sortable text-right" @click.prevent="sortSitesBy('recent_price')"
+                                :class="sortSiteClass('recent_price')">Current Price
+                            </th>
+                            <th class="sortable hidden-xs hidden-sm text-center" :class="sortSiteClass('availability')"
+                                @click.prevent="sortSitesBy('availability')">Available
+                            </th>
+                            <th class="sortable hidden-xs hidden-sm text-right" :class="sortSiteClass('previous_price')"
+                                @click.prevent="sortSitesBy('previous_price')">Previous Price
+                            </th>
+                            <th class="sortable text-right hidden-xs hidden-sm" :class="sortSiteClass('price_change')"
+                                @click.prevent="sortSitesBy('price_change')">Change
+                            </th>
+                            <th class="sortable hidden-xs hidden-sm" @click.prevent="sortSitesBy('last_changed_at')"
+                                :class="sortSiteClass('last_changed_at')" style="padding-left: 20px;">Last Changed
+                            </th>
                             <th width="120"></th>
                         </tr>
                         </thead>
-                        <single-site v-for="site in sites" :current-site="site" :is-newly-created="justAddedSiteId == site.id" @selected-item="selectedItem" @reload-site="updateSite" @reload-sites="reloadSites" @deleted-site="deletedSite"></single-site>
+                        <single-site v-for="site in sites" :current-site="site"
+                                     :is-newly-created="justAddedSiteId == site.id" @selected-item="selectedItem"
+                                     @reload-site="updateSite" @reload-sites="reloadSites"
+                                     @deleted-site="deletedSite"></single-site>
                         <tbody>
                         <tr class="empty-message-row" v-if="!hasSites && !isLoadingSites">
                             <td colspan="9" class="text-center">
-                                To start tracking prices, simply copy and paste the URL of the product page of the website your want to track.
+                                To start tracking prices, simply copy and paste the URL of the product page of the
+                                website your want to track.
                             </td>
                         </tr>
                         <tr class="loading-row loading-row-text" v-if="isLoadingSites && !hasSites">
@@ -89,16 +125,17 @@
                         <!--IMPORTANT: disable load more function for the moment, progressive loading logic conflicts with sorting when added new site-->
                         <!--<tbody>-->
                         <!--<tr class="load-more-row" v-if="!isLoadingSites && moreSitesToLoad">-->
-                            <!--<td colspan="9" class="p-t-20">-->
-                                <!--<a href="#" class="lnk-load-more text-tiffany" @click.prevent="loadSites">LOAD MORE&hellip;</a>-->
-                            <!--</td>-->
+                        <!--<td colspan="9" class="p-t-20">-->
+                        <!--<a href="#" class="lnk-load-more text-tiffany" @click.prevent="loadSites">LOAD MORE&hellip;</a>-->
+                        <!--</td>-->
                         <!--</tr>-->
                         <!--</tbody>-->
                         <!--/LOAD MORE-->
                         <tbody>
                         <tr class="add-site-row">
                             <td colspan="9" class="add-item-cell">
-                                <add-site :product="product" :number-of-sites="numberOfSites" @added-site="addedSite"></add-site>
+                                <add-site :product="product" :number-of-sites="numberOfSites"
+                                          @added-site="addedSite"></add-site>
                             </td>
                         </tr>
                         </tbody>
@@ -107,7 +144,8 @@
             </td>
         </tr>
         </tbody>
-        <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
+        <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete"
+                             @confirmDelete="confirmDelete"></delete-confirmation>
     </table>
 </template>
 
@@ -117,6 +155,8 @@
     import singleSite from './SingleSite.vue';
     import editProduct from './EditProduct.vue';
 
+    import domain from '../../../filters/domain';
+    import currency from '../../../filters/currency';
     import formatDateTime from '../../../filters/formatDateTime';
 
     import dotdotdot from '../../fragments/loading/DotDotDot.vue';
@@ -180,10 +220,6 @@
                 if (site.url.itemsCount > 1) {
                     this.justAddedSite = site;
                 }
-//                if (!this.moreSitesToLoad) {
-//                    this.appendSite(site);
-//                }
-//                this.emitReloadProduct();
                 this.reloadSites();
             },
             appendSite(site) {
@@ -365,6 +401,23 @@
             },
             moreSitesToLoad(){
                 return this.sites.length < this.product.numberOfSites;
+            },
+            cheapestSite(){
+                if (this.sites.length > 0) {
+                    let cheapestPrice = null;
+                    let cheapestSite = null;
+                    this.sites.forEach(function (site) {
+                        if (site.item != null && site.item.recentPrice) {
+                            let recentPrice = parseInt(site.item.recentPrice);
+                            if (cheapestPrice == null || recentPrice < cheapestPrice) {
+                                cheapestPrice = recentPrice;
+                                cheapestSite = site;
+                            }
+                        }
+                    });
+                    return cheapestSite;
+                }
+                return null;
             }
         }
     }
@@ -453,7 +506,7 @@
         color: #777;
     }
 
-    tr.loading-row-text{
+    tr.loading-row-text {
         font-weight: bold;
         padding: 20px !important;
         font-size: 16px;

@@ -95,7 +95,9 @@
                 </tr>
                 <tr>
                     <th>URL:</th>
-                    <td class="url-container" v-text="site.siteUrl"></td>
+                    <td class="url-container">
+                        <a :href="site.siteUrl" v-text="site.siteUrl"></a>
+                    </td>
                 </tr>
                 <tr>
                     <th>Is my site:</th>

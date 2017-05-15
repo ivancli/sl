@@ -180,7 +180,7 @@ class ItemController extends Controller
         event(new BeforePrices($item));
 
         $historicalPrices = $this->itemService->loadHistoricalPrices($item);
-        $status = !is_null($historicalPrices) && is_array($historicalPrices);
+        $status = !is_null($historicalPrices);
 
         event(new AfterPrices($item));
 

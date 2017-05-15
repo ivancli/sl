@@ -9,6 +9,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         Content here
+                        <line-chart :data="test" :options="testOptions"></line-chart>
                     </div>
                 </div>
             </section>
@@ -22,6 +23,8 @@
 </template>
 
 <script>
+    import lineChart from '../../../../charts/lineChart';
+
     import loading from '../../../fragments/loading/Loading.vue';
 
     import currency from '../../../../filters/currency';
@@ -31,10 +34,24 @@
             'charting-site'
         ],
         components: {
+            lineChart,
             loading
         },
         data(){
-            return {}
+            return {
+                prices: [],
+                test: {
+                    labels: ['January', 'February'],
+                    datasets: [
+                        {
+                            label: 'GitHub Commits',
+                            backgroundColor: '#f87979',
+                            data: [40, 20]
+                        }
+                    ]
+                },
+                testOptions:{}
+            }
         },
         mounted(){
             console.info('SiteChart.vue is mounted.');
@@ -44,7 +61,7 @@
             loadPrices(){
                 axios.get(this.item.urls.price).then(response => {
                     if (response.data.status == true) {
-                        console.info(response.data.historicalPrices);
+                        this.prices = response.data.historicalPrices;
                     }
                 }).catch(error => {
                     console.info(error.response);

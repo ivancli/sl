@@ -73,22 +73,9 @@ class ItemService
 
     public function loadHistoricalPrices(Item $item)
     {
-        $user = auth()->user();
-        $intervalHour = 1;
-        if (!is_null($user->subscription) && !is_null($user->subscription->subscriptionCriteria)) {
-            $subscription = $user->subscription;
-            $criteria = $subscription->subscriptionCriteria;
-            $intervalHour = $criteria->frequency;
-        }
-
         $priceItemMeta = $item->metas()->where('element', 'PRICE')->first();
         if (!is_null($priceItemMeta)) {
-            $historicalPrices = $priceItemMeta->historicalPrices()->whereIn('id', function ($query) use ($priceItemMeta, $intervalHour) {
-                $query->select(DB::raw('MAX(id)'))
-                    ->from(with(new HistoricalPrice)->getTable())
-                    ->where('item_meta_id', $priceItemMeta->getKey())
-                    ->groupBy(DB::raw('CEIL(UNIX_TIMESTAMP(created_at)/(' . $intervalHour . ' * 60 * 60))'));
-            })->get();
+            $historicalPrices = $priceItemMeta->historicalPrices;
             return $historicalPrices;
         }
         return null;
