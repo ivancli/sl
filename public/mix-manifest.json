@@ -1,6 +1,6 @@
 {
-  "/js/app/product/index.js": "/js/app/product/index.07fc24d2baeb3bdc967f.js",
-  "/js/app/account_settings/index.js": "/js/app/account_settings/index.70e10ca8e1e5c464c935.js",
+  "/js/app/product/index.js": "/js/app/product/index.952f9ac9ed70869ffde9.js",
+  "/js/app/account_settings/index.js": "/js/app/account_settings/index.7ace7da3b317c5a7cc3c.js",
   "/js/app/item_meta/index.js": "/js/app/item_meta/index.c7ce29ec25068f2354af.js",
   "/js/app/item/index.js": "/js/app/item/index.c7c786b6723cc5215322.js",
   "/js/app/domain/index.js": "/js/app/domain/index.9a649697e8dd0fd37a28.js",
@@ -30,11 +30,11 @@
   "/js/app/domain/edit.js": "/js/app/domain/edit.4303db4100aef2817d57.js",
   "/js/app/domain/create.js": "/js/app/domain/create.ff56009680c5b8b455c0.js",
   "/js/app/report/index.js": "/js/app/report/index.d9e23eb6bab211f97357.js",
-  "/js/app/alert/index.js": "/js/app/alert/index.b770d5aceecc8e04096c.js",
+  "/js/app/alert/index.js": "/js/app/alert/index.5c8ac55e7644e7a7efd1.js",
   "/js/auth/register.js": "/js/auth/register.745eb5a4ff4a00b7756a.js",
   "/js/auth/login.js": "/js/auth/login.518f351275631f375621.js",
   "/js/auth/forgot.js": "/js/auth/forgot.8b2b95af1161d1bcf353.js",
   "/js/app.js": "/js/app.d4cbd061343b7163b3fb.js",
-  "/css/app.css": "/css/app.fde6550073ab8f499c58.css",
-  "/css/auth.css": "/css/auth.fde6550073ab8f499c58.css"
+  "/css/app.css": "/css/app.7997d931e3d7482576bf.css",
+  "/css/auth.css": "/css/auth.7997d931e3d7482576bf.css"
 }

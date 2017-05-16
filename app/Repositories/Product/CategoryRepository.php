@@ -48,6 +48,10 @@ class CategoryRepository implements CategoryContract
                 ->orHaving('products_count', '>', 0);
         }
 
+        if (array_has($data, 'with') && !empty(array_get($data, 'with'))) {
+            $builder->with(array_get($data, 'with'));
+        }
+
         $categories = $builder->get();
 
         return $categories;

@@ -41,6 +41,15 @@ class Site extends Model
         return $this->belongsTo('App\Models\Item', 'item_id', 'id');
     }
 
+    /**
+     * relationship with alert
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
+    public function alert()
+    {
+        return $this->morphOne('App\Models\Alert', 'alertable');
+    }
+
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/

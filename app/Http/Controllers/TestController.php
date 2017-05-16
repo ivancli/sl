@@ -14,6 +14,8 @@ use App\Contracts\Repositories\UrlManagement\ItemContract;
 use App\Contracts\Repositories\UrlManagement\ItemMetaContract;
 use App\Contracts\Repositories\UrlManagement\ParserContract;
 use App\Contracts\Repositories\UrlManagement\UrlContract;
+use App\Models\Alert;
+use App\Models\Site;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -38,25 +40,7 @@ class TestController extends Controller
 
     public function test()
     {
-        $item = $this->itemRepo->get(2);
-
-
-
-        $itemMeta = $item->metas()->where('id', 5)->first();
-
-        DB::enableQueryLog();
-        ($itemMeta->historicalPrices);
-        dd(DB::getQueryLog());
-        dump($item->recentPrice);
-        $item->interval = 12;
-        dd($item->recentPrice);
-
-
-        $crawler = $this->crawlerRepo->get(7);
-        $content = $this->crawlerRepo->fetch($crawler);
-        $content = $content['content'];
-
-        preg_match_all('#variants\[(\d+?)\]\[1\]\[\d+\]=(\d+?);#', $content, $matches);
-        dd($matches);
+        $alert = Alert::findOrFail(1);
+        dd($alert->alertable);
     }
 }

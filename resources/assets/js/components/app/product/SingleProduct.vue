@@ -16,7 +16,7 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <i class="fa fa-info-circle text-muted" v-show="!editingProduct"></i>
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <span v-show="!editingProduct" class="hidden-xs hidden-sm f-w-normal text-muted f-s-11">
+                <span v-show="!editingProduct" v-if="cheapestSite != null" class="hidden-xs hidden-sm f-w-normal text-muted f-s-11">
                     <span>
                         Cheapest:
                         <strong>{{cheapestSite.siteUrl | domain}}</strong>

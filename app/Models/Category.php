@@ -41,6 +41,15 @@ class Category extends Model
         return $this->hasManyThrough('App\Models\Site', 'App\Models\Product', 'category_id', 'product_id', 'id');
     }
 
+    /**
+     * relationship with alert
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
+    public function alert()
+    {
+        return $this->morphOne('App\Models\Alert', 'alertable');
+    }
+
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/

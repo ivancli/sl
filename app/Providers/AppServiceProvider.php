@@ -16,6 +16,7 @@ use App\Observers\ProductObserver;
 use App\Observers\SiteObserver;
 use App\Observers\UrlObserver;
 use App\Observers\UserObserver;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -27,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        /*region observers*/
         User::observe(UserObserver::class);
         Category::observe(CategoryObserver::class);
         Product::observe(ProductObserver::class);
@@ -34,6 +36,15 @@ class AppServiceProvider extends ServiceProvider
         Url::observe(UrlObserver::class);
         Item::observe(ItemObserver::class);
         Crawler::observe(CrawlerObserver::class);
+        /*endregion*/
+
+        /*region morph*/
+        Relation::morphMap([
+            'category' => Category::class,
+            'product' => Product::class,
+            'site' => Site::class,
+        ]);
+        /*endregion*/
     }
 
     /**

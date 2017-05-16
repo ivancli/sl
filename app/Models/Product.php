@@ -54,6 +54,15 @@ class Product extends Model
         return $this->hasOne('App\Models\ProductMeta', 'product_id', 'id');
     }
 
+    /**
+     * relationship with alert
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
+    public function alert()
+    {
+        return $this->morphOne('App\Models\Alert', 'alertable');
+    }
+
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/

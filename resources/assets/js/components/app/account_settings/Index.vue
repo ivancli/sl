@@ -63,11 +63,6 @@
                 activeTab: 'edit-profile'
             }
         },
-        watch: {
-            locationHash(){
-                this.activeTab = this.locationHash;
-            }
-        },
         methods: {
             setInitActiveTab() {
                 if (window.location.hash != '') {
