@@ -6,16 +6,12 @@
                 <a class="btn-collapse" aria-expanded="true"><i class="fa fa-tag "></i></a>
             </th>
             <th class="category-th">
-                <a class="text-muted category-name-link" href="#" v-text="category.category_name"
-                   v-show="!editingCategoryName"></a>
-                <edit-category :editing-category="category" :going-to-edit-category-name="editingCategoryName"
-                               @edited-category="editedCategory"
-                               @cancel-edit-category-name="cancelEditCategoryName"></edit-category>
+                <a class="text-muted category-name-link" href="#" v-text="category.category_name" v-show="!editingCategoryName"></a>
+                <edit-category :editing-category="category" :going-to-edit-category-name="editingCategoryName" @edited-category="editedCategory" @cancel-edit-category-name="cancelEditCategoryName"></edit-category>
             </th>
 
             <th class="text-right action-cell category-th">
-                <a href="#" class="btn-action btn-edit" title="edit" @click.prevent="onClickEditCategory"
-                   v-if="!editingCategoryName">
+                <a href="#" class="btn-action btn-edit" title="edit" @click.prevent="onClickEditCategory" v-if="!editingCategoryName">
                     <i class="fa fa-pencil"></i>
                 </a>
                 <a href="#" class="btn-action btn-chart" title="chart">
@@ -24,13 +20,11 @@
                 <a href="#" class="btn-action btn-report" title="report">
                     <i class="fa fa-envelope-o"></i>
                 </a>
-                <a href="#" class="btn-action btn-delete-category" title="delete"
-                   @click.prevent="onClickDeleteCategory">
+                <a href="#" class="btn-action btn-delete-category" title="delete" @click.prevent="onClickDeleteCategory">
                     <i class="glyphicon glyphicon-trash"></i>
                 </a>
             </th>
-            <th class="text-center vertical-align-middle cell-category-collapse" width="70"
-                @click.prevent="toggleCategoryCollapse">
+            <th class="text-center vertical-align-middle cell-category-collapse" width="70" @click.prevent="toggleCategoryCollapse">
                 <a class="text-muted btn-collapse btn-category-collapse" :class="isCollapsed ? 'collapsed' : ''">
                     <i class="fa fa-angle-up"></i>
                 </a>
@@ -40,8 +34,7 @@
             <th></th>
             <th colspan="3" class="category-th">
                 <div class="text-light">
-                    Created
-                    on {{category.created_at | formatDateTime(dateFormat)}}
+                    Created on {{category.created_at | formatDateTime(dateFormat)}}
                     <strong class="text-muted"><i>by {{category.owner.fullName}}</i></strong>
                 </div>
                 <div class="text-light">
@@ -56,8 +49,7 @@
             <td></td>
             <td colspan="3" class="table-container">
                 <div class="collapsible-category-div collapse" :class="isCollapsed ? '' : 'in'">
-                    <single-product v-for="product in products" :current-product="product"
-                                    @reload-product="updateProduct" @reload-products="reloadProducts" @deleted-product="deletedProduct"></single-product>
+                    <single-product v-for="product in products" :current-product="product" @reload-product="updateProduct" @reload-products="reloadProducts" @deleted-product="deletedProduct"></single-product>
                     <div class="text-center m-t-20" v-if="isLoadingProducts">
                         <dotdotdot></dotdotdot>
                     </div>

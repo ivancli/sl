@@ -98,9 +98,6 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
-        ],
         'agree_terms' => [
             'required' => 'You need to agree to the terms to proceed.'
         ],
@@ -125,23 +122,29 @@ return [
             'unique_per_product' => 'A site with the same URL already exists in this product.'
         ],
         'DATE_FORMAT' => [
-            'required' => 'Please select a date format',
+            'required' => 'Please select a date format.',
         ],
         'TIME_FORMAT' => [
-            'required' => 'Please select a time format',
+            'required' => 'Please select a time format.',
         ],
         /*TODO find a way to make message appear once only, or add index to message*/
         'metas.*.name' => [
-            'required' => 'Each meta\'s name is required',
+            'required' => 'Each meta\'s name is required.',
         ],
         'metas.*.type' => [
-            'required' => 'Each meta\'s type is required',
+            'required' => 'Each meta\'s type is required.',
         ],
         'confs.*.element' => [
-            'required' => 'Each configuration\'s element is required',
+            'required' => 'Each configuration\'s element is required.',
         ],
         'confs.*.value' => [
-            'required' => 'Each configuration\'s value is required',
+            'required' => 'Each configuration\'s value is required.',
+        ],
+        'product_alerts.*.type' => [
+            'required' => 'Product alert type is required.',
+        ],
+        'product_alerts.*.price' => [
+            'required' => 'Price is required.',
         ],
     ],
 
@@ -171,6 +174,7 @@ return [
         'company.ebay_username' => 'eBay username',
         'display.date_format' => 'date format',
         'display.time_format' => 'time format',
+        'product_alerts.*.product_id' => 'product ID',
     ],
 
 ];

@@ -74,6 +74,25 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Product\Site\BeforeAssignItem' => [],
         'App\Events\Product\Site\AfterAssignItem' => [],
 
+
+        /**
+         * Alert
+         */
+        'App\Events\Alert\BeforeIndex' => [],
+        'App\Events\Alert\AfterIndex' => [],
+        'App\Events\Alert\BeforeShow' => [],
+        'App\Events\Alert\AfterShow' => [],
+        'App\Events\Alert\BeforeCreate' => [],
+        'App\Events\Alert\AfterCreate' => [],
+        'App\Events\Alert\BeforeStore' => [],
+        'App\Events\Alert\AfterStore' => [],
+        'App\Events\Alert\BeforeEdit' => [],
+        'App\Events\Alert\AfterEdit' => [],
+        'App\Events\Alert\BeforeUpdate' => [],
+        'App\Events\Alert\AfterUpdate' => [],
+        'App\Events\Alert\BeforeDestroy' => [],
+        'App\Events\Alert\AfterDestroy' => [],
+
         /**
          * URL Management
          */

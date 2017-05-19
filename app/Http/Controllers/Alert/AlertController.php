@@ -2,16 +2,35 @@
 
 namespace App\Http\Controllers\Alert;
 
+use App\Events\Alert\AfterCreate;
+use App\Events\Alert\AfterDestroy;
+use App\Events\Alert\AfterEdit;
+use App\Events\Alert\AfterIndex;
+use App\Events\Alert\AfterShow;
+use App\Events\Alert\AfterStore;
+use App\Events\Alert\AfterUpdate;
+use App\Events\Alert\BeforeCreate;
+use App\Events\Alert\BeforeDestroy;
+use App\Events\Alert\BeforeEdit;
+use App\Events\Alert\BeforeIndex;
+use App\Events\Alert\BeforeShow;
+use App\Events\Alert\BeforeStore;
+use App\Events\Alert\BeforeUpdate;
 use App\Http\Controllers\Controller;
+use App\Services\Alert\AlertService;
 use Illuminate\Http\Request;
 
 class AlertController extends Controller
 {
     protected $request;
 
-    public function __construct(Request $request)
+    protected $alertService;
+
+    public function __construct(Request $request, AlertService $alertService)
     {
         $this->request = $request;
+
+        $this->alertService = $alertService;
     }
 
     /**
@@ -21,7 +40,20 @@ class AlertController extends Controller
      */
     public function index()
     {
-        return view('app.alert.index');
+        event(new BeforeIndex);
+
+        if ($this->request->ajax()) {
+            $alerts = $this->alertService->load();
+            $status = true;
+        }
+
+        event(new AfterIndex);
+
+        if ($this->request->ajax()) {
+            return compact(['alerts', 'status']);
+        } else {
+            return view('app.alert.index');
+        }
     }
 
     /**
@@ -31,7 +63,9 @@ class AlertController extends Controller
      */
     public function create()
     {
-        //
+
+        event(new BeforeCreate);
+        event(new AfterCreate);
     }
 
     /**
@@ -41,7 +75,14 @@ class AlertController extends Controller
      */
     public function store()
     {
-        //
+        event(new BeforeStore);
+
+        $this->alertService->store($this->request->all());
+        $status = true;
+
+        event(new AfterStore);
+
+        return compact(['status']);
     }
 
     /**
@@ -52,7 +93,9 @@ class AlertController extends Controller
      */
     public function show($id)
     {
-        //
+
+        event(new BeforeShow);
+        event(new AfterShow);
     }
 
     /**
@@ -63,7 +106,9 @@ class AlertController extends Controller
      */
     public function edit($id)
     {
-        //
+
+        event(new BeforeEdit);
+        event(new AfterEdit);
     }
 
     /**
@@ -74,7 +119,9 @@ class AlertController extends Controller
      */
     public function update($id)
     {
-        //
+
+        event(new BeforeUpdate);
+        event(new AfterUpdate);
     }
 
     /**
@@ -85,6 +132,8 @@ class AlertController extends Controller
      */
     public function destroy($id)
     {
-        //
+
+        event(new BeforeDestroy);
+        event(new AfterDestroy);
     }
 }

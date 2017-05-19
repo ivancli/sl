@@ -97,6 +97,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\LoggingModels\UserActivityLog', 'user_id', 'id');
     }
 
+    public function alerts()
+    {
+        return $this->hasMany('App\Models\Alert', 'user_id', 'id');
+    }
+
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/

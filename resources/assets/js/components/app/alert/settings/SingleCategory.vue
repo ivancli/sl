@@ -8,14 +8,14 @@
             <span class="category-name" @click.prevent="toggleCategoryActive">{{ category.category_name }}</span>
             &nbsp;&nbsp;
         </div>
-        <div class="category-option" v-if="isSelected">
-            <select class="input-sm form-control sl-form-control">
+        <div class="category-option" v-show="isSelected">
+            <select class="input-sm form-control sl-form-control" v-model="type">
                 <option value="">-- select alert type --</option>
                 <option value="my_price">beats my price</option>
                 <option value="price_change">price changes</option>
             </select>
         </div>
-        <div class="product-options p-l-30" v-if="isActive">
+        <div class="product-options p-l-30" v-show="isActive">
             <ul class="product-options-list">
                 <single-product v-for="product in category.products" :current-product="product" @option-changed="updateProductAlerts"></single-product>
             </ul>
@@ -44,9 +44,15 @@
                 productAlerts: {},
             }
         },
-        watch:{
+        watch: {
+            isSelected(val){
+                if (val === false) {
+                    this.type = '';
+                }
+                this.emitCategoryAlertUpdated();
+            },
             type(){
-                this.emitOptionChanged();
+                this.emitCategoryAlertUpdated();
             }
         },
         methods: {
@@ -54,15 +60,14 @@
                 this.isActive = !this.isActive;
             },
             updateProductAlerts(productAlert){
-                if (productAlert.type == null || productAlert.type == '') {
-                    delete this.productAlerts[productAlert.product_id]
-                } else {
-                    this.productAlerts[productAlert.product_id] = productAlert;
-                }
-                this.emitOptionChanged();
+                this.productAlerts[productAlert.product_id] = productAlert;
+                this.emitProductAlertsUpdated();
             },
-            emitOptionChanged(){
-                this.$emit('option-changed', this.alert);
+            emitCategoryAlertUpdated(){
+                this.$emit('category-alert-updated', this.categoryAlert);
+            },
+            emitProductAlertsUpdated(){
+                this.$emit('product-alerts-updated', this.productAlerts);
             }
         },
         computed: {
@@ -75,11 +80,11 @@
                 }
                 return '';
             },
-            alert(){
+            categoryAlert(){
                 return {
                     category_id: this.category.id,
-                    /*category alert options here*/
-                    products: this.productAlerts,
+                    is_selected: this.isSelected,
+                    type: this.type,
                 }
             }
         },

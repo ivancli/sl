@@ -8,7 +8,7 @@
             </label>
         </div>
         &nbsp;&nbsp;
-        <div class="product-option" v-if="isSelected">
+        <div class="product-option" v-show="isSelected">
             <div class="inline-block">
                 <select class="input-sm form-control sl-form-control" v-model="type">
                     <option value="">-- select alert type --</option>
@@ -35,13 +35,13 @@
         },
         watch: {
             isSelected(val){
-                if(val == false){
-                    this.type = null;
+                if (val === false) {
+                    this.type = "";
                 }
                 this.emitOptionChanged();
             },
             type(val){
-                if (val != 'custom') {
+                if (val !== 'custom') {
                     this.price = null;
                 }
                 this.emitOptionChanged();
@@ -67,11 +67,12 @@
                 return this.currentProduct;
             },
             showSpecificPriceInput(){
-                return this.type == 'custom';
+                return this.type === 'custom';
             },
             alert(){
                 return {
                     product_id: this.product.id,
+                    is_selected: this.isSelected,
                     type: this.type,
                     price: this.price
                 }

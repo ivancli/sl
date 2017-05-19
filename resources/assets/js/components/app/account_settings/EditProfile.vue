@@ -87,12 +87,12 @@
                 this.isUpdatingProfile = true;
                 axios.put(user.profileUrls.update, this.updateUserProfileData).then(response => {
                     this.isUpdatingProfile = false;
-                    if (response.data.status == true) {
+                    if (response.data.status === true) {
                         this.setSuccessMsg();
                     }
                 }).catch(error => {
                     this.isUpdatingProfile = false;
-                    if (error.response && error.response.status == 422 && error.response.data) {
+                    if (error.response && error.response.status === 422 && error.response.data) {
                         this.errors = error.response.data;
                     }
                 })
