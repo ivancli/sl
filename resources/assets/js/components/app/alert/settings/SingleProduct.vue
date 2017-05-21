@@ -19,7 +19,8 @@
             </div>
             &nbsp;&nbsp;
             <div class="inline-block" v-if="showSpecificPriceInput">
-                $&nbsp;<input type="text" placeholder="enter a price" class="product-comp-price form-control sl-form-control input-sm p-l-5" v-model="price">
+                $&nbsp;<input type="text" placeholder="enter a price"
+                              class="product-comp-price form-control sl-form-control input-sm p-l-5" v-model="price">
             </div>
         </div>
     </li>
@@ -28,10 +29,12 @@
 <script>
     export default{
         props: [
-            'current-product'
+            'current-product',
+            'current-product-alerts',
         ],
         mounted(){
             console.info('SingleProduct component mounted.');
+            this.setInitProductAlert();
         },
         watch: {
             isSelected(val){
@@ -41,7 +44,10 @@
                 this.emitOptionChanged();
             },
             type(val){
-                if (val !== 'custom') {
+                if (val === 'custom') {
+                    this.operator = '>';
+                } else {
+                    this.operator = null;
                     this.price = null;
                 }
                 this.emitOptionChanged();
@@ -55,9 +61,19 @@
                 isSelected: false,
                 type: "",
                 price: null,
+                operator: null,
             }
         },
         methods: {
+            setInitProductAlert(){
+                if (this.currentProductAlerts.hasOwnProperty(this.product.id)) {
+                    let productAlert = this.currentProductAlerts[this.product.id];
+                    this.isSelected = productAlert.is_selected;
+                    this.type = productAlert.type;
+                    this.price = productAlert.price;
+                    this.operator = productAlert.operator;
+                }
+            },
             emitOptionChanged(){
                 this.$emit('option-changed', this.alert);
             }
@@ -74,7 +90,8 @@
                     product_id: this.product.id,
                     is_selected: this.isSelected,
                     type: this.type,
-                    price: this.price
+                    price: this.price,
+                    operator: this.operator,
                 }
             }
         }

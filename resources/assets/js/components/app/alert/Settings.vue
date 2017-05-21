@@ -1,22 +1,22 @@
 <template>
     <div class="p-l-20">
         <form>
-            <div class="row">
-                <div class="col-sm-12">
-                    <p>To receive price change email alerts, choose from the following options:</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-offset-3">
-                    <ul class="text-danger errors-container p-b-10 p-l-20" v-if="Object.keys(errors).length > 0">
-                        <li v-for="error in errors">
+            <div class="row m-b-10">
+                <div class="col-md-offset-1 col-md-10">
+                    <ul class="text-danger errors-container m-b-0 p-l-20" v-if="Object.keys(errors).length > 0">
+                        <li v-for="error in errors" class="text-danger">
                             <div v-if="error.constructor != Array" v-text="error"></div>
                             <div v-else v-for="message in error" v-text="message"></div>
                         </li>
                     </ul>
-                    <ul class="p-b-10 p-l-20 success-container" v-if="successMsg != ''">
-                        <li v-text="successMsg"></li>
+                    <ul class="m-b-0 p-l-20 success-container" v-if="successMsg != ''">
+                        <li v-text="successMsg" class="text-success"></li>
                     </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <p>To receive price change email alerts, choose from the following options:</p>
                 </div>
             </div>
             <div class="row">
@@ -35,7 +35,7 @@
                             <div class="basic-options p-l-50" v-if="basicActive">
                                 Send alert when
                                 &nbsp;
-                                <select class="input-sm">
+                                <select class="input-sm" v-model="type">
                                     <option value="">-- select alert type --</option>
                                     <option value="my_price">my price was beaten</option>
                                     <option value="price_change">price changes</option>
@@ -59,7 +59,7 @@
 
                             <div class="advanced-options p-l-70" v-if="advancedActive">
                                 <ul class="category-options-list">
-                                    <single-category v-for="category in categories" :current-category="category" @category-alert-updated="updateCategoryAlerts" @product-alerts-updated="updateProductAlerts"></single-category>
+                                    <single-category v-for="category in categories" :current-category-alerts="categoryAlerts" :current-product-alerts="productAlerts" :current-category="category" @category-alert-updated="updateCategoryAlerts" @product-alerts-updated="updateProductAlerts"></single-category>
                                 </ul>
                             </div>
                         </li>
@@ -73,7 +73,7 @@
                 </div>
             </div>
         </form>
-        <loading v-if="isUpdatingAlerts"></loading>
+        <loading v-if="isUpdatingAlerts || isLoadingAlerts || isLoadingCategoriesAndProducts"></loading>
     </div>
 </template>
 
@@ -91,29 +91,38 @@
             return {
                 basicActive: false,
                 advancedActive: false,
+                type: "",
                 categories: [],
                 categoryAlerts: {},
                 productAlerts: {},
                 isUpdatingAlerts: false,
                 isLoadingCategoriesAndProducts: false,
+                isLoadingAlerts: false,
                 errors: [],
                 successMsg: '',
+                alerts: [],
             }
         },
         mounted(){
             console.info('Settings component mounted.');
             this.loadCategoriesAndProducts();
+            this.loadAlerts(() => {
+                this.initSetAlerts();
+            });
         },
         watch: {
             basicActive(val){
                 if (val === true) {
                     this.advancedActive = false;
                 }
+                this.categoryAlerts = {};
+                this.productAlerts = {};
             },
             advancedActive(val){
                 if (val === true) {
                     this.basicActive = false;
                 }
+                this.type = '';
             }
         },
         methods: {
@@ -131,6 +140,54 @@
                     this.isLoadingCategoriesAndProducts = false;
                     console.info(error.response);
                 })
+            },
+            loadAlerts(callback){
+                this.isLoadingAlerts = true;
+                axios.get('/alert').then(response => {
+                    this.isLoadingAlerts = false;
+                    if (response.data.status === true) {
+                        this.alerts = response.data.alerts;
+                        if (typeof callback === 'function') {
+                            callback();
+                        }
+                    }
+                }).catch(error => {
+                    this.isLoadingAlerts = false;
+                    console.info(error.response);
+                })
+            },
+            initSetAlerts(){
+                this.alerts.forEach((alert, index) => {
+                    switch (alert.alert_type) {
+                        case 'basic':
+                            this.basicActive = true;
+                            this.advancedActive = false;
+                            this.type = alert.comp_type;
+                            break;
+                        case 'advanced':
+                            this.basicActive = false;
+                            this.advancedActive = true;
+                            switch (alert.alertable_type) {
+                                case 'category':
+                                    this.categoryAlerts[alert.alertable_id] = {
+                                        is_selected: true,
+                                        price: alert.comp_price,
+                                        category_id: alert.alertable_id,
+                                        type: alert.comp_type,
+                                    };
+                                    break;
+                                case 'product':
+                                    this.productAlerts[alert.alertable_id] = {
+                                        is_selected: true,
+                                        operator: alert.comp_operator,
+                                        price: alert.comp_price,
+                                        product_id: alert.alertable_id,
+                                        type: alert.comp_type,
+                                    };
+                                    break;
+                            }
+                    }
+                });
             },
             updateCategoryAlerts(categoryAlert){
                 if (categoryAlert.is_selected === true && categoryAlert.type !== null && categoryAlert.type.length > 0) {
@@ -200,8 +257,15 @@
             },
             updateAlertsRequestData(){
                 return {
-                    product_alerts: this.productAlerts,
-                    category_alerts: this.categoryAlerts,
+                    basic_alert: {
+                        is_selected: this.basicActive,
+                        type: this.type,
+                    },
+                    advanced_alert: {
+                        is_selected: this.advancedActive,
+                        product_alerts: this.productAlerts,
+                        category_alerts: this.categoryAlerts,
+                    }
                 };
             },
         }

@@ -17,7 +17,7 @@
         </div>
         <div class="product-options p-l-30" v-show="isActive">
             <ul class="product-options-list">
-                <single-product v-for="product in category.products" :current-product="product" @option-changed="updateProductAlerts"></single-product>
+                <single-product v-for="product in category.products" :current-product-alerts="currentProductAlerts" :current-product="product" @option-changed="updateProductAlerts"></single-product>
             </ul>
         </div>
     </li>
@@ -31,10 +31,13 @@
             singleProduct
         },
         props: [
-            'currentCategory'
+            'currentCategory',
+            'currentCategoryAlerts',
+            'currentProductAlerts',
         ],
         mounted(){
             console.info('SingleCategory component mounted.');
+            this.initSetCategoryAlert();
         },
         data(){
             return {
@@ -56,11 +59,19 @@
             }
         },
         methods: {
+            initSetCategoryAlert(){
+                if (this.currentCategoryAlerts.hasOwnProperty(this.category.id)) {
+                    let categoryAlert = this.currentCategoryAlerts[this.category.id];
+                    this.isSelected = categoryAlert.is_selected;
+                    this.type = categoryAlert.type;
+                }
+            },
             toggleCategoryActive(){
                 this.isActive = !this.isActive;
             },
             updateProductAlerts(productAlert){
                 this.productAlerts[productAlert.product_id] = productAlert;
+                this.isActive = true;
                 this.emitProductAlertsUpdated();
             },
             emitCategoryAlertUpdated(){

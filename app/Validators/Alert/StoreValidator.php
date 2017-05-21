@@ -23,11 +23,14 @@ class StoreValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return [
-            'product_alerts' => 'array',
-            'category_alerts' => 'array',
-            'product_alerts.*.product_id' => 'required',
-            'product_alerts.*.type' => 'required',
-            'product_alerts.*.price' => 'required_if:product_alerts.*.type,custom',
+            'basic_alert.type' => 'required_if:basic_alert.is_selected,true',
+            'advanced_alert.product_alerts' => 'array',
+            'advanced_alert.category_alerts' => 'array',
+            'advanced_alert.category_alerts.*.category_id' => 'required_if:advanced_alert.is_selected,true',
+            'advanced_alert.category_alerts.*.type' => 'required_if:advanced_alert.is_selected,true',
+            'advanced_alert.product_alerts.*.product_id' => 'required_if:advanced_alert.is_selected,true',
+            'advanced_alert.product_alerts.*.type' => 'required_if:advanced_alert.is_selected,true',
+            'advanced_alert.product_alerts.*.price' => 'required_if:advanced_alert.product_alerts.*.type,custom',
         ];
     }
 }

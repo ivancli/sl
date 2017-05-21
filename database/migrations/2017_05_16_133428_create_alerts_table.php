@@ -20,6 +20,7 @@ class CreateAlertsTable extends Migration
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->integer('alertable_id')->nullable();
             $table->string('alertable_type')->nullable();
+            $table->string('alert_type');
             $table->string('comp_type')->nullable();
             $table->decimal('comp_price')->nullable();
             $table->string('comp_operator')->nullable();

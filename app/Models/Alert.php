@@ -6,7 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Alert extends Model
 {
-    protected $fillable = ['comp_type', 'comp_price', 'comp_operator', 'last_active_at'];
+    protected $fillable = [
+        'alert_type', /* basic / advanced */
+        'comp_type',  /* category / product */
+        'comp_price', /* amount when comp_type is custom */
+        'comp_operator', /* comparison operator when comp_type is custom, <, <=, =, >=, > */
+        'last_active_at'
+    ];
 
 
     /**
