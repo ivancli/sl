@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Alert as AlertModel;
 
+use App\Models\Site;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -17,6 +18,7 @@ class Alert implements ShouldQueue
 
     protected $alert;
     protected $lastActiveAt = null;
+    protected $alertCreatedAt = null;
     protected $user;
 
     protected $emailData;
@@ -34,6 +36,9 @@ class Alert implements ShouldQueue
         if (!is_null($this->alert->last_active_at)) {
             $this->lastActiveAt = Carbon::createFromFormat('Y-m-d H:i:s', $this->alert->last_active_at);
         }
+        if (!is_null($this->alert->created_at)) {
+            $this->alertCreatedAt = Carbon::createFromFormat('Y-m-d H:i:s', $this->alert->created_at);
+        }
     }
 
     /**
@@ -45,7 +50,7 @@ class Alert implements ShouldQueue
     {
         /*TODO compare last active at and last price change date*/
         switch ($this->alert->alert_type) {
-            case 'base':
+            case 'basic':
                 $this->processBasicAlert();
                 break;
             case 'advanced':
@@ -63,36 +68,12 @@ class Alert implements ShouldQueue
 
     protected function processBasicAlert()
     {
-
-
         switch ($this->alert->comp_type) {
             case 'my_price':
 
                 break;
-            case 'price_chance':
-                $sites = $this->user->sites;
-
-                $alertSites = collect();
-
-                foreach ($sites as $site) {
-                    $item = $site->item;
-                    if (!is_null($item)) {
-                        if (!is_null($item->lastChangedAt)) {
-                            if (!is_null($this->lastActiveAt)) {
-                                $lastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $item->lastChangedAt);
-                                if ($lastChangedAt > $this->lastActiveAt) {
-                                    $alertSites->push($site);
-                                }
-                            } else {
-                                $alertSites->push($site);
-                            }
-                        }
-                    }
-                }
-
-                /*now $sites has all sites which have price changes*/
-
-
+            case 'price_change':
+                $this->_processBasicPriceChange();
                 break;
         }
     }
@@ -102,4 +83,55 @@ class Alert implements ShouldQueue
 
     }
 
+    private function _processBasicMyPrice()
+    {
+        $products = $this->user->products;
+
+        $alertProducts = collect();
+        foreach ($products as $product) {
+            $sites = $product->sites;
+
+        }
+    }
+
+    private function _processBasicPriceChange()
+    {
+        $sites = $this->user->sites;
+
+        $alertSites = collect();
+        foreach ($sites as $site) {
+            $item = $site->item;
+            if (!is_null($item)) {
+                if (!is_null($item->lastChangedAt)) {
+                    $lastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $item->lastChangedAt);
+                    if (!is_null($this->lastActiveAt)) {
+                        if ($lastChangedAt > $this->lastActiveAt) {
+                            $alertSites->push($site);
+                        }
+                    } else {
+                        if ($lastChangedAt > $this->alertCreatedAt) {
+                            $alertSites->push($site);
+                        }
+                    }
+                }
+            }
+        }
+
+        $this->alert->setLastActiveAt();
+
+        /* TODO dispatch mail job with $alertSites */
+
+    }
+
+    private function _isMySite(Site $site)
+    {
+        $companyUrl = $this->user->company_url;
+        if (!is_null($companyUrl)) {
+
+        }
+
+        /* TODO add ebay later on */
+
+        return false;
+    }
 }
