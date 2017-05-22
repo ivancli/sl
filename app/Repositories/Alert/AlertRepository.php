@@ -18,6 +18,30 @@ use App\Models\User;
 class AlertRepository implements AlertContract
 {
     /**
+     * Get all alerts
+     * @return mixed
+     */
+    public function all()
+    {
+        return Alert::all();
+    }
+
+    /**
+     * Get alert by alert ID
+     * @param $alert_id
+     * @param bool $throw
+     * @return Alert
+     */
+    public function get($alert_id, $throw = true)
+    {
+        if ($throw == true) {
+            return Alert::findOrFail($alert_id);
+        } else {
+            return Alert::find($alert_id);
+        }
+    }
+
+    /**
      * create/update an alert
      * @param array $data
      * @return mixed

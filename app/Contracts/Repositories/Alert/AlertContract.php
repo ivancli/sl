@@ -17,6 +17,20 @@ use App\Models\User;
 interface AlertContract
 {
     /**
+     * Get all alerts
+     * @return mixed
+     */
+    public function all();
+
+    /**
+     * Get alert by alert ID
+     * @param $alert_id
+     * @param bool $throw
+     * @return Alert
+     */
+    public function get($alert_id, $throw = true);
+
+    /**
      * create/update an alert
      * @param array $data
      * @return mixed

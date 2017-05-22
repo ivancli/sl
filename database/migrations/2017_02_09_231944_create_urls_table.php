@@ -16,6 +16,7 @@ class CreateUrlsTable extends Migration
         Schema::create('urls', function (Blueprint $table) {
             $table->increments('id');
             $table->text('full_path');
+            $table->text('response_code')->nullable();
             $table->string('status')->default('waiting');
             $table->char('is_active', 1)->default('y');
             $table->timestamps();

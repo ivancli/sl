@@ -45,7 +45,7 @@ class ItemMeta extends Model
         $interval = null;
         if (auth()->check()) {
             $user = auth()->user();
-            if (isset($user->subscription) && isset($user->subscription->subscriptionCriteria)) {
+            if (!is_null($user->subscription) && !is_null($user->subscription->subscriptionCriteria)) {
                 $subscriptionCriteria = $user->subscription->subscriptionCriteria;
                 if (isset($subscriptionCriteria->frequency) && is_int($subscriptionCriteria->frequency)) {
                     $interval = $subscriptionCriteria->frequency;

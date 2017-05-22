@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 class Url extends Model
 {
     protected $fillable = [
-        'full_path', 'status', 'is_active'
+        'full_path', 'response_code', 'status', 'is_active'
     ];
 
     protected $appends = [
@@ -145,6 +145,16 @@ class Url extends Model
     /*----------------------------------------------------------------------*/
     /* Helpers                                                              */
     /*----------------------------------------------------------------------*/
+
+    /**
+     * Set URL's response code
+     * @param $response_code
+     */
+    public function setResponseCode($response_code)
+    {
+        $this->response_code = $response_code;
+        $this->save();
+    }
 
     /**
      * Set URL's activeness

@@ -10,7 +10,8 @@ use App\Jobs\Crawl as CrawlJob;
 
 class Crawl extends Command
 {
-    var $urlRepo;
+    protected $urlRepo;
+
     /**
      * The name and signature of the console command.
      *
@@ -68,7 +69,7 @@ class Crawl extends Command
         }
     }
 
-    protected function processSingleUrl($url)
+    protected function processSingleUrl(Url $url)
     {
         // check activeness of URL
         if ($this->validate($url)) {

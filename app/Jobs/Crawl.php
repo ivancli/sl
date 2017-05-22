@@ -65,6 +65,8 @@ class Crawl implements ShouldQueue
 
         $result = $crawlerRepo->fetch($crawler);
 
+        $this->url->setResponseCode($result['status']);
+
         if ($result['status'] != 200) {
             $this->url->statusCrawlFailed();
             return false;

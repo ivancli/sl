@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Alert extends Model
@@ -31,5 +32,22 @@ class Alert extends Model
     public function alertable()
     {
         return $this->morphTo();
+    }
+
+    /*----------------------------------------------------------------------*/
+    /* Helpers                                                              */
+    /*----------------------------------------------------------------------*/
+
+    /**
+     * Set last active date time
+     * @param string $dateTime
+     */
+    public function setLastActiveAt(string $dateTime = null)
+    {
+        if (is_null($dateTime)) {
+            $dateTime = Carbon::now()->toDateTimeString();
+        }
+        $this->last_active_at = $dateTime;
+        $this->save();
     }
 }

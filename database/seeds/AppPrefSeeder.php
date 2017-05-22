@@ -5,7 +5,7 @@ use App\Contracts\Repositories\Admin\AppPrefContract;
 
 class AppPrefSeeder extends Seeder
 {
-    var $appPrefRepo;
+    protected $appPrefRepo;
 
     public function __construct(AppPrefContract $appPrefContract)
     {

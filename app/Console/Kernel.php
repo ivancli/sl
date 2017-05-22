@@ -17,7 +17,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\Crawl::class
+        Commands\Crawl::class,
+        Commands\Alert::class
     ];
 
     protected $appPrefRepo;
@@ -38,6 +39,23 @@ class Kernel extends ConsoleKernel
         #region repositories binding
         $this->appPrefRepo = $this->app->make(AppPrefContract::class);
         #endregion
+
+        $this->scheduleCrawlers($schedule);
+    }
+
+    /**
+     * Register the Closure based commands for the application.
+     *
+     * @return void
+     */
+    protected function commands()
+    {
+        require base_path('routes/console.php');
+    }
+
+    protected function scheduleCrawlers(Schedule $schedule)
+    {
+        #region Crawl.php
 
         $schedule->command('crawl --active')
             ->withoutOverlapping()
@@ -88,15 +106,15 @@ class Kernel extends ConsoleKernel
                 ]);
                 #endregion
             });
-    }
 
-    /**
-     * Register the Closure based commands for the application.
-     *
-     * @return void
-     */
-    protected function commands()
-    {
-        require base_path('routes/console.php');
+        #endregion
+
+        #region Alert.php
+
+        $schedule->command('alert')
+            ->withoutOverlapping()
+            ->everyThirtyMinutes();
+
+        #endregion
     }
 }
