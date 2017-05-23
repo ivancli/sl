@@ -40,7 +40,7 @@ class TestController extends Controller
 
     public function test()
     {
-        $alert = Alert::findOrFail(1);
-        dd($alert->alertable);
+        $alert = Alert::first();
+        dd($alert->alertable_type);
     }
 }

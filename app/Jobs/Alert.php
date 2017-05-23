@@ -62,15 +62,13 @@ class Alert implements ShouldQueue
         /*TODO if it's within crawling frequency, ignore*/
 
         /*TODO if it's outside crawling frequency, trigger alert email*/
-
-        $this->alert->setLastActiveAt();
     }
 
     protected function processBasicAlert()
     {
         switch ($this->alert->comp_type) {
             case 'my_price':
-
+                $this->_processBasicMyPrice();
                 break;
             case 'price_change':
                 $this->_processBasicPriceChange();
@@ -79,6 +77,49 @@ class Alert implements ShouldQueue
     }
 
     protected function processAdvancedAlert()
+    {
+        $alertable = $this->alert->alertable;
+
+        switch ($this->alert->alertable_type) {
+            case 'product':
+                switch ($this->alert->comp_type) {
+                    case 'my_price':
+                        $this->_processAdvancedProductMyPrice();
+                        break;
+                    case 'price_change':
+                        $this->_processAdvancedProductPriceChange();
+                        break;
+                }
+                break;
+            case 'category':
+                switch ($this->alert->comp_type) {
+                    case 'my_price':
+                        $this->_processAdvancedCategoryMyPrice();
+                        break;
+                    case 'price_change':
+                        $this->_processAdvancedCategoryPriceChange();
+                        break;
+                }
+                break;
+        }
+    }
+
+    private function _processAdvancedProductPriceChange()
+    {
+
+    }
+
+    private function _processAdvancedProductMyPrice()
+    {
+
+    }
+
+    private function _processAdvancedCategoryPriceChange()
+    {
+
+    }
+
+    private function _processAdvancedCategoryMyPrice()
     {
 
     }
@@ -90,7 +131,61 @@ class Alert implements ShouldQueue
         $alertProducts = collect();
         foreach ($products as $product) {
             $sites = $product->sites;
+            $mySites = $sites->filter(function ($site) {
+                return $this->_isMySite($site);
+            });
+            if ($mySites->count() == 0) {
+                continue;
+            }
+            $notMySites = $sites->filter(function ($site) {
+                return !$this->_isMySite($site);
+            });
+            $beatenBySites = collect();
+            foreach ($mySites as $mySite) {
 
+                $mySiteItem = $mySite->item;
+
+                if (is_null($mySiteItem)) {
+                    continue;
+                }
+
+                $lastChangedAt = null;
+                if (!is_null($mySiteItem->lastChangedAt)) {
+                    $lastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $mySiteItem->lastChangedAt);
+                }
+
+                foreach ($notMySites as $notMySite) {
+                    $notMySiteItem = $notMySite->item;
+
+                    if (is_null($notMySiteItem)) {
+                        continue;
+                    }
+
+                    $notMySiteLastChangedAt = null;
+                    if (!is_null($notMySiteItem->lastChangedAt)) {
+                        $notMySiteLastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $notMySiteItem->lastChangedAt);
+                    }
+
+                    /* either my site or not my site has changed price */
+                    if ((!is_null($lastChangedAt) && $lastChangedAt > $this->lastActiveAt) || (!is_null($notMySiteLastChangedAt) && $notMySiteLastChangedAt > $this->lastActiveAt)) {
+                        /* both my site and not my site have recent prices */
+                        if (!is_null($mySiteItem->recentPrice) && !is_null($notMySiteItem->recentPrice)) {
+                            if ($notMySiteItem->recentPrice > $mySiteItem->recentPrice) {
+                                $beatenBySites->push($notMySite);
+                            }
+                        }
+                    }
+                }
+            }
+            if ($beatenBySites->count() > 0) {
+                $alertProducts->push($product);
+            }
+        }
+
+        if ($alertProducts->count() > 0) {
+            $this->alert->setLastActiveAt();
+
+            /* TODO dispatch mail job with $alertProducts */
         }
     }
 
@@ -116,10 +211,11 @@ class Alert implements ShouldQueue
                 }
             }
         }
+        if ($alertSites->count() > 0) {
+            $this->alert->setLastActiveAt();
 
-        $this->alert->setLastActiveAt();
-
-        /* TODO dispatch mail job with $alertSites */
+            /* TODO dispatch mail job with $alertSites */
+        }
 
     }
 
@@ -127,7 +223,24 @@ class Alert implements ShouldQueue
     {
         $companyUrl = $this->user->company_url;
         if (!is_null($companyUrl)) {
+            $urlSegments = parse_url($companyUrl);
+            $companyDomain = isset($urlSegments['host']) ? $urlSegments['host'] : '';
 
+            if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $companyDomain, $regs)) {
+                $companyDomain = $regs['domain'];
+            } else {
+                return false;
+            }
+
+            $siteDomainSegments = parse_url($site->url->domain);
+            $siteDomain = isset($siteDomainSegments['host']) ? $siteDomainSegments['host'] : '';
+
+            if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $siteDomain, $regs)) {
+                $siteDomain = $regs['domain'];
+            } else {
+                return false;
+            }
+            return $companyDomain == $siteDomain;
         }
 
         /* TODO add ebay later on */
