@@ -2,6 +2,8 @@
 
 namespace App\Mail\Alert;
 
+use App\Models\Product;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -11,14 +13,21 @@ class AdvancedProductMyPrice extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $user;
+
+    public $product;
+
     /**
      * Create a new message instance.
      *
-     * @return void
+     * @param User $user
+     * @param Product $product
      */
-    public function __construct()
+    public function __construct(User $user, Product $product)
     {
-        //
+        $this->user = $user;
+
+        $this->product = $product;
     }
 
     /**
