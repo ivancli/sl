@@ -45,7 +45,7 @@
             },
             type(val){
                 if (val === 'custom') {
-                    this.operator = '>';
+                    this.operator = '<=';
                 } else {
                     this.operator = null;
                     this.price = null;

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Observers;
 
 use App\Models\User;
@@ -46,7 +47,8 @@ class UserObserver
 
     public function deleting(User $user)
     {
-
+        /*remove corresponding alerts when deleting a user*/
+        $user->alerts()->delete();
     }
 
     public function deleted()

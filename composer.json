@@ -32,10 +32,11 @@
   "require": {
     "php": ">=5.6.4",
     "campaignmonitor/createsend-php": "^5.0",
+    "guzzlehttp/guzzle": "^6.2",
     "ivancli/chargify": "dev-master",
     "ivancli/crawler": "dev-master",
-    "ivancli/parser": "dev-master",
     "ivancli/item_generator": "dev-master",
+    "ivancli/parser": "dev-master",
     "ivancli/um": "dev-master",
     "laravel/framework": "5.4.*",
     "laravel/tinker": "~1.0",

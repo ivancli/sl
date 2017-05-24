@@ -30,7 +30,7 @@ class StoreValidator extends ValidatorAbstract
             'advanced_alert.category_alerts.*.type' => 'required_if:advanced_alert.is_selected,true',
             'advanced_alert.product_alerts.*.product_id' => 'required_if:advanced_alert.is_selected,true',
             'advanced_alert.product_alerts.*.type' => 'required_if:advanced_alert.is_selected,true',
-            'advanced_alert.product_alerts.*.price' => 'required_if:advanced_alert.product_alerts.*.type,custom',
+            'advanced_alert.product_alerts.*.price' => 'required_if:advanced_alert.product_alerts.*.type,custom|numeric|nullable',
         ];
     }
 }

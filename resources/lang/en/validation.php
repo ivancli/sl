@@ -140,11 +140,18 @@ return [
         'confs.*.value' => [
             'required' => 'Each configuration\'s value is required.',
         ],
-        'product_alerts.*.type' => [
-            'required' => 'Product alert type is required.',
+        'basic_alert.type' => [
+            'required' => 'Basic alert type is required.',
         ],
-        'product_alerts.*.price' => [
-            'required' => 'Price is required.',
+        'advanced_alert.category_alerts.*.type' => [
+            'required_if' => 'Category alert type is required.',
+        ],
+        'advanced_alert.product_alerts.*.type' => [
+            'required_if' => 'Product alert type is required.',
+        ],
+        'advanced_alert.product_alerts.*.price' => [
+            'required_if' => 'Price is required.',
+            'numeric' => 'Price must be numeric.',
         ],
     ],
 

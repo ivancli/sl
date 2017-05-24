@@ -1,7 +1,7 @@
 <template>
     <tbody>
     <tr class="site-wrapper">
-        <td class="site-url vertical-align-middle">
+        <td class="site-url vertical-align-middle" :class="mySiteClass">
             <a :href="site.siteUrl" target="_blank" class="text-muted site-url-link" :title="site.siteUrl"
                v-show="!editingSiteURL">
                 {{site.siteUrl | domain}}
@@ -10,7 +10,7 @@
             <edit-site :editing-site="site" :going-to-edit-site="editingSiteURL" @edited-site="editedSite"
                        @cancel-edit-site-url="cancelEditSiteURL"></edit-site>
         </td>
-        <td class="vertical-align-middle col-recent-price">
+        <td class="vertical-align-middle col-recent-price" :class="mySiteClass">
             <div class="text-right">
                 <div v-if="site.item != null && site.item.recentPrice != null">
                     ${{ site.item.recentPrice | currency }}
@@ -22,7 +22,7 @@
                 </div>
             </div>
         </td>
-        <td class="vertical-align-middle">
+        <td class="vertical-align-middle" :class="mySiteClass">
             <div class="text-center">
                 <div v-if="site.item != null && site.item.availability != null">
                     {{ site.item.availability == true ? 'Yes' : 'No' }}
@@ -32,7 +32,7 @@
                 </div>
             </div>
         </td>
-        <td class="vertical-align-middle hidden-xs hidden-sm col-previous-price">
+        <td class="vertical-align-middle hidden-xs hidden-sm col-previous-price" :class="mySiteClass">
             <div class="text-right">
                 <div v-if="site.item != null && site.item.previousPrice != null">
                     ${{ site.item.previousPrice | currency }}
@@ -44,7 +44,7 @@
                 </div>
             </div>
         </td>
-        <td class="vertical-align-middle hidden-xs hidden-sm col-price-change">
+        <td class="vertical-align-middle hidden-xs hidden-sm col-price-change" :class="mySiteClass">
             <div class="text-right">
                 <div v-if="site.item != null && site.item.priceChange != null">
                     ${{ site.item.priceChange | currency }}
@@ -56,7 +56,7 @@
                 </div>
             </div>
         </td>
-        <td class="hidden-xs vertical-align-middle hidden-xs hidden-sm" style="padding-left: 20px;">
+        <td class="hidden-xs vertical-align-middle hidden-xs hidden-sm p-l-20" :class="mySiteClass">
             <div v-if="site.item != null && site.item.lastChangedAt != null">
                 {{ site.item.lastChangedAt | formatDateTime(dateFormat) }}
             </div>
@@ -211,8 +211,8 @@
                 this.isDeletingSite = true;
                 axios.delete(this.site.urls.delete).then(response => {
                     this.isDeletingSite = false;
-                    if (response.data.status == true) {
-                        if (typeof callback == 'function') {
+                    if (response.data.status === true) {
+                        if (typeof callback === 'function') {
                             callback();
                         }
                     }
@@ -235,7 +235,7 @@
                 this.isSelectingItem = false;
             },
             emitSelectedItem(item){
-                if (typeof item != 'undefined') {
+                if (typeof item !== 'undefined') {
                     this.$emit('selected-item', item);
                 } else {
                     this.$emit('selected-item');
@@ -266,6 +266,37 @@
             },
             datetimeFormat(){
                 return this.dateFormat + ' ' + this.timeFormat;
+            },
+            user(){
+                return this.$store.getters.user;
+            },
+            isMySite(){
+                if (this.user.metas.company_url === null) {
+                    return false;
+                }
+
+                let siteDomain = this.$options.filters.domain(this.site.siteUrl);
+                let siteDomainParts = siteDomain.split('.');
+                let siteSubdomain = siteDomainParts.shift();
+                let upperLevelSiteDomain = siteDomainParts.join('.');
+
+                let companyDomain = this.$options.filters.domain(this.user.metas.company_url);
+                let companyDomainParts = companyDomain.split('.');
+                let companySubdomain = companyDomainParts.shift();
+                let upperLevelCompanyDomain = companyDomainParts.join('.');
+
+                if (upperLevelSiteDomain === upperLevelCompanyDomain) {
+                    return true;
+                }
+
+                /*TODO check ebay stuff*/
+                return false;
+            },
+            mySiteClass(){
+                if (this.isMySite) {
+                    return 'my-site';
+                }
+                return '';
             }
         },
     }
@@ -320,6 +351,12 @@
     tr.site-wrapper td.col-previous-price,
     tr.site-wrapper td.col-price-change {
         padding-right: 25px;
+    }
+
+    td.my-site,
+    td.my-site a {
+        color: #43bda5;
+        font-weight: bold;
     }
 
     @media (max-width: 991px) {

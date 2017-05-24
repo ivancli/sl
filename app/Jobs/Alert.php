@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Mail\Alert\BasicMyPrice;
+use App\Mail\Alert\BasicPriceChange;
 use App\Models\Alert as AlertModel;
 
 use App\Models\Site;
@@ -11,6 +13,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\Mail;
 
 class Alert implements ShouldQueue
 {
@@ -78,8 +81,6 @@ class Alert implements ShouldQueue
 
     protected function processAdvancedAlert()
     {
-        $alertable = $this->alert->alertable;
-
         switch ($this->alert->alertable_type) {
             case 'product':
                 switch ($this->alert->comp_type) {
@@ -89,6 +90,8 @@ class Alert implements ShouldQueue
                     case 'price_change':
                         $this->_processAdvancedProductPriceChange();
                         break;
+                    case 'custom':
+                        $this->_processAdvancedProductCustom();
                 }
                 break;
             case 'category':
@@ -104,29 +107,189 @@ class Alert implements ShouldQueue
         }
     }
 
-    private function _processAdvancedProductPriceChange()
-    {
-
-    }
-
+    /**
+     * validate advanced alert - product my price is beaten
+     * @return bool
+     */
     private function _processAdvancedProductMyPrice()
     {
+        $product = $this->alert->alertable;
 
+        if (is_null($product)) {
+            return false;
+        }
+        $sites = $product->sites;
+
+        $mySites = $sites->filter(function ($site) {
+            return $this->_isMySite($site);
+        });
+        $notMySites = $sites->filter(function ($site) {
+            return !$this->_isMySite($site);
+        });
+
+        if ($mySites->count() == 0 || $notMySites->count() == 0) {
+            return false;
+        }
+
+        $beatenBySites = collect();
+        foreach ($mySites as $mySite) {
+
+            $mySiteItem = $mySite->item;
+
+            if (is_null($mySiteItem)) {
+                continue;
+            }
+            $lastChangedAt = null;
+            if (!is_null($mySiteItem->lastChangedAt)) {
+                $lastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $mySiteItem->lastChangedAt);
+            }
+            foreach ($notMySites as $notMySite) {
+                $notMySiteItem = $notMySite->item;
+
+                if (is_null($notMySiteItem)) {
+                    continue;
+                }
+
+                $notMySiteLastChangedAt = null;
+                if (!is_null($notMySiteItem->lastChangedAt)) {
+                    $notMySiteLastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $notMySiteItem->lastChangedAt);
+                }
+
+                $comparedDateTime = !is_null($this->lastActiveAt) ? $this->lastActiveAt : $this->alertCreatedAt;
+
+                /* either my site or not my site has changed price */
+                if ((!is_null($lastChangedAt) && $lastChangedAt > $comparedDateTime) || (!is_null($notMySiteLastChangedAt) && $notMySiteLastChangedAt > $comparedDateTime)) {
+                    /* both my site and not my site have recent prices */
+                    if (!is_null($mySiteItem->recentPrice) && !is_null($notMySiteItem->recentPrice)) {
+                        if (floatval($notMySiteItem->recentPrice) < floatval($mySiteItem->recentPrice)) {
+                            $beatenBySites->push($notMySite);
+                        }
+                    }
+                }
+            }
+        }
+        if ($beatenBySites->count() > 0) {
+            $this->alert->setLastActiveAt();
+
+            $this->emailData = compact(['beatenBySites']);
+            dd($this->emailData);
+            /* TODO dispatch mail job with beatenBySites */
+        }
+
+        return true;
     }
 
-    private function _processAdvancedCategoryPriceChange()
+    /**
+     * validate advanced alert - product price change alert
+     * @return bool
+     */
+    private function _processAdvancedProductPriceChange()
     {
+        $product = $this->alert->alertable;
 
+        if (is_null($product)) {
+            return false;
+        }
+
+        $sites = $product->sites;
+
+        $alertSites = collect();
+        foreach ($sites as $site) {
+            if ($this->_siteHasPriceChange($site)) {
+                $alertSites->push($site);
+            }
+        }
+        if ($alertSites->count() > 0) {
+            $this->alert->setLastActiveAt();
+
+            $this->emailData = compact(['alertSites']);
+            dd($this->emailData);
+            /* TODO dispatch mail job with $alertSites */
+        }
+
+        return true;
     }
 
+    /**
+     * validate advanced alert - product custom validation alert
+     * @return bool
+     */
+    private function _processAdvancedProductCustom()
+    {
+        $product = $this->alert->alertable;
+
+        if (is_null($product)) {
+            return false;
+        }
+        $sites = $product->sites;
+
+        $alertSites = collect();
+        foreach ($sites as $site) {
+            $siteItem = $site->item;
+
+            if (is_null($siteItem)) {
+                continue;
+            }
+
+            $siteLastChangedAt = null;
+            if (!is_null($siteItem->lastChangedAt)) {
+                $siteLastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $siteItem->lastChangedAt);
+            }
+
+            $comparedDateTime = !is_null($this->lastActiveAt) ? $this->lastActiveAt : $this->alertCreatedAt;
+
+            if (!is_null($siteLastChangedAt) && $siteLastChangedAt > $comparedDateTime) {
+                if (!is_null($siteItem->recentPrice)) {
+
+                    $comparedResult = null;
+                    $comparedPrice = $this->alert->comp_price;
+                    switch ($this->alert->comp_operator) {
+                        case '<':
+                            $comparedResult = floatval($siteItem->recentPrice) < $comparedPrice;
+                            break;
+                        case '<=':
+                            $comparedResult = floatval($siteItem->recentPrice) <= $comparedPrice;
+                            break;
+                        case '>':
+                            $comparedResult = floatval($siteItem->recentPrice) > $comparedPrice;
+                            break;
+                        case '>=':
+                            $comparedResult = floatval($siteItem->recentPrice) >= $comparedPrice;
+                            break;
+                        case '=':
+                            $comparedResult = floatval($siteItem->recentPrice) == $comparedPrice;
+                            break;
+                    }
+                    if ($comparedResult) {
+                        $alertSites->push($site);
+                    }
+                }
+            }
+        }
+        if ($alertSites->count() > 0) {
+            $this->alert->setLastActiveAt();
+
+            $this->emailData = compact(['alertSites']);
+            dd($this->emailData);
+            /* TODO dispatch mail job with beatenBySites */
+        }
+
+        return true;
+    }
+
+    /**
+     * validate advanced alert - category my price beaten alert
+     * @return bool
+     */
     private function _processAdvancedCategoryMyPrice()
     {
+        $category = $this->alert->alertable;
 
-    }
+        if (is_null($category)) {
+            return false;
+        }
 
-    private function _processBasicMyPrice()
-    {
-        $products = $this->user->products;
+        $products = $category->products;
 
         $alertProducts = collect();
         foreach ($products as $product) {
@@ -134,12 +297,12 @@ class Alert implements ShouldQueue
             $mySites = $sites->filter(function ($site) {
                 return $this->_isMySite($site);
             });
-            if ($mySites->count() == 0) {
-                continue;
-            }
             $notMySites = $sites->filter(function ($site) {
                 return !$this->_isMySite($site);
             });
+            if ($mySites->count() == 0 || $notMySites->count() == 0) {
+                continue;
+            }
             $beatenBySites = collect();
             foreach ($mySites as $mySite) {
 
@@ -148,12 +311,10 @@ class Alert implements ShouldQueue
                 if (is_null($mySiteItem)) {
                     continue;
                 }
-
                 $lastChangedAt = null;
                 if (!is_null($mySiteItem->lastChangedAt)) {
                     $lastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $mySiteItem->lastChangedAt);
                 }
-
                 foreach ($notMySites as $notMySite) {
                     $notMySiteItem = $notMySite->item;
 
@@ -166,11 +327,117 @@ class Alert implements ShouldQueue
                         $notMySiteLastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $notMySiteItem->lastChangedAt);
                     }
 
+                    $comparedDateTime = !is_null($this->lastActiveAt) ? $this->lastActiveAt : $this->alertCreatedAt;
+
                     /* either my site or not my site has changed price */
-                    if ((!is_null($lastChangedAt) && $lastChangedAt > $this->lastActiveAt) || (!is_null($notMySiteLastChangedAt) && $notMySiteLastChangedAt > $this->lastActiveAt)) {
+                    if ((!is_null($lastChangedAt) && $lastChangedAt > $comparedDateTime) || (!is_null($notMySiteLastChangedAt) && $notMySiteLastChangedAt > $comparedDateTime)) {
                         /* both my site and not my site have recent prices */
                         if (!is_null($mySiteItem->recentPrice) && !is_null($notMySiteItem->recentPrice)) {
-                            if ($notMySiteItem->recentPrice > $mySiteItem->recentPrice) {
+                            if (floatval($notMySiteItem->recentPrice) < floatval($mySiteItem->recentPrice)) {
+                                $beatenBySites->push($notMySite);
+                            }
+                        }
+                    }
+                }
+            }
+            if ($beatenBySites->count() > 0) {
+                $alertProducts->push($product);
+            }
+        }
+
+        if ($alertProducts->count() > 0) {
+            $this->alert->setLastActiveAt();
+
+            $this->emailData = compact(['alertProducts']);
+            dd($this->emailData);
+            /* TODO dispatch mail job with $alertProducts */
+        }
+
+        return true;
+    }
+
+    /**
+     * validate advanced alert - category price change alert
+     * @return bool
+     */
+    private function _processAdvancedCategoryPriceChange()
+    {
+        $category = $this->alert->alertable;
+
+        if (is_null($category)) {
+            return false;
+        }
+
+        $sites = $category->sites;
+
+        $alertSites = collect();
+        foreach ($sites as $site) {
+            if ($this->_siteHasPriceChange($site)) {
+                $alertSites->push($site);
+            }
+        }
+        if ($alertSites->count() > 0) {
+            $this->alert->setLastActiveAt();
+
+            $this->emailData = compact(['alertSites']);
+            dd($this->emailData);
+            /* TODO dispatch mail job with $alertSites */
+        }
+
+        return true;
+    }
+
+    /**
+     * validate basic alert - my price beaten alert
+     * @return bool
+     */
+    private function _processBasicMyPrice()
+    {
+        $products = $this->user->products;
+
+        $alertProducts = collect();
+        foreach ($products as $product) {
+            $sites = $product->sites;
+            $mySites = $sites->filter(function ($site) {
+                return $this->_isMySite($site);
+            });
+            $notMySites = $sites->filter(function ($site) {
+                return !$this->_isMySite($site);
+            });
+            if ($mySites->count() == 0 || $notMySites->count() == 0) {
+                continue;
+            }
+            $beatenBySites = collect();
+            foreach ($mySites as $mySite) {
+
+                $mySiteItem = $mySite->item;
+
+                if (is_null($mySiteItem)) {
+                    continue;
+                }
+                $lastChangedAt = null;
+                if (!is_null($mySiteItem->lastChangedAt)) {
+                    $lastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $mySiteItem->lastChangedAt);
+                }
+                foreach ($notMySites as $notMySite) {
+                    $notMySiteItem = $notMySite->item;
+
+                    if (is_null($notMySiteItem)) {
+                        continue;
+                    }
+
+                    $notMySiteLastChangedAt = null;
+                    if (!is_null($notMySiteItem->lastChangedAt)) {
+                        $notMySiteLastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $notMySiteItem->lastChangedAt);
+                    }
+
+                    $comparedDateTime = !is_null($this->lastActiveAt) ? $this->lastActiveAt : $this->alertCreatedAt;
+
+                    /* either my site or not my site has changed price */
+                    if ((!is_null($lastChangedAt) && $lastChangedAt > $comparedDateTime) || (!is_null($notMySiteLastChangedAt) && $notMySiteLastChangedAt > $comparedDateTime)) {
+                        /* both my site and not my site have recent prices */
+                        if (!is_null($mySiteItem->recentPrice) && !is_null($notMySiteItem->recentPrice)) {
+                            if (floatval($notMySiteItem->recentPrice) < floatval($mySiteItem->recentPrice)) {
                                 $beatenBySites->push($notMySite);
                             }
                         }
@@ -186,42 +453,48 @@ class Alert implements ShouldQueue
             $this->alert->setLastActiveAt();
 
             /* TODO dispatch mail job with $alertProducts */
+            Mail::to($this->user->email)
+                ->subject('SpotLite Price Alert')
+                ->send(new BasicMyPrice($alertProducts));
         }
+
+        return true;
     }
 
+    /**
+     * validate basic alert - price change alert
+     * @return bool
+     */
     private function _processBasicPriceChange()
     {
         $sites = $this->user->sites;
 
         $alertSites = collect();
         foreach ($sites as $site) {
-            $item = $site->item;
-            if (!is_null($item)) {
-                if (!is_null($item->lastChangedAt)) {
-                    $lastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $item->lastChangedAt);
-                    if (!is_null($this->lastActiveAt)) {
-                        if ($lastChangedAt > $this->lastActiveAt) {
-                            $alertSites->push($site);
-                        }
-                    } else {
-                        if ($lastChangedAt > $this->alertCreatedAt) {
-                            $alertSites->push($site);
-                        }
-                    }
-                }
+            if ($this->_siteHasPriceChange($site)) {
+                $alertSites->push($site);
             }
         }
         if ($alertSites->count() > 0) {
             $this->alert->setLastActiveAt();
 
             /* TODO dispatch mail job with $alertSites */
+            Mail::to($this->user->email)
+                ->subject('SpotLite Price Alert')
+                ->send(new BasicPriceChange($alertSites));
         }
 
+        return true;
     }
 
+    /**
+     * check if provided site is my site
+     * @param Site $site
+     * @return bool
+     */
     private function _isMySite(Site $site)
     {
-        $companyUrl = $this->user->company_url;
+        $companyUrl = $this->user->metas->company_url;
         if (!is_null($companyUrl)) {
             $urlSegments = parse_url($companyUrl);
             $companyDomain = isset($urlSegments['host']) ? $urlSegments['host'] : '';
@@ -232,7 +505,7 @@ class Alert implements ShouldQueue
                 return false;
             }
 
-            $siteDomainSegments = parse_url($site->url->domain);
+            $siteDomainSegments = parse_url($site->url->domainFullPath);
             $siteDomain = isset($siteDomainSegments['host']) ? $siteDomainSegments['host'] : '';
 
             if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $siteDomain, $regs)) {
@@ -245,6 +518,31 @@ class Alert implements ShouldQueue
 
         /* TODO add ebay later on */
 
+        return false;
+    }
+
+    /**
+     * check if provided site has recently changed price after alert last active/created
+     * @param Site $site
+     * @return bool
+     */
+    private function _siteHasPriceChange(Site $site)
+    {
+        $item = $site->item;
+        if (!is_null($item)) {
+            if (!is_null($item->lastChangedAt)) {
+                $lastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $item->lastChangedAt);
+                if (!is_null($this->lastActiveAt)) {
+                    if ($lastChangedAt > $this->lastActiveAt) {
+                        return true;
+                    }
+                } else {
+                    if ($lastChangedAt > $this->alertCreatedAt) {
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 }
