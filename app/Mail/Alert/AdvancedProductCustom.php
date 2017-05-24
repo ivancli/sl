@@ -2,6 +2,8 @@
 
 namespace App\Mail\Alert;
 
+use App\Models\Alert;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -11,14 +13,32 @@ class AdvancedProductCustom extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $user;
+
+    public $alert;
+
+    public $product;
+
+    public $sites;
+
+    public $subject = "SpotLite Price Alert";
+
     /**
      * Create a new message instance.
      *
-     * @return void
+     * @param User $user
+     * @param Alert $alert
+     * @param $sites
      */
-    public function __construct()
+    public function __construct(User $user, Alert $alert, $sites)
     {
-        //
+        $this->user = $user;
+
+        $this->alert = $alert;
+
+        $this->product = $alert->alertable;
+
+        $this->sites = $sites;
     }
 
     /**

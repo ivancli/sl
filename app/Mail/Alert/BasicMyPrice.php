@@ -12,9 +12,11 @@ class BasicMyPrice extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $user;
+
     public $products;
 
-    public $user;
+    public $subject = "SpotLite Price Alert";
 
     /**
      * Create a new message instance.

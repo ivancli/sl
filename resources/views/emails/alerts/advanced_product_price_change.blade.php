@@ -1,15 +1,15 @@
-@component('mail::message')
+@component('mail::alert_message')
 
-# Hi Ivan
+# Hi {{$user->first_name}},
 
-The price for the following product URLs are found to have changed.
+The price for the product *{{$product->product_name}}* are found to have changed.
 
 
 @if(isset($sites))
 |Category   |Product    |URL    |
 |-----------|-----------|-------|
 @foreach($sites as $site)
-|{{$site->product->category->category_name}}|{{$site->product->product_name}}|{{$site->url->domainFullPath}}|
+|{{$product->category->category_name}}|{{$product->product_name}}|{{$site->url->domainFullPath}}|
 @endforeach
 @endif
 

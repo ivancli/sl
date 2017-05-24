@@ -6,6 +6,6 @@
         Do you want to change your report preferences? Click here:
     </p>
     <p>
-        <strong><a href="#">Change Preferences</a></strong>
+        <strong><a href="{{route('report.index')}}">Change Preferences</a></strong>
     </p>
 </div>

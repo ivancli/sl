@@ -2,6 +2,11 @@
 
 namespace App\Jobs;
 
+use App\Mail\Alert\AdvancedCategoryMyPrice;
+use App\Mail\Alert\AdvancedCategoryPriceChange;
+use App\Mail\Alert\AdvancedProductCustom;
+use App\Mail\Alert\AdvancedProductMyPrice;
+use App\Mail\Alert\AdvancedProductPriceChange;
 use App\Mail\Alert\BasicMyPrice;
 use App\Mail\Alert\BasicPriceChange;
 use App\Models\Alert as AlertModel;
@@ -35,7 +40,6 @@ class Alert implements ShouldQueue
     {
         $this->alert = $alert;
         $this->user = $alert->user;
-
         if (!is_null($this->alert->last_active_at)) {
             $this->lastActiveAt = Carbon::createFromFormat('Y-m-d H:i:s', $this->alert->last_active_at);
         }
@@ -171,9 +175,9 @@ class Alert implements ShouldQueue
         if ($beatenBySites->count() > 0) {
             $this->alert->setLastActiveAt();
 
-            $this->emailData = compact(['beatenBySites']);
-            dd($this->emailData);
             /* TODO dispatch mail job with beatenBySites */
+            Mail::to($this->user->email)
+                ->send(new AdvancedProductMyPrice($this->user, $product));
         }
 
         return true;
@@ -202,9 +206,9 @@ class Alert implements ShouldQueue
         if ($alertSites->count() > 0) {
             $this->alert->setLastActiveAt();
 
-            $this->emailData = compact(['alertSites']);
-            dd($this->emailData);
             /* TODO dispatch mail job with $alertSites */
+            Mail::to($this->user->email)
+                ->send(new AdvancedProductPriceChange($this->user, $product, $alertSites));
         }
 
         return true;
@@ -269,9 +273,9 @@ class Alert implements ShouldQueue
         if ($alertSites->count() > 0) {
             $this->alert->setLastActiveAt();
 
-            $this->emailData = compact(['alertSites']);
-            dd($this->emailData);
             /* TODO dispatch mail job with beatenBySites */
+            Mail::to($this->user->email)
+                ->send(new AdvancedProductCustom($this->user, $this->alert, $alertSites));
         }
 
         return true;
@@ -348,9 +352,9 @@ class Alert implements ShouldQueue
         if ($alertProducts->count() > 0) {
             $this->alert->setLastActiveAt();
 
-            $this->emailData = compact(['alertProducts']);
-            dd($this->emailData);
             /* TODO dispatch mail job with $alertProducts */
+            Mail::to($this->user->email)
+                ->send(new AdvancedCategoryMyPrice($this->user, $category, $alertProducts));
         }
 
         return true;
@@ -379,9 +383,9 @@ class Alert implements ShouldQueue
         if ($alertSites->count() > 0) {
             $this->alert->setLastActiveAt();
 
-            $this->emailData = compact(['alertSites']);
-            dd($this->emailData);
             /* TODO dispatch mail job with $alertSites */
+            Mail::to($this->user->email)
+                ->send(new AdvancedCategoryPriceChange($this->user, $category, $alertSites));
         }
 
         return true;
@@ -454,8 +458,7 @@ class Alert implements ShouldQueue
 
             /* TODO dispatch mail job with $alertProducts */
             Mail::to($this->user->email)
-                ->subject('SpotLite Price Alert')
-                ->send(new BasicMyPrice($alertProducts));
+                ->send(new BasicMyPrice($this->user, $alertProducts));
         }
 
         return true;
@@ -468,7 +471,6 @@ class Alert implements ShouldQueue
     private function _processBasicPriceChange()
     {
         $sites = $this->user->sites;
-
         $alertSites = collect();
         foreach ($sites as $site) {
             if ($this->_siteHasPriceChange($site)) {
@@ -480,8 +482,7 @@ class Alert implements ShouldQueue
 
             /* TODO dispatch mail job with $alertSites */
             Mail::to($this->user->email)
-                ->subject('SpotLite Price Alert')
-                ->send(new BasicPriceChange($alertSites));
+                ->send(new BasicPriceChange($this->user, $alertSites));
         }
 
         return true;

@@ -1,6 +1,6 @@
-@component('mail::message')
+@component('mail::alert_message')
 
-# Hi Ivan
+# Hi {{$user->first_name}},
 
 The price for the following products are found to have beaten your prices.
 

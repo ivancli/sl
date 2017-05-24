@@ -17,6 +17,8 @@ class AdvancedProductMyPrice extends Mailable
 
     public $product;
 
+    public $subject = "SpotLite Price Alert";
+
     /**
      * Create a new message instance.
      *
