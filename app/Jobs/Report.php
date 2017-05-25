@@ -72,7 +72,9 @@ class Report implements ShouldQueue
 
     protected function processDigestReport()
     {
+        if ($this->_isTimeToRun()) {
 
+        }
     }
 
     private function _processProductProductReport()
@@ -86,9 +88,10 @@ class Report implements ShouldQueue
     private function _processProductCategoryReport()
     {
         if ($this->_isTimeToRun()) {
-            dd("called1");
+            $category = $this->report->reportable;
+
         }
-        dd("called2");
+        $this->report->setLastActiveAt();
     }
 
     private function _ranWithinHours($hour = 1)
