@@ -47,6 +47,9 @@ class TestController extends Controller
             case 'product':
                 $this->processProductReport();
                 break;
+            case 'digest':
+                $this->processDigestReport();
+                break;
         }
     }
 
@@ -60,6 +63,11 @@ class TestController extends Controller
                 $this->_processProductCategoryReport();
                 break;
         }
+    }
+
+    protected function processDigestReport()
+    {
+
     }
 
     private function _processProductProductReport()
