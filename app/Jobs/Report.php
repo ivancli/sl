@@ -18,6 +18,7 @@ class Report implements ShouldQueue
     protected $user;
     protected $lastActiveAt;
     protected $now;
+    protected $currentTime;
 
     /**
      * Create a new job instance.
@@ -30,8 +31,13 @@ class Report implements ShouldQueue
         $this->user = $report->user;
         if (!is_null($this->report->last_active_at)) {
             $this->lastActiveAt = Carbon::createFromFormat('Y-m-d H:i:s', $this->report->last_active_at);
+            $this->lastActiveAt->minute(0);
+            $this->lastActiveAt->second(0);
         }
         $this->now = Carbon::now();
+        $this->now->minute(0);
+        $this->now->second(0);
+        $this->currentTime = $this->now->format('H:i:s');
     }
 
     /**
@@ -47,6 +53,7 @@ class Report implements ShouldQueue
         }
     }
 
+
     protected function processProductReport()
     {
         switch ($this->report->reportable_type) {
@@ -59,14 +66,25 @@ class Report implements ShouldQueue
         }
     }
 
-    private function _processProductProductReport()
+    protected function processDigestReport()
     {
 
     }
 
+    private function _processProductProductReport()
+    {
+        if ($this->_isTimeToRun()) {
+            dd("called1");
+        }
+        dd("called2");
+    }
+
     private function _processProductCategoryReport()
     {
-
+        if ($this->_isTimeToRun()) {
+            dd("called1");
+        }
+        dd("called2");
     }
 
     private function _ranWithinHours($hour = 1)
@@ -80,17 +98,58 @@ class Report implements ShouldQueue
 
     private function _isTimeToRun()
     {
+        if ($this->_ranWithinHours()) {
+            return false;
+        }
+
         $frequency = $this->report->frequency;
         switch ($frequency) {
             case 'day':
-
+                if ($this->report->time == $this->currentTime) {
+                    if ($this->report->weekday_only == 'y') {
+                        if ($this->now->isWeekday()) {
+                            return true;
+                        }
+                    } else {
+                        return true;
+                    }
+                }
+                return false;
                 break;
             case 'week':
-
+                /* check same day of week */
+                if ($this->report->day == $this->now->dayOfWeek) {
+                    /* check same hour */
+                    if ($this->report->time == $this->currentTime) {
+                        if ($this->report->weekday_only == 'y') {
+                            /* check weekday */
+                            if ($this->now->isWeekday()) {
+                                return true;
+                            }
+                        } else {
+                            return true;
+                        }
+                    }
+                }
+                return false;
                 break;
             case 'month':
-
+                /* check same date of month */
+                if ($this->report->date == $this->now->day) {
+                    /* check same hour */
+                    if ($this->report->time == $this->currentTime) {
+                        if ($this->report->weekday_only == 'y') {
+                            /* check weekday */
+                            if ($this->now->isWeekday()) {
+                                return true;
+                            }
+                        } else {
+                            return true;
+                        }
+                    }
+                }
                 break;
         }
+        return true;
     }
 }
