@@ -49,6 +49,10 @@ class Report implements ShouldQueue
     {
         switch ($this->report->report_type) {
             case 'product':
+                $this->processProductReport();
+                break;
+            case 'digest':
+                $this->processDigestReport();
                 break;
         }
     }
