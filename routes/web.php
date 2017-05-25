@@ -42,10 +42,12 @@ Route::group(['middleware' => ['auth', 'subs']], function () {
     Route::resource('category', 'Product\CategoryController', ['except' => [
         'create'
     ]]);
+    Route::get('category/report/{category}', 'Product\CategoryController@report')->name('category.report.show');
 
     Route::resource('product', 'Product\ProductController', ['except' => [
         'create'
     ]]);
+    Route::get('product/report/{product}', 'Product\ProductController@report')->name('product.report.show');
 
     Route::resource('site', 'Product\SiteController', ['except' => [
         'create'

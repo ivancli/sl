@@ -97,9 +97,22 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\LoggingModels\UserActivityLog', 'user_id', 'id');
     }
 
+    /**
+     * relationship with alert
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function alerts()
     {
         return $this->hasMany('App\Models\Alert', 'user_id', 'id');
+    }
+
+    /**
+     * relationship with report
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function reports()
+    {
+        return $this->hasMany('App\Models\Report', 'user_id', 'id');
     }
 
     /*----------------------------------------------------------------------*/

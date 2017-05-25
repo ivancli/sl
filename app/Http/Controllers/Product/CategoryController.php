@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Product;
 use App\Events\Product\Category\AfterDestroy;
 use App\Events\Product\Category\AfterEdit;
 use App\Events\Product\Category\AfterIndex;
+use App\Events\Product\Category\AfterReportShow;
 use App\Events\Product\Category\AfterShow;
 use App\Events\Product\Category\AfterStore;
 use App\Events\Product\Category\AfterUpdate;
 use App\Events\Product\Category\BeforeDestroy;
 use App\Events\Product\Category\BeforeEdit;
 use App\Events\Product\Category\BeforeIndex;
+use App\Events\Product\Category\BeforeReportShow;
 use App\Events\Product\Category\BeforeShow;
 use App\Events\Product\Category\BeforeStore;
 use App\Events\Product\Category\BeforeUpdate;
@@ -150,5 +152,17 @@ class CategoryController extends Controller
         } else {
             return redirect()->route('product');
         }
+    }
+
+    public function report(Category $category)
+    {
+        event(new BeforeReportShow($category));
+
+        $report = $category->report;
+        $status = true;
+
+        event(new AfterReportShow($category));
+
+        return compact(['report', 'status']);
     }
 }

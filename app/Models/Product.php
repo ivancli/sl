@@ -11,7 +11,7 @@ class Product extends Model
     ];
 
     protected $appends = [
-        'owner', 'numberOfSites', 'urls',
+        'numberOfSites', 'hasReport', 'urls',
     ];
 
     protected $with = [
@@ -63,18 +63,18 @@ class Product extends Model
         return $this->morphOne('App\Models\Alert', 'alertable');
     }
 
+    /**
+     * relationship with report
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
+    public function report()
+    {
+        return $this->morphOne('App\Models\Report', 'reportable');
+    }
+
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/
-
-    /**
-     * owner of this product
-     * @return User
-     */
-    public function getOwnerAttribute()
-    {
-        return $this->user;
-    }
 
     /**
      * get number of sites
@@ -83,6 +83,15 @@ class Product extends Model
     public function getNumberOfSitesAttribute()
     {
         return $this->sites()->count();
+    }
+
+    /**
+     * check if product has report or not
+     * @return bool
+     */
+    public function getHasReportAttribute()
+    {
+        return $this->report()->count() > 0;
     }
 
     /**
@@ -98,6 +107,7 @@ class Product extends Model
             'edit' => route('product.edit', $this->getKey()),
             'update' => route('product.update', $this->getKey()),
             'delete' => route('product.destroy', $this->getKey()),
+            'report_show' => route('product.report.show', $this->getKey()),
         );
     }
 }

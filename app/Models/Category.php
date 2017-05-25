@@ -11,7 +11,7 @@ class Category extends Model
     ];
 
     protected $appends = [
-        'owner', 'numberOfProducts', 'numberOfSites', 'urls',
+        'owner', 'numberOfProducts', 'numberOfSites', 'hasReport', 'urls',
     ];
 
     /**
@@ -50,6 +50,15 @@ class Category extends Model
         return $this->morphOne('App\Models\Alert', 'alertable');
     }
 
+    /**
+     * relationship with report
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
+    public function report()
+    {
+        return $this->morphOne('App\Models\Report', 'reportable');
+    }
+
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/
@@ -82,6 +91,15 @@ class Category extends Model
     }
 
     /**
+     * check if category has report or not
+     * @return bool
+     */
+    public function getHasReportAttribute()
+    {
+        return $this->report()->count() > 0;
+    }
+
+    /**
      * an attribute with an array of routes related to this object
      * @return array
      */
@@ -94,6 +112,7 @@ class Category extends Model
             'edit' => route('category.edit', $this->getKey()),
             'update' => route('category.update', $this->getKey()),
             'delete' => route('category.destroy', $this->getKey()),
+            'report_show' => route('category.report.show', $this->getKey()),
         );
     }
 }

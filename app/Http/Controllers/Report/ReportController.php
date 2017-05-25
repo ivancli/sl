@@ -2,16 +2,37 @@
 
 namespace App\Http\Controllers\Report;
 
+use App\Events\Report\AfterCreate;
+use App\Events\Report\AfterDestroy;
+use App\Events\Report\AfterEdit;
+use App\Events\Report\AfterIndex;
+use App\Events\Report\AfterShow;
+use App\Events\Report\AfterStore;
+use App\Events\Report\AfterUpdate;
+use App\Events\Report\BeforeCreate;
+use App\Events\Report\BeforeDestroy;
+use App\Events\Report\BeforeEdit;
+use App\Events\Report\BeforeIndex;
+use App\Events\Report\BeforeShow;
+use App\Events\Report\BeforeStore;
+use App\Events\Report\BeforeUpdate;
+
 use App\Http\Controllers\Controller;
+use App\Models\Report;
+use App\Services\Report\ReportService;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
     protected $request;
 
-    public function __construct(Request $request)
+    protected $reportService;
+
+    public function __construct(Request $request, ReportService $reportService)
     {
         $this->request = $request;
+
+        $this->reportService = $reportService;
     }
 
     /**
@@ -21,6 +42,9 @@ class ReportController extends Controller
      */
     public function index()
     {
+        event(new BeforeIndex);
+        event(new AfterIndex);
+
         return view('app.report.index');
     }
 
@@ -31,7 +55,8 @@ class ReportController extends Controller
      */
     public function create()
     {
-        //
+        event(new BeforeCreate);
+        event(new AfterCreate);
     }
 
     /**
@@ -41,50 +66,72 @@ class ReportController extends Controller
      */
     public function store()
     {
-        //
+        event(new BeforeStore);
+
+        $report = $this->reportService->store($this->request->all());
+        $status = true;
+
+        event(new AfterStore);
+
+        return compact(['report', 'status']);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param Report $report
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Report $report)
     {
-        //
+        event(new BeforeShow($report));
+        event(new AfterShow($report));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param Report $report
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Report $report)
     {
-        //
+        event(new BeforeEdit($report));
+        event(new AfterEdit($report));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  int $id
+     * @param Report $report
      * @return \Illuminate\Http\Response
      */
-    public function update($id)
+    public function update(Report $report)
     {
-        //
+        event(new BeforeUpdate($report));
+
+        $report = $this->reportService->update($report, $this->request->all());
+        $status = true;
+
+        event(new AfterUpdate($report));
+
+        return compact(['status', 'report']);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param Report $report
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Report $report)
     {
-        //
+        event(new BeforeDestroy($report));
+
+        $status = $report->delete();
+
+        event(new AfterDestroy($report));
+
+        return compact(['status']);
     }
 }

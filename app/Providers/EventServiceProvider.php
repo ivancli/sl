@@ -41,6 +41,8 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Product\Category\AfterUpdate' => [],
         'App\Events\Product\Category\BeforeDestroy' => [],
         'App\Events\Product\Category\AfterDestroy' => [],
+        'App\Events\Product\Category\BeforeReportShow' => [],
+        'App\Events\Product\Category\AfterReportShow' => [],
 
         'App\Events\Product\Product\BeforeIndex' => [],
         'App\Events\Product\Product\AfterIndex' => [],
@@ -56,6 +58,8 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Product\Product\AfterUpdate' => [],
         'App\Events\Product\Product\BeforeDestroy' => [],
         'App\Events\Product\Product\AfterDestroy' => [],
+        'App\Events\Product\Product\BeforeReportShow' => [],
+        'App\Events\Product\Product\AfterReportShow' => [],
 
         'App\Events\Product\Site\BeforeIndex' => [],
         'App\Events\Product\Site\AfterIndex' => [],
@@ -78,6 +82,7 @@ class EventServiceProvider extends ServiceProvider
         /**
          * Alert
          */
+        /*controller*/
         'App\Events\Alert\BeforeIndex' => [],
         'App\Events\Alert\AfterIndex' => [],
         'App\Events\Alert\BeforeShow' => [],
@@ -92,6 +97,24 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Alert\AfterUpdate' => [],
         'App\Events\Alert\BeforeDestroy' => [],
         'App\Events\Alert\AfterDestroy' => [],
+
+        /**
+         * Report
+         */
+        'App\Events\Report\BeforeIndex' => [],
+        'App\Events\Report\AfterIndex' => [],
+        'App\Events\Report\BeforeShow' => [],
+        'App\Events\Report\AfterShow' => [],
+        'App\Events\Report\BeforeCreate' => [],
+        'App\Events\Report\AfterCreate' => [],
+        'App\Events\Report\BeforeStore' => [],
+        'App\Events\Report\AfterStore' => [],
+        'App\Events\Report\BeforeEdit' => [],
+        'App\Events\Report\AfterEdit' => [],
+        'App\Events\Report\BeforeUpdate' => [],
+        'App\Events\Report\AfterUpdate' => [],
+        'App\Events\Report\BeforeDestroy' => [],
+        'App\Events\Report\AfterDestroy' => [],
 
         /**
          * URL Management
@@ -357,6 +380,12 @@ class EventServiceProvider extends ServiceProvider
         'App\Listeners\Product\CategoryControllerEventSubscriber',
         'App\Listeners\Product\ProductControllerEventSubscriber',
         'App\Listeners\Product\SiteControllerEventSubscriber',
+
+        /*alert*/
+        'App\Listeners\Alert\AlertControllerEventSubscriber',
+
+        /*report*/
+        'App\Listeners\Report\ReportControllerEventSubscriber',
 
         /*url management*/
         'App\Listeners\UrlManagement\DomainControllerEventSubscriber',

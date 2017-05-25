@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Product;
 use App\Events\Product\Product\AfterDestroy;
 use App\Events\Product\Product\AfterEdit;
 use App\Events\Product\Product\AfterIndex;
+use App\Events\Product\Product\AfterReportShow;
 use App\Events\Product\Product\AfterShow;
 use App\Events\Product\Product\AfterStore;
 use App\Events\Product\Product\AfterUpdate;
 use App\Events\Product\Product\BeforeDestroy;
 use App\Events\Product\Product\BeforeEdit;
 use App\Events\Product\Product\BeforeIndex;
+use App\Events\Product\Product\BeforeReportShow;
 use App\Events\Product\Product\BeforeShow;
 use App\Events\Product\Product\BeforeStore;
 use App\Events\Product\Product\BeforeUpdate;
@@ -113,7 +115,6 @@ class ProductController extends Controller
      * Update the specified resource in storage.
      *
      * @param Product $product
-     * @param UpdateValidator $updateValidator
      * @return JsonResponse|\Illuminate\Http\Response
      */
     public function update(Product $product)
@@ -151,5 +152,23 @@ class ProductController extends Controller
         } else {
             return redirect()->route('product');
         }
+    }
+
+    /**
+     * Load alert by product
+     *
+     * @param Product $product
+     * @return array
+     */
+    public function report(Product $product)
+    {
+        event(new BeforeReportShow($product));
+
+        $report = $product->report;
+        $status = true;
+
+        event(new AfterReportShow($product));
+
+        return compact(['report', 'status']);
     }
 }

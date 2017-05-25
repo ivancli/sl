@@ -8,11 +8,8 @@
                 </a>
             </th>
             <th class="product-th product-name-container">
-                <a class="text-muted product-name-link" href="#" v-text="product.product_name"
-                   v-show="!editingProduct"></a>
-                <edit-product :editing-product="product" :going-to-edit-product="editingProduct"
-                              @edited-product="editedProduct"
-                              @cancel-edit-product-name="cancelEditProduct"></edit-product>
+                <a class="text-muted product-name-link" href="#" v-text="product.product_name" v-show="!editingProduct"></a>
+                <edit-product :editing-product="product" :going-to-edit-product="editingProduct" @edited-product="editedProduct" @cancel-edit-product-name="cancelEditProduct"></edit-product>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <i class="fa fa-info-circle text-muted" v-show="!editingProduct"></i>
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -41,8 +38,8 @@
                 <a href="#" class="btn-action" title="chart">
                     <i class="fa fa-line-chart"></i>
                 </a>
-                <a href="#" class="btn-action" title="report">
-                    <i class="fa fa-envelope-o"></i>
+                <a href="#" class="btn-action" title="report" @click.prevent="onClickEditProductReport">
+                    <i class="fa" :class="reportIconClass"></i>
                 </a>
                 <a href="#" class="btn-action" title="delete" @click.prevent="onClickDeleteProduct">
                     <i class="glyphicon glyphicon-trash"></i>
@@ -62,8 +59,7 @@
             <td></td>
             <td colspan="3">
                 <div class="text-light">
-                    Created on {{product.created_at | formatDateTime(dateFormat)}} <strong class="text-muted"><i>by
-                    {{product.owner.fullName}}</i></strong>
+                    Created on {{product.created_at | formatDateTime(dateFormat)}} <strong class="text-muted"><i>by {{user.fullName}}</i></strong>
                 </div>
             </td>
         </tr>
@@ -74,36 +70,20 @@
                     <table class="table table-striped table-condensed tbl-site">
                         <thead>
                         <tr>
-                            <th class="sortable" @click.prevent="sortSitesBy('site')" :class="sortSiteClass('site')">
-                                Site
-                            </th>
-                            <th class="sortable text-right" @click.prevent="sortSitesBy('recent_price')"
-                                :class="sortSiteClass('recent_price')">Current Price
-                            </th>
-                            <th class="sortable hidden-xs hidden-sm text-center" :class="sortSiteClass('availability')"
-                                @click.prevent="sortSitesBy('availability')">Available
-                            </th>
-                            <th class="sortable hidden-xs hidden-sm text-right" :class="sortSiteClass('previous_price')"
-                                @click.prevent="sortSitesBy('previous_price')">Previous Price
-                            </th>
-                            <th class="sortable text-right hidden-xs hidden-sm" :class="sortSiteClass('price_change')"
-                                @click.prevent="sortSitesBy('price_change')">Change
-                            </th>
-                            <th class="sortable hidden-xs hidden-sm" @click.prevent="sortSitesBy('last_changed_at')"
-                                :class="sortSiteClass('last_changed_at')" style="padding-left: 20px;">Last Changed
-                            </th>
+                            <th class="sortable" @click.prevent="sortSitesBy('site')" :class="sortSiteClass('site')">Site</th>
+                            <th class="sortable text-right" @click.prevent="sortSitesBy('recent_price')" :class="sortSiteClass('recent_price')">Current Price</th>
+                            <th class="sortable hidden-xs hidden-sm text-center" :class="sortSiteClass('availability')" @click.prevent="sortSitesBy('availability')">Available</th>
+                            <th class="sortable hidden-xs hidden-sm text-right" :class="sortSiteClass('previous_price')" @click.prevent="sortSitesBy('previous_price')">Previous Price</th>
+                            <th class="sortable text-right hidden-xs hidden-sm" :class="sortSiteClass('price_change')" @click.prevent="sortSitesBy('price_change')">Change</th>
+                            <th class="sortable hidden-xs hidden-sm" @click.prevent="sortSitesBy('last_changed_at')" :class="sortSiteClass('last_changed_at')" style="padding-left: 20px;">Last Changed</th>
                             <th width="120"></th>
                         </tr>
                         </thead>
-                        <single-site v-for="site in sites" :current-site="site"
-                                     :is-newly-created="justAddedSiteId == site.id" @selected-item="selectedItem"
-                                     @reload-site="updateSite" @reload-sites="reloadSites"
-                                     @deleted-site="deletedSite"></single-site>
+                        <single-site v-for="site in sites" :current-site="site" :is-newly-created="justAddedSiteId == site.id" @selected-item="selectedItem" @reload-site="updateSite" @reload-sites="reloadSites" @deleted-site="deletedSite"></single-site>
                         <tbody>
                         <tr class="empty-message-row" v-if="!hasSites && !isLoadingSites">
                             <td colspan="9" class="text-center">
-                                To start tracking prices, simply copy and paste the URL of the product page of the
-                                website your want to track.
+                                To start tracking prices, simply copy and paste the URL of the product page of the website your want to track.
                             </td>
                         </tr>
                         <tr class="loading-row loading-row-text" v-if="isLoadingSites && !hasSites">
@@ -134,8 +114,7 @@
                         <tbody>
                         <tr class="add-site-row">
                             <td colspan="9" class="add-item-cell">
-                                <add-site :product="product" :number-of-sites="numberOfSites"
-                                          @added-site="addedSite"></add-site>
+                                <add-site :product="product" :number-of-sites="numberOfSites" @added-site="addedSite"></add-site>
                             </td>
                         </tr>
                         </tbody>
@@ -144,8 +123,8 @@
             </td>
         </tr>
         </tbody>
-        <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete"
-                             @confirmDelete="confirmDelete"></delete-confirmation>
+        <product-report-popup v-if="editingProductReport" :current-product="product" @edited-report="editedProductReport" @deleted-report="deletedProductReport" @cancel-edit="cancelEditProductReport"></product-report-popup>
+        <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
     </table>
 </template>
 
@@ -154,6 +133,7 @@
     import addSite from './AddSite.vue';
     import singleSite from './SingleSite.vue';
     import editProduct from './EditProduct.vue';
+    import productReportPopup from '../report/popups/Product.vue';
 
     import domain from '../../../filters/domain';
     import currency from '../../../filters/currency';
@@ -171,6 +151,7 @@
             addSite,
             singleSite,
             editProduct,
+            productReportPopup,
             dotdotdot,
             deleteConfirmation,
         },
@@ -204,11 +185,12 @@
                     column: 'recent_price',
                     sequence: 'asc',
                 },
+                editingProductReport: false,
             }
         },
         watch: {
             productSearchPromise(val){
-                if (val == true) {
+                if (val === true) {
                     this.clearProductSearchPromise();
                     this.reloadSites();
                 }
@@ -233,8 +215,8 @@
             },
             reloadSite(site, callback){
                 axios.get(site.urls.show).then(response => {
-                    if (response.data.status == true) {
-                        if (typeof callback == 'function') {
+                    if (response.data.status === true) {
+                        if (typeof callback === 'function') {
                             callback(response.data.site);
                         }
                     }
@@ -254,7 +236,7 @@
                 this.isLoadingSites = true;
                 axios.get('/site', this.loadSitesRequestData).then(response => {
                     this.isLoadingSites = false;
-                    if (response.data.status == true) {
+                    if (response.data.status === true) {
                         this.sites = this.sites.concat(response.data.sites);
                     }
                 }).catch(error => {
@@ -277,8 +259,8 @@
                 this.sites = [];
             },
             sortSitesBy(column){
-                if (this.sorting.column == column) {
-                    if (this.sorting.sequence == 'asc') {
+                if (this.sorting.column === column) {
+                    if (this.sorting.sequence === 'asc') {
                         this.sorting.sequence = 'desc';
                     } else {
                         this.sorting.sequence = 'asc';
@@ -315,7 +297,7 @@
                 this.isDeletingProduct = true;
                 axios.delete(this.product.urls.delete).then(response => {
                     this.isDeletingProduct = false;
-                    if (response.data.status == true) {
+                    if (response.data.status === true) {
                         this.loadUser();
                         this.emitDeleteProduct();
                     }
@@ -330,6 +312,20 @@
                 this.$store.dispatch(CLEAR_PRODUCT_SEARCH_PROMISE, {
                     product_id: this.product.id
                 });
+            },
+            onClickEditProductReport(){
+                this.editingProductReport = true;
+            },
+            editedProductReport(){
+                this.editingProductReport = false;
+                this.emitReloadProduct();
+            },
+            deletedProductReport(){
+                this.editingProductReport = false;
+                this.emitReloadProduct();
+            },
+            cancelEditProductReport(){
+                this.editingProductReport = false;
             },
             /*endregion*/
             loadUser(){
@@ -348,7 +344,7 @@
             /*endregion*/
             /*region helpers*/
             sortSiteClass(column){
-                if (this.sorting.column == column) {
+                if (this.sorting.column === column) {
                     return 'sort-' + this.sorting.sequence;
                 } else {
                     return ''
@@ -357,6 +353,9 @@
             /*endregion*/
         },
         computed: {
+            user(){
+                return this.$store.getters.user;
+            },
             product(){
                 return this.currentProduct;
             },
@@ -384,7 +383,7 @@
                 return this.sites.length > 0;
             },
             justAddedSiteId(){
-                if (this.justAddedSite != null) {
+                if (this.justAddedSite !== null) {
                     return this.justAddedSite.id
                 } else {
                     return null;
@@ -394,7 +393,7 @@
                 return this.$store.getters.productSearchTerm;
             },
             productSearchPromise(){
-                return this.$store.getters.productSearchPromise[this.product.id] == true;
+                return this.$store.getters.productSearchPromise[this.product.id] === true;
             },
             numberOfSites(){
                 return this.product.numberOfSites;
@@ -407,9 +406,9 @@
                     let cheapestPrice = null;
                     let cheapestSite = null;
                     this.sites.forEach(function (site) {
-                        if (site.item != null && site.item.recentPrice) {
+                        if (site.item !== null && site.item.recentPrice) {
                             let recentPrice = parseInt(site.item.recentPrice);
-                            if (cheapestPrice == null || recentPrice < cheapestPrice) {
+                            if (cheapestPrice === null || recentPrice < cheapestPrice) {
                                 cheapestPrice = recentPrice;
                                 cheapestSite = site;
                             }
@@ -418,6 +417,13 @@
                     return cheapestSite;
                 }
                 return null;
+            },
+            reportIconClass(){
+                if (this.product.hasReport === true) {
+                    return 'text-tiffany fa-envelope';
+                } else {
+                    return 'fa-envelope-o';
+                }
             }
         }
     }

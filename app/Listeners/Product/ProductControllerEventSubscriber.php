@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Listeners\Product;
 
 use App\Jobs\Log\UserActivity;
@@ -92,6 +93,18 @@ class ProductControllerEventSubscriber
         $this->dispatchUserActivityLog($activity);
     }
 
+    public function onBeforeReportShow($event)
+    {
+        $product = $event->product;
+    }
+
+    public function onAfterReportShow($event)
+    {
+        $product = $event->product;
+        $active = "Loaded Product Report {$product->getKey()}";
+        $this->dispatchUserActivityLog($active);
+    }
+
     protected function dispatchUserActivityLog($activity)
     {
         dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log")->onConnection('sync'));
@@ -160,6 +173,14 @@ class ProductControllerEventSubscriber
         $events->listen(
             'App\Events\Product\Product\AfterDestroy',
             'App\Listeners\Product\ProductControllerEventSubscriber@onAfterDestroy'
+        );
+        $events->listen(
+            'App\Events\Product\Product\BeforeReportShow',
+            'App\Listeners\Product\ProductControllerEventSubscriber@onBeforeReportShow'
+        );
+        $events->listen(
+            'App\Events\Product\Product\AfterReportShow',
+            'App\Listeners\Product\ProductControllerEventSubscriber@onAfterReportShow'
         );
     }
 }

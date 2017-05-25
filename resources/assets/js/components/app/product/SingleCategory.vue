@@ -17,8 +17,8 @@
                 <a href="#" class="btn-action btn-chart" title="chart">
                     <i class="fa fa-line-chart"></i>
                 </a>
-                <a href="#" class="btn-action btn-report" title="report">
-                    <i class="fa fa-envelope-o"></i>
+                <a href="#" class="btn-action btn-report" title="report" @click.prevent="onClickEditCategoryReport">
+                    <i class="fa" :class="reportIconClass"></i>
                 </a>
                 <a href="#" class="btn-action btn-delete-category" title="delete" @click.prevent="onClickDeleteCategory">
                     <i class="glyphicon glyphicon-trash"></i>
@@ -63,6 +63,7 @@
             </td>
         </tr>
         </tbody>
+        <category-report-popup v-if="editingCategoryReport" :current-category="category" @edited-report="editedCategoryReport" @deleted-report="deletedCategoryReport" @cancel-edit="cancelEditCategoryReport"></category-report-popup>
         <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
     </table>
 </template>
@@ -73,6 +74,8 @@
     import addProduct from './AddProduct.vue';
     import singleProduct from './SingleProduct.vue';
     import editCategory from './EditCategory.vue';
+    import categoryReportPopup from '../report/popups/Category.vue';
+
     import formatDateTime from '../../../filters/formatDateTime';
 
     import dotdotdot from '../../fragments/loading/DotDotDot.vue';
@@ -87,6 +90,7 @@
             addProduct,
             singleProduct,
             editCategory,
+            categoryReportPopup,
             dotdotdot,
             deleteConfirmation
         },
@@ -115,12 +119,13 @@
                 },
                 isLoadingProducts: false,
                 isDeletingCategory: false,
+                editingCategoryReport: false,
                 productLength: 5,
             }
         },
         watch: {
             categorySearchPromise(){
-                if (this.categorySearchPromise == null) {
+                if (this.categorySearchPromise === null) {
                     this.reloadProducts(() => {
                         this.products.forEach((product) => {
                             this.$store.dispatch(SET_PRODUCT_SEARCH_PROMISE, {
@@ -137,9 +142,9 @@
                 this.isLoadingProducts = true;
                 axios.get('/product', this.loadProductsRequestData).then(response => {
                     this.isLoadingProducts = false;
-                    if (response.data.status == true) {
+                    if (response.data.status === true) {
                         this.products = this.products.concat(response.data.products);
-                        if (typeof callback == 'function') {
+                        if (typeof callback === 'function') {
                             callback();
                         }
                     }
@@ -159,8 +164,8 @@
             },
             reloadProduct(product, callback){
                 axios.get(product.urls.show).then(response => {
-                    if (response.data.status == true) {
-                        if (typeof callback == 'function') {
+                    if (response.data.status === true) {
+                        if (typeof callback === 'function') {
                             callback(response.data.product);
                         }
                     }
@@ -175,7 +180,7 @@
             reloadProducts(callback) {
                 this.clearProductsList();
                 this.loadProducts(() => {
-                    if (typeof callback == 'function') {
+                    if (typeof callback === 'function') {
                         callback();
                     }
                 });
@@ -239,12 +244,26 @@
                 this.isDeletingCategory = true;
                 axios.delete(this.category.urls.delete).then(response => {
                     this.isDeletingCategory = false;
-                    if (response.data.status == true) {
+                    if (response.data.status === true) {
                         this.loadUser();
                     }
                 }).catch(error => {
                     this.isDeletingCategory = false;
                 })
+            },
+            onClickEditCategoryReport(){
+                this.editingCategoryReport = true;
+            },
+            editedCategoryReport(){
+                this.editingCategoryReport = false;
+                this.emitReloadCategory();
+            },
+            deletedCategoryReport(){
+                this.editingCategoryReport = false;
+                this.emitReloadCategory();
+            },
+            cancelEditCategoryReport(){
+                this.editingCategoryReport = false;
             },
             loadUser() {
                 this.$store.dispatch(LOAD_USER);
@@ -293,6 +312,13 @@
             },
             moreProductsToLoad(){
                 return this.products.length < this.category.numberOfProducts;
+            },
+            reportIconClass(){
+                if (this.category.hasReport === true) {
+                    return 'text-tiffany fa-envelope';
+                } else {
+                    return 'fa-envelope-o';
+                }
             }
         }
     }

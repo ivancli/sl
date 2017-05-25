@@ -93,6 +93,18 @@ class CategoryControllerEventSubscriber
         $this->dispatchUserActivityLog($activity);
     }
 
+    public function onBeforeReportShow($event)
+    {
+        $category = $event->category;
+    }
+
+    public function onAfterReportShow($event)
+    {
+        $category = $event->category;
+        $activity = "Loaded Product Report {$category->getKey()}";
+        $this->dispatchUserActivityLog($activity);
+    }
+
     protected function dispatchUserActivityLog($activity)
     {
         dispatch((new UserActivity(auth()->user(), $activity))->onQueue("log")->onConnection('sync'));
@@ -161,6 +173,14 @@ class CategoryControllerEventSubscriber
         $events->listen(
             'App\Events\Product\Category\AfterDestroy',
             'App\Listeners\Product\CategoryControllerEventSubscriber@onAfterDestroy'
+        );
+        $events->listen(
+            'App\Events\Product\Category\BeforeReportShow',
+            'App\Listeners\Product\CategoryControllerEventSubscriber@onBeforeReportShow'
+        );
+        $events->listen(
+            'App\Events\Product\Category\AfterReportShow',
+            'App\Listeners\Product\CategoryControllerEventSubscriber@onAfterReportShow'
         );
     }
 }
