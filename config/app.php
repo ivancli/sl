@@ -186,6 +186,10 @@ return [
         IvanCLI\ItemGenerator\ItemGeneratorServiceProvider::class,
 
         Ixudra\Curl\CurlServiceProvider::class,
+
+        App\Providers\HelperServiceProvider::class,
+
+        Maatwebsite\Excel\ExcelServiceProvider::class,
     ],
 
     /*
@@ -243,6 +247,8 @@ return [
         'ItemGenerator' => \IvanCLI\ItemGenerator\ItemGeneratorFacade::class,
 
         'Curl' => Ixudra\Curl\Facades\Curl::class,
+
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];

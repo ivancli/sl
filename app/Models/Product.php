@@ -72,6 +72,15 @@ class Product extends Model
         return $this->morphOne('App\Models\Report', 'reportable');
     }
 
+    /**
+     * relationship with historical report
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function historicalReport()
+    {
+        return $this->morphMany('App\Models\HistoricalReport', 'reportable');
+    }
+
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/

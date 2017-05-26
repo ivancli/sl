@@ -19,7 +19,7 @@ class Item extends Model
     ];
 
     protected $appends = [
-        'recentPrice', 'availability', 'previousPrice', 'priceChange', 'lastChangedAt', 'urls'
+        'recentPrice', 'recentPriceAt', 'availability', 'previousPrice', 'priceChange', 'lastChangedAt', 'urls'
     ];
 
     /**
@@ -64,6 +64,18 @@ class Item extends Model
             $price = $priceItemMeta->historicalPrices()->orderBy('id', 'desc')->first();
             if(!is_null($price)){
                 return $price->amount;
+            }
+        }
+        return null;
+    }
+
+    public function getRecentPriceAtAttribute()
+    {
+        $priceItemMeta = $this->metas()->where('element', 'PRICE')->first();
+        if (!is_null($priceItemMeta)) {
+            $price = $priceItemMeta->historicalPrices()->orderBy('id', 'desc')->first();
+            if(!is_null($price)){
+                return $price->created_at;
             }
         }
         return null;

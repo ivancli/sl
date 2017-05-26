@@ -115,6 +115,15 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Report', 'user_id', 'id');
     }
 
+    /**
+     * relationship with historical report
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function historicalReports()
+    {
+        return $this->hasMany('App\Models\HistoricalReport', 'user_id', 'id');
+    }
+
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/

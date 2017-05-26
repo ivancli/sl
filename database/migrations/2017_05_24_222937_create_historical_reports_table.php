@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -18,11 +19,17 @@ class CreateHistoricalReportsTable extends Migration
             $table->integer('user_id')->unsigned()->nullable();
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('cascade');
+            $table->integer('report_id')->unsigned()->nullable();
+            $table->foreign('report_id')->references('id')->on('reports')
+                ->onUpdate('cascade')->onDelete('set null');
             $table->integer('reportable_id')->nullable();
             $table->string('reportable_type')->nullable();
             $table->string('file_name')->nullable();
             $table->timestamps();
         });
+
+        DB::statement("ALTER TABLE `historical_reports` ADD `content` LONGBLOB AFTER `file_name`");
+
     }
 
     /**

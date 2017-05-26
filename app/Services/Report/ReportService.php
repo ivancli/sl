@@ -33,9 +33,14 @@ class ReportService
         #endregion
     }
 
-    public function get()
+    public function load(array $data = [])
     {
-
+        if (array_has($data, 'page')) {
+            $reports = $this->reportRepo->filterAll($data);
+        } else {
+            $reports = $this->reportRepo->all();
+        }
+        return $reports;
     }
 
     public function store(array $data)

@@ -18,7 +18,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\Crawl::class,
-        Commands\Alert::class
+        Commands\Alert::class,
+        Commands\Report::class,
     ];
 
     protected $appPrefRepo;

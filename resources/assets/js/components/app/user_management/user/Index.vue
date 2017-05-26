@@ -103,11 +103,11 @@
         },
         methods: {
             loadUsers(link){
-                if (typeof link != 'string') {
+                if (typeof link !== 'string') {
                     link = this.firstPageUrl;
                 }
                 axios.get(link).then(response=> {
-                    if (response.data.status == true) {
+                    if (response.data.status === true) {
                         this.users = response.data.users.data;
                         this.paginationData.current_page = response.data.users.current_page;
                         this.paginationData.from = response.data.users.from;
@@ -123,11 +123,11 @@
                 })
             },
             orderByClass(column){
-                return this.orderByData.column == column ? 'order-' + this.orderByData.direction : '';
+                return this.orderByData.column === column ? 'order-' + this.orderByData.direction : '';
             },
             setOrdering(column){
-                if (this.orderByData.column == column) {
-                    if (this.orderByData.direction == 'asc') {
+                if (this.orderByData.column === column) {
+                    if (this.orderByData.direction === 'asc') {
                         this.orderByData.direction = 'desc';
                     } else {
                         this.orderByData.direction = 'asc';
@@ -140,7 +140,7 @@
                 this.loadUsers(this.currentPageUrl);
             },
             onFilterChanged(){
-                if (this.filterDelayData.promise != null) {
+                if (this.filterDelayData.promise !== null) {
                     clearTimeout(this.filterDelayData.promise);
                 }
                 this.filterDelayData.promise = setTimeout(()=> {
@@ -158,7 +158,7 @@
                         + '&key=' + this.filterText;
             },
             nextPageUrl: function () {
-                if (this.paginationData.next_page_url == null) {
+                if (this.paginationData.next_page_url === null) {
                     return null;
                 } else {
                     return this.paginationData.next_page_url
@@ -169,7 +169,7 @@
                 }
             },
             prevPageUrl: function () {
-                if (this.paginationData.prev_page_url == null) {
+                if (this.paginationData.prev_page_url === null) {
                     return null;
                 } else {
                     return this.paginationData.prev_page_url

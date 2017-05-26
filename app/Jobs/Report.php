@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Contracts\Repositories\Report\ReportContract;
+use App\Mail\Report\ProductCategoryReport;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -9,12 +11,16 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Models\Report as ReportModel;
+use Illuminate\Support\Facades\Mail;
 
 class Report implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $report;
+
+    protected $reportRepo;
+
     protected $user;
     protected $lastActiveAt;
     protected $now;
@@ -38,6 +44,8 @@ class Report implements ShouldQueue
         $this->now->minute(0);
         $this->now->second(0);
         $this->currentTime = $this->now->format('H:i:s');
+
+        $this->reportRepo = app(ReportContract::class);
     }
 
     /**
@@ -75,21 +83,23 @@ class Report implements ShouldQueue
         if ($this->_isTimeToRun()) {
 
         }
+        $this->report->setLastActiveAt();
     }
 
     private function _processProductProductReport()
     {
         if ($this->_isTimeToRun()) {
-            dd("called1");
+            $historicalReport = $this->reportRepo->generate($this->report);
         }
-        dd("called2");
+        $this->report->setLastActiveAt();
     }
 
     private function _processProductCategoryReport()
     {
         if ($this->_isTimeToRun()) {
-            $category = $this->report->reportable;
-
+            $historicalReport = $this->reportRepo->generate($this->report);
+            Mail::to($this->user->email)
+                ->send(new ProductCategoryReport($this->report, $historicalReport));
         }
         $this->report->setLastActiveAt();
     }

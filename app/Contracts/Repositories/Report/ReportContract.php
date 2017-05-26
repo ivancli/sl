@@ -14,10 +14,17 @@ use App\Models\Report;
 interface ReportContract
 {
     /**
-     * Get all reports
+     * @param array $data
      * @return mixed
      */
-    public function all();
+    public function filterAll(array $data = []);
+
+    /**
+     * Get all reports
+     * @param array $data
+     * @return mixed
+     */
+    public function all(array $data = []);
 
     /**
      * Get report by report ID
@@ -48,4 +55,11 @@ interface ReportContract
      * @return mixed
      */
     public function update(Report $report, array $data);
+
+    /**
+     * Generate a report
+     * @param Report $report
+     * @return mixed
+     */
+    public function generate(Report $report);
 }

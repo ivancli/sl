@@ -47,6 +47,15 @@ class Report extends Model
         return $this->morphTo();
     }
 
+    /**
+     * relationships with historical report
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function historicalReports()
+    {
+        return $this->hasMany('App\Models\HistoricalReport', 'report_id', 'id');
+    }
+
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/

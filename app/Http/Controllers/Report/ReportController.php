@@ -43,9 +43,22 @@ class ReportController extends Controller
     public function index()
     {
         event(new BeforeIndex);
+
+        if ($this->request->ajax()) {
+
+            $reports = $this->reportService->load($this->request->all());
+
+            $status = true;
+
+        }
+
         event(new AfterIndex);
 
-        return view('app.report.index');
+        if ($this->request->ajax()) {
+            return compact(['status', 'reports']);
+        } else {
+            return view('app.report.index');
+        }
     }
 
     /**

@@ -43,7 +43,7 @@
                             <h4 class="f-w-bold">SpotLite Digest</h4>
                         </div>
 
-                        TBC
+                        <edit-digest @update-digest="updateDigestSettings"></edit-digest>
                     </div>
                     <div class="text-right">
                         <button class="btn btn-primary btn-flat" @click.prevent="updateUserProfile">UPDATE</button>
@@ -61,6 +61,8 @@
     import companyForm from './forms/Company.vue';
     import displayForm from './forms/Display.vue';
 
+    import editDigest from '../report/EditDigest.vue';
+
     import loading from '../../fragments/loading/Loading.vue';
 
     export default{
@@ -68,6 +70,7 @@
             profileForm,
             companyForm,
             displayForm,
+            editDigest,
             loading
         },
         data(){
@@ -96,6 +99,9 @@
                         this.errors = error.response.data;
                     }
                 })
+            },
+            updateDigestSettings(digestSettings){
+
             },
             clearErrors: function () {
                 this.errors = {};
