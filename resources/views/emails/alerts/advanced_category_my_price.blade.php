@@ -1,6 +1,6 @@
 @component('mail::alert_message')
 
-# Hi {{$user->first_name}},
+## Hi {{$user->first_name}},
 
 The price for the category *{{$category->category_name}}* are found to have beaten your prices.
 

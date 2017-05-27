@@ -3,7 +3,9 @@
 namespace App\Jobs;
 
 use App\Contracts\Repositories\Report\ReportContract;
+use App\Mail\Report\DigestReport;
 use App\Mail\Report\ProductCategoryReport;
+use App\Mail\Report\ProductProductReport;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -81,7 +83,9 @@ class Report implements ShouldQueue
     protected function processDigestReport()
     {
         if ($this->_isTimeToRun()) {
-
+            $reportDetail = $this->reportRepo->generate($this->report);
+            Mail::to($this->user->email)
+                ->send(new DigestReport($this->report, $reportDetail));
         }
         $this->report->setLastActiveAt();
     }
@@ -90,6 +94,8 @@ class Report implements ShouldQueue
     {
         if ($this->_isTimeToRun()) {
             $historicalReport = $this->reportRepo->generate($this->report);
+            Mail::to($this->user->email)
+                ->send(new ProductProductReport($this->report, $historicalReport));
         }
         $this->report->setLastActiveAt();
     }

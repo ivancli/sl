@@ -75,6 +75,7 @@
         },
         data(){
             return {
+                digest: {},
                 isUpdatingProfile: false,
                 errors: {},
                 successMsg: ''
@@ -101,7 +102,7 @@
                 })
             },
             updateDigestSettings(digestSettings){
-
+                this.digest = digestSettings;
             },
             clearErrors: function () {
                 this.errors = {};
@@ -119,6 +120,7 @@
                     profile: this.profile,
                     company: this.company,
                     display: this.display,
+                    digest: this.digest,
                 }
             },
             profile(){
@@ -129,7 +131,7 @@
             },
             display(){
                 return this.$store.getters.display;
-            }
+            },
         }
     }
 </script>

@@ -22,41 +22,39 @@
             <b>Change Date</b>
         </td>
     </tr>
-    @foreach($products as $product)
-        @foreach($product->sites as $site)
-            <tr>
-                <td>{{$product->category->category_name}}</td>
-                <td>{{$product->product_name}}</td>
-                <td>{{$site->siteUrl}}</td>
-                <td>
-                    @if(!is_null($site->item) && !is_null($site->item->recentPrice))
-                        {{$site->item->recentPrice}}
-                    @else
-                        -
-                    @endif
-                </td>
-                <td>
-                    @if(!is_null($site->item) && !is_null($site->item->recentPriceAt))
-                        {{$site->item->recentPriceAt}}
-                    @else
-                        -
-                    @endif
-                </td>
-                <td>
-                    @if(!is_null($site->item) && !is_null($site->item->previousPrice))
-                        {{$site->item->previousPrice}}
-                    @else
-                        -
-                    @endif
-                </td>
-                <td>
-                    @if(!is_null($site->item->lastChangedAt))
-                        {{$site->item->lastChangedAt}}
-                    @else
-                        -
-                    @endif
-                </td>
-            </tr>
-        @endforeach
+    @foreach($product->sites as $site)
+        <tr>
+            <td>{{$product->category->category_name}}</td>
+            <td>{{$product->product_name}}</td>
+            <td>{{$site->siteUrl}}</td>
+            <td>
+                @if(!is_null($site->item) && !is_null($site->item->recentPrice))
+                    {{$site->item->recentPrice}}
+                @else
+                    -
+                @endif
+            </td>
+            <td>
+                @if(!is_null($site->item) && !is_null($site->item->recentPriceAt))
+                    {{$site->item->recentPriceAt}}
+                @else
+                    -
+                @endif
+            </td>
+            <td>
+                @if(!is_null($site->item) && !is_null($site->item->previousPrice))
+                    {{$site->item->previousPrice}}
+                @else
+                    -
+                @endif
+            </td>
+            <td>
+                @if(!is_null($site->item->lastChangedAt))
+                    {{$site->item->lastChangedAt}}
+                @else
+                    -
+                @endif
+            </td>
+        </tr>
     @endforeach
 </table>

@@ -1,6 +1,6 @@
 @component('mail::report_message')
 
-# Hi {{$user->first_name}},
+## Hi {{$user->first_name}},
 
 
 Please find your {{$category->category_name}} report attached.

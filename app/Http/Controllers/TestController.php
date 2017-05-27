@@ -9,11 +9,15 @@
 namespace App\Http\Controllers;
 
 
+use App\Contracts\Repositories\Report\ReportContract;
 use App\Models\Report;
 use Carbon\Carbon;
+use Illuminate\Mail\Markdown;
+use Illuminate\Support\Facades\Mail;
 
 class TestController extends Controller
 {
+    protected $reportRepo;
     protected $report;
     protected $user;
     protected $lastActiveAt;
@@ -23,10 +27,11 @@ class TestController extends Controller
 
     /**
      * Create a new job instance.
-     *
+     * @param ReportContract $reportContract
      */
-    public function __construct()
+    public function __construct(ReportContract $reportContract)
     {
+        $this->reportRepo = $reportContract;
         $report = Report::first();
         $this->report = $report;
         $this->user = $report->user;
@@ -43,6 +48,28 @@ class TestController extends Controller
 
     public function test()
     {
+        $reportDetail = $this->reportRepo->generate($this->report);
+
+        $user = $this->report->user;
+        $report = $this->report;
+        $cheapestProductCount = $reportDetail->get('cheapest_product_count', 0);
+        $mostExpensiveProductCount = $reportDetail->get('most_expensive_product_count', 0);
+        $crawlFailCount = $reportDetail->get('crawl_fail_count', 0);
+        $priceChangeCount = $reportDetail->get('price_change_count', 0);
+        $products = $reportDetail->get('products', collect());
+
+        $markdown = new Markdown(view(), config('mail.markdown'));
+
+        return $markdown->render('emails.reports.digest.index',
+            compact(['user', 'report', 'cheapestProductCount', 'mostExpensiveProductCount', 'crawlFailCount', 'priceChangeCount', 'products']
+            ));
+
+
+
+
+
+
+
         switch ($this->report->report_type) {
             case 'product':
                 $this->processProductReport();
@@ -52,6 +79,7 @@ class TestController extends Controller
                 break;
         }
     }
+
 
     protected function processProductReport()
     {
@@ -67,23 +95,30 @@ class TestController extends Controller
 
     protected function processDigestReport()
     {
-
+        if ($this->_isTimeToRun()) {
+            $reportDetail = $this->reportRepo->generate($this->report);
+            Mail::to($this->user->email)
+                ->send();
+        }
+//        $this->report->setLastActiveAt();
     }
 
     private function _processProductProductReport()
     {
         if ($this->_isTimeToRun()) {
-            dd("called1");
+            $historicalReport = $this->reportRepo->generate($this->report);
         }
-        dd("called2");
+        $this->report->setLastActiveAt();
     }
 
     private function _processProductCategoryReport()
     {
         if ($this->_isTimeToRun()) {
-            dd("called1");
+            $historicalReport = $this->reportRepo->generate($this->report);
+            Mail::to($this->user->email)
+                ->send(new ProductCategoryReport($this->report, $historicalReport));
         }
-        dd("called2");
+        $this->report->setLastActiveAt();
     }
 
     private function _ranWithinHours($hour = 1)

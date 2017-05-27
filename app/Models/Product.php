@@ -76,7 +76,7 @@ class Product extends Model
      * relationship with historical report
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
-    public function historicalReport()
+    public function historicalReports()
     {
         return $this->morphMany('App\Models\HistoricalReport', 'reportable');
     }

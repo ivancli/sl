@@ -9,6 +9,7 @@
 namespace App\Services\Account;
 
 
+use App\Contracts\Repositories\Report\ReportContract;
 use App\Contracts\Repositories\UserManagement\UserContract;
 use App\Models\User;
 use App\Validators\Account\Profile\UpdateValidator;
@@ -18,6 +19,7 @@ class ProfileService
     #region repositories
 
     protected $userRepo;
+    protected $reportRepo;
 
     #endregion
 
@@ -27,11 +29,12 @@ class ProfileService
 
     #endregion
 
-    public function __construct(UserContract $userContract,
+    public function __construct(UserContract $userContract, ReportContract $reportContract,
                                 UpdateValidator $updateValidator)
     {
         #region repositories binding
         $this->userRepo = $userContract;
+        $this->reportRepo = $reportContract;
         #endregion
 
         #region validators binding
@@ -71,6 +74,24 @@ class ProfileService
             foreach (array_get($data, 'display') as $element => $value) {
                 $user->setPreference($element, $value);
             }
+        }
+
+        if (array_has($data, 'digest')) {
+            $digest = array_get($data, 'digest');
+            if (array_has($digest, 'is_active') && array_get($digest, 'is_active') == true) {
+                if (array_has($digest, 'report_id') && !is_null(array_get($digest, 'report_id'))) {
+                    $report = $this->reportRepo->get(array_get($digest, 'report_id'));
+                    $report->update($digest);
+                    $user->reports()->save($report);
+                } else {
+                    $report = $this->reportRepo->store($digest);
+                    $user->reports()->save($report);
+                }
+            } else {
+                $user->reports()->where('report_type', 'digest')->delete();
+            }
+        } else {
+            $user->reports()->where('report_type', 'digest')->delete();
         }
     }
 }

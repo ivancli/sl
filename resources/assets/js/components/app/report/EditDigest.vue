@@ -104,7 +104,7 @@
                     return report.report_type === 'digest';
                 });
                 if (digestReport.length > 0) {
-                    this.digestReport = digestReport;
+                    this.digestReport = digestReport[0];
                     this.initSetReport();
                 }
             });
@@ -149,8 +149,8 @@
                 if (this.isActive) {
                     this.frequency = this.digestReport.frequency;
                     this.time = this.digestReport.time;
-                    this.weekdayOnly = this.digestReport.weekday_only;
-                    this.showAll = this.digestReport.show_all;
+                    this.weekdayOnly = this.digestReport.weekday_only === 'y';
+                    this.showAll = this.digestReport.show_all === 'y';
                 }
             },
             emitUpdateDigest(){
@@ -165,21 +165,25 @@
                 switch (this.frequency) {
                     case 'day':
                         return {
+                            report_id: this.digestReport !== null ? this.digestReport.id : null,
+                            report_type: 'digest',
                             is_active: this.isActive,
                             frequency: this.frequency,
                             time: this.time,
-                            weekday_only: this.weekdayOnly,
-                            show_all: this.showAll,
+                            weekday_only: this.weekdayOnly === true ? 'y' : 'n',
+                            show_all: this.showAll === true ? 'y' : 'n',
                         };
                         break;
                     case 'week':
                         return {
+                            report_id: this.digestReport !== null ? this.digestReport.id : null,
+                            report_type: 'digest',
                             is_active: this.isActive,
                             frequency: this.frequency,
                             day: 1,
-                            time: null,
+                            time: '00:00:00',
                             weekday_only: null,
-                            show_all: this.showAll,
+                            show_all: this.showAll === true ? 'y' : 'n',
                         };
                         break;
                 }

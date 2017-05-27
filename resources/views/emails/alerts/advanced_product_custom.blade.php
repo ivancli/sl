@@ -1,6 +1,6 @@
 @component('mail::alert_message')
 
-# Hi {{$user->first_name}},
+## Hi {{$user->first_name}},
 
 The price for product *{{$product->product_name}}* are found to be
 @if($alert->comp_operator == '<')

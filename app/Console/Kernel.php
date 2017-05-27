@@ -117,5 +117,13 @@ class Kernel extends ConsoleKernel
             ->everyThirtyMinutes();
 
         #endregion
+
+        #region Report.php
+
+        $schedule->command('report')
+            ->withoutOverlapping()
+            ->everyThirtyMinutes();
+
+        #endregion
     }
 }
