@@ -49,6 +49,9 @@ class UserObserver
     {
         /*remove corresponding alerts when deleting a user*/
         $user->alerts()->delete();
+        $user->historicalAlerts()->delete();
+        $user->reportS()->delete();
+        $user->historicalReports()->delete();
     }
 
     public function deleted()

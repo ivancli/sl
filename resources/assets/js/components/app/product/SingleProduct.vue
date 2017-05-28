@@ -16,7 +16,11 @@
                 <span v-show="!editingProduct" v-if="cheapestSite != null" class="hidden-xs hidden-sm f-w-normal text-muted f-s-11">
                     <span>
                         Cheapest:
-                        <strong>{{cheapestSite.siteUrl | domain}}</strong>
+                        <strong>
+                            <a class="text-muted" :href="cheapestSite.siteUrl" target="_blank">
+                                {{ cheapestDisplayName }}
+                            </a>
+                        </strong>
                     </span>
                     &nbsp;&nbsp;
                     <span>
@@ -26,7 +30,7 @@
                     &nbsp;&nbsp;
                     <span>
                         Price Change:
-                        <strong v-if="cheapestSite.item.priceChange != null">${{ cheapestSite.item.priceChange | currency }}</strong>
+                        <strong v-if="cheapestSite.item.priceChange != null">{{ cheapestSite.item.priceChange < 0 ? '-' : '' }} ${{ cheapestSite.item.priceChange | currency }}</strong>
                         <strong v-else><i class="fa fa-minus"></i></strong>
                     </span>
                 </span>
@@ -424,7 +428,28 @@
                 } else {
                     return 'fa-envelope-o';
                 }
-            }
+            },
+            userDomains(){
+                return this.$store.getters.userDomains;
+            },
+            cheapestDisplayName(){
+                /*TODO need to add ebay site store name before the following validations*/
+
+                let siteDomain = this.$options.filters.domain(this.cheapestSite.siteUrl);
+
+                let userDomains = this.userDomains.filter(userDomain => {
+                    let domain = this.$options.filters.domain(userDomain.domain);
+                    return siteDomain.indexOf(domain) > -1;
+                });
+                if (userDomains.length > 0) {
+                    let userDomain = userDomains[0];
+                    if (userDomain.alias !== null && userDomain.alias.length > 0) {
+                        return userDomain.alias;
+                    }
+                }
+
+                return siteDomain;
+            },
         }
     }
 </script>

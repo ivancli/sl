@@ -10,14 +10,14 @@
                         Edit Profile
                     </a>
                 </li>
+                <li :class="setTabActiveClass('site-names')">
+                    <a href="#site-names" @click.prevent="setActiveTab('site-names')">
+                        Site Names
+                    </a>
+                </li>
                 <li :class="setTabActiveClass('reset-password')">
                     <a href="#reset-password" @click.prevent="setActiveTab('reset-password')">
                         Reset Password
-                    </a>
-                </li>
-                <li :class="setTabActiveClass('display-settings')">
-                    <a href="#display-settings" @click.prevent="setActiveTab('display-settings')">
-                        Display Settings
                     </a>
                 </li>
                 <li :class="setTabActiveClass('manage-subscription')" v-if="hasSubscription">
@@ -30,11 +30,11 @@
                 <div class="tab-pane" id="edit-profile" :class="setTabActiveClass('edit-profile')">
                     <edit-profile></edit-profile>
                 </div>
+                <div class="tab-pane" id="site-names" :class="setTabActiveClass('site-names')">
+                    <site-names></site-names>
+                </div>
                 <div class="tab-pane" id="reset-password" :class="setTabActiveClass('reset-password')">
                     <reset-password></reset-password>
-                </div>
-                <div class="tab-pane" id="display-settings" :class="setTabActiveClass('display-settings')">
-                    <display-settings></display-settings>
                 </div>
                 <div class="tab-pane" id="manage-subscription" :class="setTabActiveClass('manage-subscription')"
                      v-if="hasSubscription">
@@ -49,6 +49,7 @@
     import EditProfile from './EditProfile.vue';
     import ResetPassword from './ResetPassword.vue';
     import DisplaySettings from './DisplaySettings.vue';
+    import SiteNames from './SiteName.vue';
     import ManageSubscription from './ManageSubscription.vue';
 
     export default {
@@ -56,6 +57,7 @@
             EditProfile,
             ResetPassword,
             DisplaySettings,
+            SiteNames,
             ManageSubscription
         },
         data(){
@@ -65,10 +67,11 @@
         },
         methods: {
             setInitActiveTab() {
-                if (window.location.hash != '') {
+                if (window.location.hash !== '') {
                     switch (window.location.hash) {
                         case "#reset-password":
                         case "#display-settings":
+                        case "#site-names":
                             this.activeTab = window.location.hash.replace('#', '');
                             break;
                         case "#manage-subscription":
@@ -88,7 +91,7 @@
                 }, false);
             },
             setTabActiveClass(tabName) {
-                return tabName == this.activeTab ? 'active' : '';
+                return tabName === this.activeTab ? 'active' : '';
             },
             setActiveTab(tabName) {
                 this.activeTab = tabName;

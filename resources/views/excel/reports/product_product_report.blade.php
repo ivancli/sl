@@ -7,7 +7,10 @@
             <b>Product</b>
         </td>
         <td>
-            <b>Site</b>
+            <b>Site Name</b>
+        </td>
+        <td>
+            <b>Product Page URL</b>
         </td>
         <td>
             <b>Current Price</b>
@@ -26,6 +29,7 @@
         <tr>
             <td>{{$product->category->category_name}}</td>
             <td>{{$product->product_name}}</td>
+            <td>{{$site->displayName}}</td>
             <td>{{$site->siteUrl}}</td>
             <td>
                 @if(!is_null($site->item) && !is_null($site->item->recentPrice))

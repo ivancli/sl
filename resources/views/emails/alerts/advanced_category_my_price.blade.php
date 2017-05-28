@@ -6,11 +6,13 @@ The price for the category *{{$category->category_name}}* are found to have beat
 
 
 @if(isset($products))
+@component('mail::table')
 |Category   |Product    |
 |-----------|-----------|
 @foreach($products as $product)
 |{{$product->category->category_name}}|{{$product->product_name}}
 @endforeach
+@endcomponent
 @endif
 
 You can also view this information through your Products page:

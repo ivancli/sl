@@ -4,7 +4,7 @@
         <td class="site-url vertical-align-middle" :class="mySiteClass">
             <a :href="site.siteUrl" target="_blank" class="text-muted site-url-link" :title="site.siteUrl"
                v-show="!editingSiteURL">
-                {{site.siteUrl | domain}}
+                {{ displayName }}
             </a>
 
             <edit-site :editing-site="site" :going-to-edit-site="editingSiteURL" @edited-site="editedSite"
@@ -269,6 +269,27 @@
             },
             user(){
                 return this.$store.getters.user;
+            },
+            userDomains(){
+                return this.$store.getters.userDomains;
+            },
+            displayName(){
+                /*TODO need to add ebay site store name before the following validations*/
+
+                let siteDomain = this.$options.filters.domain(this.site.siteUrl);
+
+                let userDomains = this.userDomains.filter(userDomain => {
+                    let domain = this.$options.filters.domain(userDomain.domain);
+                    return siteDomain.indexOf(domain) > -1;
+                });
+                if (userDomains.length > 0) {
+                    let userDomain = userDomains[0];
+                    if (userDomain.alias !== null && userDomain.alias.length > 0) {
+                        return userDomain.alias;
+                    }
+                }
+
+                return siteDomain;
             },
             isMySite(){
                 if (this.user.metas.company_url === null) {

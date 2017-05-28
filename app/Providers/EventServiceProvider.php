@@ -97,10 +97,26 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Alert\AfterUpdate' => [],
         'App\Events\Alert\BeforeDestroy' => [],
         'App\Events\Alert\AfterDestroy' => [],
+        /*controller*/
+        'App\Events\HistoricalAlert\BeforeIndex' => [],
+        'App\Events\HistoricalAlert\AfterIndex' => [],
+        'App\Events\HistoricalAlert\BeforeShow' => [],
+        'App\Events\HistoricalAlert\AfterShow' => [],
+        'App\Events\HistoricalAlert\BeforeCreate' => [],
+        'App\Events\HistoricalAlert\AfterCreate' => [],
+        'App\Events\HistoricalAlert\BeforeStore' => [],
+        'App\Events\HistoricalAlert\AfterStore' => [],
+        'App\Events\HistoricalAlert\BeforeEdit' => [],
+        'App\Events\HistoricalAlert\AfterEdit' => [],
+        'App\Events\HistoricalAlert\BeforeUpdate' => [],
+        'App\Events\HistoricalAlert\AfterUpdate' => [],
+        'App\Events\HistoricalAlert\BeforeDestroy' => [],
+        'App\Events\HistoricalAlert\AfterDestroy' => [],
 
         /**
          * Report
          */
+        /*report*/
         'App\Events\Report\BeforeIndex' => [],
         'App\Events\Report\AfterIndex' => [],
         'App\Events\Report\BeforeShow' => [],
@@ -115,6 +131,21 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Report\AfterUpdate' => [],
         'App\Events\Report\BeforeDestroy' => [],
         'App\Events\Report\AfterDestroy' => [],
+        /*historical report*/
+        'App\Events\HistoricalReport\BeforeIndex' => [],
+        'App\Events\HistoricalReport\AfterIndex' => [],
+        'App\Events\HistoricalReport\BeforeShow' => [],
+        'App\Events\HistoricalReport\AfterShow' => [],
+        'App\Events\HistoricalReport\BeforeCreate' => [],
+        'App\Events\HistoricalReport\AfterCreate' => [],
+        'App\Events\HistoricalReport\BeforeStore' => [],
+        'App\Events\HistoricalReport\AfterStore' => [],
+        'App\Events\HistoricalReport\BeforeEdit' => [],
+        'App\Events\HistoricalReport\AfterEdit' => [],
+        'App\Events\HistoricalReport\BeforeUpdate' => [],
+        'App\Events\HistoricalReport\AfterUpdate' => [],
+        'App\Events\HistoricalReport\BeforeDestroy' => [],
+        'App\Events\HistoricalReport\AfterDestroy' => [],
 
         /**
          * URL Management
@@ -259,6 +290,21 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\UserManagement\User\AfterUpdate' => [],
         'App\Events\UserManagement\User\BeforeDestroy' => [],
         'App\Events\UserManagement\User\AfterDestroy' => [],
+        /* user domain */
+        'App\Events\UserManagement\UserDomain\BeforeIndex' => [],
+        'App\Events\UserManagement\UserDomain\AfterIndex' => [],
+        'App\Events\UserManagement\UserDomain\BeforeShow' => [],
+        'App\Events\UserManagement\UserDomain\AfterShow' => [],
+        'App\Events\UserManagement\UserDomain\BeforeCreate' => [],
+        'App\Events\UserManagement\UserDomain\AfterCreate' => [],
+        'App\Events\UserManagement\UserDomain\BeforeStore' => [],
+        'App\Events\UserManagement\UserDomain\AfterStore' => [],
+        'App\Events\UserManagement\UserDomain\BeforeEdit' => [],
+        'App\Events\UserManagement\UserDomain\AfterEdit' => [],
+        'App\Events\UserManagement\UserDomain\BeforeUpdate' => [],
+        'App\Events\UserManagement\UserDomain\AfterUpdate' => [],
+        'App\Events\UserManagement\UserDomain\BeforeDestroy' => [],
+        'App\Events\UserManagement\UserDomain\AfterDestroy' => [],
 
         /* group */
         'App\Events\UserManagement\Group\BeforeIndex' => [],
@@ -383,9 +429,11 @@ class EventServiceProvider extends ServiceProvider
 
         /*alert*/
         'App\Listeners\Alert\AlertControllerEventSubscriber',
+        'App\Listeners\Alert\HistoricalAlertControllerEventSubscriber',
 
         /*report*/
         'App\Listeners\Report\ReportControllerEventSubscriber',
+        'App\Listeners\Report\HistoricalReportControllerEventSubscriber',
 
         /*url management*/
         'App\Listeners\UrlManagement\DomainControllerEventSubscriber',

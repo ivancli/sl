@@ -64,6 +64,15 @@ class Product extends Model
     }
 
     /**
+     * relationship with historical alert
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function historicalAlerts()
+    {
+        return $this->morphMany('App\Models\HistoricalAlert', 'alertable');
+    }
+
+    /**
      * relationship with report
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne
      */

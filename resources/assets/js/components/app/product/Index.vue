@@ -59,7 +59,7 @@
     import loading from '../../fragments/loading/Loading.vue';
 
     import {
-        TOGGLE_ALL_CATEGORIES, LOAD_USER, SET_CATEGORY_SEARCH_PROMISE, CLEAR_CATEGORY_SEARCH_PROMISE
+        TOGGLE_ALL_CATEGORIES, LOAD_USER, SET_CATEGORY_SEARCH_PROMISE, CLEAR_CATEGORY_SEARCH_PROMISE, LOAD_USER_DOMAINS
     } from '../../../actions/action-types';
 
     export default {
@@ -77,10 +77,11 @@
         mounted() {
             console.info('Index component is mounted');
             this.loadCategories();
+            this.loadUserDomains();
         },
         watch: {
             productSearchTerm(){
-                if (this.categorySearchPromise != null) {
+                if (this.categorySearchPromise !== null) {
                     clearTimeout(this.categorySearchPromise)
                 }
                 let categoryPromise = setTimeout(() => {
@@ -100,9 +101,9 @@
         methods: {
             loadCategories(callback) {
                 axios.get('/category', this.loadCategoriesRequestData).then(response => {
-                    if (response.data.status == true) {
+                    if (response.data.status === true) {
                         this.categories = response.data.categories;
-                        if (typeof callback == 'function') {
+                        if (typeof callback === 'function') {
                             callback();
                         }
                     }
@@ -115,7 +116,7 @@
             },
             reloadCategory(category){
                 axios.get(category.urls.show).then(response => {
-                    if (response.data.status == true) {
+                    if (response.data.status === true) {
                         this.setCategory(response.data.category);
                     }
                 }).catch(error => {
@@ -136,6 +137,9 @@
             loadUser() {
                 this.$store.dispatch(LOAD_USER);
             },
+            loadUserDomains(){
+                this.$store.dispatch(LOAD_USER_DOMAINS);
+            }
         },
         computed: {
             allCollapseStatus(){
@@ -144,7 +148,7 @@
             shouldExpandAll(){
                 let shouldExpand = true;
                 for (let categoryCollapseStatus in this.allCollapseStatus) {
-                    if (this.allCollapseStatus.hasOwnProperty(categoryCollapseStatus) && this.allCollapseStatus[categoryCollapseStatus] == false) {
+                    if (this.allCollapseStatus.hasOwnProperty(categoryCollapseStatus) && this.allCollapseStatus[categoryCollapseStatus] === false) {
                         shouldExpand = false;
                         break;
                     }
@@ -170,7 +174,7 @@
                 return null;
             },
             productUsagePercentage(){
-                if (this.maxNumberOfProducts != null) {
+                if (this.maxNumberOfProducts !== null) {
                     return this.numberOfProducts / this.maxNumberOfProducts * 100;
                 }
                 return 0;

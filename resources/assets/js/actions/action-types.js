@@ -28,3 +28,5 @@ export const CLEAR_SEARCH_PRODUCT_REFERENCE = 'clearSearchProductReference';
 export const SET_PROFILE = 'setProfile';
 export const SET_COMPANY = 'setCompany';
 export const SET_DISPLAY = 'setDisplay';
+
+export const LOAD_USER_DOMAINS = 'loadUserDomains';

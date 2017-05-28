@@ -19,28 +19,28 @@ function sanitizeFileName($string)
     return $string;
 }
 
+function domain($url)
+{
+    $urlSegments = parse_url($url);
+    $urlDomain = isset($urlSegments['host']) ? $urlSegments['host'] : '';
+
+    if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $urlDomain, $regs)) {
+        return $regs['domain'];
+    } else {
+        return null;
+    }
+}
+
 function sameDomain($url_1, $url_2)
 {
     if (!is_null($url_1)) {
-        $url1Segments = parse_url($url_1);
-        $url1Domain = isset($url1Segments['host']) ? $url1Segments['host'] : '';
 
-        if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $url1Domain, $regs)) {
-            $url1Domain = $regs['domain'];
-        } else {
-            return false;
+        $url1Domain = domain($url_1);
+        $url2Domain = domain($url_2);
+
+        if (!is_null($url1Domain) && !is_null($url2Domain)) {
+            return $url1Domain == $url2Domain;
         }
-
-        $url2Segments = parse_url($url_2);
-        $url2Domain = isset($url2Segments['host']) ? $url2Segments['host'] : '';
-
-        if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $url2Domain, $regs)) {
-            $url2Domain = $regs['domain'];
-        } else {
-            return false;
-        }
-        return $url1Domain == $url2Domain;
     }
-
     return false;
 }

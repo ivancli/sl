@@ -6,11 +6,13 @@ The price for category *{{$category->category_name}}* are found to have changed.
 
 
 @if(isset($sites))
-|Category   |Product    |URL    |
-|-----------|-----------|-------|
+@component('mail::table')
+|Category   |Product    |Product Page URL    |
+|-----------|-----------|--------------------|
 @foreach($sites as $site)
-|{{$site->product->category->category_name}}|{{$site->product->product_name}}|{{$site->url->domainFullPath}}|
+|{{$site->product->category->category_name}}|{{$site->product->product_name}}|@component('mail::link', ['url' => $site->siteUrl]){{$site->displayName}}@endcomponent|
 @endforeach
+@endcomponent
 @endif
 
 You can also view this information through your Products page:

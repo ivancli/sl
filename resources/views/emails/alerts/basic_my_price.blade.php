@@ -6,11 +6,13 @@ The price for the following products are found to have beaten your prices.
 
 
 @if(isset($products))
+@component('mail::table')
 |Category   |Product    |
 |-----------|-----------|
 @foreach($products as $product)
 |{{$product->category->category_name}}|{{$product->product_name}}
 @endforeach
+@endcomponent
 @endif
 
 You can also view this information through your Products page:

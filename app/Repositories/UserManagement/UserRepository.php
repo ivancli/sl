@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Repositories\UserManagement;
 
 use App\Contracts\Repositories\UserManagement\UserContract;
 use App\Models\User;
+use App\Models\UserDomain;
 use App\Models\UserMeta;
 use Exception;
 use Illuminate\Http\Request;
@@ -181,5 +183,28 @@ class UserRepository implements UserContract
     {
         $user->detachRoles();
         $user->attachRoles($roles);
+    }
+
+    /**
+     * update user domains
+     * @param User $user
+     * @param array $data
+     * @return mixed
+     */
+    public function updateUserDomains(User $user, array $data)
+    {
+        $domains = collect();
+        foreach ($data as $userDomain) {
+            $domainFullPath = array_get($userDomain, 'domain');
+            $domain = $user->domains()->where('domain', $domainFullPath)->first();
+            if (is_null($domain)) {
+                $domain = $user->domains()->save(new UserDomain($userDomain));
+                $domains->push($domain);
+            } else {
+                $domain->update($userDomain);
+            }
+            $domains->push($domain);
+        }
+        return $domains;
     }
 }

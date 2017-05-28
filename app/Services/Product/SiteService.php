@@ -217,6 +217,9 @@ class SiteService
         $url->sites()->save($site);
         $product = $this->productRepo->get(array_get($data, 'product_id'));
         $product->sites()->save($site);
+
+        dispatch((new CrawlJob($url))->onQueue("crawl")->onConnection('sync'));
+
         return $site;
     }
 

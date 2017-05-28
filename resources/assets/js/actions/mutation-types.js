@@ -32,3 +32,6 @@ export const CLEAR_SEARCH_PRODUCT_REFERENCE = 'CLEAR_SEARCH_PRODUCT_REFERENCE';
 export const SET_PROFILE = 'SET_PROFILE';
 export const SET_COMPANY = 'SET_COMPANY';
 export const SET_DISPLAY = 'SET_DISPLAY';
+
+/*user domains*/
+export const LOAD_USER_DOMAINS = 'LOAD_USER_DOMAINS';

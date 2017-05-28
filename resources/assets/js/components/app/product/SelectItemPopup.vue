@@ -64,7 +64,7 @@
         methods: {
             loadItems(){
                 axios.get(this.url.urls.item_index).then(response => {
-                    if (response.data.status == true) {
+                    if (response.data.status === true) {
                         this.items = response.data.items;
                     }
                 }).catch(error => {

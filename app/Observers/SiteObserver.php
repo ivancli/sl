@@ -10,15 +10,18 @@ namespace App\Observers;
 
 
 use App\Contracts\Repositories\UrlManagement\UrlContract;
+use App\Contracts\Repositories\UserManagement\UserContract;
 use App\Models\Site;
 
 class SiteObserver
 {
     protected $urlRepo;
+    protected $userRepo;
 
-    public function __construct(UrlContract $urlContract)
+    public function __construct(UrlContract $urlContract, UserContract $userContract)
     {
         $this->urlRepo = $urlContract;
+        $this->userRepo = $userContract;
     }
 
     public function creating()
@@ -38,7 +41,21 @@ class SiteObserver
 
     public function saved(Site $site)
     {
+        #region create user domain alias preference
+        if($site->product()->count() > 0){
+            $product = $site->product;
+            $user = $product->user;
 
+            $domains = [];
+            $domainFullPath = domain($site->siteUrl);
+            if (!is_null($domainFullPath)) {
+                $domains[] = [
+                    'domain' => $domainFullPath,
+                ];
+                $this->userRepo->updateUserDomains($user, $domains);
+            }
+        }
+        #endregion
     }
 
     public function updating(Site $site)

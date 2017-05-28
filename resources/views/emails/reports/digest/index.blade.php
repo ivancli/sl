@@ -42,7 +42,7 @@ Price Check Failed
                     <td>{{ $product->product_name }}</td>
                     <td>
                         <a href="{{$site->siteUrl}}">
-                            {{ $site->url->domainFullPath }}
+                            {{ $site->displayName }}
                         </a>
                     </td>
                     <td>

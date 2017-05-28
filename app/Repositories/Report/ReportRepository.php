@@ -159,6 +159,16 @@ class ReportRepository implements ReportContract
     {
         $product = $report->reportable;
         $user = $report->user;
+        $userDomains = $user->domains->pluck('alias', 'domain')->all();
+
+        $product->sites->each(function ($site) use ($userDomains) {
+            $siteDomain = domain($site->siteUrl);
+            if (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
+                $site->setAttribute('displayName', array_get($userDomains, $siteDomain));
+            } else {
+                $site->setAttribute('displayName', $site->url->domainFullPath);
+            }
+        });
 
         $fileName = sanitizeFileName($product->product_name) . "_product_report";
         $excel = Excel::create($fileName, function ($excel) use ($product) {
@@ -197,6 +207,19 @@ class ReportRepository implements ReportContract
         $category = $report->reportable;
         $user = $report->user;
 
+        $userDomains = $user->domains->pluck('alias', 'domain')->all();
+
+        $category->products->each(function ($product) use ($userDomains) {
+            $product->sites->each(function ($site) use ($userDomains) {
+                $siteDomain = domain($site->siteUrl);
+                if (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
+                    $site->setAttribute('displayName', array_get($userDomains, $siteDomain));
+                } else {
+                    $site->setAttribute('displayName', $site->url->domainFullPath);
+                }
+            });
+        });
+
         $fileName = sanitizeFileName($category->category_name) . "_category_report";
         $excel = Excel::create($fileName, function ($excel) use ($category) {
             $excel->sheet($category->category_name, function ($sheet) use ($category) {
@@ -233,6 +256,7 @@ class ReportRepository implements ReportContract
     private function _generateDigestReport(Report $report)
     {
         $user = $report->user;
+        $userDomains = $user->domains->pluck('alias', 'domain')->all();
         $frequency = $report->frequency;
         $now = Carbon::now();
 
@@ -247,6 +271,14 @@ class ReportRepository implements ReportContract
             $mostExpensivePrice = $sites->max('item.recentPrice');
 
             foreach ($sites as $site) {
+
+
+                $siteDomain = domain($site->siteUrl);
+                if (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
+                    $site->setAttribute('displayName', array_get($userDomains, $siteDomain));
+                } else {
+                    $site->setAttribute('displayName', $site->url->domainFullPath);
+                }
 
                 $item = $site->item;
                 if (is_null($item)) {

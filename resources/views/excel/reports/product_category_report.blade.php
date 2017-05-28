@@ -7,7 +7,10 @@
             <b>Product</b>
         </td>
         <td>
-            <b>Site</b>
+            <b>Site Name</b>
+        </td>
+        <td>
+            <b>Product Page URL</b>
         </td>
         <td>
             <b>Current Price</b>
@@ -27,6 +30,7 @@
             <tr>
                 <td>{{$category->category_name}}</td>
                 <td>{{$product->product_name}}</td>
+                <td>{{$site->displayName}}</td>
                 <td>{{$site->siteUrl}}</td>
                 <td>
                     @if(!is_null($site->item) && !is_null($site->item->recentPrice))
@@ -50,7 +54,7 @@
                     @endif
                 </td>
                 <td>
-                    @if(!is_null($site->item->lastChangedAt))
+                    @if(!is_null($site->item) && !is_null($site->item->lastChangedAt))
                         {{$site->item->lastChangedAt}}
                     @else
                         -

@@ -4,10 +4,10 @@
 import Vue from 'vue';
 
 Vue.filter('domain', function (url) {
-    if (typeof url == 'undefined' || url == null) {
+    if (typeof url === 'undefined' || url === null) {
         return null;
     }
-    var domain;
+    let domain;
     if (url.indexOf("://") > -1) {
         domain = url.split('/')[2];
     } else {

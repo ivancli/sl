@@ -36,6 +36,7 @@ Route::group(['middleware' => ['auth', 'subs']], function () {
     Route::resource('account-settings', 'Account\AccountSettingsController');
     Route::resource('user/profile', 'Account\ProfileController');
     Route::resource('user/preference', 'Account\PreferenceController');
+    Route::resource('user/user-domain', 'Account\UserDomainController');
     #endregion
 
     #region Product Related Routes
@@ -58,7 +59,9 @@ Route::group(['middleware' => ['auth', 'subs']], function () {
 
     #region Product Side Features Related Routes
     Route::resource('alert', 'Alert\AlertController');
+    Route::resource('historical-alert', 'Alert\HistoricalAlertController');
     Route::resource('report', 'Report\ReportController');
+    Route::resource('historical-report', 'Report\HistoricalReportController');
     #endregion
 
     #region Administration Routes

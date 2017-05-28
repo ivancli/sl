@@ -10,6 +10,10 @@ class HistoricalReport extends Model
         'file_name', 'content'
     ];
 
+    protected $appends = [
+        'urls'
+    ];
+
     /**
      * relationship with user
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -36,4 +40,22 @@ class HistoricalReport extends Model
     {
         return $this->morphTo();
     }
+
+    /*----------------------------------------------------------------------*/
+    /* Attributes                                                           */
+    /*----------------------------------------------------------------------*/
+
+    public function getUrlsAttribute()
+    {
+        return [
+            'index' => route('historical-report.index'),
+            'show' => route('historical-report.show', $this->getKey()),
+            'store' => route('historical-report.store'),
+            'edit' => route('historical-report.edit', $this->getKey()),
+            'update' => route('historical-report.update', $this->getKey()),
+            'delete' => route('historical-report.destroy', $this->getKey()),
+        ];
+    }
+
+
 }

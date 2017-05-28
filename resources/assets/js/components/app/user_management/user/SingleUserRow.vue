@@ -87,7 +87,7 @@
                 this.isDeletingUser = true;
                 axios.delete(this.user.urls.delete).then(response=> {
                     this.isDeletingUser = false;
-                    if (response.data.status == true) {
+                    if (response.data.status === true) {
                         this.$emit('reloadUsers');
                     }
                 }).catch(error=> {

@@ -48,6 +48,8 @@ class ProductObserver
     {
         /*manually remove corresponding alert when a product is deleted*/
         $product->alert()->delete();
+        $product->historicalAlerts()->delete();
+        $product->report()->delete();
     }
 
     public function deleted()

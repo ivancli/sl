@@ -70,4 +70,13 @@ interface UserContract
      * @return mixed
      */
     public function updateRoles(User $user, array $roles);
+
+
+    /**
+     * update user domains
+     * @param User $user
+     * @param array $data
+     * @return mixed
+     */
+    public function updateUserDomains(User $user, array $data);
 }

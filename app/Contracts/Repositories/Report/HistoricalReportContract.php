@@ -11,8 +11,16 @@ namespace App\Contracts\Repositories\Report;
 
 interface HistoricalReportContract
 {
+
     /**
-     *
+     * load all / filtered historical reports
+     * @param array $data
+     * @return mixed
+     */
+    public function filterAll(array $data = []);
+
+    /**
+     * create new historical report
      * @param array $data
      * @return \App\Models\HistoricalReport
      */

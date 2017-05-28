@@ -64,7 +64,7 @@
         },
         methods: {
             setInitActiveTab() {
-                if (window.location.hash != '') {
+                if (window.location.hash !== '') {
                     switch (window.location.hash) {
                         case "#alert-history":
                             this.activeTab = window.location.hash.replace('#', '');
@@ -81,7 +81,7 @@
                 }, false);
             },
             setTabActiveClass(tabName) {
-                return tabName == this.activeTab ? 'active' : '';
+                return tabName === this.activeTab ? 'active' : '';
             },
             setActiveTab(tabName) {
                 this.activeTab = tabName;

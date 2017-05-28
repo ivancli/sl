@@ -107,6 +107,15 @@ class User extends Authenticatable
     }
 
     /**
+     * relationship with historical alert
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function historicalAlerts()
+    {
+        return $this->hasMany('App\Models\HistoricalAlert', 'user_id', 'id');
+    }
+
+    /**
      * relationship with report
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -122,6 +131,11 @@ class User extends Authenticatable
     public function historicalReports()
     {
         return $this->hasMany('App\Models\HistoricalReport', 'user_id', 'id');
+    }
+
+    public function domains()
+    {
+        return $this->hasMany('App\Models\UserDomain', 'user_id', 'id');
     }
 
     /*----------------------------------------------------------------------*/

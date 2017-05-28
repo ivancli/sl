@@ -9,12 +9,14 @@ import loginUserStore from '../../loginUser';
 import defaultStore from '../../default';
 import collapse from './collapse';
 import search from './search';
+import userDomains from '../account_settings/user_domains';
 
 export default new Vuex.Store({
     modules: {
         loginUserStore,
         defaultStore,
         search,
-        collapse
+        collapse,
+        userDomains,
     }
 });
