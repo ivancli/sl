@@ -23,6 +23,8 @@ class CreateUsersTable extends Migration
             $table->timestamp('last_login_at')->nullable();
             $table->rememberToken();
             $table->string('status')->default('active');
+            $table->char('set_password', 1)->default('n');
+            $table->char('set_samples', 1)->default('n');
             $table->timestamps();
         });
     }

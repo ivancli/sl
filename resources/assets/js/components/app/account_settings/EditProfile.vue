@@ -85,7 +85,7 @@
             console.info('EditProfile component is mounted.');
         },
         methods: {
-            updateUserProfile: function () {
+            updateUserProfile() {
                 this.clearErrors();
                 this.clearSuccessMsg();
                 this.isUpdatingProfile = true;
@@ -104,13 +104,13 @@
             updateDigestSettings(digestSettings){
                 this.digest = digestSettings;
             },
-            clearErrors: function () {
+            clearErrors() {
                 this.errors = {};
             },
-            setSuccessMsg: function () {
+            setSuccessMsg() {
                 this.successMsg = "Your profile has been updated."
             },
-            clearSuccessMsg: function () {
+            clearSuccessMsg() {
                 this.successMsg = '';
             }
         },

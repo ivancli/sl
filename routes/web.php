@@ -49,6 +49,7 @@ Route::group(['middleware' => ['auth']], function () {
     #region User Account Client Routes
     Route::resource('account-settings', 'Account\AccountSettingsController');
     Route::resource('user/profile', 'Account\ProfileController');
+    Route::put('user/profile/password/{user_id}', 'Account\ProfileController@password')->name('profile.password');
     Route::resource('user/preference', 'Account\PreferenceController');
     Route::resource('user/user-domain', 'Account\UserDomainController');
     #endregion

@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'title', 'first_name', 'last_name', 'email', 'password', 'status'
+        'title', 'first_name', 'last_name', 'email', 'password', 'status', 'set_password'
     ];
 
     /**
@@ -232,6 +232,7 @@ class User extends Authenticatable
     {
         return array(
             'update' => route('profile.update', $this->getKey()),
+            'password' => route('profile.password', $this->getKey()),
         );
     }
 

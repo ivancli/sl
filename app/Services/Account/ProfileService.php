@@ -12,6 +12,7 @@ namespace App\Services\Account;
 use App\Contracts\Repositories\Report\ReportContract;
 use App\Contracts\Repositories\UserManagement\UserContract;
 use App\Models\User;
+use App\Validators\Account\Profile\PasswordValidator;
 use App\Validators\Account\Profile\UpdateValidator;
 
 class ProfileService
@@ -26,11 +27,12 @@ class ProfileService
     #region validators
 
     protected $updateValidator;
+    protected $passwordValidator;
 
     #endregion
 
     public function __construct(UserContract $userContract, ReportContract $reportContract,
-                                UpdateValidator $updateValidator)
+                                UpdateValidator $updateValidator, PasswordValidator $passwordValidator)
     {
         #region repositories binding
         $this->userRepo = $userContract;
@@ -39,6 +41,7 @@ class ProfileService
 
         #region validators binding
         $this->updateValidator = $updateValidator;
+        $this->passwordValidator = $passwordValidator;
         #endregion
     }
 
@@ -93,5 +96,19 @@ class ProfileService
         } else {
             $user->reports()->where('report_type', 'digest')->delete();
         }
+    }
+
+    /**
+     * initial set password
+     * @param User $user
+     * @param array $data
+     */
+    public function setPassword(User $user, array $data)
+    {
+        $this->passwordValidator->validate($data);
+
+        $user->password = bcrypt(array_get($data, 'password'));
+        $user->set_password = 'y';
+        $user->save();
     }
 }

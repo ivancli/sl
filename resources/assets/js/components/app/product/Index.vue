@@ -79,11 +79,16 @@
             </div>
         </div>
         <loading v-if="isSearchingCategories"></loading>
+        <create-password v-if="!hasSetPassword" @set-password="loadUser"></create-password>
+        <welcome v-if="hasSetPassword && !hasSetSamples"></welcome>
     </section>
 </template>
 
 <script>
     import Vue from 'vue';
+
+    import createPassword from '../account_settings/popups/CreatePassword.vue';
+    import welcome from '../account_settings/popups/Welcome.vue';
 
     import addCategory from './AddCategory.vue';
     import singleCategory from './SingleCategory.vue';
@@ -95,6 +100,8 @@
 
     export default {
         components: {
+            createPassword,
+            welcome,
             addCategory,
             singleCategory,
             loading
@@ -203,6 +210,12 @@
             },
             user(){
                 return this.$store.getters.user
+            },
+            hasSetPassword(){
+                return this.user.set_password === 'y';
+            },
+            hasSetSamples(){
+                return this.user.set_samples === 'y';
             },
             subscription(){
                 if (typeof this.user.subscription !== 'undefined' && this.user.subscription !== null) {

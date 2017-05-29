@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AppPrefSeeder::class);
         $this->call(InitRolesSeeder::class);
         $this->call(InitPermissionsSeeder::class);
-        $this->call(TestingUserSeeder::class);
+        $this->call(AdminUserSeeder::class);
         $this->call(DomainSeeder::class);
     }
 }

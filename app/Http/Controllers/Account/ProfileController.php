@@ -68,6 +68,15 @@ class ProfileController extends Controller
         event(new AfterUpdate($user));
 
         return compact(['status']);
+    }
 
+    public function password($user_id)
+    {
+        $user = $this->profileService->getUserById($user_id);
+
+        $this->profileService->setPassword($user, $this->request->all());
+        $status = true;
+
+        return compact(['status']);
     }
 }
