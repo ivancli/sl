@@ -3,7 +3,7 @@
     <section class="content">
         <div class="box box-solid">
             <div class="box-body p-20">
-                <div class="row m-b-20">
+                <div class="row m-b-20" v-if="subscriptionIsValid">
                     <div class="col-md-12">
                         <div class="text-muted f-w-bold l-h-30" v-if="user.subscription">
                             {{ subscriptionPlan.name }} Plan:
@@ -21,21 +21,52 @@
                         </div>
                     </div>
                 </div>
+                <div class="row m-b-20" v-else>
+                    <div class="col-sm-12">
+                        <div class="invalid-subscription-msg-container">
+                            <table class="table" style="margin: 0; color: white;" v-if="subscriptionIsPastDue">
+                                <tr>
+                                    <td class="invalid-subscription-msg">
+                                        <h3>OH NO! YOUR TRIAL HAS EXPIRED!</h3>
+                                        <p>To re-activate your account and
+                                            continue to use SpotLite, please add a payment method.</p>
+                                    </td>
+                                    <td class="shrink invalid-subscription-button">
+                                        <a :href="updatePaymentLink" class="btn btn-primary btn-lg btn-flat">ADD PAYMENT METHOD</a>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table class="table" v-if="subscriptionIsCancelled">
+                                <tr>
+                                    <td class="invalid-subscription-msg">
+                                        <h3>OH NO! YOUR SUBSCRIPTION IS CANCELLED!</h3>
+                                        <p>Please reactivate to continue using SpotLite.</p>
+                                    </td>
+                                    <td class="shrink invalid-subscription-button" v-if="subscription.apiSubscription.credit_card_id !== null">
+                                        <a href="#" class="btn btn-primary btn-lg btn-flat" @click.prevent="onReactivateSubscription">REACTIVATE</a>
+                                    </td>
+                                    <td class="shrink invalid-subscription-button" v-else>
+                                        <a :href="updatePaymentLink" class="btn btn-primary btn-lg btn-flat">REACTIVATE</a>
+                                    </td>
+
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
                 <div class="row m-b-10">
                     <div class="col-sm-8">
-                        <add-category @added-category="reloadCategories"></add-category>
+                        <add-category @added-category="reloadCategories" v-if="subscriptionIsValid"></add-category>
                     </div>
                     <div class="col-sm-4 text-right" v-if="hasCategories">
                         <div class="collapse-container">
-                            <a href="#" class="text-muted btn-collapse-all" @click.prevent="toggleAllCategories"
-                               v-text="shouldExpandAll ? 'Expand All' : 'Collapse All'"></a>
+                            <a href="#" class="text-muted btn-collapse-all" @click.prevent="toggleAllCategories" v-text="shouldExpandAll ? 'Expand All' : 'Collapse All'"></a>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        <single-category v-for="single_category in categories" :current-category="single_category"
-                                         @reload-category="updateCategory" @reload-categories="reloadCategories"></single-category>
+                        <single-category v-for="single_category in categories" :current-category="single_category" @reload-category="updateCategory" @reload-categories="reloadCategories"></single-category>
                     </div>
                 </div>
                 <div class="row">
@@ -59,7 +90,7 @@
     import loading from '../../fragments/loading/Loading.vue';
 
     import {
-        TOGGLE_ALL_CATEGORIES, LOAD_USER, SET_CATEGORY_SEARCH_PROMISE, CLEAR_CATEGORY_SEARCH_PROMISE, LOAD_USER_DOMAINS
+        TOGGLE_ALL_CATEGORIES, LOAD_USER, SET_CATEGORY_SEARCH_PROMISE, CLEAR_CATEGORY_SEARCH_PROMISE, LOAD_USER_DOMAINS, LOAD_UPDATE_PAYMENT_LINK
     } from '../../../actions/action-types';
 
     export default {
@@ -78,6 +109,7 @@
             console.info('Index component is mounted');
             this.loadCategories();
             this.loadUserDomains();
+            this.loadUpdatePaymentLink();
         },
         watch: {
             productSearchTerm(){
@@ -96,6 +128,11 @@
                 this.$store.dispatch(SET_CATEGORY_SEARCH_PROMISE, {
                     category_search_promise: categoryPromise
                 });
+            },
+            user(val){
+                if (val.hasOwnProperty('subscription')) {
+                    this.loadUpdatePaymentLink();
+                }
             }
         },
         methods: {
@@ -139,7 +176,13 @@
             },
             loadUserDomains(){
                 this.$store.dispatch(LOAD_USER_DOMAINS);
-            }
+            },
+            loadUpdatePaymentLink(){
+                this.$store.dispatch(LOAD_UPDATE_PAYMENT_LINK);
+            },
+            onReactivateSubscription(){
+
+            },
         },
         computed: {
             allCollapseStatus(){
@@ -161,15 +204,43 @@
             user(){
                 return this.$store.getters.user
             },
+            subscription(){
+                if (typeof this.user.subscription !== 'undefined' && this.user.subscription !== null) {
+                    return this.user.subscription;
+                }
+                return null;
+            },
+            subscriptionIsValid(){
+                if (this.subscription !== null) {
+                    return this.subscription.isValid;
+                }
+                return true;
+            },
+            subscriptionIsPastDue(){
+                if (this.subscription !== null) {
+                    return this.subscription.isPastDue === true;
+                }
+                return false;
+            },
+            subscriptionIsCancelled()
+            {
+                if (this.subscription !== null) {
+                    return this.subscription.isCancelled === true;
+                }
+                return false;
+            },
+            updatePaymentLink(){
+                return this.$store.getters.updatePaymentLink;
+            },
             numberOfProducts(){
                 return this.user.numberOfProducts;
             },
             maxNumberOfProducts(){
-                if (this.user.hasOwnProperty('subscription')) {
-                    if (this.user.subscription.subscriptionCriteria.product == 0) {
+                if (this.subscription !== null) {
+                    if (this.subscription.subscriptionCriteria.product == 0) {
                         return null;
                     }
-                    return this.user.subscription.subscriptionCriteria.product;
+                    return this.subscription.subscriptionCriteria.product;
                 }
                 return null;
             },
@@ -242,5 +313,33 @@
         background-color: #dedede;
         border-radius: 10px;
         height: 15px;
+    }
+
+    .invalid-subscription-msg-container {
+        background-color: #7ed0c0;
+        padding: 15px;
+    }
+
+    .invalid-subscription-msg-container table {
+        margin: 0;
+        color: white;
+    }
+
+    .invalid-subscription-msg {
+        border: none !important;
+    }
+
+    .invalid-subscription-msg h3 {
+        margin-top: 0;
+    }
+
+    .invalid-subscription-msg p {
+        font-size: 18px;
+        margin-bottom: 0
+    }
+
+    .invalid-subscription-button {
+        border: none !important;
+        vertical-align: middle !important;
     }
 </style>

@@ -20,6 +20,7 @@ class CreateSubscriptionsTable extends Migration
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->string('api_subscription_id')->nullable();
             $table->string('token')->nullable();
+            $table->string('location')->default('au');
             $table->timestamps();
         });
     }

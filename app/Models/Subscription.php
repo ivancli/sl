@@ -20,7 +20,7 @@ class Subscription extends Model
     ];
 
     protected $appends = [
-        'isValid', 'apiSubscription', 'isTrialing', 'isPastDue', 'isActive', 'subscriptionPlan', 'subscriptionCriteria'
+        'isValid', 'apiSubscription', 'isTrialing', 'isPastDue', 'isActive', 'isCancelled', 'subscriptionPlan', 'subscriptionCriteria', 'urls'
     ];
 
     public function user()
@@ -38,7 +38,7 @@ class Subscription extends Model
      */
     public function getApiSubscriptionAttribute()
     {
-        return Chargify::subscription()->get($this->api_subscription_id);
+        return Chargify::subscription($this->location)->get($this->api_subscription_id);
     }
 
     /**
@@ -90,6 +90,18 @@ class Subscription extends Model
     }
 
     /**
+     * check if subscription is cancelled
+     * @return bool
+     */
+    public function getIsCancelledAttribute()
+    {
+        if (!is_null($this->apiSubscription)) {
+            return $this->apiSubscription->state == 'canceled';
+        }
+        return false;
+    }
+
+    /**
      * attribute showing subscription plan
      * @return null|Product
      */
@@ -112,6 +124,20 @@ class Subscription extends Model
         }
         return json_decode($this->subscriptionPlan->description);
     }
+
+    /**
+     * URLs
+     * @return array
+     */
+    public function getUrlsAttribute()
+    {
+        return [
+            "edit" => route('subscription.edit', $this->getKey()),
+            "reactivate" => route('subscription.reactivate', $this->getKey()),
+            "delete" => route('subscription.destroy', $this->getKey()),
+        ];
+    }
+
 
     /* ---------------------------------------------------------------------- */
     /* helper functions */

@@ -60,48 +60,48 @@
             }
         },
         methods: {
-            goingToAddCategory: function () {
+            goingToAddCategory () {
                 this.addingCategory = true;
                 setTimeout(() => {
                     this.$refs['txt_new_category'].focus();
                 }, 10)
             },
-            cancelAddCategory: function () {
+            cancelAddCategory () {
                 this.addingCategory = false;
                 this.clearNewCategoryname();
                 this.$refs['txt_new_category'].blur();
             },
-            addCategory: function () {
+            addCategory () {
                 this.$refs['txt_new_category'].blur();
                 this.isAddingCategory = true;
                 this.errors = {};
                 axios.post('/category', this.addCategoryData).then(response => {
                     this.isAddingCategory = false;
-                    if (response.data.status == true) {
+                    if (response.data.status === true) {
                         this.addingCategory = false;
                     }
                     this.clearNewCategoryname();
                     this.$emit('added-category');
                 }).catch(error => {
                     this.isAddingCategory = false;
-                    if (error.response && error.response.status == 422 && error.response.data) {
+                    if (error.response && error.response.status === 422 && error.response.data) {
                         this.errors = error.response.data;
                     }
                 })
             },
-            clearErrors: function () {
+            clearErrors () {
                 this.errors = {};
             },
-            clearNewCategoryname: function () {
+            clearNewCategoryname () {
                 this.newCategoryName = '';
-            }
+            },
         },
         computed: {
-            addCategoryData: function () {
+            addCategoryData() {
                 return {
                     category_name: this.newCategoryName
                 };
-            }
+            },
         }
     }
 </script>

@@ -11,7 +11,17 @@
                     </button>
                 </div>
             </div>
-            <div class="row" v-show="!migratingSubscriptionPlan" v-if="subscriptionPlan != null">
+            <div class="row m-b-20 p-10" v-if="cancellingSubscription && hasCancelledSubscription">
+                <div class="col-lg-offset-2 col-lg-8 col-md-offset-1 col-md-10">
+                    <cancelled-subscription :subscription="subscription" :subscription-plan="subscriptionPlan"></cancelled-subscription>
+                </div>
+            </div>
+            <div class="row m-b-20 p-10" v-if="cancellingSubscription && !hasCancelledSubscription">
+                <div class="col-lg-offset-2 col-lg-8 col-md-offset-1 col-md-10">
+                    <cancel-subscription :subscription="user.subscription" @cancelled-subscription="cancelledSubscription" @hide-cancel="hideCancelSubscription"></cancel-subscription>
+                </div>
+            </div>
+            <div class="row" v-show="!migratingSubscriptionPlan" v-if="subscriptionPlan != null && !cancellingSubscription && !hasCancelledSubscription">
                 <div class="col-lg-offset-2 col-lg-8 col-md-offset-1 col-md-10">
                     <div class="p-10">
                         <div class="row subscription-info-panel">
@@ -36,14 +46,19 @@
                                         </a>
                                     </div>
                                 </div>
-                                <div class="row m-b-20">
+                                <div class="row m-b-20" v-if="!isCancelled">
                                     <div class="col-sm-12">
                                         <h4>Payment Details</h4>
                                         Upcoming Invoice:
-                                        <strong>{{ subscription.next_assessment_at | formatDateTime(dateFormat)
-                                            }}</strong>
+                                        <strong>{{ subscription.next_assessment_at | formatDateTime(dateFormat) }}</strong>
                                     </div>
                                 </div>
+                                <div class="row m-b-20" v-else>
+                                    <div class="col-sm-12">
+                                        Your subscription is cancelled. Please reactivate to continue using SpotLite.
+                                    </div>
+                                </div>
+
                                 <p>Payment History: </p>
                                 <table class="table table-bordered table-hover table-striped">
                                     <thead class="thead-inverse">
@@ -60,20 +75,24 @@
                                     </tr>
                                     <tr v-else v-for="transaction in filteredTransactions">
                                         <td>{{ transaction.created_at | formatDateTime(dateFormat) }}</td>
-                                        <td></td>
-                                        <td v-text="transaction.kind"></td>
+                                        <td>{{ transaction.memo }}</td>
+                                        <td>{{ transaction.transaction_type }}</td>
                                         <td>${{ transaction.amount_in_cents/100 | currency }}</td>
                                     </tr>
                                     </tbody>
                                 </table>
                                 <div class="row">
                                     <div class="col-sm-12 text-right">
-                                        <a :href="updatePaymentProfileLink" class="btn btn-primary btn-flat">
+                                        <a :href="updatePaymentProfileLink" class="btn btn-primary btn-flat" v-if="!isCancelled">
                                             UPDATE PAYMENT DETAILS
                                         </a>
                                         &nbsp;
-                                        <button class="btn btn-default btn-flat">
+                                        <button class="btn btn-default btn-flat" @click.prevent="onClickCancelSubscription" v-if="!isCancelled">
                                             CANCEL SUBSCRIPTION
+                                        </button>
+
+                                        <button class="btn btn-primary btn-flat" @click.prevent="onClickReactivateSubscription" v-if="isCancelled">
+                                            REACTIVATE
                                         </button>
                                     </div>
                                 </div>
@@ -83,13 +102,14 @@
                 </div>
             </div>
         </div>
-        <confirm :content="confirmMigrateContent" :title="confirmMigrateTitle" @confirm="migrateSubscription"
-                 @hide="cancelConfirmMigrate"></confirm>
+        <confirm :content="confirmMigrateContent" :title="confirmMigrateTitle" @confirm="migrateSubscription" @hide="cancelConfirmMigrate"></confirm>
         <loading v-show="submittingMigration"></loading>
     </div>
 </template>
 <script>
     import pricingTable from '../../subscription/PricingTable.vue';
+    import cancelSubscription from './CancelSubscription.vue';
+    import cancelledSubscription from './CancelledSubscription.vue';
     import confirm from '../../fragments/modals/Confirm.vue';
     import loading from '../../fragments/loading/Loading.vue'
 
@@ -103,6 +123,8 @@
     export default{
         components: {
             pricingTable,
+            cancelSubscription,
+            cancelledSubscription,
             confirm,
             loading
         },
@@ -114,7 +136,10 @@
                 transactions: [],
 
                 migratingSubscriptionPlan: false,
+                hasCancelledSubscription: false,
+                cancellingSubscription: false,
                 submittingMigration: false,
+                isReactivating: false,
                 confirmMigrateTitle: "",
                 confirmMigrateContent: "",
                 successMsg: "",
@@ -130,7 +155,7 @@
         },
         methods: {
             initSetUser: function () {
-                if (typeof user != 'undefined') {
+                if (typeof user !== 'undefined') {
                     this.user = user;
                 }
             },
@@ -143,7 +168,7 @@
             },
             loadSubscription: function () {
                 axios.get('/subscription/subscription/' + user.subscription.id).then(response => {
-                    if (response.data.status == true) {
+                    if (response.data.status === true) {
                         this.subscriptionPlan = response.data.subscriptionPlan;
                         this.updatePaymentProfileLink = response.data.updatePaymentProfileLink;
                         this.transactions = response.data.transactions;
@@ -179,12 +204,12 @@
                 });
             },
             migrateSubscription: function () {
-                if (this.selectedSubscriptionPlanId != null) {
+                if (this.selectedSubscriptionPlanId !== null) {
                     this.submittingMigration = true;
                     this.resetConfirmMigrateMessage();
                     axios.put('/subscription/subscription/' + user.subscription.id, this.migrateSubscriptionData).then(response => {
                         this.submittingMigration = false;
-                        if (response.data.status == true) {
+                        if (response.data.status === true) {
                             this.subscription = response.data.subscription;
                             this.loadSubscription();
                             this.setSuccessMsg("You subscription plan has been updated.");
@@ -193,7 +218,7 @@
                         }
                     }).catch(error => {
                         this.submittingMigration = false;
-                        if (error.response && error.response.status == 422 && error.response.data) {
+                        if (error.response && error.response.status === 422 && error.response.data) {
                             this.errors = error.response.data;
                         }
                     })
@@ -209,12 +234,48 @@
             },
             setSuccessMsg: function (text) {
                 this.successMsg = text;
+            },
+            onClickCancelSubscription(){
+                this.cancellingSubscription = true;
+            },
+            cancelledSubscription(){
+                this.hasCancelledSubscription = true;
+            },
+            hideCancelSubscription(){
+                this.cancellingSubscription = false;
+            },
+            onClickReactivateSubscription(){
+                this.isReactivating = true;
+                if (this.subscription.credit_card_id === null) {
+                    window.location.href = this.updatePaymentProfileLink;
+                } else {
+                    axios.post(this.user.subscription.urls.reactivate).then(response => {
+                        if (response.data.status === true) {
+                            this.isReactivating = false;
+                            window.location.href = '/';
+                        }
+                    }).catch(error => {
+                        this.isReactivating = false;
+                        if (error.response && error.response.status === 422 && error.response.data) {
+                            this.errors = error.response.data;
+                        }
+                    })
+                }
             }
         },
         computed: {
             filteredTransactions(){
                 /*TODO need to filter these transactions*/
-                return this.transactions;
+                let filteredTransactions = this.transactions;
+
+                for (let key in filteredTransactions) {
+                    if (filteredTransactions.hasOwnProperty(key)) {
+                        if (filteredTransactions[key].transaction_type !== 'payment') {
+                            delete filteredTransactions[key];
+                        }
+                    }
+                }
+                return filteredTransactions;
             },
             dateFormat(){
                 return user.allPreferences.DATE_FORMAT;
@@ -232,6 +293,9 @@
                 return {
                     product_id: this.selectedSubscriptionPlanId
                 };
+            },
+            isCancelled(){
+                return this.user.subscription.isCancelled === true;
             }
         }
     }

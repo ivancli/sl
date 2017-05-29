@@ -35,7 +35,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \App\Http\Middleware\VerifySubscription::class
+//            \App\Http\Middleware\VerifySubscription::class
         ],
 
         'api' => [
@@ -58,6 +58,6 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'subs' => \App\Http\Middleware\VerifySubscription::class,
+//        'subs' => \App\Http\Middleware\VerifySubscription::class,
     ];
 }

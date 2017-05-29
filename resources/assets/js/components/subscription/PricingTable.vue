@@ -1,11 +1,6 @@
 <template>
     <div class="row p-t-50">
-        <single-subscription-plan class="col-lg-3 col-md-6 plan" v-for="productFamily in productFamilies"
-                                  :single-product="productFamily.product" :preview="productFamily.preview"
-                                  @select-subscription-plan="emitSelectedSubscriptionPlan"
-                                  :login-user="user"
-        >
-
+        <single-subscription-plan class="col-md-4 plan" v-for="productFamily in productFamilies" :single-product="productFamily.product" :preview="productFamily.preview" @select-subscription-plan="emitSelectedSubscriptionPlan" :login-user="user">
         </single-subscription-plan>
     </div>
 </template>
@@ -29,9 +24,9 @@
             loadProducts: function () {
                 axios.get('/subscription/product').then(response => {
                     console.info('response', response);
-                    this.productFamilies = response.data;
+                    this.productFamilies = response.data.productFamilies;
                 }).catch(error => {
-                    if (error.response && error.response.status == 422 && error.response.data) {
+                    if (error.response && error.response.status === 422 && error.response.data) {
                         console.info(error.response);
                         this.errors = error.response.data;
                     }

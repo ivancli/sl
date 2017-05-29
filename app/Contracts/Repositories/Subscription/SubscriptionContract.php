@@ -76,4 +76,12 @@ interface SubscriptionContract
      * @return mixed
      */
     public function getTransactions(Subscription $subscription);
+
+    /**
+     * Cancel subscription
+     * @param Subscription $subscription
+     * @param array $data
+     * @return mixed
+     */
+    public function cancelSubscription(Subscription $subscription, array $data = []);
 }

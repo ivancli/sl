@@ -45,16 +45,17 @@ class AuthenticationEventSubscriber
         $this->dispatchUserActivityLog($activity, $user);
 
         if (!is_null($user->subscription)) {
-            Cache::forget("chargify.subscriptions.{$user->subscription->api_subscription_id}");
+            Cache::forget("{$user->subscription->location}.chargify.subscriptions.{$user->subscription->api_subscription_id}");
         }
     }
 
     public function onAuthLogout($event)
     {
         $user = $event->user;
-
-        $activity = "User -- {$user->fullName} -- Logged Out";
-        $this->dispatchUserActivityLog($activity, $user);
+        if(isset($user) && !is_null($user)){
+            $activity = "User -- {$user->fullName} -- Logged Out";
+            $this->dispatchUserActivityLog($activity, $user);
+        }
     }
 
     public function onAuthRegistered($event)

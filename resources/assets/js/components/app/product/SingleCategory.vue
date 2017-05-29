@@ -11,13 +11,13 @@
             </th>
 
             <th class="text-right action-cell category-th">
-                <a href="#" class="btn-action btn-edit" title="edit" @click.prevent="onClickEditCategory" v-if="!editingCategoryName">
+                <a href="#" class="btn-action btn-edit" title="edit" @click.prevent="onClickEditCategory" v-if="!editingCategoryName && subscriptionIsValid">
                     <i class="fa fa-pencil"></i>
                 </a>
                 <a href="#" class="btn-action btn-chart" title="chart">
                     <i class="fa fa-line-chart"></i>
                 </a>
-                <a href="#" class="btn-action btn-report" title="report" @click.prevent="onClickEditCategoryReport">
+                <a href="#" class="btn-action btn-report" title="report" @click.prevent="onClickEditCategoryReport" v-if="subscriptionIsValid">
                     <i class="fa" :class="reportIconClass"></i>
                 </a>
                 <a href="#" class="btn-action btn-delete-category" title="delete" @click.prevent="onClickDeleteCategory">
@@ -56,7 +56,7 @@
                     <div class="m-t-20" v-if="!isLoadingProducts && moreProductsToLoad">
                         <a href="#" class="lnk-load-more text-tiffany" @click.prevent="loadProducts">LOAD MORE&hellip;</a>
                     </div>
-                    <div class="m-t-20">
+                    <div class="m-t-20" v-if="subscriptionIsValid">
                         <add-product :category="category" @added-product="addedProduct"></add-product>
                     </div>
                 </div>
@@ -319,7 +319,22 @@
                 } else {
                     return 'fa-envelope-o';
                 }
-            }
+            },
+            user(){
+                return this.$store.getters.user
+            },
+            subscription(){
+                if (typeof this.user.subscription !== 'undefined' && this.user.subscription !== null) {
+                    return this.user.subscription;
+                }
+                return null;
+            },
+            subscriptionIsValid(){
+                if (this.subscription !== null) {
+                    return this.subscription.isValid;
+                }
+                return true;
+            },
         }
     }
 </script>

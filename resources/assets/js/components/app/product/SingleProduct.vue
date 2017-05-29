@@ -36,13 +36,13 @@
                 </span>
             </th>
             <th class="text-right action-cell product-th">
-                <a href="#" class="btn-action" title="edit" @click.prevent="onClickEditProduct" v-if="!editingProduct">
+                <a href="#" class="btn-action" title="edit" @click.prevent="onClickEditProduct" v-if="!editingProduct && subscriptionIsValid">
                     <i class="fa fa-pencil"></i>
                 </a>
                 <a href="#" class="btn-action" title="chart">
                     <i class="fa fa-line-chart"></i>
                 </a>
-                <a href="#" class="btn-action" title="report" @click.prevent="onClickEditProductReport">
+                <a href="#" class="btn-action" title="report" @click.prevent="onClickEditProductReport" v-if="subscriptionIsValid">
                     <i class="fa" :class="reportIconClass"></i>
                 </a>
                 <a href="#" class="btn-action" title="delete" @click.prevent="onClickDeleteProduct">
@@ -115,7 +115,7 @@
                         <!--</tr>-->
                         <!--</tbody>-->
                         <!--/LOAD MORE-->
-                        <tbody>
+                        <tbody v-if="subscriptionIsValid">
                         <tr class="add-site-row">
                             <td colspan="9" class="add-item-cell">
                                 <add-site :product="product" :number-of-sites="numberOfSites" @added-site="addedSite"></add-site>
@@ -359,6 +359,18 @@
         computed: {
             user(){
                 return this.$store.getters.user;
+            },
+            subscription(){
+                if (typeof this.user.subscription !== 'undefined' && this.user.subscription !== null) {
+                    return this.user.subscription;
+                }
+                return null;
+            },
+            subscriptionIsValid(){
+                if (this.subscription !== null) {
+                    return this.subscription.isValid;
+                }
+                return true;
             },
             product(){
                 return this.currentProduct;

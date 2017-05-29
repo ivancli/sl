@@ -16,9 +16,9 @@ interface ProductFamilyContract
     /**
      * Load all product families
      *
+     * @param array $data
      * @param bool $throw
      * @return mixed
-     * @throws ProductFamilyNotFoundException
      */
-    public function getProductFamilies($throw = false);
+    public function getProductFamilies(array $data = [], $throw = false);
 }

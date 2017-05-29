@@ -31,9 +31,10 @@ class SubscriptionManagementRepository implements SubscriptionManagementContract
     /**
      * Retrieve data for pricing tables
      *
+     * @param array $data
      * @return mixed
      */
-    public function getPricingTables()
+    public function getPricingTables(array $data = [])
     {
         return Cache::rememberForever('product_families.products', function () {
             $families = $this->productFamilyRepo->getProductFamilies();
@@ -70,6 +71,10 @@ class SubscriptionManagementRepository implements SubscriptionManagementContract
                 ]);
 
                 $finalProduct->criteria = json_decode($finalProduct->description);
+                if (isset($finalProduct->criteria->hidden) && $finalProduct->criteria->hidden == 1) {
+                    continue;
+                }
+
                 $finalProductFamily = $family;
                 $finalProductFamily->product = $finalProduct;
                 $finalProductFamily->preview = $subscriptionPreview;

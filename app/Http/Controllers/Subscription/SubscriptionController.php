@@ -19,6 +19,8 @@ use App\Models\Subscription;
 use App\Models\User;
 use App\Services\Subscription\SubscriptionService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use IvanCLI\Chargify\Chargify;
 
 class SubscriptionController extends Controller
 {
@@ -71,10 +73,44 @@ class SubscriptionController extends Controller
     /**
      * User without subscription will come to this page and reactivate/subscribe
      * @param Subscription $subscription
+     * @return array
      */
     public function edit(Subscription $subscription)
     {
+        $link = $this->subscriptionService->updateLink($subscription);
+        $status = true;
+        return compact(['link', 'status']);
+    }
 
+    /**
+     * updated credit card
+     */
+    public function updated()
+    {
+        $user = auth()->user();
+        $subscription = $user->subscription;
+        if (!is_null($subscription)) {
+            Cache::forget("{$subscription->location}.chargify.subscriptions.{$subscription->api_subscription_id}");
+            $result = Chargify::subscription($subscription->location)->reactivate($subscription->apiSubscription->id);
+            Cache::forget("{$subscription->location}.chargify.subscriptions.{$subscription->api_subscription_id}");
+        }
+
+        return redirect()->route('account-settings.index');
+    }
+
+    /**
+     * reactivate subscription
+     * @param Subscription $subscription
+     * @return array
+     */
+    public function reactivate(Subscription $subscription)
+    {
+        Cache::forget("{$subscription->location}.chargify.subscriptions.{$subscription->api_subscription_id}");
+        $result = Chargify::subscription($subscription->location)->reactivate($subscription->apiSubscription->id);
+        Cache::forget("{$subscription->location}.chargify.subscriptions.{$subscription->api_subscription_id}");
+        $status = true;
+
+        return compact(['status']);
     }
 
     /**
@@ -96,6 +132,25 @@ class SubscriptionController extends Controller
         $resultData = $this->subscriptionService->update($subscription, $this->request->all());
         $resultData = array_set($resultData, 'status', true);
 
-        return $resultData;
+        Cache::forget("{$subscription->location}.chargify.subscriptions.{$subscription->api_subscription_id}");
+
+        if ($this->request->ajax()) {
+            return $resultData;
+        } else {
+            return redirect()->route('account-settings.index');
+        }
+    }
+
+    /**
+     * Cancel subscription - either keep or not keep profiles
+     * @param Subscription $subscription
+     * @return array
+     */
+    public function destroy(Subscription $subscription)
+    {
+        $this->subscriptionService->cancel($subscription, $this->request->all());
+        $status = true;
+
+        return compact(['status']);
     }
 }

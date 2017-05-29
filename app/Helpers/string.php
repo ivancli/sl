@@ -44,3 +44,9 @@ function sameDomain($url_1, $url_2)
     }
     return false;
 }
+
+function urlPath($string)
+{
+    $path = array_get(parse_url($string), 'path');
+    return $path;
+}

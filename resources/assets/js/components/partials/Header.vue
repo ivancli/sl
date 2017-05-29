@@ -22,28 +22,28 @@
                             <i class="fa fa-tag"></i>&nbsp;PRODUCTS
                         </a>
                     </li>
-                    <li class="">
+                    <li class="" v-if="subscriptionIsValid">
                         <a href="/positioning">
                             <i class="fa fa-street-view"></i>&nbsp;POSITIONING
                         </a>
                     </li>
-                    <li class="">
+                    <li class="" v-if="subscriptionIsValid">
                         <a href="/alert">
                             <i class="fa fa-bell-o"></i>&nbsp;ALERTS
                         </a>
                     </li>
-                    <li class="">
+                    <li class="" v-if="subscriptionIsValid">
                         <a href="/report">
                             <i class="fa fa-envelope-o"></i>&nbsp;REPORTS
                         </a>
                     </li>
-                    <li class="">
+                    <li class="" v-if="isStaffMember">
                         <a href="/app-preference">
                             <i class="fa fa-gears"></i>
                             <span class="hidden-lg hidden-md hidden-sm">App Preferences</span>
                         </a>
                     </li>
-                    <li class="dropdown">
+                    <li class="dropdown" v-if="isStaffMember">
                         <a href="#" data-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-files-o"></i>&nbsp;<span class="hidden-lg hidden-md hidden-sm">Manage Crawler</span>&nbsp;<i
                                 class="fa fa-caret-down"></i>
@@ -61,7 +61,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="dropdown ">
+                    <li class="dropdown " v-if="isStaffMember">
                         <a href="#" data-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-users"></i>&nbsp;<span
                                 class="hidden-lg hidden-md hidden-sm">Manage Users</span>&nbsp;<i
@@ -94,7 +94,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="dropdown ">
+                    <li class="dropdown " v-if="isStaffMember">
                         <a href="#" data-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-file-text-o"></i>&nbsp;<span class="hidden-lg hidden-md hidden-sm">System Logs</span>&nbsp;<i
                                 class="fa fa-caret-down"></i>
@@ -114,7 +114,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="dropdown">
+                    <li class="dropdown" v-if="isStaffMember">
                         <a href="#" data-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-file-archive-o"></i>&nbsp;<span class="hidden-lg hidden-md hidden-sm">Manage Legals</span>&nbsp;<i
                                 class="fa fa-caret-down"></i>
@@ -193,17 +193,35 @@
         methods: {},
         computed: {
             isProductPage(){
-                if (typeof currentRouteName != 'undefined') {
-                    return currentRouteName == 'product.index';
+                if (typeof currentRouteName !== 'undefined') {
+                    return currentRouteName === 'product.index';
                 } else {
-                    return window.location.pathname == "/product";
+                    return window.location.pathname === "/product";
                 }
             },
             needSubscription(){
                 return user.needSubscription;
             },
             hasSubscription(){
-                return typeof user.subscription != 'undefined' && user.subscription != null;
+                return typeof user.subscription !== 'undefined' && user.subscription !== null;
+            },
+            user(){
+                return this.$store.getters.user
+            },
+            subscription(){
+                if (typeof this.user.subscription !== 'undefined' && this.user.subscription !== null) {
+                    return this.user.subscription;
+                }
+                return null;
+            },
+            subscriptionIsValid(){
+                if (this.subscription !== null) {
+                    return this.subscription.isValid;
+                }
+                return true;
+            },
+            isStaffMember(){
+                return this.user.isStaffMember === true;
             }
         }
     }

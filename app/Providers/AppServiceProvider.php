@@ -80,5 +80,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Contracts\Repositories\UserManagement\GroupContract', 'App\Repositories\UserManagement\GroupRepository');
         $this->app->bind('App\Contracts\Repositories\UserManagement\RoleContract', 'App\Repositories\UserManagement\RoleRepository');
         $this->app->bind('App\Contracts\Repositories\UserManagement\PermissionContract', 'App\Repositories\UserManagement\PermissionRepository');
+
+
+        $this->app->bind('App\Contracts\Repositories\API\TokenContract', 'App\Repositories\API\TokenRepository');
     }
 }

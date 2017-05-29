@@ -14,7 +14,8 @@ interface SubscriptionManagementContract
     /**
      * Retrieve data for pricing tables
      *
+     * @param array $data
      * @return mixed
      */
-    public function getPricingTables();
+    public function getPricingTables(array $data = []);
 }

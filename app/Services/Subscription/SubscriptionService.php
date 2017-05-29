@@ -89,4 +89,18 @@ class SubscriptionService
         }
         return compact(['subscription', 'errors']);
     }
+
+    public function updateLink(Subscription $subscription)
+    {
+        $link = $this->subscriptionRepo->generateUpdatePaymentProfileLink($subscription);
+        return $link;
+    }
+
+    public function cancel(Subscription $subscription, array $data = [])
+    {
+        $user = $subscription->user;
+        $result = $this->subscriptionRepo->cancelSubscription($subscription, $data);
+        return $result;
+
+    }
 }

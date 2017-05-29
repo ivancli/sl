@@ -67,13 +67,13 @@
             </div>
         </td>
         <td class="text-right action-cell vertical-align-middle">
-            <a href="#" class="btn-action hidden-md hidden-lg" title="show details" @click.prevent="toggleSiteDetails">
+            <a href="#" class="btn-action hidden-md hidden-lg" title="show details" @click.prevent="toggleSiteDetails" v-if="subscriptionIsValid">
                 <i class="fa fa-info-circle"></i>
             </a>
-            <a href="#" class="btn-action" title="edit" v-if="!editingSiteURL" @click.prevent="goingToEditSiteURL">
+            <a href="#" class="btn-action" title="edit" v-if="!editingSiteURL && subscriptionIsValid" @click.prevent="goingToEditSiteURL">
                 <i class="fa fa-pencil"></i>
             </a>
-            <a href="#" class="btn-action" title="choose item" v-if="site.url.itemsCount > 1" @click.prevent="onClickSelectItem">
+            <a href="#" class="btn-action" title="choose item" v-if="site.url.itemsCount > 1 && subscriptionIsValid" @click.prevent="onClickSelectItem">
                 <i class="fa fa-exclamation-triangle" v-if="site.item == null"></i>
                 <i class="fa fa-list-ul" v-else></i>
             </a>
@@ -269,6 +269,18 @@
             },
             user(){
                 return this.$store.getters.user;
+            },
+            subscription(){
+                if (typeof this.user.subscription !== 'undefined' && this.user.subscription !== null) {
+                    return this.user.subscription;
+                }
+                return null;
+            },
+            subscriptionIsValid(){
+                if (this.subscription !== null) {
+                    return this.subscription.isValid;
+                }
+                return true;
             },
             userDomains(){
                 return this.$store.getters.userDomains;

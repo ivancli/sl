@@ -16,18 +16,32 @@ Route::get('login', 'Auth\LoginController@showLoginForm')->name('login.get');
 Route::post('login', 'Auth\LoginController@login')->name('login.post');
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register.get');
 Route::post('register', 'Auth\RegisterController@register')->name('register.post');
+Route::get('external-register', 'Auth\RegisterController@externalRegister')->name('external-register.get');
 Route::get('forgot', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('forgot.get');
 Route::post('forgot', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('forgot.post');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout.get');
 #endregion
 
+#region Token Routes
+Route::group(['prefix' => 'api'], function () {
+    Route::get('token', 'API\TokenController@get')->name('api.token.get');
+    Route::get('token/verify', 'API\TokenController@verify')->name('api.token.verify');
+
+    Route::get('geo/country/{ip_address?}', 'API\GeoController@country')->name('api.geo.country');
+    Route::get('geo/state/{ip_address?}', 'API\GeoController@state')->name('api.geo.state');
+    Route::get('geo/city/{ip_address?}', 'API\GeoController@city')->name('api.geo.city');
+    Route::get('geo/{ip_address?}', 'API\GeoController@all')->name('api.geo.all');
+});
+
 #region Subscription Routes
 Route::get('subscription/product', 'Subscription\ProductController@index')->name('subscription.product.index');
+Route::get('subscription/update', 'Subscription\SubscriptionController@updated')->name('subscription.updated');
+Route::post('subscription/reactivate/{subscription}', 'Subscription\SubscriptionController@reactivate')->name('subscription.reactivate');
 Route::resource('subscription/subscription', 'Subscription\SubscriptionController');
 #endregion
 
 
-Route::group(['middleware' => ['auth', 'subs']], function () {
+Route::group(['middleware' => ['auth']], function () {
     Route::get('/', function () {
         return redirect()->route('product.index');
     })->name('home.get');

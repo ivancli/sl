@@ -104,7 +104,7 @@
                     }
                 }).catch(error=> {
                     this.isRegistering = false;
-                    if (error.response && error.response.status == 422 && error.response.data) {
+                    if (error.response && error.response.status === 422 && error.response.data) {
                         this.errors = error.response.data;
                     }
                 })
@@ -120,7 +120,7 @@
                     password: this.password,
                     password_confirmation: this.passwordConfirmation,
                     coupon_code: this.couponCode,
-                    agree_terms: this.agreeTerms == true ? 'y' : '',
+                    agree_terms: this.agreeTerms === true ? 'y' : '',
                     subscription_plan_id: this.selectedSubscriptionPlanId,
                 }
             },

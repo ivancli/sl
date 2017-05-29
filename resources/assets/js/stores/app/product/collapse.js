@@ -43,7 +43,7 @@ export default{
         [TOGGLE_ALL_CATEGORIES] (state){
             let shouldCollapse = false;
             for (let cid in state.categoriesCollapsed) {
-                if (state.categoriesCollapsed.hasOwnProperty(cid) && state.categoriesCollapsed[cid] == false) {
+                if (state.categoriesCollapsed.hasOwnProperty(cid) && state.categoriesCollapsed[cid] === false) {
                     shouldCollapse = true;
                     break;
                 }

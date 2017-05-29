@@ -34,6 +34,10 @@ class User extends Authenticatable
         'profileUrls', 'preferenceUrls', 'isStaffMember', 'isUnlimitedClient', 'needSubscription', 'urls'
     ];
 
+    protected $with = [
+        'subscription'
+    ];
+
     /**
      * relationship with subscription
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
