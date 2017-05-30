@@ -34,5 +34,6 @@ class SubscriptionServiceProvider extends ServiceProvider
         $this->app->bind('App\Contracts\Repositories\Subscription\ProductFamilyContract', 'App\Repositories\Subscription\ProductFamilyRepository');
         $this->app->bind('App\Contracts\Repositories\Subscription\SubscriptionContract', 'App\Repositories\Subscription\SubscriptionRepository');
         $this->app->bind('App\Contracts\Repositories\Subscription\SubscriptionManagementContract', 'App\Repositories\Subscription\SubscriptionManagementRepository');
+        $this->app->bind('App\Contracts\Repositories\Subscription\CouponContract', 'App\Repositories\Subscription\CouponRepository');
     }
 }

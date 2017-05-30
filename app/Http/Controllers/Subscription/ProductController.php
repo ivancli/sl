@@ -33,6 +33,14 @@ class ProductController extends Controller
      */
     public function index()
     {
+        if (auth()->check()) {
+            $user = auth()->user();
+            $subscription = $user->subscription;
+            if (!is_null($subscription)) {
+                $location = $subscription->location;
+                $this->request->merge(compact(['location']));
+            }
+        }
         $productFamilies = $this->productService->prices($this->request->all());
         $status = true;
 

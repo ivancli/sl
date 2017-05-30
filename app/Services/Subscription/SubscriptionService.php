@@ -15,6 +15,7 @@ use App\Contracts\Repositories\UserManagement\UserContract;
 use App\Exceptions\JsonDecodeException;
 use App\Exceptions\Subscription\SubscriptionNotFoundException;
 use App\Models\Subscription;
+use Carbon\Carbon;
 
 class SubscriptionService
 {
@@ -98,9 +99,18 @@ class SubscriptionService
 
     public function cancel(Subscription $subscription, array $data = [])
     {
-        $user = $subscription->user;
         $result = $this->subscriptionRepo->cancelSubscription($subscription, $data);
+        $subscription->cancelled_at = Carbon::now()->format('Y-m-d H:i:s');
+        $subscription->save();
         return $result;
 
+    }
+
+    public function reactivate(Subscription $subscription)
+    {
+        $result = $this->subscriptionRepo->reactivateSubscription($subscription);
+        $subscription->cancelled_at = null;
+        $subscription->save();
+        return $result;
     }
 }

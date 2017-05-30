@@ -36,11 +36,13 @@ class SubscriptionManagementRepository implements SubscriptionManagementContract
      */
     public function getPricingTables(array $data = [])
     {
-        return Cache::rememberForever('product_families.products', function () {
-            $families = $this->productFamilyRepo->getProductFamilies();
+        $location = array_get($data, 'location', 'au');
+
+        return Cache::rememberForever("{$location}.product_families.products", function () use($location){
+            $families = $this->productFamilyRepo->getProductFamilies(compact(['location']));
             $outputProductFamilies = [];
             foreach ($families as $familyIndex => $family) {
-                $products = $this->productRepo->getProductsByProductFamilyID($family->id);
+                $products = $this->productRepo->getProductsByProductFamilyID($family->id, compact(['location']));
                 if (isset($products->errors) || count($products) == 0) {
                     continue;
                 }
@@ -67,7 +69,8 @@ class SubscriptionManagementRepository implements SubscriptionManagementContract
                     "payment_profile_attributes" => array(
                         "billing_country" => "AU",
                         "billing_state" => "NSW",
-                    )
+                    ),
+                    'location' => $location
                 ]);
 
                 $finalProduct->criteria = json_decode($finalProduct->description);

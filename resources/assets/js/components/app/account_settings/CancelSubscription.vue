@@ -57,17 +57,24 @@
                 </div>
             </div>
         </div>
+        <loading v-if="isCancellingSubscription"></loading>
     </div>
 </template>
 
 <script>
+    import loading from '../../fragments/loading/Loading.vue';
+
     export default{
+        components: {
+            loading,
+        },
         props: [
             'subscription',
         ],
         data(){
             return {
                 keepProfile: '1',
+                isCancellingSubscription: false,
             };
         },
         mounted(){
@@ -75,11 +82,14 @@
         },
         methods: {
             cancelSubscription(){
+                this.isCancellingSubscription = true;
                 axios.delete(this.subscription.urls.delete, this.cancelSubscriptionRequestData).then(response => {
+                    this.isCancellingSubscription = false;
                     if (response.data.status === true) {
                         this.emitCancelledSubscription();
                     }
                 }).catch(error => {
+                    this.isCancellingSubscription = false;
                     console.info(error);
                 })
             },
@@ -96,7 +106,9 @@
         computed: {
             cancelSubscriptionRequestData(){
                 return {
-                    keep_profile: this.keepProfile === "1",
+                    params: {
+                        keep_profile: this.keepProfile === "1",
+                    }
                 };
             },
         }

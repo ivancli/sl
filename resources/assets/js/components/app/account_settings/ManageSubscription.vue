@@ -13,7 +13,7 @@
             </div>
             <div class="row m-b-20 p-10" v-if="cancellingSubscription && hasCancelledSubscription">
                 <div class="col-lg-offset-2 col-lg-8 col-md-offset-1 col-md-10">
-                    <cancelled-subscription :subscription="subscription" :subscription-plan="subscriptionPlan"></cancelled-subscription>
+                    <cancelled-subscription-survey :subscription="subscription" :subscription-plan="subscriptionPlan"></cancelled-subscription-survey>
                 </div>
             </div>
             <div class="row m-b-20 p-10" v-if="cancellingSubscription && !hasCancelledSubscription">
@@ -70,7 +70,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr v-if="transactions.length == 0">
+                                    <tr v-if="filteredTransactions.length == 0">
                                         <td colspan="4" align="center">No payment histories in the list</td>
                                     </tr>
                                     <tr v-else v-for="transaction in filteredTransactions">
@@ -103,13 +103,13 @@
             </div>
         </div>
         <confirm :content="confirmMigrateContent" :title="confirmMigrateTitle" @confirm="migrateSubscription" @hide="cancelConfirmMigrate"></confirm>
-        <loading v-show="submittingMigration"></loading>
+        <loading v-show="submittingMigration || isReactivating"></loading>
     </div>
 </template>
 <script>
     import pricingTable from '../../subscription/PricingTable.vue';
     import cancelSubscription from './CancelSubscription.vue';
-    import cancelledSubscription from './CancelledSubscription.vue';
+    import cancelledSubscriptionSurvey from './CancelledSubscription.vue';
     import confirm from '../../fragments/modals/Confirm.vue';
     import loading from '../../fragments/loading/Loading.vue'
 
@@ -117,20 +117,19 @@
     import currency from '../../../filters/currency';
 
     import {
-        SET_SUBSCRIPTION_PLAN_ID
+        SET_SUBSCRIPTION_PLAN_ID, LOAD_USER
     } from '../../../actions/action-types';
 
     export default{
         components: {
             pricingTable,
             cancelSubscription,
-            cancelledSubscription,
+            cancelledSubscriptionSurvey,
             confirm,
             loading
         },
         data(){
             return {
-                subscription: null,
                 subscriptionPlan: null,
                 updatePaymentProfileLink: '',
                 transactions: [],
@@ -144,28 +143,13 @@
                 confirmMigrateContent: "",
                 successMsg: "",
 
-                user: null,
             }
         },
         mounted(){
             console.info('ManageSubscription component is mounted.');
-            this.initSetUser();
-            this.initSetUserSubscription();
             this.loadSubscription();
         },
         methods: {
-            initSetUser: function () {
-                if (typeof user !== 'undefined') {
-                    this.user = user;
-                }
-            },
-            initSetUserSubscription: function () {
-                if (user.subscription && user.subscription.apiSubscription) {
-                    this.subscription = user.subscription.apiSubscription;
-                } else {
-                    this.subscription = null;
-                }
-            },
             loadSubscription: function () {
                 axios.get('/subscription/subscription/' + user.subscription.id).then(response => {
                     if (response.data.status === true) {
@@ -211,6 +195,7 @@
                         this.submittingMigration = false;
                         if (response.data.status === true) {
                             this.subscription = response.data.subscription;
+                            this.loadUser();
                             this.loadSubscription();
                             this.setSuccessMsg("You subscription plan has been updated.");
                             this.cancelMigratingSubscriptionPlan();
@@ -240,6 +225,7 @@
             },
             cancelledSubscription(){
                 this.hasCancelledSubscription = true;
+                this.loadUser();
             },
             hideCancelSubscription(){
                 this.cancellingSubscription = false;
@@ -261,27 +247,39 @@
                         }
                     })
                 }
+            },
+            loadUser(){
+                this.$store.dispatch(LOAD_USER);
             }
         },
         computed: {
+            user(){
+                return this.$store.getters.user;
+            },
+            subscription(){
+                if (this.user.subscription && this.user.subscription.apiSubscription) {
+                    return this.user.subscription.apiSubscription;
+                }
+                return null;
+            },
             filteredTransactions(){
                 /*TODO need to filter these transactions*/
-                let filteredTransactions = this.transactions;
+                let filteredTransactions = [];
 
-                for (let key in filteredTransactions) {
-                    if (filteredTransactions.hasOwnProperty(key)) {
-                        if (filteredTransactions[key].transaction_type !== 'payment') {
-                            delete filteredTransactions[key];
+                for (let key in this.transactions) {
+                    if (this.transactions.hasOwnProperty(key)) {
+                        if (this.transactions[key].transaction_type === 'payment') {
+                            filteredTransactions.push(this.transactions[key]);
                         }
                     }
                 }
                 return filteredTransactions;
             },
             dateFormat(){
-                return user.allPreferences.DATE_FORMAT;
+                return this.user.allPreferences.DATE_FORMAT;
             },
             timeFormat(){
-                return user.allPreferences.TIME_FORMAT;
+                return this.user.allPreferences.TIME_FORMAT;
             },
             datetimeFormat(){
                 return this.dateFormat + ' ' + this.timeFormat;

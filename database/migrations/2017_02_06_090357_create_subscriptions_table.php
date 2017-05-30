@@ -21,6 +21,7 @@ class CreateSubscriptionsTable extends Migration
             $table->string('api_subscription_id')->nullable();
             $table->string('token')->nullable();
             $table->string('location')->default('au');
+            $table->timestamp('cancelled_at')->nullable();
             $table->timestamps();
         });
     }

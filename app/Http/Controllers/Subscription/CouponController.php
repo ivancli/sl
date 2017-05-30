@@ -29,6 +29,10 @@ class CouponController extends Controller
     {
         $is_valid = $this->couponService->verify($this->request->all());
         $status = true;
-        return compact(['is_valid', 'status']);
+        if ($this->request->has('callback')) {
+            return response()->json(compact(['is_valid', 'status']))->withCallback($this->request->get('callback'));
+        } else {
+            return compact(['is_valid', 'status']);
+        }
     }
 }

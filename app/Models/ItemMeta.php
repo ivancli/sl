@@ -42,7 +42,10 @@ class ItemMeta extends Model
      */
     public function historicalPrices()
     {
+        $query = $this->hasMany('App\Models\HistoricalPrice', 'item_meta_id', 'id');
         $interval = null;
+        $length = null;
+        $cancelled_at = Carbon::now();
         if (auth()->check()) {
             $user = auth()->user();
             if (!is_null($user->subscription) && !is_null($user->subscription->subscriptionCriteria)) {
@@ -50,19 +53,33 @@ class ItemMeta extends Model
                 if (isset($subscriptionCriteria->frequency) && is_int($subscriptionCriteria->frequency)) {
                     $interval = $subscriptionCriteria->frequency;
                 }
+                if (isset($subscriptionCriteria->historic_pricing) && is_int($subscriptionCriteria->historic_pricing)) {
+                    $length = $subscriptionCriteria->historic_pricing;
+                }
+                if (!is_null($user->subscription->cancelled_at)) {
+                    $cancelled_at = Carbon::createFromFormat('Y-m-d H:i:s', $user->subscription->cancelled_at);
+                }
             }
         }
 
         if (!is_null($interval)) {
-            return $this->hasMany('App\Models\HistoricalPrice', 'item_meta_id', 'id')->whereIn('id', function ($query) use ($interval) {
+            $query->whereIn('id', function ($query) use ($interval) {
                 $query->select(DB::raw('MAX(id)'))
                     ->from(with(new HistoricalPrice)->getTable())
                     ->where('item_meta_id', $this->getKey())
                     ->groupBy(DB::raw('CEIL(UNIX_TIMESTAMP(created_at)/(' . $interval . ' * 60 * 60))'));
             });
-        } else {
-            return $this->hasMany('App\Models\HistoricalPrice', 'item_meta_id', 'id');
         }
+
+        if (!is_null($length) && $length != 0) {
+            $query->where(DB::raw("created_at BETWEEN NOW() - INTERVAL {$length} MONTH AND NOW()"));
+        }
+
+        if (!is_null($cancelled_at)) {
+            $query->where('created_at', '<', $cancelled_at);
+        }
+
+        return $query;
     }
 
     /**

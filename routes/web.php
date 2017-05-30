@@ -34,6 +34,7 @@ Route::group(['prefix' => 'api'], function () {
 });
 
 #region Subscription Routes
+Route::get('subscription/coupon', 'Subscription\CouponController@verify')->name('subscription.coupon.verify');
 Route::get('subscription/product', 'Subscription\ProductController@index')->name('subscription.product.index');
 Route::get('subscription/update', 'Subscription\SubscriptionController@updated')->name('subscription.updated');
 Route::post('subscription/reactivate/{subscription}', 'Subscription\SubscriptionController@reactivate')->name('subscription.reactivate');
@@ -52,6 +53,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::put('user/profile/password/{user_id}', 'Account\ProfileController@password')->name('profile.password');
     Route::resource('user/preference', 'Account\PreferenceController');
     Route::resource('user/user-domain', 'Account\UserDomainController');
+    Route::get('user/sample-account', 'Account\SampleAccountController@index')->name('sample-account.index');
+    Route::post('user/sample-account', 'Account\SampleAccountController@store')->name('sample-account.store');
     #endregion
 
     #region Product Related Routes

@@ -27,6 +27,9 @@ class AdminUserSeeder extends Seeder
             'last_name' => 'Sample',
             'email' => 'admin@spotlite.com.au',
             'password' => bcrypt('S0lutions'),
+            'set_password' => 'y',
+            'set_samples' => 'y',
+            'set_conversion' => 'y',
         ]);
         $auSampleUser->save();
         $auSampleUser->attachRole($tier_1);
@@ -36,6 +39,9 @@ class AdminUserSeeder extends Seeder
             'last_name' => 'Sample',
             'email' => 'us@spotlite.com.au',
             'password' => bcrypt('S0lutions'),
+            'set_password' => 'y',
+            'set_samples' => 'y',
+            'set_conversion' => 'y',
         ]);
         $usSampleUser->save();
         $usSampleUser->attachRole($tier_1);

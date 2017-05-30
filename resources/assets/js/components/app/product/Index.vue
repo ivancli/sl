@@ -80,7 +80,7 @@
         </div>
         <loading v-if="isSearchingCategories"></loading>
         <create-password v-if="!hasSetPassword" @set-password="loadUser"></create-password>
-        <welcome v-if="hasSetPassword && !hasSetSamples"></welcome>
+        <welcome v-if="hasSetPassword && !hasSetSamples" @set-welcome="setWelcome"></welcome>
     </section>
 </template>
 
@@ -189,6 +189,10 @@
             },
             onReactivateSubscription(){
 
+            },
+            setWelcome(){
+                this.loadUser();
+                this.loadCategories();
             },
         },
         computed: {

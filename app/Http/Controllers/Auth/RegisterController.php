@@ -82,16 +82,17 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $subscriptionPlan = $this->subscriptionPlanRepo->getProductByProductId($data['subscription_plan_id']);
 
         $referer = request()->server('HTTP_REFERER');
         $path = urlPath($referer);
         if (!is_null($path)) {
-            $subscriptionLocation = strpos($path, 'us') !== false ? 'us' : 'au';
+            $location = strpos($path, 'us') !== false ? 'us' : 'au';
         } else {
-            $subscriptionLocation = null;
+            $location = 'au';
         }
+        $location = 'us';
 
+        $subscriptionPlan = $this->subscriptionPlanRepo->getProductByProductId($data['subscription_plan_id'], compact(['location']));
         $user = User::create([
             'title' => array_get($data, 'title'),
             'first_name' => array_get($data, 'first_name'),
@@ -104,7 +105,7 @@ class RegisterController extends Controller
 
         if ($subscriptionPlan->require_credit_card) {
             /* subscription requires credit card, send new user to sign up page*/
-            $this->redirectTo = $this->subscriptionPlanRepo->generateSignUpPageLink($subscriptionPlan->id, $user, $couponCode);
+            $this->redirectTo = $this->subscriptionPlanRepo->generateSignUpPageLink($subscriptionPlan->id, $user, $couponCode, compact(['location']));
         } else {
             /*subscription does not require credit card, create subscription via API*/
             $country = array_get($data, 'country', 'AU');
@@ -120,13 +121,13 @@ class RegisterController extends Controller
                     "state" => $state
                 ),
                 "coupon_code" => $couponCode,
-                "location" => $subscriptionLocation,
+                "location" => $location,
             ]);
 
             // update api_subscription_id
             $subscription = $user->subscription;
             $subscription->api_subscription_id = $result->id;
-            $subscription->location = $subscriptionLocation;
+            $subscription->location = $location;
             $subscription->save();
         }
         return $user;

@@ -146,7 +146,9 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a href="/account-settings#edit-profile">My Account</a></li>
-                            <li><a href="/account-settings#bulk-import">Bulk Import <span class="icon-new-feature">NEW</span></a></li>
+                            <li v-if="subscriptionIsValid">
+                                <a href="/account-settings#bulk-import">Bulk Import <span class="icon-new-feature">NEW</span></a>
+                            </li>
                             <li><a href="/account-settings#site-names">Site Names</a></li>
                             <li><a href="/account-settings#reset-password">Reset Password</a></li>
                             <li v-if="needSubscription && hasSubscription"><a href="/account-settings#manage-subscription">Manage My Subscription</a></li>
@@ -200,10 +202,10 @@
                 }
             },
             needSubscription(){
-                return user.needSubscription;
+                return this.user.needSubscription;
             },
             hasSubscription(){
-                return typeof user.subscription !== 'undefined' && user.subscription !== null;
+                return typeof this.user.subscription !== 'undefined' && this.user.subscription !== null;
             },
             user(){
                 return this.$store.getters.user

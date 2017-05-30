@@ -16,7 +16,7 @@ use IvanCLI\Chargify\Models\Product;
 class Subscription extends Model
 {
     protected $fillable = [
-        'token', 'api_subscription_id'
+        'token', 'api_subscription_id', 'location', 'cancelled_at'
     ];
 
     protected $appends = [

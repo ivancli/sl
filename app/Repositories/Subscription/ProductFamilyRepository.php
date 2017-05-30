@@ -25,9 +25,9 @@ class ProductFamilyRepository implements ProductFamilyContract
      */
     public function getProductFamilies(array $data = [], $throw = false)
     {
-        $storeLocation = array_get($data, 'storeLocation', 'au');
+        $location = array_get($data, 'location', 'au');
 
-        $productFamilies = Chargify::productFamily($storeLocation)->all();
+        $productFamilies = Chargify::productFamily($location)->all();
         if ($throw && empty($productFamilies)) {
             throw new ProductFamilyNotFoundException();
         }

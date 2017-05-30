@@ -9,19 +9,30 @@
 namespace App\Services\Subscription;
 
 
+use App\Contracts\Repositories\Subscription\CouponContract;
 use App\Validators\Subscription\Coupon\VerifyValidator;
 use IvanCLI\Chargify\Chargify;
 
 class CouponService
 {
+    #region repositories
+
+    protected $couponRepo;
+
+    #endregion
+
     #region validators
 
     protected $verifyValidator;
 
     #endregion
 
-    public function __construct(VerifyValidator $verifyValidator)
+    public function __construct(CouponContract $couponContract, VerifyValidator $verifyValidator)
     {
+        #region repositories binding
+        $this->couponRepo = $couponContract;
+        #endregion
+
         #region validators binding
         $this->verifyValidator = $verifyValidator;
         #endregion
@@ -34,17 +45,8 @@ class CouponService
      */
     public function verify(array $data = [])
     {
-        $this->verifyValidator->validate($data);
+        $result = $this->couponRepo->verify($data);
 
-        $couponCode = array_get($data, 'coupon_code');
-        $productFamilyId = array_get($data, 'product_family_id');
-        $location = array_get($data, 'subscription_location');
-
-        $coupon = Chargify::coupon($location)->validate($couponCode, $productFamilyId);
-        if (!isset($coupon->errors) && is_null($coupon->archived_at)) {
-            return true;
-        } else {
-            return false;
-        }
+        return $result;
     }
 }

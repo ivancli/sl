@@ -33,13 +33,16 @@ class ProductRepository implements ProductContract
      * Load all product within a product family
      *
      * @param $product_family_id
+     * @param array $data
      * @param bool $throw
      * @return mixed
      * @throws ProductNotFoundException
      */
-    public function getProductsByProductFamilyID($product_family_id, $throw = false)
+    public function getProductsByProductFamilyID($product_family_id, array $data = [], $throw = false)
     {
-        $products = Chargify::product()->allByProductFamily($product_family_id);
+        $location = array_get($data, 'location', 'au');
+
+        $products = Chargify::product($location)->allByProductFamily($product_family_id);
         if ($throw && empty($products)) {
             throw new ProductNotFoundException();
         }
@@ -50,13 +53,16 @@ class ProductRepository implements ProductContract
      * Load product by product ID
      *
      * @param $product_id
+     * @param array $data
      * @param bool $throw
      * @return mixed
      * @throws ProductNotFoundException
      */
-    public function getProductByProductId($product_id, $throw = false)
+    public function getProductByProductId($product_id, array $data = [], $throw = false)
     {
-        $product = Chargify::product()->get($product_id);
+        $location = array_get($data, 'location', 'au');
+
+        $product = Chargify::product($location)->get($product_id);
         if ($throw && is_null($product)) {
             throw new ProductNotFoundException();
         }
@@ -69,13 +75,16 @@ class ProductRepository implements ProductContract
      * @param $product_id
      * @param User $user
      * @param string $coupon_code
+     * @param array $data
      * @return mixed
      * @throws ProductSignUpPageNotFoundException
      * @throws SubscriptionNotFoundException
      */
-    public function generateSignUpPageLink($product_id, User $user, $coupon_code = '')
+    public function generateSignUpPageLink($product_id, User $user, $coupon_code = '', array $data = [])
     {
-        $product = $this->getProductByProductId($product_id);
+        $location = array_get($data, 'location', 'au');
+
+        $product = $this->getProductByProductId($product_id, compact(['location']));
         $signUpPage = count($product->public_signup_pages) > 0 ? array_first($product->public_signup_pages)->url : null;
         if (is_null($signUpPage)) {
             throw new ProductSignUpPageNotFoundException();

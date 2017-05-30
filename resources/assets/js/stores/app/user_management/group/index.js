@@ -7,9 +7,11 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 import defaultStore from '../../../default';
+import loginUserStore from '../../../loginUser';
 
 export default new Vuex.Store({
     modules: {
+        loginUserStore,
         defaultStore,
         index: {
             state: {},

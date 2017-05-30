@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Contracts\Repositories\Subscription;
 
 use App\Exceptions\Subscription\CannotCreateSubscriptionException;
@@ -58,10 +59,10 @@ interface SubscriptionContract
      * Get subscription by Subscription ID
      *
      * @param $subscription_id
-     * @return mixed
-     * * @throws SubscriptionNotFoundException
+     * @param array $data
+     * @return mixed *
      */
-    public function get($subscription_id);
+    public function get($subscription_id, array $data = []);
 
     /**
      * Generate update payment profile URL for a subscription
@@ -84,4 +85,12 @@ interface SubscriptionContract
      * @return mixed
      */
     public function cancelSubscription(Subscription $subscription, array $data = []);
+
+    /**
+     * Reactivate subscription
+     * @param Subscription $subscription
+     * @param array $data
+     * @return mixed
+     */
+    public function reactivateSubscription(Subscription $subscription, array $data = []);
 }

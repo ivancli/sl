@@ -25,7 +25,9 @@ class SubscriptionRepository implements SubscriptionContract
      */
     public function previewSubscription($data)
     {
-        $preview = Chargify::subscription()->preview($data);
+        $location = array_get($data, 'location', 'au');
+
+        $preview = Chargify::subscription($location)->preview($data);
         /* TODO add exception here */
         return $preview;
     }
@@ -50,6 +52,7 @@ class SubscriptionRepository implements SubscriptionContract
     public function createSubscription(array $data)
     {
         $location = array_get($data, 'location');
+
         $subscription = Chargify::subscription($location)->create($data);
         if (isset($subscription->errors)) {
             throw new CannotCreateSubscriptionException($subscription->errors);
@@ -66,7 +69,9 @@ class SubscriptionRepository implements SubscriptionContract
      */
     public function updateSubscription(Subscription $subscription, array $data)
     {
-        $subscription = Chargify::subscription()->update($subscription->api_subscription_id, $data);
+        $location = array_get($data, 'location', 'au');
+
+        $subscription = Chargify::subscription($location)->update($subscription->api_subscription_id, $data);
         return $subscription;
     }
 
@@ -79,19 +84,24 @@ class SubscriptionRepository implements SubscriptionContract
      */
     public function migrateSubscription(Subscription $subscription, array $data)
     {
-        $subscription = Chargify::subscription()->createMigration($subscription->api_subscription_id, $data);
+        $location = array_get($data, 'location', 'au');
+
+        $subscription = Chargify::subscription($location)->createMigration($subscription->api_subscription_id, $data);
     }
 
     /**
      * Get subscription by Subscription ID
      *
      * @param $subscription_id
+     * @param array $data
      * @return mixed
      * @throws SubscriptionNotFoundException
      */
-    public function get($subscription_id)
+    public function get($subscription_id, array $data = [])
     {
-        $subscription = Chargify::subscription()->get($subscription_id);
+        $location = array_get($data, 'location', 'au');
+
+        $subscription = Chargify::subscription($location)->get($subscription_id);
         if (is_null($subscription)) {
             throw new SubscriptionNotFoundException();
         }
@@ -118,7 +128,8 @@ class SubscriptionRepository implements SubscriptionContract
      */
     public function getTransactions(Subscription $subscription)
     {
-        $transactions = Chargify::transaction()->allBySubscription($subscription->api_subscription_id);
+        $location = $subscription->location;
+        $transactions = Chargify::transaction($location)->allBySubscription($subscription->api_subscription_id);
         $transactions = collect($transactions)->sortBy('created_at');
         return $transactions;
     }
@@ -128,14 +139,13 @@ class SubscriptionRepository implements SubscriptionContract
         $apiSubscription = $subscription->apiSubscription;
 
         /*TODO campaign monitor update*/
-        dd($data);
-        if (!array_has($data, 'keep_profile') || array_get($data, 'keep_profile') != '1') {
+        if (!array_has($data, 'keep_profile') || array_get($data, 'keep_profile') != 'true') {
             Chargify::subscription($subscription->location)->deletePaymentProfile($apiSubscription->id, $apiSubscription->credit_card_id);
         }
         Chargify::subscription($subscription->location)->cancel($apiSubscription->id);
         $updatedSubscription = Chargify::subscription($subscription->location)->get($apiSubscription->id);
         if (!isset($updatedSubscription->errors)) {
-            Cache::forget("{$subscription->location}.chargify.subscriptions.{$subscription->api_subscription_id}");
+            Cache::forget("{}.chargify.subscriptions.{$subscription->api_subscription_id}");
 
             /*TODO campaign monitor update*/
 
@@ -145,5 +155,20 @@ class SubscriptionRepository implements SubscriptionContract
         } else {
             return false;
         }
+    }
+
+    /**
+     * Reactivate subscription
+     * @param Subscription $subscription
+     * @param array $data
+     * @return mixed
+     */
+    public function reactivateSubscription(Subscription $subscription, array $data = [])
+    {
+        Cache::forget("{$subscription->location}.chargify.subscriptions.{$subscription->api_subscription_id}");
+        $result = Chargify::subscription($subscription->location)->reactivate($subscription->api_subscription_id);
+        Cache::forget("{$subscription->location}.chargify.subscriptions.{$subscription->api_subscription_id}");
+
+        return $result;
     }
 }

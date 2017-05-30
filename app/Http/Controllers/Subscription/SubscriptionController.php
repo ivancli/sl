@@ -41,7 +41,6 @@ class SubscriptionController extends Controller
     public function show(Subscription $subscription)
     {
         /*TODO add event listeners to this function*/
-
         $viewData = $this->subscriptionService->show($subscription);
         $viewData = array_set($viewData, 'status', true);
 
@@ -105,9 +104,7 @@ class SubscriptionController extends Controller
      */
     public function reactivate(Subscription $subscription)
     {
-        Cache::forget("{$subscription->location}.chargify.subscriptions.{$subscription->api_subscription_id}");
-        $result = Chargify::subscription($subscription->location)->reactivate($subscription->apiSubscription->id);
-        Cache::forget("{$subscription->location}.chargify.subscriptions.{$subscription->api_subscription_id}");
+        $this->subscriptionService->reactivate($subscription);
         $status = true;
 
         return compact(['status']);
@@ -128,6 +125,8 @@ class SubscriptionController extends Controller
          * It is impossible to migrate, in which will cause pro-rata calculation and charge money from users
          */
         /*TODO add event listeners to this function*/
+        $location = $subscription->location;
+        $this->request->merge(compact(['location']));
 
         $resultData = $this->subscriptionService->update($subscription, $this->request->all());
         $resultData = array_set($resultData, 'status', true);

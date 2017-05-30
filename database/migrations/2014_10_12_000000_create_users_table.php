@@ -25,6 +25,7 @@ class CreateUsersTable extends Migration
             $table->string('status')->default('active');
             $table->char('set_password', 1)->default('n');
             $table->char('set_samples', 1)->default('n');
+            $table->char('set_conversion', 1)->default('n');
             $table->timestamps();
         });
     }

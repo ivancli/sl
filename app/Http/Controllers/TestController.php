@@ -14,6 +14,7 @@ use App\Models\Report;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Mail\Markdown;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 
 class TestController extends Controller
@@ -31,6 +32,6 @@ class TestController extends Controller
 
     public function test()
     {
-        $user = User::findOrFail(2);
+        Cache::forget('https://gmail-sandbox.chargify.com/.chargify.subscriptions.17932731"');
     }
 }

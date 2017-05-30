@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'title', 'first_name', 'last_name', 'email', 'password', 'status', 'set_password'
+        'title', 'first_name', 'last_name', 'email', 'password', 'status', 'set_password', 'set_conversion'
     ];
 
     /**
@@ -298,5 +298,14 @@ class User extends Authenticatable
             $this->preferences()->save($preference);
         }
         return $preference;
+    }
+
+    /**
+     * set conversion tracking to be y
+     */
+    public function setConversionTracked()
+    {
+        $this->set_conversion = 'y';
+        $this->save();
     }
 }

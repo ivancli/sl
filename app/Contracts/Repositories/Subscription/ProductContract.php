@@ -20,21 +20,21 @@ interface ProductContract
      * Load product by product ID
      *
      * @param $product_family_id
+     * @param array $data
      * @param bool $throw
      * @return mixed
-     * @throws ProductNotFoundException
      */
-    public function getProductsByProductFamilyID($product_family_id, $throw = false);
+    public function getProductsByProductFamilyID($product_family_id, array $data = [], $throw = false);
 
     /**
      * Load product by product ID
      *
      * @param $product_id
+     * @param $data
      * @param bool $throw
      * @return mixed
-     * @throws ProductNotFoundException
      */
-    public function getProductByProductId($product_id, $throw = false);
+    public function getProductByProductId($product_id, array $data = [], $throw = false);
 
     /**
      * Retrieve sign up page link of a product
@@ -42,9 +42,8 @@ interface ProductContract
      * @param $product_id
      * @param User $user
      * @param string $coupon_code
+     * @param array $data
      * @return mixed
-     * @throws ProductSignUpPageNotFoundException
-     * @throws SubscriptionNotFoundException
      */
-    public function generateSignUpPageLink($product_id, User $user, $coupon_code = '');
+    public function generateSignUpPageLink($product_id, User $user, $coupon_code = '', array $data = []);
 }

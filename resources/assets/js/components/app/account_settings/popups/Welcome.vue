@@ -26,8 +26,8 @@
 
                                             <ul class="text-danger errors-container p-b-10 p-l-20" v-if="Object.keys(errors).length > 0">
                                                 <li v-for="error in errors">
-                                                    <div v-if="error.constructor != Array" v-text="error"></div>
-                                                    <div v-else v-for="message in error" v-text="message"></div>
+                                                    <div class="text-left" v-if="error.constructor != Array" v-text="error"></div>
+                                                    <div class="text-left" v-else v-for="message in error" v-text="message"></div>
                                                 </li>
                                             </ul>
                                             <form class="form-horizontal">
@@ -107,9 +107,11 @@
                                                         </label>
                                                     </div>
                                                 </div>
-                                                <div class="form-group">
-                                                    <select class="form-control" multiple="multiple">
-                                                        <option value="">-- select sample products from the list --</option>
+                                                <div class="form-group" v-if="showSampleData">
+                                                    <select class="form-control" multiple="multiple" v-model="selectedCategories">
+                                                        <option :value="sampleCategory.id" v-for="sampleCategory in sampleCategories">
+                                                            {{ sampleCategory.category_name }}
+                                                        </option>
                                                     </select>
                                                 </div>
                                             </form>
@@ -168,16 +170,16 @@
                 </div>
             </section>
         </div>
-        <loading v-if="isSettingWelcome"></loading>
+        <loading v-if="isSettingWelcome || isLoadingSampleAccount"></loading>
     </div>
 </template>
 
 <script>
-    import vSelect from 'vue-select';
+    import loading from '../../../fragments/loading/Loading.vue';
 
     export default{
-        components:{
-            vSelect,
+        components: {
+            loading,
         },
         data(){
             return {
@@ -186,15 +188,54 @@
                 showSampleData: false,
                 selectedCategories: [],
                 isSettingWelcome: false,
+                isLoadingSampleAccount: false,
+                sampleCategories: [],
                 errors: {},
             }
         },
         mounted(){
             console.info('Welcome component mounted.');
+            this.loadSampleAccountCategories();
         },
         methods: {
+            loadSampleAccountCategories(){
+                this.isLoadingSampleAccount = true;
+                axios.get('/user/sample-account').then(response => {
+                    this.isLoadingSampleAccount = false;
+                    if (response.data.status === true) {
+                        this.sampleCategories = response.data.categories;
+                    }
+                }).catch(error => {
+                    this.isLoadingSampleAccount = false;
+                    console.info('error', error);
+                });
+            },
             onClickGoToProduct(){
                 this.isSettingWelcome = true;
+
+                axios.post('/user/sample-account', this.saveWelcomeRequestData).then(response => {
+                    this.isSettingWelcome = false;
+                    if (response.data.status === true) {
+                        this.emitSetWelcome();
+                    }
+                }).catch(error => {
+                    this.isSettingWelcome = false;
+                    if (error.response && error.response.status === 422 && error.response.data) {
+                        this.errors = error.response.data;
+                    }
+                });
+            },
+            emitSetWelcome(){
+                this.$emit('set-welcome');
+            }
+        },
+        computed: {
+            saveWelcomeRequestData(){
+                return {
+                    industry: this.industry,
+                    company_type: this.companyType,
+                    selected_category_ids: this.selectedCategories,
+                }
             }
         }
     }

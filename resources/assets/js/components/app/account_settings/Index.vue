@@ -36,8 +36,7 @@
                 <div class="tab-pane" id="reset-password" :class="setTabActiveClass('reset-password')">
                     <reset-password></reset-password>
                 </div>
-                <div class="tab-pane" id="manage-subscription" :class="setTabActiveClass('manage-subscription')"
-                     v-if="hasSubscription">
+                <div class="tab-pane" id="manage-subscription" :class="setTabActiveClass('manage-subscription')" v-if="hasSubscription">
                     <manage-subscription></manage-subscription>
                 </div>
             </div>
@@ -104,8 +103,11 @@
             this.setInitHashWatcher();
         },
         computed: {
+            user(){
+                return this.$store.getters.user;
+            },
             hasSubscription(){
-                return !user.isStaffMember && user.subscription && user.subscription.apiSubscription;
+                return !this.user.isStaffMember && this.user.subscription && this.user.subscription.apiSubscription;
             }
         }
     }

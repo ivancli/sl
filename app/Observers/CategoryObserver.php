@@ -46,6 +46,7 @@ class CategoryObserver
     public function deleting(Category $category)
     {
         /*remove corresponding alerts when deleting category*/
+        $category->products()->delete();
         $category->alert()->delete();
         $category->historicalAlerts()->delete();
         $category->report()->delete();
