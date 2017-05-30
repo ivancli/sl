@@ -77,6 +77,15 @@ class Category extends Model
         return $this->morphMany('App\Models\HistoricalReport', 'reportable');
     }
 
+    /**
+     * relationship with widget
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function widgets()
+    {
+        return $this->morphMany('App\Models\Widget', 'widgetable');
+    }
+
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/

@@ -50,6 +50,15 @@ class Site extends Model
         return $this->morphOne('App\Models\Alert', 'alertable');
     }
 
+    /**
+     * relationship with widget
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function widgets()
+    {
+        return $this->morphMany('App\Models\Widget', 'widgetable');
+    }
+
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/

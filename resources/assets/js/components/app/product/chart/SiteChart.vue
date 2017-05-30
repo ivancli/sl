@@ -1,5 +1,5 @@
 <template>
-    <div class="modal is-active">
+    <div class="modal is-active chart-modal">
         <div class="modal-background"></div>
         <div class="modal-card">
             <header class="modal-card-head">
@@ -7,18 +7,59 @@
             </header>
             <section class="modal-card-body">
                 <div class="row">
-                    <div class="col-sm-12">
-                        Content here
-                        <line-chart :data="test" :options="testOptions"></line-chart>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-sm-12 chart-options">
+                                Generate a chart for
+                                <select class="input-sm form-control sl-form-control">
+                                    <option value="this_week">this week</option>
+                                    <option value="last_week">last week</option>
+                                    <option value="last_7_days">last 7 days</option>
+                                    <option value="this_month">this month</option>
+                                    <option value="last_month">last month</option>
+                                    <option value="last_30_days">last 30 days</option>
+                                    <option value="this_quarter">this quarter</option>
+                                    <option value="last_quarter">last quarter</option>
+                                    <option value="last_90_days">last 90 days</option>
+                                </select>
+                                showing a price for each
+                                <select class="input-sm form-control sl-form-control">
+                                    <option value="day">day</option>
+                                    <option value="week">week</option>
+                                    <option value="month">month</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" v-model="showAddToDashboardOptions">
+                                        I would like to add this chart to my dashboard.
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" v-if="showAddToDashboardOptions">
+                            <div class="col-sm-12 m-b-20">
+                                Name this chart <input type="text" class="input-sm form-control sl-form-control" placeholder="enter a chart name" v-model="name">
+                            </div>
+                            <div class="col-sm-12">
+                                <a class="btn btn-primary btn-flat" href="#" @click.prevent="addWidget">ADD CHART</a>
+                            </div>
+                        </div>
+                        <div class="row" v-if="!showAddToDashboardOptions">
+                            <div class="col-sm-12">
+                                <a class="btn btn-primary btn-flat" href="#" @click.prevent="loadPrices">GO</a>
+                                <a class="btn btn-default btn-flat" href="#" @click.prevent="hideModal">CANCEL</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
                         <vue-highcharts :options="options" ref="lineCharts"></vue-highcharts>
                     </div>
                 </div>
             </section>
-            <footer class="modal-card-foot">
-                <div class="text-right">
-                    <a class="btn btn-default btn-flat" href="#" @click.prevent="hideModal">CANCEL</a>
-                </div>
-            </footer>
         </div>
     </div>
 </template>
@@ -30,19 +71,6 @@
 
     import currency from '../../../../filters/currency';
 
-    const asyncData = {
-        name: 'Tokyo',
-        marker: {
-            symbol: 'square'
-        },
-        data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, {
-            y: 26.5,
-            marker: {
-                symbol: 'url(http://www.highcharts.com/demo/gfx/sun.png)'
-            }
-        }, 23.3, 18.3, 13.9, 9.6]
-    }
-
     export default{
         props: [
             'charting-site'
@@ -53,34 +81,36 @@
         },
         data(){
             return {
+                timespan: 'this_week',
+                resolution: 'day',
+                name: null,
                 prices: [],
-                labels: [],
+                showAddToDashboardOptions: false,
             }
         },
         mounted(){
             console.info('SiteChart.vue is mounted.');
             this.loadPrices();
-
-
-            let lineCharts = this.$refs.lineCharts;
-            lineCharts.delegateMethod('showLoading', 'Loading...');
-            setTimeout(() => {
-                lineCharts.addSeries(asyncData);
-                lineCharts.hideLoading();
-            }, 2000)
         },
         methods: {
+            initChart(){
+                this.$refs.lineCharts.delegateMethod('showLoading', 'Loading...');
+            },
             loadPrices(){
-                axios.get(this.item.urls.price).then(response => {
+                this.$refs.lineCharts.delegateMethod('showLoading', 'Loading...');
+                axios.get(this.item.urls.price, this.loadPricesRequestData).then(response => {
+                    this.$refs.lineCharts.hideLoading();
                     if (response.data.status === true) {
-                        response.data.historicalPrices.forEach(historicalPrice => {
-                            this.prices.push(parseFloat(historicalPrice.amount));
-                            this.labels.push(historicalPrice.created_at);
-                        });
+                        this.prices = response.data.historicalPrices;
+                        this.updateChartSeries();
                     }
                 }).catch(error => {
+                    this.$refs.lineCharts.hideLoading();
                     console.info(error.response);
                 });
+            },
+            updateChartSeries(){
+                this.$refs.lineCharts.addSeries(this.chartData);
             },
             hideModal(){
                 this.emitHideModal();
@@ -99,6 +129,98 @@
             item(){
                 return this.site.item;
             },
+            from(){
+                let startDate = null;
+                switch (this.timespan) {
+                    case "this_week":
+                        startDate = moment().startOf('isoweek').format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_week":
+                        startDate = moment().subtract(1, 'week').startOf('isoweek').format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_7_days":
+                        startDate = moment().subtract(7, 'day').format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "this_month":
+                        startDate = moment().startOf("month").format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_month":
+                        startDate = moment().subtract(1, 'month').startOf("month").format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_30_days":
+                        startDate = moment().subtract(30, 'day').format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "this_quarter":
+                        startDate = moment().startOf("quarter").format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_quarter":
+                        startDate = moment().subtract(1, 'quarter').startOf("quarter").format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_90_days":
+                        startDate = moment().subtract(90, 'day').format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                }
+                return startDate;
+            },
+            to(){
+                let endDate = null;
+                switch (this.timespan) {
+                    case "this_week":
+                        endDate = moment().format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_week":
+                        endDate = moment().subtract(1, 'week').endOf('isoweek').format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_7_days":
+                        endDate = moment().format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "this_month":
+                        endDate = moment().format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_month":
+                        endDate = moment().subtract(1, 'month').endOf("month").format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_30_days":
+                        endDate = moment().format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "this_quarter":
+                        endDate = moment().format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_quarter":
+                        endDate = moment().subtract(1, 'quarter').endOf("quarter").format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_90_days":
+                        endDate = moment().format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                }
+                return endDate;
+            },
+            loadPricesRequestData()
+            {
+                return {
+                    params: {
+                        from: this.from,
+                        to: this.to,
+                        resolution: this.resolution,
+                    }
+                }
+            },
+            chartData(){
+                let data = [];
+                this.prices.forEach(price => {
+                    data.push([
+                        moment(price.created_at).unix() * 1000,
+                        parseFloat(price.amount)
+                    ]);
+                });
+                return {
+                    name: this.url.domainFullPath,
+                    marker: {
+                        symbol: 'square'
+                    },
+                    data: data
+                };
+            },
             options(){
                 return {
                     chart: {
@@ -111,16 +233,18 @@
                         text: 'Source: WorldClimate.com'
                     },
                     xAxis: {
-                        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                        type: "datetime",
+                        labels: {
+                            format: '{value:%e %b}'
+                        }
                     },
                     yAxis: {
                         title: {
-                            text: 'Temperature'
+                            text: 'price'
                         },
                         labels: {
                             formatter: function () {
-                                return this.value + '°';
+                                return '$' + this.value;
                             }
                         }
                     },
@@ -148,5 +272,14 @@
 </script>
 
 <style>
+    @media screen and (min-width: 1201px) {
+        .chart-modal .modal-content,
+        .chart-modal .modal-card {
+            width: 1200px;
+        }
+    }
 
+    .chart-options {
+        line-height: 40px;
+    }
 </style>

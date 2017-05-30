@@ -142,6 +142,15 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\UserDomain', 'user_id', 'id');
     }
 
+    /**
+     * relationship with widget
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function widgets()
+    {
+        return $this->hasMany('App\Models\Widget', 'user_id', 'id');
+    }
+
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/
