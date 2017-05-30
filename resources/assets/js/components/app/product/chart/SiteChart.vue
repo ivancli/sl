@@ -10,6 +10,7 @@
                     <div class="col-sm-12">
                         Content here
                         <line-chart :data="test" :options="testOptions"></line-chart>
+                        <vue-highcharts :options="options" ref="lineCharts"></vue-highcharts>
                     </div>
                 </div>
             </section>
@@ -23,18 +24,31 @@
 </template>
 
 <script>
-    import lineChart from '../../../../charts/lineChart';
+    import vueHighcharts from 'vue2-highcharts';
 
     import loading from '../../../fragments/loading/Loading.vue';
 
     import currency from '../../../../filters/currency';
+
+    const asyncData = {
+        name: 'Tokyo',
+        marker: {
+            symbol: 'square'
+        },
+        data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, {
+            y: 26.5,
+            marker: {
+                symbol: 'url(http://www.highcharts.com/demo/gfx/sun.png)'
+            }
+        }, 23.3, 18.3, 13.9, 9.6]
+    }
 
     export default{
         props: [
             'charting-site'
         ],
         components: {
-            lineChart,
+            vueHighcharts,
             loading
         },
         data(){
@@ -46,6 +60,14 @@
         mounted(){
             console.info('SiteChart.vue is mounted.');
             this.loadPrices();
+
+
+            let lineCharts = this.$refs.lineCharts;
+            lineCharts.delegateMethod('showLoading', 'Loading...');
+            setTimeout(() => {
+                lineCharts.addSeries(asyncData);
+                lineCharts.hideLoading();
+            }, 2000)
         },
         methods: {
             loadPrices(){
@@ -77,20 +99,49 @@
             item(){
                 return this.site.item;
             },
-            test() {
+            options(){
                 return {
-                    labels: ["2017-05-21 02:02:02", "2017-05-22 02:02:02", "2017-05-23 02:02:02", "2017-05-24 02:02:02", "2017-05-25 02:02:02", "2017-05-26 02:02:02", "2017-05-27 02:02:02", "2017-05-28 02:02:02", "2017-05-29 02:02:02", "2017-05-30 02:02:02", "2017-05-31 02:02:02"],
-                    datasets: [
-                        {
-                            label: this.url.domainFullPath,
-                            backgroundColor: '#7ed0c0',
-                            data:  [31, 21, 30, 29, 32.95, 32.95, 32.95, 32.95, 32.95, 32.95, 32.95,]
+                    chart: {
+                        type: 'spline'
+                    },
+                    title: {
+                        text: 'Monthly Average Temperature'
+                    },
+                    subtitle: {
+                        text: 'Source: WorldClimate.com'
+                    },
+                    xAxis: {
+                        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Temperature'
+                        },
+                        labels: {
+                            formatter: function () {
+                                return this.value + '°';
+                            }
                         }
-                    ]
-                };
-            },
-            testOptions(){
-                return {};
+                    },
+                    tooltip: {
+                        crosshairs: true,
+                        shared: true
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        spline: {
+                            marker: {
+                                radius: 4,
+                                lineColor: '#666666',
+                                lineWidth: 1
+                            }
+                        }
+                    },
+                    series: []
+                }
             }
         }
     }
