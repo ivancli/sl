@@ -9,12 +9,9 @@
                 <div class="col-sm-12">
                     <form>
                         <input type="text" autocomplete="off" name="site_url"
-                               class="txt-site-url form-control txt-item input-sm" v-model="newSiteURL"
-                               ref="txt_new_site"
-                               placeholder="Enter a product page URL">
+                               class="txt-site-url form-control txt-item input-sm" v-model="newSiteURL" ref="txt_new_site" placeholder="Enter a product page URL">
                         <div class="buttons">
-                            <button class="btn btn-primary btn-flat btn-sm" @click.prevent="addSite"
-                                    :disabled="isAddingSite">
+                            <button class="btn btn-primary btn-flat btn-sm" @click.prevent="addSite" :disabled="isAddingSite">
                                 <span class="hidden-sm hidden-xs">
                                     CONFIRM
                                 </span>
@@ -23,8 +20,7 @@
                                 </span>
                             </button>
                             &nbsp;&nbsp;
-                            <button class="btn btn-default btn-flat btn-cancel-add-site btn-sm"
-                                    @click.prevent="cancelAddSite">
+                            <button class="btn btn-default btn-flat btn-cancel-add-site btn-sm" @click.prevent="cancelAddSite">
                                 <span class="hidden-sm hidden-xs">
                                     CANCEL
                                 </span>
@@ -37,9 +33,9 @@
                 </div>
             </div>
         </div>
-        <div class="add-item-controls" v-show="addingSite && reachedSiteLimit">
+        <div class="add-item-controls" v-show="addingSite && reachedSiteLimit">subscription
             You have reached the product URL limit of {{ subscriptionPlanName }} plan.<br/>
-            Please <a href="#">upgrade your subscription</a> to add more URLs.
+            Please <a href="/account-settings#manage-subscription">upgrade your subscription</a> to add more URLs.
         </div>
         <error-modal :modal-errors="errors" @hideErrorModal="clearErrors"></error-modal>
         <loading v-if="isAddingSite"></loading>
@@ -88,14 +84,14 @@
                 this.errors = {};
                 axios.post('/site', this.addSiteData).then(response => {
                     this.isAddingSite = false;
-                    if (response.data.status == true) {
+                    if (response.data.status === true) {
                         this.addingSite = false;
                         this.clearNewSiteURL();
                         this.emitAddedSite(response.data.site);
                     }
                 }).catch(error => {
                     this.isAddingSite = false;
-                    if (error.response && error.response.status == 422 && error.response.data) {
+                    if (error.response && error.response.status === 422 && error.response.data) {
                         this.errors = error.response.data;
                     }
                 })
@@ -128,34 +124,33 @@
                 }
             },
             subscriptionPlan(){
-                if (this.subscription != null) {
+                if (this.subscription !== null) {
                     return this.subscription.subscriptionPlan
                 } else {
                     return null;
                 }
             },
             subscriptionPlanName(){
-                if (this.subscriptionPlan != null) {
+                if (this.subscriptionPlan !== null) {
                     return this.subscriptionPlan.name;
                 } else {
                     return null;
                 }
             },
+            subscriptionCriteria(){
+                if (this.subscription !== null && this.subscription.hasOwnProperty('subscriptionCriteria')) {
+                    return this.subscription.subscriptionCriteria;
+                }
+                return null
+            },
             maxNumberOfSites(){
-                if (this.subscription != null) {
-                    if (this.user.subscription.subscriptionCriteria.site == 0) {
-                        return null;
-                    }
+                if (this.subscriptionCriteria !== null && this.subscriptionCriteria.hasOwnProperty('site') && parseInt(this.subscriptionCriteria.site) > 0) {
                     return this.user.subscription.subscriptionCriteria.site;
                 }
                 return null;
             },
             reachedSiteLimit(){
-                if (this.maxNumberOfSites != null && this.numberOfSites >= this.maxNumberOfSites) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return this.maxNumberOfSites !== null && this.numberOfSites >= this.maxNumberOfSites;
             },
         }
     }

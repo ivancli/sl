@@ -40,17 +40,7 @@
         data(){
             return {
                 prices: [],
-                test: {
-                    labels: ['January', 'February'],
-                    datasets: [
-                        {
-                            label: 'GitHub Commits',
-                            backgroundColor: '#f87979',
-                            data: [40, 20]
-                        }
-                    ]
-                },
-                testOptions:{}
+                labels: [],
             }
         },
         mounted(){
@@ -60,8 +50,11 @@
         methods: {
             loadPrices(){
                 axios.get(this.item.urls.price).then(response => {
-                    if (response.data.status == true) {
-                        this.prices = response.data.historicalPrices;
+                    if (response.data.status === true) {
+                        response.data.historicalPrices.forEach(historicalPrice => {
+                            this.prices.push(parseFloat(historicalPrice.amount));
+                            this.labels.push(historicalPrice.created_at);
+                        });
                     }
                 }).catch(error => {
                     console.info(error.response);
@@ -83,6 +76,21 @@
             },
             item(){
                 return this.site.item;
+            },
+            test() {
+                return {
+                    labels: ["2017-05-21 02:02:02", "2017-05-22 02:02:02", "2017-05-23 02:02:02", "2017-05-24 02:02:02", "2017-05-25 02:02:02", "2017-05-26 02:02:02", "2017-05-27 02:02:02", "2017-05-28 02:02:02", "2017-05-29 02:02:02", "2017-05-30 02:02:02", "2017-05-31 02:02:02"],
+                    datasets: [
+                        {
+                            label: this.url.domainFullPath,
+                            backgroundColor: '#7ed0c0',
+                            data:  [31, 21, 30, 29, 32.95, 32.95, 32.95, 32.95, 32.95, 32.95, 32.95,]
+                        }
+                    ]
+                };
+            },
+            testOptions(){
+                return {};
             }
         }
     }

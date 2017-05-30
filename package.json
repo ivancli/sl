@@ -21,6 +21,7 @@
     "vue": "^2.0.1",
     "vue-chartjs": "^2.6.2",
     "vue-select": "^2.2.0",
+    "vue2-highcharts": "^1.1.1",
     "vuex": "^2.1.1",
     "webpack": "2.2.1"
   }

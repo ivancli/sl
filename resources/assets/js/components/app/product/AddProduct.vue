@@ -65,7 +65,7 @@
         <div class="add-item-controls" v-show="addingProduct && reachedProductLimit">
             <div class="subscription-upgrade-message">
                 You have reached the product limit of {{ subscriptionPlanName }} plan.<br/>
-                Please <a href="#">upgrade your subscription</a> to add more products.
+                Please <a href="/account-settings#manage-subscription">upgrade your subscription</a> to add more products.
             </div>
         </div>
         <error-modal :modal-errors="errors" @hideErrorModal="clearErrors"></error-modal>
@@ -115,14 +115,14 @@
                 this.errors = {};
                 axios.post('/product', this.addProductData).then(response => {
                     this.isAddingProduct = false;
-                    if (response.data.status == true) {
+                    if (response.data.status === true) {
                         this.addingProduct = false;
                         this.clearNewProductForm();
                         this.$emit('added-product', response.data.product);
                     }
                 }).catch(error => {
                     this.isAddingProduct = false;
-                    if (error.response && error.response.status == 422 && error.response.data) {
+                    if (error.response && error.response.status === 422 && error.response.data) {
                         this.errors = error.response.data;
                     }
                 })

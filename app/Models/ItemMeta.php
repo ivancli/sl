@@ -45,7 +45,7 @@ class ItemMeta extends Model
         $query = $this->hasMany('App\Models\HistoricalPrice', 'item_meta_id', 'id');
         $interval = null;
         $length = null;
-        $cancelled_at = Carbon::now();
+        $cancelled_at = null;
         if (auth()->check()) {
             $user = auth()->user();
             if (!is_null($user->subscription) && !is_null($user->subscription->subscriptionCriteria)) {
@@ -57,7 +57,7 @@ class ItemMeta extends Model
                     $length = $subscriptionCriteria->historic_pricing;
                 }
                 if (!is_null($user->subscription->cancelled_at)) {
-                    $cancelled_at = Carbon::createFromFormat('Y-m-d H:i:s', $user->subscription->cancelled_at);
+                    $cancelled_at = $user->subscription->cancelled_at;
                 }
             }
         }
@@ -72,7 +72,7 @@ class ItemMeta extends Model
         }
 
         if (!is_null($length) && $length != 0) {
-            $query->where(DB::raw("created_at BETWEEN NOW() - INTERVAL {$length} MONTH AND NOW()"));
+            $query->whereRaw("created_at > (NOW() - INTERVAL {$length} MONTH)");
         }
 
         if (!is_null($cancelled_at)) {

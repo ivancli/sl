@@ -90,7 +90,6 @@ class RegisterController extends Controller
         } else {
             $location = 'au';
         }
-        $location = 'us';
 
         $subscriptionPlan = $this->subscriptionPlanRepo->getProductByProductId($data['subscription_plan_id'], compact(['location']));
         $user = User::create([
