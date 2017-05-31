@@ -43,9 +43,7 @@ Route::resource('subscription/subscription', 'Subscription\SubscriptionControlle
 
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::get('/', function () {
-        return redirect()->route('product.index');
-    })->name('home.get');
+    Route::get('/', 'Dashboard\WidgetController@index')->name('home.get');
 
     #region User Account Client Routes
     Route::resource('account-settings', 'Account\AccountSettingsController');
@@ -55,6 +53,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('user/user-domain', 'Account\UserDomainController');
     Route::get('user/sample-account', 'Account\SampleAccountController@index')->name('sample-account.index');
     Route::post('user/sample-account', 'Account\SampleAccountController@store')->name('sample-account.store');
+    #endregion
+
+    #region Dashboard Related Routes
+    Route::resource('dashboard/widget', 'Dashboard\WidgetController');
     #endregion
 
     #region Product Related Routes
@@ -72,6 +74,10 @@ Route::group(['middleware' => ['auth']], function () {
         'create'
     ]]);
     Route::put('site/item/{site}', 'Product\SiteController@assignItem')->name('site.item.update');
+
+    Route::get('chart/site', 'Chart\ChartController@sitePrice')->name('chart.site.price');
+    Route::get('chart/product', 'Chart\ChartController@productPrice')->name('chart.product.price');
+    Route::get('chart/category', 'Chart\ChartController@categoryPrice')->name('chart.category.price');
 
     #endregion
 

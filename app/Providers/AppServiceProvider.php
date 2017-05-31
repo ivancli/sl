@@ -57,6 +57,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Contracts\Repositories\Admin\AppPrefContract', 'App\Repositories\Admin\AppPrefRepository');
         $this->app->bind('App\Contracts\Repositories\Admin\UserActivityLogContract', 'App\Repositories\Admin\UserActivityLogRepository');
 
+        $this->app->bind('App\Contracts\Repositories\Dashboard\WidgetContract', 'App\Repositories\Dashboard\WidgetRepository');
+
         $this->app->bind('App\Contracts\Repositories\Product\CategoryContract', 'App\Repositories\Product\CategoryRepository');
         $this->app->bind('App\Contracts\Repositories\Product\ProductContract', 'App\Repositories\Product\ProductRepository');
         $this->app->bind('App\Contracts\Repositories\Product\SiteContract', 'App\Repositories\Product\SiteRepository');

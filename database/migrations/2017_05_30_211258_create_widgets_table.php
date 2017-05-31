@@ -24,6 +24,7 @@ class CreateWidgetsTable extends Migration
             $table->string('widget_type')->nullable();
             $table->string('timespan')->nullable();
             $table->string('resolution')->nullable();
+            $table->integer('order')->nullable();
             $table->timestamps();
         });
     }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Widget extends Model
 {
     protected $fillable = [
-        'name', 'widget_type', 'timespan', 'resolution'
+        'name', 'widget_type', 'timespan', 'resolution', 'order'
     ];
 
     /**

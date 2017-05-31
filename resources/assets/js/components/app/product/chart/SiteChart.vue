@@ -11,7 +11,7 @@
                         <div class="row">
                             <div class="col-sm-12 chart-options">
                                 Generate a chart for
-                                <select class="input-sm form-control sl-form-control">
+                                <select class="input-sm form-control sl-form-control" v-model="timespan">
                                     <option value="this_week">this week</option>
                                     <option value="last_week">last week</option>
                                     <option value="last_7_days">last 7 days</option>
@@ -23,7 +23,7 @@
                                     <option value="last_90_days">last 90 days</option>
                                 </select>
                                 showing a price for each
-                                <select class="input-sm form-control sl-form-control">
+                                <select class="input-sm form-control sl-form-control" v-model="resolution">
                                     <option value="day">day</option>
                                     <option value="week">week</option>
                                     <option value="month">month</option>
@@ -56,7 +56,7 @@
                         </div>
                     </div>
                     <div class="col-md-8">
-                        <vue-highcharts :options="options" ref="lineCharts"></vue-highcharts>
+                        <vue-highcharts v-if="!isLoading" :options="options" ref="lineCharts"></vue-highcharts>
                     </div>
                 </div>
             </section>
@@ -86,6 +86,7 @@
                 name: null,
                 prices: [],
                 showAddToDashboardOptions: false,
+                isLoading: false,
             }
         },
         mounted(){
@@ -94,23 +95,31 @@
         },
         methods: {
             initChart(){
-                this.$refs.lineCharts.delegateMethod('showLoading', 'Loading...');
+                this.showLoading();
             },
             loadPrices(){
-                this.$refs.lineCharts.delegateMethod('showLoading', 'Loading...');
-                axios.get(this.item.urls.price, this.loadPricesRequestData).then(response => {
-                    this.$refs.lineCharts.hideLoading();
+                this.isLoading = true;
+                axios.get('/chart/site', this.loadPricesRequestData).then(response => {
+                    this.isLoading = false;
                     if (response.data.status === true) {
-                        this.prices = response.data.historicalPrices;
-                        this.updateChartSeries();
+                        this.prices = response.data.data;
+                        setTimeout(() => {
+                            this.updateChartSeries();
+                        }, 200);
                     }
                 }).catch(error => {
-                    this.$refs.lineCharts.hideLoading();
+                    this.isLoading = false;
                     console.info(error.response);
                 });
             },
             updateChartSeries(){
                 this.$refs.lineCharts.addSeries(this.chartData);
+            },
+            showLoading(){
+                this.$refs.lineCharts.delegateMethod('showLoading', 'Loading...');
+            },
+            hideLoading(){
+                this.$refs.lineCharts.hideLoading();
             },
             hideModal(){
                 this.emitHideModal();
@@ -199,6 +208,7 @@
             {
                 return {
                     params: {
+                        id: this.site.id,
                         from: this.from,
                         to: this.to,
                         resolution: this.resolution,
@@ -206,19 +216,12 @@
                 }
             },
             chartData(){
-                let data = [];
-                this.prices.forEach(price => {
-                    data.push([
-                        moment(price.created_at).unix() * 1000,
-                        parseFloat(price.amount)
-                    ]);
-                });
                 return {
                     name: this.url.domainFullPath,
                     marker: {
                         symbol: 'square'
                     },
-                    data: data
+                    data: this.prices,
                 };
             },
             options(){
@@ -227,10 +230,10 @@
                         type: 'spline'
                     },
                     title: {
-                        text: 'Monthly Average Temperature'
+                        text: this.url.domainFullPath
                     },
                     subtitle: {
-                        text: 'Source: WorldClimate.com'
+                        text: 'Average Price Chart by ' + this.resolution,
                     },
                     xAxis: {
                         type: "datetime",

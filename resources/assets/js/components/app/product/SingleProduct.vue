@@ -39,7 +39,7 @@
                 <a href="#" class="btn-action" title="edit" @click.prevent="onClickEditProduct" v-if="!editingProduct && subscriptionIsValid">
                     <i class="fa fa-pencil"></i>
                 </a>
-                <a href="#" class="btn-action" title="chart">
+                <a href="#" class="btn-action" title="chart" v-if="numberOfSites > 0" @click.prevent="onClickViewChart">
                     <i class="fa fa-line-chart"></i>
                 </a>
                 <a href="#" class="btn-action" title="report" @click.prevent="onClickEditProductReport" v-if="subscriptionIsValid">
@@ -128,6 +128,7 @@
         </tr>
         </tbody>
         <product-report-popup v-if="editingProductReport" :current-product="product" @edited-report="editedProductReport" @deleted-report="deletedProductReport" @cancel-edit="cancelEditProductReport"></product-report-popup>
+        <product-chart v-if="isViewingChart" :charting-product="product" @hide-modal="cancelViewingChart"></product-chart>
         <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
     </table>
 </template>
@@ -137,6 +138,7 @@
     import addSite from './AddSite.vue';
     import singleSite from './SingleSite.vue';
     import editProduct from './EditProduct.vue';
+    import productChart from './chart/ProductChart.vue';
     import productReportPopup from '../report/popups/Product.vue';
 
     import domain from '../../../filters/domain';
@@ -156,6 +158,7 @@
             singleSite,
             editProduct,
             productReportPopup,
+            productChart,
             dotdotdot,
             deleteConfirmation,
         },
@@ -190,6 +193,7 @@
                     sequence: 'asc',
                 },
                 editingProductReport: false,
+                isViewingChart: false,
             }
         },
         watch: {
@@ -330,6 +334,12 @@
             },
             cancelEditProductReport(){
                 this.editingProductReport = false;
+            },
+            onClickViewChart(){
+                this.isViewingChart = true;
+            },
+            cancelViewingChart(){
+                this.isViewingChart = false;
             },
             /*endregion*/
             loadUser(){

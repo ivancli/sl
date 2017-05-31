@@ -27,6 +27,9 @@ mix
     /* account settings */
     .js('resources/assets/js/app/account_settings/index.js', 'public/js/app/account_settings')
 
+    /* dashboard */
+    .js('resources/assets/js/app/dashboard/index.js', 'public/js/app/dashboard')
+
     /* product */
     .js('resources/assets/js/app/product/index.js', 'public/js/app/product')
 

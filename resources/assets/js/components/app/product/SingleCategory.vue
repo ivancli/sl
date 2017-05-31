@@ -14,7 +14,7 @@
                 <a href="#" class="btn-action btn-edit" title="edit" @click.prevent="onClickEditCategory" v-if="!editingCategoryName && subscriptionIsValid">
                     <i class="fa fa-pencil"></i>
                 </a>
-                <a href="#" class="btn-action btn-chart" title="chart">
+                <a href="#" class="btn-action btn-chart" title="chart" @click.prevent="onClickViewChart" v-if="category.numberOfSites > 0">
                     <i class="fa fa-line-chart"></i>
                 </a>
                 <a href="#" class="btn-action btn-report" title="report" @click.prevent="onClickEditCategoryReport" v-if="subscriptionIsValid">
@@ -64,6 +64,7 @@
         </tr>
         </tbody>
         <category-report-popup v-if="editingCategoryReport" :current-category="category" @edited-report="editedCategoryReport" @deleted-report="deletedCategoryReport" @cancel-edit="cancelEditCategoryReport"></category-report-popup>
+        <category-chart v-if="isViewingChart" :charting-category="category" @hide-modal="cancelViewingChart"></category-chart>
         <delete-confirmation v-if="deleteParams.active" :deleteParams="deleteParams" @cancelDelete="cancelDelete" @confirmDelete="confirmDelete"></delete-confirmation>
     </table>
 </template>
@@ -74,6 +75,7 @@
     import addProduct from './AddProduct.vue';
     import singleProduct from './SingleProduct.vue';
     import editCategory from './EditCategory.vue';
+    import categoryChart from './chart/CategoryChart.vue';
     import categoryReportPopup from '../report/popups/Category.vue';
 
     import formatDateTime from '../../../filters/formatDateTime';
@@ -91,6 +93,7 @@
             singleProduct,
             editCategory,
             categoryReportPopup,
+            categoryChart,
             dotdotdot,
             deleteConfirmation
         },
@@ -121,6 +124,7 @@
                 isDeletingCategory: false,
                 editingCategoryReport: false,
                 productLength: 5,
+                isViewingChart: false,
             }
         },
         watch: {
@@ -228,6 +232,12 @@
                     category_id: this.category.id,
                     status: status
                 });
+            },
+            onClickViewChart(){
+                this.isViewingChart = true;
+            },
+            cancelViewingChart(){
+                this.isViewingChart = false;
             },
             /*delete category*/
             onClickDeleteCategory() {

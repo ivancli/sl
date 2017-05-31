@@ -1,0 +1,281 @@
+<template>
+    <div class="modal is-active chart-modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                {{ product.product_name }}
+            </header>
+            <section class="modal-card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-sm-12 chart-options">
+                                Generate a chart for
+                                <select class="input-sm form-control sl-form-control" v-model="timespan">
+                                    <option value="this_week">this week</option>
+                                    <option value="last_week">last week</option>
+                                    <option value="last_7_days">last 7 days</option>
+                                    <option value="this_month">this month</option>
+                                    <option value="last_month">last month</option>
+                                    <option value="last_30_days">last 30 days</option>
+                                    <option value="this_quarter">this quarter</option>
+                                    <option value="last_quarter">last quarter</option>
+                                    <option value="last_90_days">last 90 days</option>
+                                </select>
+                                showing a price for each
+                                <select class="input-sm form-control sl-form-control" v-model="resolution">
+                                    <option value="day">day</option>
+                                    <option value="week">week</option>
+                                    <option value="month">month</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" v-model="showAddToDashboardOptions">
+                                        I would like to add this chart to my dashboard.
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" v-if="showAddToDashboardOptions">
+                            <div class="col-sm-12 m-b-20">
+                                Name this chart <input type="text" class="input-sm form-control sl-form-control" placeholder="enter a chart name" v-model="name">
+                            </div>
+                            <div class="col-sm-12">
+                                <a class="btn btn-primary btn-flat" href="#" @click.prevent="addWidget">ADD CHART</a>
+                            </div>
+                        </div>
+                        <div class="row" v-if="!showAddToDashboardOptions">
+                            <div class="col-sm-12">
+                                <a class="btn btn-primary btn-flat" href="#" @click.prevent="loadPrices">GO</a>
+                                <a class="btn btn-default btn-flat" href="#" @click.prevent="hideModal">CANCEL</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <vue-highcharts v-if="!isLoading" :options="options" ref="lineCharts"></vue-highcharts>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</template>
+
+<script>
+    import vueHighcharts from 'vue2-highcharts';
+
+    import loading from '../../../fragments/loading/Loading.vue';
+
+    import currency from '../../../../filters/currency';
+
+    export default{
+        props: [
+            'charting-product'
+        ],
+        components: {
+            vueHighcharts,
+            loading
+        },
+        data(){
+            return {
+                timespan: 'this_week',
+                resolution: 'day',
+                name: null,
+                prices: [],
+                showAddToDashboardOptions: false,
+                isLoading: false,
+            }
+        },
+        mounted(){
+            console.info('ProductChart.vue is mounted.');
+            this.loadPrices();
+        },
+        methods: {
+            initChart(){
+                this.showLoading();
+            },
+            loadPrices(){
+                this.isLoading = true;
+                axios.get('/chart/product', this.loadPricesRequestData).then(response => {
+                    this.isLoading = false;
+                    if (response.data.status === true) {
+                        this.prices = response.data.data;
+                        setTimeout(() => {
+                            this.updateChartSeries();
+                        }, 200);
+                    }
+                }).catch(error => {
+                    this.isLoading = false;
+                    console.info(error.response);
+                });
+            },
+            updateChartSeries(){
+                this.prices.forEach((price) => {
+                    this.$refs.lineCharts.addSeries({
+                        name: price.site,
+                        marker: {
+                            symbol: 'square'
+                        },
+                        data: price.data,
+                    });
+                });
+            },
+            showLoading(){
+                this.$refs.lineCharts.delegateMethod('showLoading', 'Loading...');
+            },
+            hideLoading(){
+                this.$refs.lineCharts.hideLoading();
+            },
+            hideModal(){
+                this.emitHideModal();
+            },
+            emitHideModal(){
+                this.$emit('hide-modal');
+            }
+        },
+        computed: {
+            product(){
+                return this.chartingProduct;
+            },
+            from(){
+                let startDate = null;
+                switch (this.timespan) {
+                    case "this_week":
+                        startDate = moment().startOf('isoweek').format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_week":
+                        startDate = moment().subtract(1, 'week').startOf('isoweek').format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_7_days":
+                        startDate = moment().subtract(7, 'day').format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "this_month":
+                        startDate = moment().startOf("month").format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_month":
+                        startDate = moment().subtract(1, 'month').startOf("month").format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_30_days":
+                        startDate = moment().subtract(30, 'day').format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "this_quarter":
+                        startDate = moment().startOf("quarter").format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_quarter":
+                        startDate = moment().subtract(1, 'quarter').startOf("quarter").format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_90_days":
+                        startDate = moment().subtract(90, 'day').format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                }
+                return startDate;
+            },
+            to(){
+                let endDate = null;
+                switch (this.timespan) {
+                    case "this_week":
+                        endDate = moment().format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_week":
+                        endDate = moment().subtract(1, 'week').endOf('isoweek').format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_7_days":
+                        endDate = moment().format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "this_month":
+                        endDate = moment().format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_month":
+                        endDate = moment().subtract(1, 'month').endOf("month").format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_30_days":
+                        endDate = moment().format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "this_quarter":
+                        endDate = moment().format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_quarter":
+                        endDate = moment().subtract(1, 'quarter').endOf("quarter").format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                    case "last_90_days":
+                        endDate = moment().format("YYYY-MM-DD HH:mm:ss");
+                        break;
+                }
+                return endDate;
+            },
+            loadPricesRequestData()
+            {
+                return {
+                    params: {
+                        id: this.product.id,
+                        from: this.from,
+                        to: this.to,
+                        resolution: this.resolution,
+                    }
+                }
+            },
+            options(){
+                return {
+                    chart: {
+                        type: 'spline'
+                    },
+                    title: {
+                        text: this.product.product_name,
+                    },
+                    subtitle: {
+                        text: 'Average Price Chart by ' + this.resolution,
+                    },
+                    xAxis: {
+                        type: "datetime",
+                        labels: {
+                            format: '{value:%e %b}'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'price'
+                        },
+                        labels: {
+                            formatter: function () {
+                                return '$' + this.value;
+                            }
+                        }
+                    },
+                    tooltip: {
+                        crosshairs: true,
+                        shared: true
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        spline: {
+                            marker: {
+                                radius: 4,
+                                lineColor: '#666666',
+                                lineWidth: 1
+                            }
+                        }
+                    },
+                    series: []
+                }
+            }
+        }
+    }
+</script>
+
+<style>
+    @media screen and (min-width: 1201px) {
+        .chart-modal .modal-content,
+        .chart-modal .modal-card {
+            width: 1200px;
+        }
+    }
+
+    .chart-options {
+        line-height: 40px;
+    }
+</style>
