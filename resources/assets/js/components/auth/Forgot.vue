@@ -3,39 +3,26 @@
         <div class="login-box m-t-0 m-b-50">
             <div class="login-box-body">
                 <p class="login-box-msg">Enter your email to reset password</p>
-                <ul class="text-danger">
+                <ul class="text-danger errors-container p-b-10 p-l-20" v-if="Object.keys(errors).length > 0">
+                    <li v-for="error in errors">
+                        <div v-if="error.constructor != Array" v-text="error"></div>
+                        <div v-else v-for="message in error" v-text="message"></div>
+                    </li>
                 </ul>
-                <ul class="text-danger errors-container">
+                <ul class="p-b-10 p-l-20 success-container" v-if="successMsg != ''">
+                    <li v-text="successMsg"></li>
                 </ul>
-                <form method="POST" action="http://login.spotlite.com.au/password" accept-charset="UTF-8" id="frm-password"
-                      onsubmit="submitForgotPassword(); return false;"><input name="_token" type="hidden"
-                                                                              value="3i7c4iYsz2Huf5ayxH60fmJl1iLS6F6otURhOKYM">
-
+                <form id="frm-password">
                     <div class="form-group has-feedback">
-                        <input class="form-control" placeholder="Email" autocomplete="off" name="email" type="email">
+                        <input class="form-control" placeholder="Email" autocomplete="off" type="email" v-model="email">
                         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                    </div>
-                    <div class="row m-b-20">
-                        <div class="col-sm-12">
-                            <div class="g-recaptcha" data-sitekey="6Ldtpg0UAAAAAEoU05qyVM0Mt6oJUYGLPewBwGDa">
-                                <div style="width: 304px; height: 78px;">
-                                    <div>
-                                        <iframe src="https://www.google.com/recaptcha/api2/anchor?k=6Ldtpg0UAAAAAEoU05qyVM0Mt6oJUYGLPewBwGDa&amp;co=aHR0cDovL2xvZ2luLnNwb3RsaXRlLmNvbS5hdTo4MA..&amp;hl=en&amp;v=r20170126104253&amp;size=normal&amp;cb=59pyus3z920"
-                                                title="recaptcha widget" width="304" height="78" frameborder="0" scrolling="no"
-                                                name="undefined"></iframe>
-                                    </div>
-                                    <textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response"
-                                              style="width: 250px; height: 40px; border: 1px solid #c1c1c1; margin: 10px 25px; padding: 0px; resize: none;  display: none; "></textarea>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-6 col-sm-push-6 text-right">
-                            <input class="btn btn-default btn-block btn-flat" href="#" type="submit" value="RESET">
+                            <button class="btn btn-default btn-block btn-flat" @click.prevent="onClickResetPassword">RESET</button>
                         </div>
                         <div class="col-sm-6 col-sm-pull-6">
-                            <div style="padding-top: 5px; padding-bottom: 5px;">
+                            <div class="p-t-5 p-b-5">
                                 <a href="/login">Back to login page</a>
                             </div>
                         </div>
@@ -43,13 +30,62 @@
                 </form>
             </div>
         </div>
+        <loading v-if="isForgetting"></loading>
     </div>
 </template>
 
 <script>
+    import loading from '../fragments/loading/Loading.vue';
+
     export default {
+        components: {
+            loading,
+        },
         mounted() {
             console.log('Forgot component mounted.')
+        },
+        data(){
+            return {
+                isForgetting: false,
+                email: '',
+                errors: {},
+                successMsg: '',
+            }
+        },
+        methods: {
+            onClickResetPassword(){
+                this.forgotPassword();
+            },
+            forgotPassword(){
+                this.isForgetting = true;
+                this.errors = {};
+                axios.post('/forgot', this.forgotPasswordRequestData).then(response => {
+                    this.isForgetting = false;
+                    this.email = '';
+                    if (response.data.status === true) {
+                        this.successMsg = 'An email with the reset password link has been sent to the provided email address.';
+                    }
+                }).catch(error => {
+                    this.isForgetting = false;
+                    this.email = '';
+                    if (error.response && error.response.status == 422 && error.response.data) {
+                        this.errors = error.response.data;
+                    }
+                })
+            }
+        },
+        computed: {
+            forgotPasswordRequestData(){
+                return {
+                    email: this.email,
+                }
+            },
         }
     }
 </script>
+
+<style>
+    .success-container {
+        color: #439c8b;
+    }
+</style>

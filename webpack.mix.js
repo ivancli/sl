@@ -18,6 +18,7 @@ mix
     .js('resources/assets/js/auth/login.js', 'public/js/auth')
     .js('resources/assets/js/auth/register.js', 'public/js/auth')
     .js('resources/assets/js/auth/forgot.js', 'public/js/auth')
+    .js('resources/assets/js/auth/reset.js', 'public/js/auth')
 
     /* app pref */
     .js('resources/assets/js/app/admin/app_pref/index.js', 'public/js/app/admin/app_pref')

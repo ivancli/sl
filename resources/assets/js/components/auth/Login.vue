@@ -62,7 +62,7 @@
             }
         },
         computed: {
-            loginData: function () {
+            loginData() {
                 return {
                     email: this.email,
                     password: this.password
@@ -70,7 +70,7 @@
             }
         },
         methods: {
-            submitLogin: function () {
+            submitLogin() {
                 this.isLoggingIn = true;
                 this.errors = {};
                 axios.post('/login', this.loginData).then(response=> {

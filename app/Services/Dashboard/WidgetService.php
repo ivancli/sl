@@ -59,7 +59,7 @@ class WidgetService
     public function load(array $data = [])
     {
         $user = auth()->user();
-        return $user->widgets;
+        return $user->widgets()->with('widgetable')->get();
     }
 
     /**
@@ -86,7 +86,7 @@ class WidgetService
                 $targetRelation = $this->siteRepo->get(array_get($data, 'id'));
                 break;
         }
-        
+
         if (!is_null($targetRelation)) {
             $targetRelation->widgets()->save($widget);
             $user->widgets()->save($widget);

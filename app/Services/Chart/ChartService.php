@@ -210,6 +210,7 @@ class ChartService
 
     /**
      * @param array $data
+     * @return \Illuminate\Support\Collection
      */
     public function categoryPrices(array $data = [])
     {
@@ -219,6 +220,8 @@ class ChartService
         $products = $category->products;
 
         $finalOutput = collect();
+
+        $resolution = array_get($data, 'resolution', 'day');
 
         foreach ($products as $product) {
 
@@ -243,7 +246,6 @@ class ChartService
                         }
                         $historicalPrices = $historicalPricesBuilder->get();
 
-                        $resolution = array_get($data, 'resolution', 'day');
 
                         switch ($resolution) {
                             case 'day':
@@ -304,18 +306,46 @@ class ChartService
             $averageOutput = collect();
             $rangeOutput = collect();
             foreach ($groupedSiteOutput as $date => $siteAverage) {
-                $averageOutput->push([
-                    Carbon::createFromFormat('Y-m-d', $date)->hour(0)->minute(0)->second(0)->timestamp * 1000,
-                    round($siteAverage->avg('average'), 2)
-                ]);
+                switch($resolution)
+                {
+                    case 'day':
+                        $averageOutput->push([
+                            Carbon::createFromFormat('Y-m-d', $date)->startOfDay()->timestamp * 1000,
+                            round($siteAverage->avg('average'), 2)
+                        ]);
 
-                $rangeOutput->push([
-                    Carbon::createFromFormat('Y-m-d', $date)->hour(0)->minute(0)->second(0)->timestamp * 1000,
-                    round($siteAverage->min('average'), 2),
-                    round($siteAverage->max('average'), 2),
-                ]);
+                        $rangeOutput->push([
+                            Carbon::createFromFormat('Y-m-d', $date)->startOfDay()->timestamp * 1000,
+                            round($siteAverage->min('average'), 2),
+                            round($siteAverage->max('average'), 2),
+                        ]);
+                        break;
+                    case 'week':
+                        $averageOutput->push([
+                            Carbon::createFromTimestampUTC(strtotime(str_replace('-', 'W', $date)))->startOfWeek()->timestamp * 1000,
+                            round($siteAverage->avg('average'), 2)
+                        ]);
+
+                        $rangeOutput->push([
+                            Carbon::createFromTimestampUTC(strtotime(str_replace('-', 'W', $date)))->startOfWeek()->timestamp * 1000,
+                            round($siteAverage->min('average'), 2),
+                            round($siteAverage->max('average'), 2),
+                        ]);
+                        break;
+                    case 'month':
+                        $averageOutput->push([
+                            Carbon::createFromFormat('Y-m', $date)->startOfMonth()->timestamp * 1000,
+                            round($siteAverage->avg('average'), 2)
+                        ]);
+
+                        $rangeOutput->push([
+                            Carbon::createFromFormat('Y-m', $date)->startOfMonth()->timestamp * 1000,
+                            round($siteAverage->min('average'), 2),
+                            round($siteAverage->max('average'), 2),
+                        ]);
+                        break;
+                }
             }
-
 
             $finalOutput->push([
                 'name' => $product->product_name,

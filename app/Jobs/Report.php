@@ -57,6 +57,10 @@ class Report implements ShouldQueue
      */
     public function handle()
     {
+        if (!$this->_validateSubscription($this->report)) {
+            return;
+        }
+
         switch ($this->report->report_type) {
             case 'product':
                 $this->processProductReport();
@@ -172,6 +176,15 @@ class Report implements ShouldQueue
                     }
                 }
                 break;
+        }
+        return true;
+    }
+
+    private function _validateSubscription(ReportModel $report)
+    {
+        $user = $report->user;
+        if (!is_null($user->subscription)) {
+            return $user->subscription->isValid;
         }
         return true;
     }

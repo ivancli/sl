@@ -32,6 +32,10 @@ class TestController extends Controller
 
     public function test()
     {
-        Cache::forget('https://gmail-sandbox.chargify.com/.chargify.subscriptions.17932731"');
+
+        $carbon = Carbon::createFromFormat('Y-m', '2017-12')->startOfMonth();
+//         = Carbon::createFromFormat('Y', '2017-20');
+//        Carbon::now()->
+        dd($carbon);
     }
 }

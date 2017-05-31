@@ -9,6 +9,24 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="text-danger errors-container p-b-10 p-l-20" v-if="Object.keys(errors).length > 0">
+                                    <li v-for="(error,index) in errors">
+                                        <div v-if="error.constructor != Array" v-text="error"></div>
+                                        <div v-else v-for="message in error">
+                                            <div v-if="index == 'id'">
+                                                please select a {{ type }}
+                                            </div>
+                                            <div v-else v-text="message"></div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <ul class="p-b-10 p-l-20 success-container" v-if="successMsg != ''">
+                                    <li v-text="successMsg"></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-sm-12 chart-options">
                                 Generate a chart for
                                 <select class="input-sm form-control sl-form-control" v-model="timespan">
@@ -87,6 +105,8 @@
                 prices: [],
                 showAddToDashboardOptions: false,
                 isLoading: false,
+                errors: {},
+                successMsg: ''
             }
         },
         mounted(){
@@ -123,6 +143,20 @@
                     });
                 });
             },
+            addWidget(){
+                axios.post('dashboard/widget', this.addWidgetRequestData).then(response => {
+                    this.isAddingNewWidget = false;
+                    if (response.data.status === true) {
+                        this.successMsg = 'The chart has been added to Dashboard.';
+                        this.showAddToDashboardOptions = false;
+                    }
+                }).catch(error => {
+                    this.isAddingNewWidget = false;
+                    if (error.response && error.response.status === 422 && error.response.data) {
+                        this.errors = error.response.data;
+                    }
+                })
+            },
             showLoading(){
                 this.$refs.lineCharts.delegateMethod('showLoading', 'Loading...');
             },
@@ -139,6 +173,15 @@
         computed: {
             product(){
                 return this.chartingProduct;
+            },
+            addWidgetRequestData(){
+                return {
+                    id: this.product.id,
+                    type: 'product',
+                    timespan: this.timespan,
+                    resolution: this.resolution,
+                    name: this.name,
+                }
             },
             from(){
                 let startDate = null;

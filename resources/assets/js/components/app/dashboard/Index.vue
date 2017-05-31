@@ -7,7 +7,7 @@
                     <small>
                         Created on the {{ user.created_at | formatDateTime(dateFormat) }} <strong><i> by {{ user.fullName }}</i></strong>
                         &vert;
-                        <a href="#" class="text-muted">Add Chart to Dashboard <i class="fa fa-cog"></i></a>
+                        <a href="#" class="text-muted" @click.prevent="onClickAddChartToDashboard">Add Chart to Dashboard <i class="fa fa-cog"></i></a>
                     </small>
                 </p>
                 <p class="text-muted f-s-17 m-b-20">
@@ -24,19 +24,31 @@
                     </div>
                     &nbsp;&nbsp;
                     <div class="form-group">
-                        <select class="form-control sl-form-control">
+                        <select class="form-control sl-form-control" v-model="globalTimespan">
                             <option value="">-- select timespan --</option>
+                            <option value="this_week">this week</option>
+                            <option value="last_week">last week</option>
+                            <option value="last_7_days">last 7 days</option>
+                            <option value="this_month">this month</option>
+                            <option value="last_month">last month</option>
+                            <option value="last_30_days">last 30 days</option>
+                            <option value="this_quarter">this quarter</option>
+                            <option value="last_quarter">last quarter</option>
+                            <option value="last_90_days">last 90 days</option>
                         </select>
                     </div>
                     &nbsp;&nbsp;
                     <div class="form-group">
-                        <select class="form-control sl-form-control">
+                        <select class="form-control sl-form-control" v-model="globalResolution">
                             <option value="">-- select period resolution --</option>
+                            <option value="day">day</option>
+                            <option value="week">week</option>
+                            <option value="month">month</option>
                         </select>
                     </div>
                     &nbsp;&nbsp;
                     <div class="form-group">
-                        <button class="btn btn-default btn-flat">RESET FILTER</button>
+                        <button class="btn btn-default btn-flat" @click.prevent="resetFilter">RESET FILTER</button>
                     </div>
                 </form>
             </div>
@@ -44,8 +56,15 @@
         <hr class="content-divider-white">
         <div class="row">
             <div class="col-sm-12">
-                <div class="col-md-3">
-                    <placeholder :should-redirect="shouldRedirect" @add-new-widget="addNewWidget"></placeholder>
+                <div class="row">
+                    <div class="col-md-3" v-for="widget in widgets">
+                        <category-widget v-if="widget.widgetable_type === 'category'" :widget="widget" :global-timespan="globalTimespan" :global-resolution="globalResolution" @deleted-widget="loadWidgets"></category-widget>
+                        <product-widget v-if="widget.widgetable_type === 'product'" :widget="widget" :global-timespan="globalTimespan" :global-resolution="globalResolution" @deleted-widget="loadWidgets"></product-widget>
+                        <site-widget v-if="widget.widgetable_type === 'site'" :widget="widget" :global-timespan="globalTimespan" :global-resolution="globalResolution" @deleted-widget="loadWidgets"></site-widget>
+                    </div>
+                    <div class="col-md-3">
+                        <placeholder :should-redirect="shouldRedirect" @add-new-widget="addNewWidget"></placeholder>
+                    </div>
                 </div>
             </div>
         </div>
@@ -54,7 +73,9 @@
 </template>
 
 <script>
-
+    import siteWidget from './widgets/product/Site.vue';
+    import productWidget from './widgets/product/Product.vue';
+    import categoryWidget from './widgets/product/Category.vue';
     import placeholder from './widgets/Placeholder.vue';
     import addWidget from './widgets/AddWidget.vue';
 
@@ -66,6 +87,9 @@
 
     export default{
         components: {
+            siteWidget,
+            productWidget,
+            categoryWidget,
             placeholder,
             addWidget,
         },
@@ -100,6 +124,13 @@
                     }
                 });
             },
+            onClickAddChartToDashboard(){
+                if (this.shouldRedirect === true) {
+                    window.location.href = '/product';
+                } else {
+                    this.addNewWidget();
+                }
+            },
             addNewWidget(){
                 this.isAddingWidget = true;
             },
@@ -109,7 +140,11 @@
             },
             cancelAddNewWidget(){
                 this.isAddingWidget = false;
-            }
+            },
+            resetFilter(){
+                this.globalTimespan = '';
+                this.globalResolution = '';
+            },
         },
         computed: {
             user(){

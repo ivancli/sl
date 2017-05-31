@@ -10,6 +10,10 @@ class Widget extends Model
         'name', 'widget_type', 'timespan', 'resolution', 'order'
     ];
 
+    protected $appends = [
+        'urls'
+    ];
+
     /**
      * relationship with user
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -27,4 +31,21 @@ class Widget extends Model
     {
         return $this->morphTo();
     }
+
+    /*----------------------------------------------------------------------*/
+    /* Attributes                                                           */
+    /*----------------------------------------------------------------------*/
+
+    public function getUrlsAttribute()
+    {
+        return array(
+            'index' => route('widget.index'),
+            'show' => route('widget.show', $this->getKey()),
+            'store' => route('widget.store'),
+            'edit' => route('widget.edit', $this->getKey()),
+            'update' => route('widget.update', $this->getKey()),
+            'delete' => route('widget.destroy', $this->getKey()),
+        );
+    }
+
 }

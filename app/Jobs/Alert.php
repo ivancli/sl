@@ -58,7 +58,10 @@ class Alert implements ShouldQueue
      */
     public function handle()
     {
-        /*TODO compare last active at and last price change date*/
+        if (!$this->_validateSubscription($this->alert)) {
+            return;
+        }
+
         switch ($this->alert->alert_type) {
             case 'basic':
                 $this->processBasicAlert();
@@ -649,5 +652,14 @@ class Alert implements ShouldQueue
             }
         }
         return false;
+    }
+
+    private function _validateSubscription(AlertModel $alert)
+    {
+        $user = $alert->user;
+        if (!is_null($user->subscription)) {
+            return $user->subscription->isValid;
+        }
+        return true;
     }
 }

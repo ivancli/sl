@@ -19,6 +19,8 @@ Route::post('register', 'Auth\RegisterController@register')->name('register.post
 Route::get('external-register', 'Auth\RegisterController@externalRegister')->name('external-register.get');
 Route::get('forgot', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('forgot.get');
 Route::post('forgot', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('forgot.post');
+Route::get('password', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+Route::post('password', 'Auth\ResetPasswordController@reset')->name('password.update');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout.get');
 #endregion
 
