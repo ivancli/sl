@@ -26,7 +26,7 @@ class AfterFetchUrl
      * @param int $status
      * @param String $content
      */
-    public function __construct(Url $url, String $content, Integer $status = null)
+    public function __construct(Url $url, $content, Integer $status = null)
     {
         $this->url = $url;
         $this->content = $content;
