@@ -179,6 +179,7 @@ return [
 
         IvanCLI\Chargify\ChargifyServiceProvider::class,
         App\Providers\SubscriptionServiceProvider::class,
+        App\Providers\MailingAgentServiceProvider::class,
 
         IvanCLI\UM\UMServiceProvider::class,
         IvanCLI\Crawler\CrawlerServiceProvider::class,
