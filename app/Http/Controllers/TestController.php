@@ -32,10 +32,8 @@ class TestController extends Controller
 
     public function test()
     {
-
-        $carbon = Carbon::createFromFormat('Y-m', '2017-12')->startOfMonth();
-//         = Carbon::createFromFormat('Y', '2017-20');
-//        Carbon::now()->
-        dd($carbon);
+//        Carbon::parse('2017-07-01T13:38:58+10:00')
+        $user = auth()->user();
+        dd($user->subscription->apiSubscription);
     }
 }

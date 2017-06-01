@@ -256,6 +256,7 @@
                     this.isDeletingCategory = false;
                     if (response.data.status === true) {
                         this.loadUser();
+                        this.emitReloadCategories();
                     }
                 }).catch(error => {
                     this.isDeletingCategory = false;

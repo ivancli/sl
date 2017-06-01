@@ -17,6 +17,7 @@ use App\Observers\SiteObserver;
 use App\Observers\UrlObserver;
 use App\Observers\UserObserver;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -28,6 +29,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Schema::defaultStringLength(191);
+
         /*region observers*/
         User::observe(UserObserver::class);
         Category::observe(CategoryObserver::class);
