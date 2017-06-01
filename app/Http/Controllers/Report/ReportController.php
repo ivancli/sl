@@ -19,6 +19,7 @@ use App\Events\Report\BeforeUpdate;
 
 use App\Http\Controllers\Controller;
 use App\Models\Report;
+use App\Services\MailingAgent\CampaignMonitor\MailingAgentService;
 use App\Services\Report\ReportService;
 use Illuminate\Http\Request;
 
@@ -28,11 +29,15 @@ class ReportController extends Controller
 
     protected $reportService;
 
-    public function __construct(Request $request, ReportService $reportService)
+    protected $mailingAgentService;
+
+    public function __construct(Request $request, ReportService $reportService, MailingAgentService $mailingAgentService)
     {
         $this->request = $request;
 
         $this->reportService = $reportService;
+
+        $this->mailingAgentService = $mailingAgentService;
     }
 
     /**
@@ -84,6 +89,8 @@ class ReportController extends Controller
         $report = $this->reportService->store($this->request->all());
         $status = true;
 
+        $this->mailingAgentService->updateLastSetupReportDate(auth()->user());
+
         event(new AfterStore);
 
         return compact(['report', 'status']);
@@ -125,6 +132,8 @@ class ReportController extends Controller
 
         $report = $this->reportService->update($report, $this->request->all());
         $status = true;
+
+        $this->mailingAgentService->updateLastSetupReportDate(auth()->user());
 
         event(new AfterUpdate($report));
 

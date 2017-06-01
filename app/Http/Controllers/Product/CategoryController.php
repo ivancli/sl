@@ -18,6 +18,7 @@ use App\Events\Product\Category\BeforeStore;
 use App\Events\Product\Category\BeforeUpdate;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Services\MailingAgent\CampaignMonitor\MailingAgentService;
 use App\Services\Product\CategoryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -26,12 +27,14 @@ class CategoryController extends Controller
 {
     protected $request;
     protected $categoryService;
+    protected $mailingAgentService;
 
-    public function __construct(Request $request, CategoryService $categoryService)
+    public function __construct(Request $request, CategoryService $categoryService, MailingAgentService $mailingAgentService)
     {
         $this->request = $request;
 
         $this->categoryService = $categoryService;
+        $this->mailingAgentService = $mailingAgentService;
     }
 
     /**
@@ -68,6 +71,9 @@ class CategoryController extends Controller
 
         $category = $this->categoryService->store($this->request->all());
         $status = true;
+
+        $this->mailingAgentService->updateNumberOfCategories(auth()->user());
+        $this->mailingAgentService->updateLastAddCategoryDate(auth()->user());
 
         event(new AfterStore($category));
 
@@ -144,6 +150,11 @@ class CategoryController extends Controller
         event(new BeforeDestroy($category));
 
         $status = $this->categoryService->destroy($category);
+
+        /* update mailing agent information */
+        $this->mailingAgentService->updateNumberOfCategories(auth()->user());
+        $this->mailingAgentService->updateNumberOfProducts(auth()->user());
+        $this->mailingAgentService->updateNumberOfSites(auth()->user());
 
         event(new AfterDestroy());
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Services\MailingAgent\CampaignMonitor\MailingAgentService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -29,14 +30,18 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/';
 
+    protected $mailingAgentService;
+
     /**
      * Create a new controller instance.
      *
-     * @return void
+     * @param MailingAgentService $mailingAgentService
      */
-    public function __construct()
+    public function __construct(MailingAgentService $mailingAgentService)
     {
         $this->middleware('guest', ['except' => 'logout']);
+
+        $this->mailingAgentService = $mailingAgentService;
     }
 
 
@@ -44,6 +49,9 @@ class LoginController extends Controller
     {
         /* TODO redirect admin users to administration page */
         /* TODO redirect normal users to home page which is '/' */
+
+        $this->mailingAgentService->updateLastLoginDate($user);
+
         $redirect_path = $this->redirectTo;
         if ($request->ajax()) {
             $redirect_path = redirect($redirect_path)->getTargetUrl();

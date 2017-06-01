@@ -17,6 +17,7 @@ use App\Exceptions\Subscription\SubscriptionNotFoundException;
 use App\Http\Controllers\Controller;
 use App\Models\Subscription;
 use App\Models\User;
+use App\Services\MailingAgent\CampaignMonitor\MailingAgentService;
 use App\Services\Subscription\SubscriptionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -26,11 +27,13 @@ class SubscriptionController extends Controller
 {
     protected $request;
     protected $subscriptionService;
+    protected $mailingAgentService;
 
-    public function __construct(Request $request, SubscriptionService $subscriptionService)
+    public function __construct(Request $request, SubscriptionService $subscriptionService, MailingAgentService $mailingAgentService)
     {
         $this->request = $request;
         $this->subscriptionService = $subscriptionService;
+        $this->mailingAgentService = $mailingAgentService;
     }
 
     /**
@@ -92,9 +95,11 @@ class SubscriptionController extends Controller
             Cache::forget("{$subscription->location}.chargify.subscriptions.{$subscription->api_subscription_id}");
             $result = Chargify::subscription($subscription->location)->reactivate($subscription->apiSubscription->id);
             Cache::forget("{$subscription->location}.chargify.subscriptions.{$subscription->api_subscription_id}");
+
+            $this->mailingAgentService->syncUser($user);
         }
 
-        return redirect()->route('account-settings.index');
+        return redirect()->route('account-settings.index', ['#manage-subscription']);
     }
 
     /**
@@ -106,6 +111,8 @@ class SubscriptionController extends Controller
     {
         $this->subscriptionService->reactivate($subscription);
         $status = true;
+
+        $this->mailingAgentService->syncUser($subscription->user);
 
         return compact(['status']);
     }
@@ -133,10 +140,12 @@ class SubscriptionController extends Controller
 
         Cache::forget("{$subscription->location}.chargify.subscriptions.{$subscription->api_subscription_id}");
 
+        $this->mailingAgentService->syncUser($subscription->user);
+
         if ($this->request->ajax()) {
             return $resultData;
         } else {
-            return redirect()->route('account-settings.index');
+            return redirect()->route('account-settings.index', ['#manage-subscription']);
         }
     }
 
@@ -149,6 +158,8 @@ class SubscriptionController extends Controller
     {
         $this->subscriptionService->cancel($subscription, $this->request->all());
         $status = true;
+
+        $this->mailingAgentService->updateSubscriptionCancelledDate($subscription->user);
 
         return compact(['status']);
     }

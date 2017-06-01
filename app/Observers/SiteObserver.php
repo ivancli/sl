@@ -12,16 +12,21 @@ namespace App\Observers;
 use App\Contracts\Repositories\UrlManagement\UrlContract;
 use App\Contracts\Repositories\UserManagement\UserContract;
 use App\Models\Site;
+use App\Services\MailingAgent\CampaignMonitor\MailingAgentService;
 
 class SiteObserver
 {
     protected $urlRepo;
     protected $userRepo;
 
-    public function __construct(UrlContract $urlContract, UserContract $userContract)
+    protected $mailingAgentService;
+
+    public function __construct(UrlContract $urlContract, UserContract $userContract, MailingAgentService $mailingAgentService)
     {
         $this->urlRepo = $urlContract;
         $this->userRepo = $userContract;
+
+        $this->mailingAgentService = $mailingAgentService;
     }
 
     public function creating()
@@ -31,7 +36,7 @@ class SiteObserver
 
     public function created(Site $site)
     {
-
+        
     }
 
     public function saving()
@@ -42,7 +47,7 @@ class SiteObserver
     public function saved(Site $site)
     {
         #region create user domain alias preference
-        if($site->product()->count() > 0){
+        if ($site->product()->count() > 0) {
             $product = $site->product;
             $user = $product->user;
 

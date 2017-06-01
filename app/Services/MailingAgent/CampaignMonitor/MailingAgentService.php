@@ -161,6 +161,101 @@ class MailingAgentService
          * */
     }
 
+    public function updateLastLoginDate(User $user)
+    {
+
+        $lastLoginDate = null;
+        if (!is_null($user->last_login_at)) {
+            $lastLoginDate = Carbon::parse($user->last_login_at)->format('Y/m/d');
+        }
+        $result = $this->mailingAgentRepo->updateSubscriber($user->email, [
+            'CustomFields' => [
+                $this->__customField('LastLoginDate', $lastLoginDate),
+            ]
+        ]);
+    }
+
+    public function updateSubscriptionPlan(User $user)
+    {
+        $subscriptionPlan = null;
+        if (!is_null($user->subscription)) {
+            if (!is_null($user->subscription->subscriptionPlan)) {
+                $subscriptionPlan = $user->subscription->subscriptionPlan->name;
+            }
+        }
+
+        $this->mailingAgentRepo->updateSubscriber($user->email, [
+            'CustomFields' => [
+                $this->__customField('SubscriptionPlan', $subscriptionPlan),
+            ]
+        ]);
+    }
+
+    public function updateSubscriptionCancelledDate(User $user)
+    {
+        $subscriptionCancelledAt = null;
+        if (!is_null($user->subscription)) {
+            if (!is_null($user->subscription->apiSubscription)) {
+                if (!is_null($user->subscription->apiSubscription->canceled_at)) {
+                    $subscriptionCancelledAt = Carbon::parse($user->subscription->apiSubscription->canceled_at);
+                }
+            }
+        }
+
+        $this->mailingAgentRepo->updateSubscriber($user->email, [
+            'CustomFields' => [
+                $this->__customField('SubscriptionCancelledDate', $subscriptionCancelledAt),
+            ]
+        ]);
+    }
+
+    public function updateSubscribedDate(User $user)
+    {
+        $subscribedDate = null;
+        if (!is_null($user->subscription)) {
+            $subscribedDate = Carbon::parse($user->subscription->created_at)->format('Y/m/d');
+        }
+        $this->mailingAgentRepo->updateSubscriber($user->email, [
+            'CustomFields' => [
+                $this->__customField('SubscribedDate', $subscribedDate),
+            ]
+        ]);
+    }
+
+    public function updateLastSubscriptionUpdatedDate(User $user)
+    {
+        $subscriptionUpdatedDate = null;
+
+        if (!is_null($user->subscription)) {
+            $subscriptionUpdatedDate = Carbon::parse($user->subscription->updated_at)->format('Y/m/d');
+        }
+        $this->mailingAgentRepo->updateSubscriber($user->email, [
+            'CustomFields' => [
+                $this->__customField('LastSubscriptionUpdatedDate', $subscriptionUpdatedDate)
+            ]
+        ]);
+    }
+
+    public function updateTrialExpiry(User $user)
+    {
+        $subscriptionTrialEndedAt = null;
+
+        if (!is_null($user->subscription)) {
+            if (!is_null($user->subscription->apiSubscription)) {
+                if (!is_null($user->subscription->apiSubscription->trial_ended_at)) {
+                    $subscriptionTrialEndedAt = Carbon::parse($user->subscription->apiSubscription->trial_ended_at)->format('Y/m/d');
+                }
+            }
+        }
+
+        $this->mailingAgentRepo->updateSubscriber($user->email, [
+            'Name' => $user->fullName,
+            'CustomFields' => [
+                $this->__customField('TrialExpiry', $subscriptionTrialEndedAt),
+            ],
+        ]);
+    }
+
     /**
      * synchronise all user data in one go
      * @param User $user
@@ -223,6 +318,10 @@ class MailingAgentService
         if (!is_null($user->widgets()->max('updated_at'))) {
             $lastConfiguredDashboardDate = Carbon::parse($user->widgets()->max('updated_at'))->format('Y/m/d');
         }
+        $lastLoginDate = null;
+        if (!is_null($user->last_login_at)) {
+            $lastLoginDate = Carbon::parse($user->last_login_at)->format('Y/m/d');
+        }
 
 
         $this->mailingAgentRepo->updateSubscriber($user->email, [
@@ -241,8 +340,8 @@ class MailingAgentService
                 $this->__customField('LastSetupReportDate', $lastSetupReportDate),
                 $this->__customField('TrialExpiry', $subscriptionTrialEndedAt),
                 $this->__customField('SubscriptionCancelledDate', $subscriptionCancelledAt),
+                $this->__customField('LastLoginDate', $lastLoginDate),
                 $this->__customField('MaximumNumberofSites', $maxNumberOfSites),
-                $this->__customField('LastLoginDate', ''),
                 $this->__customField('MaximumNumberofProducts', $maxNumberOfProducts),
                 $this->__customField('Industry', $user->metas->industry),
                 $this->__customField('CompanyType', $user->metas->company_type),

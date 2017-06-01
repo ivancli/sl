@@ -8,6 +8,7 @@ use App\Exceptions\Subscription\SubscriptionNotFoundException;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use App\Services\MailingAgent\CampaignMonitor\MailingAgentService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -38,21 +39,27 @@ class RegisterController extends Controller
     protected $redirectToRouteName = 'home.get';
     protected $subscriptionPlanRepo, $subscriptionRepo;
 
+    protected $mailingAgentService;
+
     /**
      * Create a new controller instance.
      *
      * @param SubscriptionPlanContract $subscriptionPlanContract
      * @param SubscriptionContract $subscriptionContract
+     * @param MailingAgentService $mailingAgentService
      */
     public function __construct(
         SubscriptionPlanContract $subscriptionPlanContract,
-        SubscriptionContract $subscriptionContract
+        SubscriptionContract $subscriptionContract,
+        MailingAgentService $mailingAgentService
     )
     {
         $this->middleware('guest');
 
         $this->subscriptionPlanRepo = $subscriptionPlanContract;
         $this->subscriptionRepo = $subscriptionContract;
+
+        $this->mailingAgentService = $mailingAgentService;
     }
 
     /**
@@ -102,6 +109,8 @@ class RegisterController extends Controller
         $user->subscription()->save(new Subscription);
         $couponCode = isset($couponCode) ? $couponCode : '';
 
+        $this->mailingAgentService->store($user);
+
         if ($subscriptionPlan->require_credit_card) {
             /* subscription requires credit card, send new user to sign up page*/
             $this->redirectTo = $this->subscriptionPlanRepo->generateSignUpPageLink($subscriptionPlan->id, $user, $couponCode, compact(['location']));
@@ -128,6 +137,8 @@ class RegisterController extends Controller
             $subscription->api_subscription_id = $result->id;
             $subscription->location = $location;
             $subscription->save();
+
+            $this->mailingAgentService->syncUser($user);
         }
         return $user;
     }

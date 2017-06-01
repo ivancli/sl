@@ -18,6 +18,7 @@ use App\Events\Alert\BeforeStore;
 use App\Events\Alert\BeforeUpdate;
 use App\Http\Controllers\Controller;
 use App\Services\Alert\AlertService;
+use App\Services\MailingAgent\CampaignMonitor\MailingAgentService;
 use Illuminate\Http\Request;
 
 class AlertController extends Controller
@@ -26,11 +27,15 @@ class AlertController extends Controller
 
     protected $alertService;
 
-    public function __construct(Request $request, AlertService $alertService)
+    protected $mailingAgentService;
+
+    public function __construct(Request $request, AlertService $alertService, MailingAgentService $mailingAgentService)
     {
         $this->request = $request;
 
         $this->alertService = $alertService;
+
+        $this->mailingAgentService = $mailingAgentService;
     }
 
     /**
@@ -79,6 +84,8 @@ class AlertController extends Controller
 
         $this->alertService->store($this->request->all());
         $status = true;
+
+        $this->mailingAgentService->updateLastSetupAlertDate(auth()->user());
 
         event(new AfterStore);
 

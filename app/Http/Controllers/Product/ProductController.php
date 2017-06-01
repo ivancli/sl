@@ -18,6 +18,7 @@ use App\Events\Product\Product\BeforeStore;
 use App\Events\Product\Product\BeforeUpdate;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Services\MailingAgent\CampaignMonitor\MailingAgentService;
 use App\Services\Product\ProductService;
 use App\Validators\Product\Product\UpdateValidator;
 use Illuminate\Http\JsonResponse;
@@ -27,12 +28,14 @@ class ProductController extends Controller
 {
     protected $request;
     protected $productService;
+    protected $mailingAgentService;
 
-    public function __construct(Request $request, ProductService $productService)
+    public function __construct(Request $request, ProductService $productService, MailingAgentService $mailingAgentService)
     {
         $this->request = $request;
 
         $this->productService = $productService;
+        $this->mailingAgentService = $mailingAgentService;
     }
 
     /**
@@ -70,6 +73,9 @@ class ProductController extends Controller
 
         $product = $this->productService->store($this->request->all());
         $status = true;
+
+        $this->mailingAgentService->updateNumberOfProducts(auth()->user());
+        $this->mailingAgentService->updateLastAddProductDate(auth()->user());
 
         event(new AfterStore($product));
 
@@ -144,6 +150,9 @@ class ProductController extends Controller
         event(new BeforeDestroy($product));
 
         $status = $this->productService->destroy($product);
+
+        $this->mailingAgentService->updateNumberOfProducts(auth()->user());
+        $this->mailingAgentService->updateNumberOfSites(auth()->user());
 
         event(new AfterDestroy());
 

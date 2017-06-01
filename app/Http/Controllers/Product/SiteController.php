@@ -21,6 +21,7 @@ use App\Events\Product\Site\BeforeStore;
 use App\Events\Product\Site\BeforeUpdate;
 use App\Http\Controllers\Controller;
 use App\Models\Site;
+use App\Services\MailingAgent\CampaignMonitor\MailingAgentService;
 use App\Services\Product\SiteService;
 use App\Validators\Product\Site\StoreValidator;
 use App\Validators\Product\Site\UpdateValidator;
@@ -31,11 +32,14 @@ class SiteController extends Controller
 {
     protected $request;
     protected $siteService;
+    protected $mailingAgentService;
 
-    public function __construct(Request $request, SiteService $siteService)
+    public function __construct(Request $request, SiteService $siteService, MailingAgentService $mailingAgentService)
     {
         $this->request = $request;
         $this->siteService = $siteService;
+
+        $this->mailingAgentService = $mailingAgentService;
     }
 
     /**
@@ -73,6 +77,8 @@ class SiteController extends Controller
         /*TODO enhance add site process*/
         $site = $this->siteService->store($this->request->all());
         $status = true;
+
+        $this->mailingAgentService->updateNumberOfSites(auth()->user());
 
         event(new AfterStore($site));
 
@@ -151,6 +157,9 @@ class SiteController extends Controller
         event(new BeforeDestroy($site));
 
         $status = $this->siteService->destroy($site);
+
+        $this->mailingAgentService->updateNumberOfSites(auth()->user());
+        $this->mailingAgentService->updateLastAddSiteDate(auth()->user());
 
         event(new AfterDestroy());
 

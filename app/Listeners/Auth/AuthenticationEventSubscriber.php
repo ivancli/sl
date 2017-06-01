@@ -12,6 +12,7 @@ namespace App\Listeners\Auth;
 use App\Jobs\Log\UserActivity;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\MailingAgent\CampaignMonitor\MailingAgentService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
@@ -45,12 +46,13 @@ class AuthenticationEventSubscriber
         $user->last_login_at = Carbon::now()->format('Y-m-d H:i:s');
         $user->save();
 
-        $activity = "User -- {$user->fullName} -- Signed In";
-        $this->dispatchUserActivityLog($activity, $user);
-
         if (!is_null($user->subscription)) {
             Cache::forget("{$user->subscription->location}.chargify.subscriptions.{$user->subscription->api_subscription_id}");
         }
+
+        $activity = "User -- {$user->fullName} -- Signed In";
+        $this->dispatchUserActivityLog($activity, $user);
+
     }
 
     public function onAuthLogout($event)
@@ -66,12 +68,12 @@ class AuthenticationEventSubscriber
     {
         $user = $event->user;
 
-        $activity = "User -- {$user->fullName} -- Signed Up";
-        $this->dispatchUserActivityLog($activity, $user);
-
         /* assign registered users to client role */
         $client = Role::where('name', 'client')->first();
         $user->attachRole($client);
+
+        $activity = "User -- {$user->fullName} -- Signed Up";
+        $this->dispatchUserActivityLog($activity, $user);
     }
 
     /**
