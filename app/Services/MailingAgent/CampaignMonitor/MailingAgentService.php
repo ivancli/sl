@@ -295,27 +295,27 @@ class MailingAgentService
             }
         }
         $lastAddedCategoryDate = null;
-        if (!is_null($user->categories()->max('created_at'))) {
+        if (!is_null($user->categories()->max('categories.created_at'))) {
             $lastAddedCategoryDate = Carbon::parse($user->categories()->max('categories.created_at'))->format('Y/m/d');
         }
         $lastAddedProductDate = null;
-        if (!is_null($user->products()->max('created_at'))) {
+        if (!is_null($user->products()->max('products.created_at'))) {
             $lastAddedCategoryDate = Carbon::parse($user->products()->max('products.created_at'))->format('Y/m/d');
         }
         $lastAddedSiteDate = null;
-        if (!is_null($user->sites()->max('created_at'))) {
+        if (!is_null($user->sites()->max('sites.created_at'))) {
             $lastAddedCategoryDate = Carbon::parse($user->sites()->max('sites.created_at'))->format('Y/m/d');
         }
         $lastSetupAlertDate = null;
-        if (!is_null($user->sites()->max('updated_at'))) {
+        if (!is_null($user->alerts()->max('alerts.updated_at'))) {
             $lastSetupAlertDate = Carbon::parse($user->alerts()->max('alerts.updated_at'))->format('Y/m/d');
         }
         $lastSetupReportDate = null;
-        if (!is_null($user->sites()->max('updated_at'))) {
+        if (!is_null($user->reports()->max('reports.updated_at'))) {
             $lastSetupAlertDate = Carbon::parse($user->reports()->max('reports.updated_at'))->format('Y/m/d');
         }
         $lastConfiguredDashboardDate = null;
-        if (!is_null($user->widgets()->max('updated_at'))) {
+        if (!is_null($user->widgets()->max('widgets.updated_at'))) {
             $lastConfiguredDashboardDate = Carbon::parse($user->widgets()->max('widgets.updated_at'))->format('Y/m/d');
         }
         $lastLoginDate = null;
