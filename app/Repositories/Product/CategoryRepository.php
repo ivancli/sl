@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Repositories\Product;
 
 use App\Contracts\Repositories\Product\CategoryContract;
@@ -41,7 +42,11 @@ class CategoryRepository implements CategoryContract
             $key = array_get($data, 'key');
             //get number of products of each category matching the key
             $builder->withCount(['products' => function ($query) use ($key) {
-                $query->where('product_name', 'like', "%{$key}%");
+                $query->join('product_metas', 'products.id', 'product_metas.product_id')
+                    ->where('product_name', 'like', "%{$key}%")
+                    ->orWhere('brand', 'like', "%{$key}%")
+                    ->orWhere('supplier', 'like', "%{$key}%")
+                    ->orWhere('cost_price', 'like', "%{$key}%");
             }]);
             //category name matches of one or more product names match
             $builder->having('category_name', 'like', "%{$key}%")

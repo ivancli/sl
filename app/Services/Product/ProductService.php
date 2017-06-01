@@ -56,7 +56,12 @@ class ProductService
         if (array_has($data, 'key') && !empty(array_get($data, 'key'))) {
             $key = array_get($data, 'key');
             if (strpos(strtolower($category->category_name), strtolower($key)) === false) {
-                $productsBuilder = $category->products()->where('product_name', 'like', "%{$key}%");
+                $productsBuilder = $category->products()
+                    ->join('product_metas', 'products.id', 'product_metas.product_id')
+                    ->where('product_name', 'like', "%{$key}%")
+                    ->orWhere('brand', 'like', "%{$key}%")
+                    ->orWhere('supplier', 'like', "%{$key}%")
+                    ->orWhere('cost_price', 'like', "%{$key}%");
             } else {
                 $productsBuilder = $category->products();
             }

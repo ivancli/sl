@@ -66,7 +66,6 @@ class SiteService
         /* TODO make this function to accept parameters and dynamic */
         $product = $this->productRepo->get(array_get($data, 'product_id'));
         $sitesBuilder = $product->sites()->with('item');
-        DB::enableQueryLog();
 
         $sites = $sitesBuilder->get();
         if (array_has($data, 'sorting_column') && !empty(array_get($data, 'sorting_column'))) {
