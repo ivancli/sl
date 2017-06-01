@@ -135,6 +135,7 @@
 
 <script>
     import Vue from 'vue';
+
     import addSite from './AddSite.vue';
     import singleSite from './SingleSite.vue';
     import editProduct from './EditProduct.vue';
