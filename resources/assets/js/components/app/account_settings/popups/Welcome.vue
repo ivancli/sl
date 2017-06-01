@@ -30,7 +30,7 @@
                                                     <div class="text-left" v-else v-for="message in error" v-text="message"></div>
                                                 </li>
                                             </ul>
-                                            <form class="form-horizontal">
+                                            <form class="form-horizontal" @submit.prevent="onClickGoToProduct">
                                                 <div class="form-group required">
                                                     <select class="form-control" v-model="industry">
                                                         <option value="">What is your industry?</option>
@@ -97,7 +97,7 @@
                                                     </select>
                                                 </div>
                                                 <div class="form-group">
-                                                    <input type="text" class="form-control" placeholder="What is your site URL? e.g. http://www.company.com">
+                                                    <input type="text" class="form-control" placeholder="What is your site URL? e.g. http://www.company.com" v-model="companyUrl">
                                                 </div>
                                                 <div class="form-group text-left">
                                                     <div class="checkbox">
@@ -234,6 +234,7 @@
                 return {
                     industry: this.industry,
                     company_type: this.companyType,
+                    company_url: this.companyUrl,
                     selected_category_ids: this.selectedCategories,
                 }
             }

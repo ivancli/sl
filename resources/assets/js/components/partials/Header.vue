@@ -163,9 +163,9 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a href="#">SpotLite Tour</a></li>
-                            <li><a href="#" target="_blank">Video Tutorials</a></li>
-                            <li><a href="#" target="_blank">FAQ</a></li>
-                            <li><a href="#" target="_blank">Step by Step Guide</a></li>
+                            <li><a href="https://spotlitehelp.zendesk.com/hc/en-us/categories/204682247-Video-Tutorials" target="_blank">Video Tutorials</a></li>
+                            <li><a href="https://spotlitehelp.zendesk.com/hc/en-us/categories/204664368-FAQ" target="_blank">FAQ</a></li>
+                            <li><a href="https://spotlitehelp.zendesk.com/hc/en-us/categories/204682187-Step-by-Step-Guide" target="_blank">Step by Step Guide</a></li>
                             <li><a href="#">Contact us</a></li>
                         </ul>
                     </li>

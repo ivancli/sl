@@ -69,6 +69,8 @@
             </div>
         </div>
         <add-widget v-if="isAddingWidget" @added-widget="addedNewWidget" @hide-modal="cancelAddNewWidget"></add-widget>
+        <create-password v-if="!hasSetPassword" @set-password="loadUser"></create-password>
+        <welcome v-if="hasSetPassword && !hasSetSamples" @set-welcome="setWelcome"></welcome>
     </section>
 </template>
 
@@ -78,6 +80,8 @@
     import categoryWidget from './widgets/product/Category.vue';
     import placeholder from './widgets/Placeholder.vue';
     import addWidget from './widgets/AddWidget.vue';
+    import createPassword from '../account_settings/popups/CreatePassword.vue';
+    import welcome from '../account_settings/popups/Welcome.vue';
 
     import formatDateTime from '../../../filters/formatDateTime';
 
@@ -92,6 +96,8 @@
             categoryWidget,
             placeholder,
             addWidget,
+            createPassword,
+            welcome,
         },
         mounted(){
             console.info('Index component mounted.');
@@ -144,6 +150,10 @@
             resetFilter(){
                 this.globalTimespan = '';
                 this.globalResolution = '';
+            },
+            setWelcome(){
+                this.loadUser();
+                this.loadWidgets();
             },
         },
         computed: {
@@ -234,7 +244,13 @@
                     to: this.globalTo,
                     resolution: this.globalResolution,
                 }
-            }
+            },
+            hasSetPassword(){
+                return this.user.set_password === 'y';
+            },
+            hasSetSamples(){
+                return this.user.set_samples === 'y';
+            },
         }
     }
 </script>

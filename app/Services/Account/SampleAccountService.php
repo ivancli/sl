@@ -100,6 +100,10 @@ class SampleAccountService
             }
         }
 
+
+        $this->userRepo->updateMetas($user, $data);
+
+
         $user->set_samples = 'y';
         $user->save();
     }
