@@ -34,6 +34,6 @@ class TestController extends Controller
     {
 //        Carbon::parse('2017-07-01T13:38:58+10:00')
         $user = auth()->user();
-        dd($user->subscription->apiSubscription);
+        dd($user->subscription->subscriptionCriteria);
     }
 }

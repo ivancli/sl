@@ -12,6 +12,7 @@ namespace App\Listeners\Auth;
 use App\Jobs\Log\UserActivity;
 use App\Models\Role;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 class AuthenticationEventSubscriber
@@ -41,6 +42,9 @@ class AuthenticationEventSubscriber
     {
         $user = $event->user;
 
+        $user->last_login_at = Carbon::now()->format('Y-m-d H:i:s');
+        $user->save();
+
         $activity = "User -- {$user->fullName} -- Signed In";
         $this->dispatchUserActivityLog($activity, $user);
 
@@ -52,7 +56,7 @@ class AuthenticationEventSubscriber
     public function onAuthLogout($event)
     {
         $user = $event->user;
-        if(isset($user) && !is_null($user)){
+        if (isset($user) && !is_null($user)) {
             $activity = "User -- {$user->fullName} -- Logged Out";
             $this->dispatchUserActivityLog($activity, $user);
         }

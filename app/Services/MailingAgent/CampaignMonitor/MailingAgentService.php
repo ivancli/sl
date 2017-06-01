@@ -29,6 +29,10 @@ class MailingAgentService
         #endregion
     }
 
+    /**
+     * create new subscriber
+     * @param User $user
+     */
     public function store(User $user)
     {
         $this->mailingAgentRepo->storeSubscriber([
@@ -37,12 +41,22 @@ class MailingAgentService
         ]);
     }
 
+    /**
+     * delete a subscriber
+     * @param User $user
+     * @return mixed
+     */
     public function destroy(User $user)
     {
         $result = $this->mailingAgentRepo->delete($user->email);
         return $result;
     }
 
+    /**
+     * unsubscribe a subscriber
+     * @param User $user
+     * @return mixed
+     */
     public function unsubscribe(User $user)
     {
         $result = $this->mailingAgentRepo->unsubscribe($user->email);
@@ -53,10 +67,7 @@ class MailingAgentService
     {
         $result = $this->mailingAgentRepo->updateSubscriber($user->email, [
             'CustomFields' => [
-                [
-                    "Key" => "NumberofCategories",
-                    "Value" => $user->numberOfCategories,
-                ]
+                $this->__customField('NumberofCategories', $user->numberOfCategories),
             ]
         ]);
         return $result;
@@ -66,10 +77,7 @@ class MailingAgentService
     {
         $result = $this->mailingAgentRepo->updateSubscriber($user->email, [
             'CustomFields' => [
-                [
-                    "Key" => "NumberofProducts",
-                    "Value" => $user->numberOfProducts,
-                ]
+                $this->__customField('NumberofProducts', $user->numberOfProducts),
             ]
         ]);
         return $result;
@@ -79,10 +87,7 @@ class MailingAgentService
     {
         $result = $this->mailingAgentRepo->updateSubscriber($user->email, [
             'CustomFields' => [
-                [
-                    "Key" => "NumberofSites",
-                    "Value" => $user->numberOfSites,
-                ]
+                $this->__customField('NumberofSites', $user->numberOfSites),
             ]
         ]);
         return $result;
@@ -92,10 +97,7 @@ class MailingAgentService
     {
         $result = $this->mailingAgentRepo->updateSubscriber($user->email, [
             'CustomFields' => [
-                [
-                    "Key" => "LastAddedCategoryDate",
-                    "Value" => date('Y/m/d'),
-                ]
+                $this->__customField('LastAddedCategoryDate', date('Y/m/d')),
             ]
         ]);
         return $result;
@@ -105,10 +107,7 @@ class MailingAgentService
     {
         $result = $this->mailingAgentRepo->updateSubscriber($user->email, [
             'CustomFields' => [
-                [
-                    "Key" => "LastAddedProductDate",
-                    "Value" => date('Y/m/d'),
-                ]
+                $this->__customField('LastAddedProductDate', date('Y/m/d')),
             ]
         ]);
         return $result;
@@ -118,10 +117,7 @@ class MailingAgentService
     {
         $result = $this->mailingAgentRepo->updateSubscriber($user->email, [
             'CustomFields' => [
-                [
-                    "Key" => "LastAddedSiteDate",
-                    "Value" => date('Y/m/d'),
-                ]
+                $this->__customField('LastAddedSiteDate', date('Y/m/d')),
             ]
         ]);
         return $result;
@@ -131,10 +127,7 @@ class MailingAgentService
     {
         $result = $this->mailingAgentRepo->updateSubscriber($user->email, [
             'CustomFields' => [
-                [
-                    "Key" => "LastSetupAlertDate",
-                    "Value" => date('Y/m/d'),
-                ]
+                $this->__customField('LastSetupAlertDate', date('Y/m/d')),
             ]
         ]);
         return $result;
@@ -144,10 +137,7 @@ class MailingAgentService
     {
         $result = $this->mailingAgentRepo->updateSubscriber($user->email, [
             'CustomFields' => [
-                [
-                    "Key" => "LastSetupReportDate",
-                    "Value" => date('Y/m/d'),
-                ]
+                $this->__customField('LastSetupReportDate', date('Y/m/d')),
             ]
         ]);
         return $result;
@@ -157,10 +147,7 @@ class MailingAgentService
     {
         $result = $this->mailingAgentRepo->updateSubscriber($user->email, [
             'CustomFields' => [
-                [
-                    "Key" => "LastConfiguredDashboardDate",
-                    "Value" => date('Y/m/d'),
-                ]
+                $this->__customField('LastConfiguredDashboardDate', date('Y/m/d')),
             ]
         ]);
         return $result;
@@ -174,51 +161,40 @@ class MailingAgentService
          * */
     }
 
+    /**
+     * synchronise all user data in one go
+     * @param User $user
+     */
     public function syncUser(User $user)
     {
-        /*
-         *
-         *
-        Name
-        NumberofSites
-        SubscriptionPlan
-        NumberofProducts
-        NumberofCategories
-        LastAddedCategoryDate
-        LastAddedProductDate
-        LastAddedSiteDate
-        SubscribedDate
-        LastSubscriptionUpdatedDate
-        LastNominatedMySiteDate
-        LastSetupAlertDate
-        LastSetupReportDate
-        TrialExpiry
-        SubscriptionCancelledDate
-        MaximumNumberofSites
-        LastLoginDate
-        MaximumNumberofProducts
-        Industry
-        CompanyType
-        CompanyName
-        LastConfiguredDashboardDate
-        CancelledBeforeEndofTrial
-        CancelledAfterEndofTrial
-        NextLevelSubscriptionPlan
-        NextLevelMaximumNumberofSites
-        NextLevelMaximumNumberofProducts
-        NextLevelSubscriptionPlanDescription
-        SubscriptionLocation
-        */
         $subscriptionPlan = null;
         $subscribedDate = null;
         $subscriptionUpdatedDate = null;
         $subscriptionTrialEndedAt = null;
+        $subscriptionCancelledAt = null;
+        $maxNumberOfProducts = null;
+        $maxNumberOfSites = null;
+        $subscriptionLocation = null;
+
         if (!is_null($user->subscription)) {
             $subscribedDate = Carbon::parse($user->subscription->created_at)->format('Y/m/d');
             $subscriptionUpdatedDate = Carbon::parse($user->subscription->updated_at)->format('Y/m/d');
-            if (!is_null($user->subscription->trial_ended_at)) {
-                $subscriptionTrialEndedAt = Carbon::parse($user->subscription->trial_ended_at)->format('Y/m/d');
+            $subscriptionLocation = $user->subscription->location;
+            if (!is_null($user->subscription->apiSubscription)) {
+                if (!is_null($user->subscription->apiSubscription->trial_ended_at)) {
+                    $subscriptionTrialEndedAt = Carbon::parse($user->subscription->apiSubscription->trial_ended_at)->format('Y/m/d');
+                }
+                if (!is_null($user->subscription->apiSubscription->canceled_at)) {
+                    $subscriptionCancelledAt = Carbon::parse($user->subscription->apiSubscription->canceled_at);
+                }
             }
+            if (!is_null($user->subscription->subscriptionCriteria) && $user->subscription->subscriptionCriteria->product > 0) {
+                $maxNumberOfProducts = $user->subscription->subscriptionCriteria->product;
+            }
+            if (!is_null($user->subscription->subscriptionCriteria) && $user->subscription->subscriptionCriteria->site > 0) {
+                $maxNumberOfSites = $user->subscription->subscriptionCriteria->site;
+            }
+
             if (!is_null($user->subscription->subscriptionPlan)) {
                 $subscriptionPlan = $user->subscription->subscriptionPlan->name;
             }
@@ -243,6 +219,10 @@ class MailingAgentService
         if (!is_null($user->sites()->max('updated_at'))) {
             $lastSetupAlertDate = Carbon::parse($user->reports()->max('updated_at'))->format('Y/m/d');
         }
+        $lastConfiguredDashboardDate = null;
+        if (!is_null($user->widgets()->max('updated_at'))) {
+            $lastConfiguredDashboardDate = Carbon::parse($user->widgets()->max('updated_at'))->format('Y/m/d');
+        }
 
 
         $this->mailingAgentRepo->updateSubscriber($user->email, [
@@ -260,22 +240,15 @@ class MailingAgentService
                 $this->__customField('LastSetupAlertDate', $lastSetupAlertDate),
                 $this->__customField('LastSetupReportDate', $lastSetupReportDate),
                 $this->__customField('TrialExpiry', $subscriptionTrialEndedAt),
-                $this->__customField('SubscriptionCancelledDate', ''),
-                $this->__customField('MaximumNumberofSites', ''),
+                $this->__customField('SubscriptionCancelledDate', $subscriptionCancelledAt),
+                $this->__customField('MaximumNumberofSites', $maxNumberOfSites),
                 $this->__customField('LastLoginDate', ''),
-                $this->__customField('MaximumNumberofProducts', ''),
-                $this->__customField('Industry', ''),
-                $this->__customField('CompanyType', ''),
-                $this->__customField('CompanyName', ''),
-                $this->__customField('LastConfiguredDashboardDate', ''),
-                $this->__customField('CancelledBeforeEndofTrial', ''),
-                $this->__customField('CancelledAfterEndofTrial', ''),
-                $this->__customField('NextLevelSubscriptionPlan', ''),
-                $this->__customField('NextLevelMaximumNumberofSites', ''),
-                $this->__customField('NextLevelMaximumNumberofProducts', ''),
-                $this->__customField('NextLevelSubscriptionPlanDescription', ''),
-                $this->__customField('SubscriptionLocation', ''),
-            ]
+                $this->__customField('MaximumNumberofProducts', $maxNumberOfProducts),
+                $this->__customField('Industry', $user->metas->industry),
+                $this->__customField('CompanyType', $user->metas->company_type),
+                $this->__customField('LastConfiguredDashboardDate', $lastConfiguredDashboardDate),
+                $this->__customField('SubscriptionLocation', $subscriptionLocation),
+            ],
         ]);
     }
 
