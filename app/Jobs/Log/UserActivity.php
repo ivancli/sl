@@ -30,7 +30,7 @@ class UserActivity implements ShouldQueue
      * @param User $user
      * @param String $activity
      */
-    public function __construct(User $user, String $activity)
+    public function __construct(User $user, $activity)
     {
         $this->user = $user;
         $this->activity = $activity;
