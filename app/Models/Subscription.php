@@ -11,7 +11,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use IvanCLI\Chargify\Chargify;
-use IvanCLI\Chargify\Models\Product;
 
 class Subscription extends Model
 {
@@ -103,7 +102,7 @@ class Subscription extends Model
 
     /**
      * attribute showing subscription plan
-     * @return null|Product
+     * @return null|\IvanCLI\Chargify\Models\Product
      */
     public function getSubscriptionPlanAttribute()
     {

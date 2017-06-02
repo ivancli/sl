@@ -50,7 +50,7 @@
                 <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadHistoricalAlerts" :disabled="paginationData.current_page == 1">FIRST</button>
                 <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadHistoricalAlerts(prevPageUrl)" :disabled="prevPageUrl == null">PREV</button>
                 <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadHistoricalAlerts(nextPageUrl)" :disabled="nextPageUrl == null">NEXT</button>
-                <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadHistoricalAlerts(lastPageUrl)" :disabled="paginationData.current_page == paginationData.last_page">LAST</button>
+                <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadHistoricalAlerts(lastPageUrl)" :disabled="paginationData.current_page == paginationData.last_page || paginationData.total <= paginationData.per_page">LAST</button>
             </div>
         </div>
     </div>

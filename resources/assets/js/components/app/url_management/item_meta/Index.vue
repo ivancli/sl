@@ -71,7 +71,7 @@
                                 <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadItemMetas" :disabled="paginationData.current_page == 1">FIRST</button>
                                 <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadItemMetas(prevPageUrl)" :disabled="prevPageUrl == null">PREV</button>
                                 <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadItemMetas(nextPageUrl)" :disabled="nextPageUrl == null">NEXT</button>
-                                <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadItemMetas(lastPageUrl)" :disabled="paginationData.current_page == paginationData.last_page">LAST
+                                <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadItemMetas(lastPageUrl)" :disabled="paginationData.current_page == paginationData.last_page || paginationData.total <= paginationData.per_page">LAST
                                 </button>
                             </div>
                         </div>

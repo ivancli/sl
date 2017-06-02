@@ -66,17 +66,10 @@
                             DOMAIN</a>
                     </div>
                     <div class="col-sm-6 text-right">
-                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadDomains"
-                                :disabled="paginationData.current_page == 1">FIRST
-                        </button>
-                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadDomains(prevPageUrl)"
-                                :disabled="prevPageUrl == null">PREV
-                        </button>
-                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadDomains(nextPageUrl)"
-                                :disabled="nextPageUrl == null">NEXT
-                        </button>
-                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadDomains(lastPageUrl)"
-                                :disabled="paginationData.current_page == paginationData.last_page">LAST
+                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadDomains" :disabled="paginationData.current_page == 1">FIRST</button>
+                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadDomains(prevPageUrl)" :disabled="prevPageUrl == null">PREV</button>
+                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadDomains(nextPageUrl)" :disabled="nextPageUrl == null">NEXT</button>
+                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadDomains(lastPageUrl)" :disabled="paginationData.current_page == paginationData.last_page || paginationData.total <= paginationData.per_page">LAST
                         </button>
                     </div>
                 </div>

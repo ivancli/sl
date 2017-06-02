@@ -216,7 +216,8 @@
                 axios.post('/user/sample-account', this.saveWelcomeRequestData).then(response => {
                     this.isSettingWelcome = false;
                     if (response.data.status === true) {
-                        this.emitSetWelcome();
+//                        this.emitSetWelcome();
+                        window.location.href = '/product';
                     }
                 }).catch(error => {
                     this.isSettingWelcome = false;

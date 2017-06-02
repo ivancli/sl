@@ -55,7 +55,7 @@
                         <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadUserActivityLogs" :disabled="paginationData.current_page == 1">FIRST</button>
                         <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadUserActivityLogs(prevPageUrl)" :disabled="prevPageUrl == null">PREV</button>
                         <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadUserActivityLogs(nextPageUrl)" :disabled="nextPageUrl == null">NEXT</button>
-                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadUserActivityLogs(lastPageUrl)" :disabled="paginationData.current_page == paginationData.last_page">LAST</button>
+                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadUserActivityLogs(lastPageUrl)" :disabled="paginationData.current_page == paginationData.last_page || paginationData.total <= paginationData.per_page">LAST</button>
                     </div>
                 </div>
             </div>
