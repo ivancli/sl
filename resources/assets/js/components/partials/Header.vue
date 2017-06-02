@@ -147,7 +147,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="/account-settings#edit-profile">My Account</a></li>
                             <li v-if="subscriptionIsValid">
-                                <a href="/account-settings#bulk-import">Bulk Import <span class="icon-new-feature">NEW</span></a>
+                                <a href="/account-settings#bulk-import">Bulk Import</a>
                             </li>
                             <li><a href="/account-settings#site-names">Site Names</a></li>
                             <li><a href="/account-settings#reset-password">Reset Password</a></li>

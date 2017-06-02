@@ -71,7 +71,7 @@ class Kernel extends ConsoleKernel
                     #region check if last reservation is within an hour
                     $crawlLastReservedAt = $this->appPrefRepo->get('CRAWL_LAST_RESERVED_AT');
                     if (!is_null($crawlLastReservedAt)) {
-                        $lastReservedDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $crawlLastReservedAt->value);
+                        $lastReservedDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $crawlLastReservedAt);
                         $currentDateTime = Carbon::now();
                         if ($lastReservedDateTime->diffInHours($currentDateTime) > 0) {
                             return true;
