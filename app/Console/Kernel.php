@@ -60,7 +60,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('crawl --active')
             ->withoutOverlapping()
-            ->everyMinute()
+            ->everyTenMinutes()
             ->when(function () {
                 #region validate reservation
                 $crawlReservedAppPref = $this->appPrefRepo->get('CRAWL_RESERVED');
