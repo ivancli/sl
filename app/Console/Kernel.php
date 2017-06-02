@@ -60,7 +60,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('crawl --active')
             ->withoutOverlapping()
-            ->hourly()
+            ->everyMinute()
             ->when(function () {
                 #region validate reservation
                 $crawlReservedAppPref = $this->appPrefRepo->get('CRAWL_RESERVED');
@@ -70,10 +70,10 @@ class Kernel extends ConsoleKernel
 
                     #region check if last reservation is within an hour
                     $crawlLastReservedAt = $this->appPrefRepo->get('CRAWL_LAST_RESERVED_AT');
-                    if (!is_null($crawlLastReservedAt)) {
-                        $lastReservedDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $crawlLastReservedAt);
+                    if (!is_null($crawlLastReservedAt) && !is_null($crawlLastReservedAt->value)) {
+                        $lastReservedDateTimePref = Carbon::createFromFormat('Y-m-d H:i:s', $crawlLastReservedAt->value);
                         $currentDateTime = Carbon::now();
-                        if ($lastReservedDateTime->diffInHours($currentDateTime) > 0) {
+                        if ($lastReservedDateTimePref->diffInHours($currentDateTime) > 0) {
                             return true;
                         }
                     } else {
@@ -85,8 +85,7 @@ class Kernel extends ConsoleKernel
                 #endregion
 
                 return false;
-            })
-            ->before(function () {
+            })->before(function () {
                 #region reserve crawler
                 $this->appPrefRepo->store([
                     'element' => 'CRAWL_RESERVED',
@@ -97,8 +96,7 @@ class Kernel extends ConsoleKernel
                     'value' => Carbon::now()->toDateTimeString()
                 ]);
                 #endregion
-            })
-            ->after(function () {
+            })->after(function () {
                 #region release crawlers
                 $this->appPrefRepo->store([
                     'element' => 'CRAWL_RESERVED',
