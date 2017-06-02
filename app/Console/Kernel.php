@@ -81,7 +81,6 @@ class Kernel extends ConsoleKernel
                         return true;
                     }
                     #endregion
-
                 }
                 #endregion
 
