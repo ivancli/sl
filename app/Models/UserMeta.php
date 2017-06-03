@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserMeta extends Model
 {
     protected $fillable = [
-        'industry', 'company_type', 'company_url'
+        'industry', 'company_type', 'company_url', 'ebay_username'
     ];
 
     /**

@@ -111,7 +111,7 @@ class DomainMetaController extends Controller
 
         event(new BeforeUpdate($domain));
 
-        $domain = $this->domainMetaService->update($domain, $this->request->all());
+        $domain = $this->domainMetaService->update($domain_id, $this->request->all());
         $status = true;
 
         event(new AfterUpdate($domain));

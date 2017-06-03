@@ -61,8 +61,8 @@ class DomainMetaService
      */
     public function update($domain_id, array $data)
     {
-        $domain = $this->domainRepo->get($domain_id);
         $this->updateValidator->validate($data);
+        $domain = $this->domainRepo->get($domain_id);
         $domain = $this->domainMetaRepo->update($domain, array_get($data, 'metas'));
         return $domain;
     }

@@ -49,6 +49,7 @@ class TestController extends Controller
         $crawler = $url->crawler;
         $result = $this->crawlerRepo->fetch($crawler);
         $content = $result['content'];
+        dd(json_decode($content));
         $items = $url->items;
         foreach ($items as $item) {
             foreach ($item->metas as $meta) {

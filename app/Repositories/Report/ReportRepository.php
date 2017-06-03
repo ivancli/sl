@@ -163,7 +163,10 @@ class ReportRepository implements ReportContract
 
         $product->sites->each(function ($site) use ($userDomains) {
             $siteDomain = domain($site->siteUrl);
-            if (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
+
+            if(!is_null($site->item) && !is_null($site->item->sellerUsername)){
+                $site->setAttribute('displayName', $site->item->sellerUsername);
+            }elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
                 $site->setAttribute('displayName', array_get($userDomains, $siteDomain));
             } else {
                 $site->setAttribute('displayName', $site->url->domainFullPath);
@@ -212,7 +215,10 @@ class ReportRepository implements ReportContract
         $category->products->each(function ($product) use ($userDomains) {
             $product->sites->each(function ($site) use ($userDomains) {
                 $siteDomain = domain($site->siteUrl);
-                if (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
+
+                if(!is_null($site->item) && !is_null($site->item->sellerUsername)){
+                    $site->setAttribute('displayName', $site->item->sellerUsername);
+                }elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
                     $site->setAttribute('displayName', array_get($userDomains, $siteDomain));
                 } else {
                     $site->setAttribute('displayName', $site->url->domainFullPath);
@@ -271,18 +277,17 @@ class ReportRepository implements ReportContract
             $mostExpensivePrice = $sites->max('item.recentPrice');
 
             foreach ($sites as $site) {
-
-
+                $item = $site->item;
                 $siteDomain = domain($site->siteUrl);
-                if (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
+                if (is_null($item)) {
+                    continue;
+                }
+                if(!is_null($item->sellerUsername)){
+                    $site->setAttribute('displayName', $item->sellerUsername);
+                }elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
                     $site->setAttribute('displayName', array_get($userDomains, $siteDomain));
                 } else {
                     $site->setAttribute('displayName', $site->url->domainFullPath);
-                }
-
-                $item = $site->item;
-                if (is_null($item)) {
-                    continue;
                 }
                 $recentPrice = $item->recentPrice;
 

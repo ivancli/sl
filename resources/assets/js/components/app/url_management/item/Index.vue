@@ -129,11 +129,11 @@
                 this.url = editingUrl;
             },
             loadItems(link){
-                if (typeof link != 'string') {
+                if (typeof link !== 'string') {
                     link = this.firstPageUrl;
                 }
                 axios.get(link).then(response => {
-                    if (response.data.status == true) {
+                    if (response.data.status === true) {
                         this.items = response.data.items.data;
                         this.paginationData.current_page = response.data.items.current_page;
                         this.paginationData.from = response.data.items.from;
@@ -191,45 +191,50 @@
                     + '&orderBy=' + this.orderByData.column
                     + '&direction=' + this.orderByData.direction
                     + '&per_page=' + this.paginationData.per_page
-                    + '&key=' + this.filterText;
+                    + '&key=' + this.filterText
+                    + '&url_id=' + this.url.id;
             },
             nextPageUrl() {
-                if (this.paginationData.next_page_url == null) {
+                if (this.paginationData.next_page_url === null) {
                     return null;
                 } else {
                     return this.paginationData.next_page_url
                         + '&orderBy=' + this.orderByData.column
                         + '&direction=' + this.orderByData.direction
                         + '&per_page=' + this.paginationData.per_page
-                        + '&key=' + this.filterText;
+                        + '&key=' + this.filterText
+                        + '&url_id=' + this.url.id;
                 }
             },
             prevPageUrl() {
-                if (this.paginationData.prev_page_url == null) {
+                if (this.paginationData.prev_page_url === null) {
                     return null;
                 } else {
                     return this.paginationData.prev_page_url
                         + '&orderBy=' + this.orderByData.column
                         + '&direction=' + this.orderByData.direction
                         + '&per_page=' + this.paginationData.per_page
-                        + '&key=' + this.filterText;
+                        + '&key=' + this.filterText
+                        + '&url_id=' + this.url.id;
                 }
             },
             firstPageUrl() {
                 return this.url.urls.item_index + '&page=1&orderBy=' + this.orderByData.column
                     + '&direction=' + this.orderByData.direction
                     + '&per_page=' + this.paginationData.per_page
-                    + '&key=' + this.filterText;
+                    + '&key=' + this.filterText
+                    + '&url_id=' + this.url.id;
             },
             lastPageUrl() {
                 return this.url.urls.item_index + '&page=' + this.paginationData.last_page
                     + '&orderBy=' + this.orderByData.column
                     + '&direction=' + this.orderByData.direction
                     + '&per_page=' + this.paginationData.per_page
-                    + '&key=' + this.filterText;
+                    + '&key=' + this.filterText
+                    + '&url_id=' + this.url.id;
             },
             viewUrlsUrl(){
-                if (this.url != null) {
+                if (this.url !== null) {
                     return this.url.urls.index;
                 } else {
                     return null;

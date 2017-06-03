@@ -180,7 +180,10 @@ class Alert implements ShouldQueue
                             if (floatval($notMySiteItem->recentPrice) < floatval($mySiteItem->recentPrice)) {
 
                                 $siteDomain = domain($notMySite->siteUrl);
-                                if (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
+
+                                if (!is_null($notMySite->item) && !is_null($notMySite->item->sellerUsername)) {
+                                    $notMySite->setAttribute('displayName', $notMySite->item->sellerUsername);
+                                } elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
                                     $notMySite->setAttribute('displayName', array_get($userDomains, $siteDomain));
                                 } else {
                                     $notMySite->setAttribute('displayName', $notMySite->url->domainFullPath);
@@ -229,7 +232,10 @@ class Alert implements ShouldQueue
             if ($this->_siteHasPriceChange($site)) {
 
                 $siteDomain = domain($site->siteUrl);
-                if (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
+
+                if (!is_null($site->item) && !is_null($site->item->sellerUsername)) {
+                    $site->setAttribute('displayName', $site->item->sellerUsername);
+                } elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
                     $site->setAttribute('displayName', array_get($userDomains, $siteDomain));
                 } else {
                     $site->setAttribute('displayName', $site->url->domainFullPath);
@@ -311,7 +317,10 @@ class Alert implements ShouldQueue
                         if ($comparedResult) {
 
                             $siteDomain = domain($site->siteUrl);
-                            if (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
+
+                            if (!is_null($site->item) && !is_null($site->item->sellerUsername)) {
+                                $site->setAttribute('displayName', $site->item->sellerUsername);
+                            } elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
                                 $site->setAttribute('displayName', array_get($userDomains, $siteDomain));
                             } else {
                                 $site->setAttribute('displayName', $site->url->domainFullPath);
@@ -403,7 +412,10 @@ class Alert implements ShouldQueue
                                 if (floatval($notMySiteItem->recentPrice) < floatval($mySiteItem->recentPrice)) {
 
                                     $siteDomain = domain($notMySite->siteUrl);
-                                    if (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
+
+                                    if (!is_null($notMySite->item) && !is_null($notMySite->item->sellerUsername)) {
+                                        $notMySite->setAttribute('displayName', $notMySite->item->sellerUsername);
+                                    } elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
                                         $notMySite->setAttribute('displayName', array_get($userDomains, $siteDomain));
                                     } else {
                                         $notMySite->setAttribute('displayName', $notMySite->url->domainFullPath);
@@ -456,7 +468,10 @@ class Alert implements ShouldQueue
         foreach ($sites as $site) {
             if ($this->_siteHasPriceChange($site)) {
                 $siteDomain = domain($site->siteUrl);
-                if (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
+
+                if (!is_null($site->item) && !is_null($site->item->sellerUsername)) {
+                    $site->setAttribute('displayName', $site->item->sellerUsername);
+                } elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
                     $site->setAttribute('displayName', array_get($userDomains, $siteDomain));
                 } else {
                     $site->setAttribute('displayName', $site->url->domainFullPath);
@@ -571,7 +586,10 @@ class Alert implements ShouldQueue
             if ($this->_siteHasPriceChange($site)) {
 
                 $siteDomain = domain($site->siteUrl);
-                if (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
+
+                if (!is_null($site->item) && !is_null($site->item->sellerUsername)) {
+                    $site->setAttribute('displayName', $site->item->sellerUsername);
+                } elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
                     $site->setAttribute('displayName', array_get($userDomains, $siteDomain));
                 } else {
                     $site->setAttribute('displayName', $site->url->domainFullPath);
@@ -602,7 +620,17 @@ class Alert implements ShouldQueue
      */
     private function _isMySite(Site $site)
     {
+        $ebaySellerUsername = $this->user->metas->ebay_username;
         $companyUrl = $this->user->metas->company_url;
+
+        /*ebay username checking*/
+        if (!is_null($site->item) && !is_null($site->item->sellerUsername)) {
+            if ($site->item->sellerUsername == $ebaySellerUsername) {
+                return true;
+            }
+        }
+
+        /*company url checking*/
         if (!is_null($companyUrl)) {
             $urlSegments = parse_url($companyUrl);
             $companyDomain = isset($urlSegments['host']) ? $urlSegments['host'] : '';
@@ -623,8 +651,6 @@ class Alert implements ShouldQueue
             }
             return $companyDomain == $siteDomain;
         }
-
-        /* TODO add ebay later on */
 
         return false;
     }

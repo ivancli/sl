@@ -20,7 +20,7 @@ class Item extends Model
     ];
 
     protected $appends = [
-        'recentPrice', 'recentPriceAt', 'availability', 'previousPrice', 'priceChange', 'lastChangedAt', 'urls'
+        'recentPrice', 'recentPriceAt', 'sellerUsername', 'availability', 'previousPrice', 'priceChange', 'lastChangedAt', 'urls'
     ];
 
     /**
@@ -63,7 +63,7 @@ class Item extends Model
         $priceItemMeta = $this->metas()->where('element', 'PRICE')->first();
         if (!is_null($priceItemMeta)) {
             $price = $priceItemMeta->historicalPrices()->orderBy('id', 'desc')->first();
-            if(!is_null($price)){
+            if (!is_null($price)) {
                 return $price->amount;
             }
         }
@@ -75,9 +75,19 @@ class Item extends Model
         $priceItemMeta = $this->metas()->where('element', 'PRICE')->first();
         if (!is_null($priceItemMeta)) {
             $price = $priceItemMeta->historicalPrices()->orderBy('id', 'desc')->first();
-            if(!is_null($price)){
+            if (!is_null($price)) {
                 return $price->created_at;
             }
+        }
+        return null;
+    }
+
+    public function getSellerUsernameAttribute()
+    {
+        $sellerUsernameMeta = $this->metas()->where('element', 'SELLER_USERNAME')->first();
+        if (!is_null($sellerUsernameMeta)) {
+            $sellerUsername = $sellerUsernameMeta->value;
+            return $sellerUsername;
         }
         return null;
     }

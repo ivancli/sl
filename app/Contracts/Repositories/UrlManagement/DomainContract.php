@@ -30,7 +30,7 @@ interface DomainContract
      * Get domain by ID
      * @param $domain_id
      * @param bool $throw
-     * @return mixed
+     * @return Domain
      */
     public function get($domain_id, $throw = true);
 

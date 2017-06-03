@@ -61,5 +61,53 @@ class DomainSeeder extends Seeder
         unset($priceMeta);
 
         #endregion
+
+
+        #region eBay
+
+        $domain = $this->domainRepo->store([
+            'name' => 'eBay',
+            'full_path' => 'http://www.ebay.com',
+        ]);
+
+        $domain->confs()->save(new DomainConf([
+            'element' => 'CUSTOM_ITEM_GENERATOR',
+            'value' => 'EBAY\MultipleItemGenerator'
+        ]));
+
+        $domain->confs()->save(new DomainConf([
+            'element' => 'CUSTOM_CRAWLER',
+            'value' => 'EBAY\APICrawler'
+        ]));
+
+        $domain->confs()->save(new DomainConf([
+            'element' => 'CUSTOM_PARSER',
+            'value' => 'EBAY\MultipleItemParser'
+        ]));
+
+        $priceMeta = $domain->metas()->save(new DomainMeta([
+            'element' => 'PRICE',
+            'format_type' => 'decimal',
+            'historical_type' => 'price',
+            'multi' => 'n'
+        ]));
+
+        $priceMeta->confs()->save(new DomainMetaConf([
+            'element' => 'ARRAY',
+            'value' => 'price.value',
+            'order' => 0
+        ]));
+
+        $priceMeta = $domain->metas()->save(new DomainMeta([
+            'element' => 'SELLER_USERNAME',
+            'multi' => 'n'
+        ]));
+
+        $priceMeta->confs()->save(new DomainMetaConf([
+            'element' => 'ARRAY',
+            'value' => 'seller.username',
+            'order' => 0
+        ]));
+        #endregion
     }
 }

@@ -69,14 +69,14 @@ class DomainRepository implements DomainContract
      * Get domain by ID
      * @param $domain_id
      * @param bool $throw
-     * @return mixed
+     * @return Domain
      */
     public function get($domain_id, $throw = true)
     {
         if ($throw) {
-            $domain = Domain::findOrFail($domain_id);
+            $domain = $this->domain->findOrFail($domain_id);
         } else {
-            $domain = Domain::find($domain_id);
+            $domain = $this->domain->find($domain_id);
         }
         return $domain;
     }

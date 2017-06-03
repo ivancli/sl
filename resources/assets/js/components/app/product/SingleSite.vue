@@ -7,13 +7,12 @@
                 {{ displayName }}
             </a>
 
-            <edit-site :editing-site="site" :going-to-edit-site="editingSiteURL" @edited-site="editedSite"
-                       @cancel-edit-site-url="cancelEditSiteURL"></edit-site>
+            <edit-site :editing-site="site" :going-to-edit-site="editingSiteURL" @edited-site="editedSite" @cancel-edit-site-url="cancelEditSiteURL"></edit-site>
         </td>
         <td class="vertical-align-middle col-recent-price" :class="mySiteClass">
             <div class="text-right">
-                <div v-if="site.item != null && site.item.recentPrice != null">
-                    ${{ site.item.recentPrice | currency }}
+                <div v-if="item != null && item.recentPrice != null">
+                    ${{ item.recentPrice | currency }}
                 </div>
                 <div v-else>
                     <div class="p-r-30">
@@ -24,8 +23,8 @@
         </td>
         <td class="vertical-align-middle" :class="mySiteClass">
             <div class="text-center">
-                <div v-if="site.item != null && site.item.availability != null">
-                    {{ site.item.availability == true ? 'Yes' : 'No' }}
+                <div v-if="item != null && item.availability != null">
+                    {{ item.availability == true ? 'Yes' : 'No' }}
                 </div>
                 <div v-else>
                     <strong><i class="fa fa-minus"></i></strong>
@@ -34,8 +33,8 @@
         </td>
         <td class="vertical-align-middle hidden-xs hidden-sm col-previous-price" :class="mySiteClass">
             <div class="text-right">
-                <div v-if="site.item != null && site.item.previousPrice != null">
-                    ${{ site.item.previousPrice | currency }}
+                <div v-if="item != null && item.previousPrice != null">
+                    ${{ item.previousPrice | currency }}
                 </div>
                 <div v-else>
                     <div class="p-r-30">
@@ -46,8 +45,8 @@
         </td>
         <td class="vertical-align-middle hidden-xs hidden-sm col-price-change" :class="mySiteClass">
             <div class="text-right">
-                <div v-if="site.item != null && site.item.priceChange != null">
-                    ${{ site.item.priceChange | currency }}
+                <div v-if="item != null && item.priceChange != null">
+                    ${{ item.priceChange | currency }}
                 </div>
                 <div v-else>
                     <div class="p-r-10">
@@ -57,8 +56,8 @@
             </div>
         </td>
         <td class="hidden-xs vertical-align-middle hidden-xs hidden-sm p-l-20" :class="mySiteClass">
-            <div v-if="site.item != null && site.item.lastChangedAt != null">
-                {{ site.item.lastChangedAt | formatDateTime(dateFormat) }}
+            <div v-if="item != null && item.lastChangedAt != null">
+                {{ item.lastChangedAt | formatDateTime(dateFormat) }}
             </div>
             <div v-else>
                 <div class="p-l-30">
@@ -74,10 +73,10 @@
                 <i class="fa fa-pencil"></i>
             </a>
             <a href="#" class="btn-action" title="choose item" v-if="site.url.itemsCount > 1 && subscriptionIsValid" @click.prevent="onClickSelectItem">
-                <i class="fa fa-exclamation-triangle" v-if="site.item == null"></i>
+                <i class="fa fa-exclamation-triangle" v-if="item == null"></i>
                 <i class="fa fa-list-ul" v-else></i>
             </a>
-            <a href="#" class="btn-action" v-if="site.item != null" title="chart" @click.prevent="onClickViewChart">
+            <a href="#" class="btn-action" v-if="item != null" title="chart" @click.prevent="onClickViewChart">
                 <i class="fa fa-line-chart"></i>
             </a>
             <a href="#" class="btn-action" title="delete" @click.prevent="onClickDeleteSite">
@@ -106,8 +105,8 @@
                 <tr>
                     <th>Current price:</th>
                     <td>
-                        <div v-if="site.item != null && site.item.recentPrice != null">
-                            ${{ site.item.recentPrice | currency }}
+                        <div v-if="item != null && item.recentPrice != null">
+                            ${{ item.recentPrice | currency }}
                         </div>
                         <div v-else>
                             <div class="p-l-30">
@@ -258,6 +257,9 @@
             site(){
                 return this.currentSite;
             },
+            item(){
+                return this.site.item;
+            },
             dateFormat(){
                 return user.allPreferences.DATE_FORMAT;
             },
@@ -285,9 +287,16 @@
             userDomains(){
                 return this.$store.getters.userDomains;
             },
+            sellerUsername(){
+                if (this.item !== null) {
+                    return this.item.sellerUsername;
+                }
+            },
             displayName(){
                 /*TODO need to add ebay site store name before the following validations*/
-
+                if (this.sellerUsername !== null) {
+                    return this.sellerUsername;
+                }
                 let siteDomain = this.$options.filters.domain(this.site.siteUrl);
 
                 let userDomains = this.userDomains.filter(userDomain => {
@@ -303,8 +312,18 @@
 
                 return siteDomain;
             },
+            companyUrl(){
+                return this.user.metas.company_url;
+            },
+            ebayUsername(){
+                return this.user.metas.ebay_username;
+            },
             isMySite(){
-                if (this.user.metas.company_url === null) {
+                if (this.ebayUsername !== null && this.sellerUsername !== null && this.ebayUsername === this.sellerUsername) {
+                    return true;
+                }
+
+                if (this.companyUrl === null) {
                     return false;
                 }
 
@@ -313,7 +332,7 @@
                 let siteSubdomain = siteDomainParts.shift();
                 let upperLevelSiteDomain = siteDomainParts.join('.');
 
-                let companyDomain = this.$options.filters.domain(this.user.metas.company_url);
+                let companyDomain = this.$options.filters.domain(this.companyUrl);
                 let companyDomainParts = companyDomain.split('.');
                 let companySubdomain = companyDomainParts.shift();
                 let upperLevelCompanyDomain = companyDomainParts.join('.');
