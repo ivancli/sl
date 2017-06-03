@@ -16,6 +16,7 @@ use App\Models\Crawler;
 use App\Models\Domain;
 use App\Models\Item;
 use App\Models\Url;
+use Carbon\Carbon;
 use IvanCLI\Crawler\Repositories\DefaultCrawler;
 use IvanCLI\Crawler\Repositories\EBAY\AccessToken;
 use IvanCLI\Crawler\Repositories\EBAY\APICrawler;
@@ -44,6 +45,14 @@ class TestController extends Controller
     public function test()
     {
 
+
+        $lastReservedDateTimePref = Carbon::parse("2017-06-04 02:10:01")->minute(0)->second(0);
+        $currentDateTime = Carbon::now();
+        if ($lastReservedDateTimePref->diffInHours($currentDateTime) > 0) {
+            dd("true");
+        }
+
+        dd("false");
 
         $url = Url::findOrFail(10);
         $crawler = $url->crawler;
