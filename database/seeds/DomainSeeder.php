@@ -98,6 +98,12 @@ class DomainSeeder extends Seeder
             'order' => 0
         ]));
 
+        $priceMeta->confs()->save(new DomainMetaConf([
+            'element' => 'ARRAY',
+            'value' => 'currentBidPrice.value',
+            'order' => 1
+        ]));
+
         $priceMeta = $domain->metas()->save(new DomainMeta([
             'element' => 'SELLER_USERNAME',
             'multi' => 'n'
