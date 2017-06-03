@@ -46,15 +46,15 @@ class TestController extends Controller
     {
 
 
-        $lastReservedDateTimePref = Carbon::parse("2017-06-04 02:10:01")->minute(0)->second(0);
-        $currentDateTime = Carbon::now();
-        if ($lastReservedDateTimePref->diffInHours($currentDateTime) > 0) {
-            dd("true");
-        }
+//        $lastReservedDateTimePref = Carbon::parse("2017-06-04 02:10:01")->minute(0)->second(0);
+//        $currentDateTime = Carbon::now();
+//        if ($lastReservedDateTimePref->diffInHours($currentDateTime) > 0) {
+//            dd("true");
+//        }
+//
+//        dd("false");
 
-        dd("false");
-
-        $url = Url::findOrFail(10);
+        $url = Url::findOrFail(3);
         $crawler = $url->crawler;
         $result = $this->crawlerRepo->fetch($crawler);
         $content = $result['content'];

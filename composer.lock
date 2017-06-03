@@ -632,12 +632,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ketchol/parser.git",
-                "reference": "b4b8ddb6f9738599a0b4836ad94a725c3ca2464a"
+                "reference": "7c89a7c116f8801247b3c3453479fbaa8858559a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ketchol/parser/zipball/b4b8ddb6f9738599a0b4836ad94a725c3ca2464a",
-                "reference": "b4b8ddb6f9738599a0b4836ad94a725c3ca2464a",
+                "url": "https://api.github.com/repos/ketchol/parser/zipball/7c89a7c116f8801247b3c3453479fbaa8858559a",
+                "reference": "7c89a7c116f8801247b3c3453479fbaa8858559a",
                 "shasum": ""
             },
             "require": {
@@ -672,7 +672,7 @@
                 "source": "https://github.com/ketchol/parser/tree/master",
                 "issues": "https://github.com/ketchol/parser/issues"
             },
-            "time": "2017-06-03T04:41:21+00:00"
+            "time": "2017-06-03T17:35:47+00:00"
         },
         {
             "name": "ivancli/um",
