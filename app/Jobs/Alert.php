@@ -182,7 +182,7 @@ class Alert implements ShouldQueue
                                 $siteDomain = domain($notMySite->siteUrl);
 
                                 if (!is_null($notMySite->item) && !is_null($notMySite->item->sellerUsername)) {
-                                    $notMySite->setAttribute('displayName', $notMySite->item->sellerUsername);
+                                    $notMySite->setAttribute('displayName', "eBay: {$notMySite->item->sellerUsername}");
                                 } elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
                                     $notMySite->setAttribute('displayName', array_get($userDomains, $siteDomain));
                                 } else {
@@ -234,7 +234,7 @@ class Alert implements ShouldQueue
                 $siteDomain = domain($site->siteUrl);
 
                 if (!is_null($site->item) && !is_null($site->item->sellerUsername)) {
-                    $site->setAttribute('displayName', $site->item->sellerUsername);
+                    $site->setAttribute('displayName', "eBay: {$site->item->sellerUsername}");
                 } elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
                     $site->setAttribute('displayName', array_get($userDomains, $siteDomain));
                 } else {
@@ -319,7 +319,7 @@ class Alert implements ShouldQueue
                             $siteDomain = domain($site->siteUrl);
 
                             if (!is_null($site->item) && !is_null($site->item->sellerUsername)) {
-                                $site->setAttribute('displayName', $site->item->sellerUsername);
+                                $site->setAttribute('displayName', "eBay: {$site->item->sellerUsername}");
                             } elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
                                 $site->setAttribute('displayName', array_get($userDomains, $siteDomain));
                             } else {
@@ -414,7 +414,7 @@ class Alert implements ShouldQueue
                                     $siteDomain = domain($notMySite->siteUrl);
 
                                     if (!is_null($notMySite->item) && !is_null($notMySite->item->sellerUsername)) {
-                                        $notMySite->setAttribute('displayName', $notMySite->item->sellerUsername);
+                                        $notMySite->setAttribute('displayName', "eBay: {$notMySite->item->sellerUsername}");
                                     } elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
                                         $notMySite->setAttribute('displayName', array_get($userDomains, $siteDomain));
                                     } else {
@@ -470,7 +470,7 @@ class Alert implements ShouldQueue
                 $siteDomain = domain($site->siteUrl);
 
                 if (!is_null($site->item) && !is_null($site->item->sellerUsername)) {
-                    $site->setAttribute('displayName', $site->item->sellerUsername);
+                    $site->setAttribute('displayName', "eBay: {$site->item->sellerUsername}");
                 } elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
                     $site->setAttribute('displayName', array_get($userDomains, $siteDomain));
                 } else {
@@ -588,7 +588,7 @@ class Alert implements ShouldQueue
                 $siteDomain = domain($site->siteUrl);
 
                 if (!is_null($site->item) && !is_null($site->item->sellerUsername)) {
-                    $site->setAttribute('displayName', $site->item->sellerUsername);
+                    $site->setAttribute('displayName', "eBay: {$site->item->sellerUsername}");
                 } elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
                     $site->setAttribute('displayName', array_get($userDomains, $siteDomain));
                 } else {

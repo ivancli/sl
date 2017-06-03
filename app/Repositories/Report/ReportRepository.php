@@ -165,7 +165,7 @@ class ReportRepository implements ReportContract
             $siteDomain = domain($site->siteUrl);
 
             if(!is_null($site->item) && !is_null($site->item->sellerUsername)){
-                $site->setAttribute('displayName', $site->item->sellerUsername);
+                $site->setAttribute('displayName', "eBay: {$site->item->sellerUsername}");
             }elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
                 $site->setAttribute('displayName', array_get($userDomains, $siteDomain));
             } else {
@@ -217,7 +217,7 @@ class ReportRepository implements ReportContract
                 $siteDomain = domain($site->siteUrl);
 
                 if(!is_null($site->item) && !is_null($site->item->sellerUsername)){
-                    $site->setAttribute('displayName', $site->item->sellerUsername);
+                    $site->setAttribute('displayName', "eBay: {$site->item->sellerUsername}");
                 }elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
                     $site->setAttribute('displayName', array_get($userDomains, $siteDomain));
                 } else {
@@ -283,7 +283,7 @@ class ReportRepository implements ReportContract
                     continue;
                 }
                 if(!is_null($item->sellerUsername)){
-                    $site->setAttribute('displayName', $item->sellerUsername);
+                    $site->setAttribute('displayName', "eBay: {$item->sellerUsername}");
                 }elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
                     $site->setAttribute('displayName', array_get($userDomains, $siteDomain));
                 } else {

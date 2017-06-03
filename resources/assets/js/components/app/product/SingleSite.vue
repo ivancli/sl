@@ -291,11 +291,12 @@
                 if (this.item !== null) {
                     return this.item.sellerUsername;
                 }
+                return null;
             },
             displayName(){
                 /*TODO need to add ebay site store name before the following validations*/
                 if (this.sellerUsername !== null) {
-                    return this.sellerUsername;
+                    return "eBay: " + this.sellerUsername;
                 }
                 let siteDomain = this.$options.filters.domain(this.site.siteUrl);
 
