@@ -146,6 +146,11 @@ class Domain extends Model
         return $conf;
     }
 
+    /**
+     * load specific configuration
+     * @param $element
+     * @return mixed
+     */
     public function getConf($element)
     {
         return $this->confs()->where('element', $element)->first();

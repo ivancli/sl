@@ -103,12 +103,26 @@ class Crawler extends Model
      * Set crawled_at to particular/current date time
      * @param string|null $dateTime
      */
-    public function setCrawledAt(string $dateTime = null)
+    public function setCrawledAt($dateTime = null)
     {
         if (is_null($dateTime)) {
             $dateTime = Carbon::now()->toDateTimeString();
         }
         $this->crawled_at = $dateTime;
         $this->save();
+    }
+
+    /**
+     * Create new configuration
+     * @param array $data
+     * @return Model
+     */
+    public function setConf(array $data = [])
+    {
+        if ($this->conf()->count() > 0) {
+            $this->conf->update($data);
+        } else {
+            $this->conf()->save(new CrawlerConf($data));
+        }
     }
 }

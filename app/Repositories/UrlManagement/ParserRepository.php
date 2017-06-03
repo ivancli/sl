@@ -55,7 +55,6 @@ class ParserRepository implements ParserContract
                 $itemConfs = $itemMeta->confs;
                 $parserClass->setOptions($itemConfs);
                 $parserClass->extract();
-                $parserClass->extract();
                 $extraction = $parserClass->getExtractions();
                 break;
         }

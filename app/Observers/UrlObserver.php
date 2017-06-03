@@ -40,13 +40,12 @@ class UrlObserver
         }
 
         /* CREATE CRAWLER */
-        $crawlerConf = $url->domain->getConf('CRAWLER');
+        $crawlerConf = $url->domain->getConf('CUSTOM_CRAWLER');
         $crawlerName = !is_null($crawlerConf) ? $crawlerConf->value : null;
-        $crawler = new Crawler([
+        $crawler = $url->crawler()->save(new Crawler);
+        $crawler->setConf([
             'class' => $crawlerName
         ]);
-        $url->crawler()->save($crawler);
-
 
         $domain = $url->domain;
         if (!is_null($domain)) {
@@ -169,11 +168,20 @@ class UrlObserver
                 foreach ($domainMeta->confs as $domainMetaConf) {
                     $itemMeta->setConf($domainMetaConf->element, $domainMetaConf->value);
                 }
+                $customParser = $url->domain->getConf('CUSTOM_PARSER');
+                if (!is_null($customParser)) {
+                    $itemMeta->setConf('PARSER_CLASS', $customParser->value);
+                }
             }
         } else {
             /*standard entities - price and availability*/
             $priceMeta = $item->setMeta('PRICE', null, false, 'decimal', 'price');
             $availabilityMeta = $item->setMeta('AVAILABILITY', null, false, 'boolean');
+            $customParser = $url->domain->getConf('CUSTOM_PARSER');
+            if (!is_null($customParser)) {
+                $priceMeta->setConf('PARSER_CLASS', $customParser->value);
+                $availabilityMeta->setConf('PARSER_CLASS', $customParser->value);
+            }
         }
         return $item;
     }

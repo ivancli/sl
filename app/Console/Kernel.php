@@ -112,6 +112,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('alert')
             ->withoutOverlapping()
             ->everyThirtyMinutes();
+        /*TODO add time checker in app preference*/
 
         #endregion
 
@@ -120,6 +121,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('report')
             ->withoutOverlapping()
             ->everyThirtyMinutes();
+        /*TODO add time checker in app preference*/
 
         #endregion
     }
