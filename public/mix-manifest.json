@@ -1,8 +1,8 @@
 {
-  "/js/app/product/index.js": "/js/app/product/index.3604b4213b3ecd91f4da.js",
+  "/js/app/product/index.js": "/js/app/product/index.6cb94e601db69252a0f5.js",
   "/js/app/account_settings/index.js": "/js/app/account_settings/index.13e266f6b6726d41a742.js",
   "/js/app/dashboard/index.js": "/js/app/dashboard/index.fafd9a7c0b17e3c10970.js",
-  "/js/app/report/index.js": "/js/app/report/index.f789dcc1d6e08d72c460.js",
+  "/js/app/report/index.js": "/js/app/report/index.f587243379dcab23b46c.js",
   "/js/app/item_meta/index.js": "/js/app/item_meta/index.275ba7bda375d29a8e12.js",
   "/js/app/alert/index.js": "/js/app/alert/index.ec8d433e64a8d2b09724.js",
   "/js/app/item/index.js": "/js/app/item/index.64944ca8aaaf81b1335c.js",
@@ -32,11 +32,12 @@
   "/js/app/domain/show.js": "/js/app/domain/show.f6852fdb592d1366fcf2.js",
   "/js/app/domain/edit.js": "/js/app/domain/edit.ce82fce47f9b0518f2f0.js",
   "/js/app/domain/create.js": "/js/app/domain/create.a0e28901dd4f83042e67.js",
+  "/js/app/positioining/index.js": "/js/app/positioining/index.e2885c245459d360683d.js",
   "/js/auth/register.js": "/js/auth/register.7ea0f00882fc372c99c1.js",
   "/js/auth/reset.js": "/js/auth/reset.d3ac12d911eb649330f6.js",
   "/js/auth/forgot.js": "/js/auth/forgot.ae099dfc99e8216e8e35.js",
   "/js/auth/login.js": "/js/auth/login.59e6ba5c90a4e635c235.js",
   "/js/app.js": "/js/app.d704065cff50b8972b47.js",
-  "/css/app.css": "/css/app.5f060bf7e1944e7e6262.css",
-  "/css/auth.css": "/css/auth.5f060bf7e1944e7e6262.css"
+  "/css/app.css": "/css/app.15e3e987023c9663a539.css",
+  "/css/auth.css": "/css/auth.15e3e987023c9663a539.css"
 }

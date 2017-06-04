@@ -146,6 +146,21 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\HistoricalReport\AfterUpdate' => [],
         'App\Events\HistoricalReport\BeforeDestroy' => [],
         'App\Events\HistoricalReport\AfterDestroy' => [],
+        /*historical report*/
+        'App\Events\Positioning\BeforeIndex' => [],
+        'App\Events\Positioning\AfterIndex' => [],
+        'App\Events\Positioning\BeforeShow' => [],
+        'App\Events\Positioning\AfterShow' => [],
+        'App\Events\Positioning\BeforeCreate' => [],
+        'App\Events\Positioning\AfterCreate' => [],
+        'App\Events\Positioning\BeforeStore' => [],
+        'App\Events\Positioning\AfterStore' => [],
+        'App\Events\Positioning\BeforeEdit' => [],
+        'App\Events\Positioning\AfterEdit' => [],
+        'App\Events\Positioning\BeforeUpdate' => [],
+        'App\Events\Positioning\AfterUpdate' => [],
+        'App\Events\Positioning\BeforeDestroy' => [],
+        'App\Events\Positioning\AfterDestroy' => [],
 
         /**
          * URL Management

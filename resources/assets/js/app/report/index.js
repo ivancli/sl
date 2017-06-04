@@ -8,7 +8,7 @@ import defaultContent from '../../components/partials/Content.vue';
 import contentHeader from '../../components/partials/content/ContentHeader.vue';
 import contentBody from '../../components/app/report/Index.vue';
 
-import store from '../../stores/app/product/index';
+import store from '../../stores/app/report/index';
 
 const sl = new Vue({
     el: '#sl',

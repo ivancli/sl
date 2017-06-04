@@ -38,13 +38,9 @@ class Report implements ShouldQueue
         $this->report = $report;
         $this->user = $report->user;
         if (!is_null($this->report->last_active_at)) {
-            $this->lastActiveAt = Carbon::createFromFormat('Y-m-d H:i:s', $this->report->last_active_at);
-            $this->lastActiveAt->minute(0);
-            $this->lastActiveAt->second(0);
+            $this->lastActiveAt = Carbon::parse($this->report->last_active_at)->minute(0)->second(0);
         }
-        $this->now = Carbon::now();
-        $this->now->minute(0);
-        $this->now->second(0);
+        $this->now = Carbon::now()->minute(0)->second(0);
         $this->currentTime = $this->now->format('H:i:s');
 
         $this->reportRepo = app(ReportContract::class);

@@ -88,6 +88,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('historical-alert', 'Alert\HistoricalAlertController');
     Route::resource('report', 'Report\ReportController');
     Route::resource('historical-report', 'Report\HistoricalReportController');
+    Route::get('positioning/filter', 'Report\PositioningController@filter')->name('positioning.filter');
+    Route::resource('positioning', 'Report\PositioningController');
     #endregion
 
     #region Administration Routes

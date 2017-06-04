@@ -40,6 +40,9 @@ mix
     /* report */
     .js('resources/assets/js/app/report/index.js', 'public/js/app/report')
 
+    /* report */
+    .js('resources/assets/js/app/positioning/index.js', 'public/js/app/positioining')
+
     /* domain */
     .js('resources/assets/js/app/url_management/domain/index.js', 'public/js/app/domain')
     .js('resources/assets/js/app/url_management/domain/create.js', 'public/js/app/domain')
