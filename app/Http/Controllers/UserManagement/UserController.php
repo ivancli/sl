@@ -165,4 +165,10 @@ class UserController extends Controller
 
         return compact(['status']);
     }
+
+    public function loginAs(User $user)
+    {
+        auth()->login($user);
+        return redirect()->to('/');
+    }
 }

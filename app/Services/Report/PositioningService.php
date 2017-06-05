@@ -271,12 +271,10 @@ class PositioningService
                 }
                 break;
         }
-
         $skip = ($page - 1) * $perPage;
         if ($skip > 0) {
             $products = $products->slice($skip);
         }
-
         if (!is_null($length) && !empty($length)) {
             $products = $products->take($length);
         }
@@ -326,7 +324,6 @@ class PositioningService
 
         $productsBuilder = $user->products();
         $productsBuilder->with('sites.item', 'category');
-        $productsBuilder = $productsBuilder->orderBy($orderByColumn, $orderByDirection);
         $products = $productsBuilder->get();
 
         $total = $products->count();
@@ -570,7 +567,6 @@ class PositioningService
                 }
                 break;
         }
-
 
         $fileName = "export_positioning_" . Carbon::now()->format('YmdHis');
         Excel::create($fileName, function ($excel) use ($products, $position) {

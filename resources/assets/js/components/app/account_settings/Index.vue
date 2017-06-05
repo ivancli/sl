@@ -10,6 +10,11 @@
                         Edit Profile
                     </a>
                 </li>
+                <li :class="setTabActiveClass('bulk-import')">
+                    <a href="#bulk-import" @click.prevent="setActiveTab('bulk-import')">
+                        Bulk Import
+                    </a>
+                </li>
                 <li :class="setTabActiveClass('site-names')">
                     <a href="#site-names" @click.prevent="setActiveTab('site-names')">
                         Site Names
@@ -30,6 +35,9 @@
                 <div class="tab-pane" id="edit-profile" :class="setTabActiveClass('edit-profile')">
                     <edit-profile></edit-profile>
                 </div>
+                <div class="tab-pane" id="bulk-import" :class="setTabActiveClass('bulk-import')">
+                    <bulk-import></bulk-import>
+                </div>
                 <div class="tab-pane" id="site-names" :class="setTabActiveClass('site-names')">
                     <site-names></site-names>
                 </div>
@@ -48,6 +56,7 @@
     import EditProfile from './EditProfile.vue';
     import ResetPassword from './ResetPassword.vue';
     import DisplaySettings from './DisplaySettings.vue';
+    import BulkImport from '../product/BulkImport.vue';
     import SiteNames from './SiteName.vue';
     import ManageSubscription from './ManageSubscription.vue';
 
@@ -57,6 +66,7 @@
             ResetPassword,
             DisplaySettings,
             SiteNames,
+            BulkImport,
             ManageSubscription
         },
         data(){
@@ -70,6 +80,7 @@
                     switch (window.location.hash) {
                         case "#reset-password":
                         case "#display-settings":
+                        case "#bulk-import":
                         case "#site-names":
                             this.activeTab = window.location.hash.replace('#', '');
                             break;

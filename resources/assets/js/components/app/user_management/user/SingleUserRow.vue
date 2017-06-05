@@ -7,6 +7,10 @@
         <td>{{ user.created_at | formatDateTime(datetimeFormat) }}</td>
         <td>{{ user.updated_at | formatDateTime(datetimeFormat) }}</td>
         <td class="text-center">
+            <a :href="user.urls.login_as" class="text-muted">
+                <i class="fa fa-user-secret"></i>
+            </a>
+            &nbsp;
             <a :href="user.urls.show" class="text-muted">
                 <i class="glyphicon glyphicon-search"></i>
             </a>

@@ -103,7 +103,7 @@
                             <table class="table table-bordered table-hover table-striped table-condensed table-paginated">
                                 <thead>
                                 <tr>
-                                    <th :class="orderByClass('cateogry.category_name')" @click.prevent="setOrdering('category_name')">Category</th>
+                                    <th :class="orderByClass('category_name')" @click.prevent="setOrdering('category_name')">Category</th>
                                     <th :class="orderByClass('product_name')" @click.prevent="setOrdering('product_name')">Product</th>
                                     <th :class="orderByClass('ref_price')" @click.prevent="setOrdering('ref_price')">Reference site price</th>
                                     <th :class="orderByClass('cheapest')" @click.prevent="setOrdering('cheapest')">Cheapest</th>
@@ -210,12 +210,12 @@
                 })
             },
             loadProducts(link){
-                this.isLoadingProduct = true;
+                this.isLoadingProducts = true;
                 if (typeof link !== 'string') {
                     link = this.firstPageUrl;
                 }
                 axios.get(link).then(response => {
-                    this.isLoadingProduct = false;
+                    this.isLoadingProducts = false;
                     if (response.data.status === true) {
                         this.products = response.data.products.data;
                         this.paginationData.current_page = response.data.urls.current_page;
@@ -227,7 +227,7 @@
                         this.paginationData.total = response.data.urls.total;
                     }
                 }).catch(error => {
-                    this.isLoadingProduct = false;
+                    this.isLoadingProducts = false;
                     console.info(error.response);
                 })
             },
@@ -246,7 +246,7 @@
                     this.orderByData.direction = 'asc'
                 }
 
-                this.loadProducts(this.currentPageUrl);
+                this.loadProducts(this.firstPageUrl);
             },
             onFilterChanged(){
                 if (this.filterDelayData.promise !== null) {
@@ -356,4 +356,39 @@
 
 <style>
 
+    table.table-paginated th {
+        padding-right: 20px !important;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .table-paginated th.order-asc:after {
+        content: "\F160";
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: inherit;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        right: 5px;
+        position: absolute;
+        color: #aaa;
+        top: 50%;
+        margin-top: -7px;
+    }
+
+    .table-paginated th.order-desc:after {
+        content: "\F161";
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: inherit;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        right: 5px;
+        position: absolute;
+        color: #aaa;
+        top: 50%;
+        margin-top: -7px;
+    }
 </style>

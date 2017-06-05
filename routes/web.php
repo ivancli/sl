@@ -72,6 +72,10 @@ Route::group(['middleware' => ['auth']], function () {
     ]]);
     Route::get('product/report/{product}', 'Product\ProductController@report')->name('product.report.show');
 
+    Route::get('bulk-import', 'Product\BulkImportController@index')->name('bulk-import.index');
+    Route::post('bulk-import', 'Product\BulkImportController@store')->name('bulk-import.store');
+
+
     Route::resource('site', 'Product\SiteController', ['except' => [
         'create'
     ]]);
@@ -146,6 +150,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     #region User Management
     Route::group(['prefix' => 'user-management'], function () {
+        Route::get('user/login-as/{user}', 'UserManagement\UserController@loginAs')->name('user.login-as');
         Route::resource('user', 'UserManagement\UserController');
         Route::resource('group', 'UserManagement\GroupController');
         Route::resource('role', 'UserManagement\RoleController');

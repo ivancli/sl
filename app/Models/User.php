@@ -151,6 +151,15 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Widget', 'user_id', 'id');
     }
 
+    /**
+     * relationship with bulk job
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function bulkJobs()
+    {
+        return $this->hasMany('App\Models\BulkJob', 'user_id', 'id');
+    }
+
     /*----------------------------------------------------------------------*/
     /* Attributes                                                           */
     /*----------------------------------------------------------------------*/
@@ -230,6 +239,7 @@ class User extends Authenticatable
             'edit' => route('user.edit', $this->getKey()),
             'update' => route('user.update', $this->getKey()),
             'delete' => route('user.destroy', $this->getKey()),
+            'login_as' => route('user.login-as', $this->getKey()),
         );
     }
 

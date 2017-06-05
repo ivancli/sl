@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel
         Commands\Crawl::class,
         Commands\Alert::class,
         Commands\Report::class,
+        Commands\BulkJob::class,
     ];
 
     protected $appPrefRepo;
