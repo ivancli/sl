@@ -632,12 +632,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ketchol/parser.git",
-                "reference": "7c89a7c116f8801247b3c3453479fbaa8858559a"
+                "reference": "3cfcf3dcc46855e2bd75f6d2f30c6978e667235e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ketchol/parser/zipball/7c89a7c116f8801247b3c3453479fbaa8858559a",
-                "reference": "7c89a7c116f8801247b3c3453479fbaa8858559a",
+                "url": "https://api.github.com/repos/ketchol/parser/zipball/3cfcf3dcc46855e2bd75f6d2f30c6978e667235e",
+                "reference": "3cfcf3dcc46855e2bd75f6d2f30c6978e667235e",
                 "shasum": ""
             },
             "require": {
@@ -672,7 +672,7 @@
                 "source": "https://github.com/ketchol/parser/tree/master",
                 "issues": "https://github.com/ketchol/parser/issues"
             },
-            "time": "2017-06-03T17:35:47+00:00"
+            "time": "2017-06-05T12:13:44+00:00"
         },
         {
             "name": "ivancli/um",
@@ -1880,16 +1880,16 @@
         },
         {
             "name": "psy/psysh",
-            "version": "v0.8.5",
+            "version": "v0.8.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "38a9d21406597a0440690eafbcb0222f528c8ac6"
+                "reference": "7028d6d525fb183d50b249b7c07598e3d386b27d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/38a9d21406597a0440690eafbcb0222f528c8ac6",
-                "reference": "38a9d21406597a0440690eafbcb0222f528c8ac6",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/7028d6d525fb183d50b249b7c07598e3d386b27d",
+                "reference": "7028d6d525fb183d50b249b7c07598e3d386b27d",
                 "shasum": ""
             },
             "require": {
@@ -1919,7 +1919,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-develop": "0.9.x-dev"
+                    "dev-develop": "0.8.x-dev"
                 }
             },
             "autoload": {
@@ -1949,7 +1949,7 @@
                 "interactive",
                 "shell"
             ],
-            "time": "2017-05-17T06:49:19+00:00"
+            "time": "2017-06-04T10:34:20+00:00"
         },
         {
             "name": "ramsey/uuid",

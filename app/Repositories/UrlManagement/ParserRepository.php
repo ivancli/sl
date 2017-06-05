@@ -27,38 +27,43 @@ class ParserRepository implements ParserContract
     {
         $parserClassConfs = $itemMeta->getConfs('PARSER_CLASS');
         if ($parserClassConfs->count() == 0) {
-            $parserClassName = "XPathParser";
+            $parserClassNames = ["XPathParser"];
         } else {
             $parserClassConf = $parserClassConfs->first();
-            $parserClassName = $parserClassConf->value;
+            $parserClassNames = $parserClassConfs->pluck('value');
         }
-        $parserClass = app()->make(self::PARSER_CLASS_PATH . "{$parserClassName}");
+        foreach ($parserClassNames as $parserClassName) {
+            $parserClass = app()->make(self::PARSER_CLASS_PATH . "{$parserClassName}");
 
-        $extraction = null;
+            $extraction = null;
 
-        $parserClass->setContent($content);
-        switch ($parserClassName) {
-            case "XPathParser":
-                $xpathConfs = $itemMeta->getConfs('XPATH');
-                foreach ($xpathConfs as $index => $xpathConf) {
-                    $parserClass->setOptions([
-                        "xpath" => $xpathConf->value,
-                    ]);
+            $parserClass->setContent($content);
+            switch ($parserClassName) {
+                case "XPathParser":
+                    $xpathConfs = $itemMeta->getConfs('XPATH');
+                    foreach ($xpathConfs as $index => $xpathConf) {
+                        $parserClass->setOptions([
+                            "xpath" => $xpathConf->value,
+                        ]);
+                        $parserClass->extract();
+                        $extraction = $parserClass->getExtractions();
+                        if (!is_null($extraction) && !empty($extraction)) {
+                            break;
+                        }
+                    }
+                    break;
+                default:
+                    $itemConfs = $itemMeta->confs;
+                    $parserClass->setOptions($itemConfs);
                     $parserClass->extract();
                     $extraction = $parserClass->getExtractions();
-                    if (!is_null($extraction) && !empty($extraction)) {
-                        break;
-                    }
-                }
-                break;
-            default:
-                $itemConfs = $itemMeta->confs;
-                $parserClass->setOptions($itemConfs);
-                $parserClass->extract();
-                $extraction = $parserClass->getExtractions();
-                break;
+                    break;
+            }
+            if (!is_null($extraction)) {
+                return $extraction;
+            }
         }
-        return $extraction;
+        return null;
     }
 
     /**
