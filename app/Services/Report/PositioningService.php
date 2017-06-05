@@ -93,7 +93,7 @@ class PositioningService
                     }
                     return str_contains($site->siteUrl, $reference);
                 })->first();
-                if (!is_null($referenceSite->item)) {
+                if (!is_null($referenceSite) && !is_null($referenceSite->item)) {
                     $product->setAttribute('referencePrice', $referenceSite->item->recentPrice);
                 }
             }
