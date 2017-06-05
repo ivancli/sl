@@ -63,6 +63,11 @@ class PositioningController extends Controller
         return compact(['status', 'options']);
     }
 
+    public function export()
+    {
+        $this->positioningService->export($this->request->all());
+    }
+
     /**
      * Show the form for creating a new resource.
      *

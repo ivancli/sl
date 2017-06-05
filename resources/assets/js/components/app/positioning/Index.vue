@@ -74,7 +74,7 @@
                         <button class="btn btn-primary btn-flat" @click.prevent="loadProducts">SHOW PRODUCTS</button>
                     </div>
                     <div class="col-xs-6 text-right">
-                        <button class="btn btn-primary btn-flat">EXPORT</button>
+                        <button class="btn btn-primary btn-flat" @click.prevent="exportPositioningView">EXPORT</button>
                     </div>
                 </div>
 
@@ -103,7 +103,7 @@
                             <table class="table table-bordered table-hover table-striped table-condensed table-paginated">
                                 <thead>
                                 <tr>
-                                    <th :class="orderByClass('category_name')" @click.prevent="setOrdering('category_name')">Category</th>
+                                    <th :class="orderByClass('cateogry.category_name')" @click.prevent="setOrdering('category_name')">Category</th>
                                     <th :class="orderByClass('product_name')" @click.prevent="setOrdering('product_name')">Product</th>
                                     <th :class="orderByClass('ref_price')" @click.prevent="setOrdering('ref_price')">Reference site price</th>
                                     <th :class="orderByClass('cheapest')" @click.prevent="setOrdering('cheapest')">Cheapest</th>
@@ -131,23 +131,28 @@
                         <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadProducts" :disabled="paginationData.current_page == 1">FIRST</button>
                         <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadProducts(prevPageUrl)" :disabled="prevPageUrl == null">PREV</button>
                         <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadProducts(nextPageUrl)" :disabled="nextPageUrl == null">NEXT</button>
-                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadProducts(lastPageUrl)" :disabled="paginationData.current_page == paginationData.last_page">LAST</button>
+                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadProducts(lastPageUrl)" :disabled="paginationData.current_page == paginationData.last_page || paginationData.last_page == null">LAST</button>
                     </div>
                 </div>
             </div>
         </div>
+        <loading v-if="isLoadingProducts || isLoadingFilters"></loading>
     </section>
 </template>
 
 <script>
     import singleProductRow from './SingleProductRow.vue';
+    import loading from '../../fragments/loading/Loading.vue';
 
     export default{
         components: {
             singleProductRow,
+            loading,
         },
         data(){
             return {
+                isLoadingProducts: false,
+                isLoadingFilters: false,
                 products: [],
                 emptyTableMsg: 'Click "SHOW PRODUCTS" button to load products.',
                 paginationData: {
@@ -188,7 +193,9 @@
         },
         methods: {
             loadFilterOptions(){
+                this.isLoadingFilters = true;
                 axios.get('/positioning/filter').then(response => {
+                    this.isLoadingFilters = false;
                     if (response.data.status === true) {
                         let options = response.data.options;
                         this.domainsFilter = response.data.options.domains;
@@ -198,14 +205,17 @@
                         this.suppliersFilter = response.data.options.suppliers;
                     }
                 }).catch(error => {
+                    this.isLoadingFilters = false;
                     console.info(error.response);
                 })
             },
             loadProducts(link){
+                this.isLoadingProduct = true;
                 if (typeof link !== 'string') {
                     link = this.firstPageUrl;
                 }
                 axios.get(link).then(response => {
+                    this.isLoadingProduct = false;
                     if (response.data.status === true) {
                         this.products = response.data.products.data;
                         this.paginationData.current_page = response.data.urls.current_page;
@@ -217,6 +227,7 @@
                         this.paginationData.total = response.data.urls.total;
                     }
                 }).catch(error => {
+                    this.isLoadingProduct = false;
                     console.info(error.response);
                 })
             },
@@ -245,7 +256,19 @@
                     this.paginationData.current_page = 1;
                     this.loadProducts(this.currentPageUrl);
                 }, this.filterDelayData.delay);
-            }
+            },
+            exportPositioningView(){
+                window.location.href = '/positioning/export?'
+                    + '&orderBy=' + this.orderByData.column
+                    + '&direction=' + this.orderByData.direction
+                    + '&key=' + this.filterText
+                    + '&reference=' + this.reference
+                    + '&position=' + this.position
+                    + '&category=' + this.category
+                    + '&exclude=' + this.exclude
+                    + '&brand=' + this.brand
+                    + '&supplier=' + this.supplier;
+            },
         },
         computed: {
             user(){
@@ -265,7 +288,7 @@
                     + '&supplier=' + this.supplier;
             },
             nextPageUrl: function () {
-                if (this.paginationData.next_page_url === null) {
+                if (this.paginationData.next_page === null) {
                     return null;
                 } else {
                     return '/positioning?page=' + this.paginationData.next_page
@@ -282,7 +305,7 @@
                 }
             },
             prevPageUrl: function () {
-                if (this.paginationData.prev_page_url === null) {
+                if (this.paginationData.prev_page === null) {
                     return null;
                 } else {
                     return '/positioning?page=' + this.paginationData.prev_page
@@ -311,17 +334,21 @@
                     + '&supplier=' + this.supplier;
             },
             lastPageUrl: function () {
-                return '/positioning?page=' + this.paginationData.last_page
-                    + '&orderBy=' + this.orderByData.column
-                    + '&direction=' + this.orderByData.direction
-                    + '&per_page=' + this.paginationData.per_page
-                    + '&key=' + this.filterText
-                    + '&reference=' + this.reference
-                    + '&position=' + this.position
-                    + '&category=' + this.category
-                    + '&exclude=' + this.exclude
-                    + '&brand=' + this.brand
-                    + '&supplier=' + this.supplier;
+                if (this.this.paginationData.last_page === null) {
+                    return null;
+                } else {
+                    return '/positioning?page=' + this.paginationData.last_page
+                        + '&orderBy=' + this.orderByData.column
+                        + '&direction=' + this.orderByData.direction
+                        + '&per_page=' + this.paginationData.per_page
+                        + '&key=' + this.filterText
+                        + '&reference=' + this.reference
+                        + '&position=' + this.position
+                        + '&category=' + this.category
+                        + '&exclude=' + this.exclude
+                        + '&brand=' + this.brand
+                        + '&supplier=' + this.supplier;
+                }
             },
         }
     }
