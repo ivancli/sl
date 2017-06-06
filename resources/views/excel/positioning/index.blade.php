@@ -18,77 +18,77 @@
     <tbody>
     @foreach($products as $product)
         <tr>
-            <td>{{ $product->category->category_name }}</td>
+            <td>{{ $product->category_name }}</td>
             <td>{{ $product->product_name }}</td>
-            <td>{{ $product->meta->brand }}</td>
-            <td>{{ $product->meta->supplier }}</td>
-            <td>{{ $product->meta->sku }}</td>
+            <td>{{ $product->brand }}</td>
+            <td>{{ $product->supplier }}</td>
+            <td>{{ $product->sku }}</td>
             <td>
-                @if(!is_null($product->meta->cost_price))
-                    ${{ number_format(floatval($product->meta->cost_price), 2) }}
+                @if(!is_null($product->cost_price))
+                    ${{ number_format(floatval($product->cost_price), 2) }}
                 @endif
             </td>
             <td>
-                @if(isset($product->referencePrice) && !is_null($product->referencePrice))
-                    ${{ number_format($product->referencePrice, 2) }}
+                @if(isset($product->reference_recent_price) && !is_null($product->reference_recent_price))
+                    ${{ number_format($product->reference_recent_price, 2) }}
                 @else
                     n/a
                 @endif
             </td>
             <th>
-                @if(isset($product->cheapestSites))
-                    @foreach($product->cheapestSites as $index=>$cheapestSite)
-                        {{ $cheapestSite->displayName }}@if(count($product->cheapestSite) > 1)<br>@endif
+                @if(isset($product->cheapest_site_url))
+                    @foreach(explode('$ $', $product->cheapest_site_url) as $index=>$cheapestSite)
+                        {{ isset(explode('$#$',$cheapestSite)[1]) ? explode('$#$',$cheapestSite)[1] : explode('$#$',$cheapestSite)[0] }}@if(count(explode('$ $', $product->cheapest_site_url)) > 1)<br>@endif
                     @endforeach
                 @endif
             </th>
             <td>
-                @if(isset($product->cheapestSites))
-                    @foreach($product->cheapestSites as $index=>$cheapestSite)
-                        {{ $cheapestSite->siteUrl }}@if(count($product->cheapestSite) > 1)<br>@endif
+                @if(isset($product->cheapest_site_url))
+                    @foreach(explode('$ $', $product->cheapest_site_url) as $index=>$cheapestSite)
+                        {{ explode('$#$',$cheapestSite)[0] }}@if(count(explode('$ $', $product->cheapest_site_url)) > 1)<br>@endif
                     @endforeach
                 @endif
             </td>
             <td>
-                @if(isset($product->cheapestPrice) && !is_null($product->cheapestPrice))
-                    ${{ number_format($product->cheapestPrice, 2) }}
+                @if(isset($product->cheapest_recent_price) && !is_null($product->cheapest_recent_price))
+                    ${{ number_format($product->cheapest_recent_price, 2) }}
                 @else
                     n/a
                 @endif
             </td>
             <td>
-                @if(!is_null($product->referencePrice))
-                    @if(floatval($product->referencePrice) - floatval($product->cheapestPrice) == 0)
-                        @if(count($product->cheapestSites) > 1)
+                @if(!is_null($product->reference_recent_price))
+                    @if(floatval($product->reference_recent_price) - floatval($product->cheapest_recent_price) == 0)
+                        @if(count(explode('$ $',$product->cheapest_site_url)) > 1)
                             0
                         @else
-                            @if(!is_null($product->secondCheapestPrice))
-                                +${{ number_format(abs($product->cheapestPrice - $product->secondCheapestPrice), 2) }}
+                            @if(!is_null($product->second_cheapest_recent_price))
+                                +${{ number_format(abs($product->cheapest_recent_price - $product->second_cheapest_recent_price), 2) }}
                             @else
                                 n/a
                             @endif
                         @endif
                     @else
-                        -${{ number_format(abs($product->referencePrice - $product->cheapestPrice), 2) }}
+                        -${{ number_format(abs($product->reference_recent_price - $product->cheapest_recent_price), 2) }}
                     @endif
                 @else
                     n/a
                 @endif
             </td>
             <td>
-                @if(!is_null($product->referencePrice))
-                    @if(floatval($product->cheapestPrice) - floatval($product->referencePrice) == 0)
-                        @if(count($product->cheapestSites) > 1)
+                @if(!is_null($product->reference_recent_price))
+                    @if(floatval($product->cheapest_recent_price) - floatval($product->reference_recent_price) == 0)
+                        @if(count(explode('$ $',$product->cheapest_site_url)) > 1)
                             0
                         @else
-                            @if(!is_null($product->secondCheapestPrice))
-                                +{{ number_format(abs($product->cheapestPrice - $product->secondCheapestPrice) / $product->referencePrice * 100, 2) }}
+                            @if(!is_null($product->second_cheapest_recent_price))
+                                +{{ number_format(abs($product->cheapest_recent_price - $product->second_cheapest_recent_price) / $product->reference_recent_price * 100, 2) }}
                             @else
                                 n/a
                             @endif
                         @endif
                     @else
-                        -{{ number_format(abs($product->referencePrice - $product->cheapestPrice) / $product->referencePrice * 100, 2) }}
+                        -{{ number_format(abs($product->reference_recent_price - $product->cheapest_recent_price) / $product->reference_recent_price * 100, 2) }}
                     @endif
                 @else
                     n/a

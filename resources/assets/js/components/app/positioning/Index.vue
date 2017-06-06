@@ -82,7 +82,7 @@
                     <div class="col-sm-6">
                         Show
                         &nbsp;&nbsp;
-                        <select class="form-control sl-form-control input-sm" v-model="paginationData.length" @change="loadProducts(currentPageUrl)">
+                        <select class="form-control sl-form-control input-sm" v-model="paginationData.length" @change="loadProducts()">
                             <option value="10">10</option>
                             <option value="25">25</option>
                             <option value="50">50</option>
@@ -106,14 +106,14 @@
                                     <th :class="orderByClass('category_name')" @click.prevent="setOrdering('category_name')">Category</th>
                                     <th :class="orderByClass('product_name')" @click.prevent="setOrdering('product_name')">Product</th>
                                     <th :class="orderByClass('ref_price')" @click.prevent="setOrdering('ref_price')">Reference site price</th>
-                                    <th :class="orderByClass('cheapest')" @click.prevent="setOrdering('cheapest')">Cheapest</th>
-                                    <th :class="orderByClass('cheapest_price')" @click.prevent="setOrdering('cheapest_price')">Cheapest $</th>
+                                    <th :class="orderByClass('cheapest_site_url')" @click.prevent="setOrdering('cheapest_site_url')">Cheapest</th>
+                                    <th :class="orderByClass('cheapest_recent_price')" @click.prevent="setOrdering('cheapest_recent_price')">Cheapest $</th>
                                     <th :class="orderByClass('diff_price')" @click.prevent="setOrdering('diff_price')">Difference $</th>
                                     <th :class="orderByClass('diff_percent')" @click.prevent="setOrdering('diff_percent')">Difference %</th>
                                 </tr>
                                 </thead>
                                 <tbody v-if="products.length > 0">
-                                <single-product-row v-for="product in products" :current-product="product"></single-product-row>
+                                <single-product-row v-if="product.cheapest_site_url !== null" v-for="product in products" :current-product="product"></single-product-row>
                                 </tbody>
                                 <tbody v-else>
                                 <tr>
@@ -128,10 +128,10 @@
                     <div class="col-sm-6">
                     </div>
                     <div class="col-sm-6 text-right">
-                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadProducts" :disabled="paginationData.current_page == 1">FIRST</button>
-                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadProducts(prevPageUrl)" :disabled="prevPageUrl == null">PREV</button>
-                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadProducts(nextPageUrl)" :disabled="nextPageUrl == null">NEXT</button>
-                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="loadProducts(lastPageUrl)" :disabled="paginationData.current_page == paginationData.last_page || paginationData.last_page == null">LAST</button>
+                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="onClickFirstPage" :disabled="firstPageDisabled">FIRST</button>
+                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="onClickPreviousPage" :disabled="prevPageDisabled">PREV</button>
+                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="onClickNextPage" :disabled="nextPageDisabled">NEXT</button>
+                        <button class="btn btn-default btn-sm btn-flat" @click.prevent="onClickLastPage" :disabled="lastPageDisabled">LAST</button>
                     </div>
                 </div>
             </div>
@@ -204,17 +204,13 @@
                     console.info(error.response);
                 })
             },
-            loadProducts(link){
+            loadProducts(){
                 this.isLoadingProducts = true;
-                if (typeof link !== 'string') {
-                    link = this.firstPageUrl;
-                }
-                axios.get(link).then(response => {
+                axios.get('/positioning', this.positioningRequestData).then(response => {
                     this.isLoadingProducts = false;
                     if (response.data.status === true) {
                         this.products = response.data.products.data;
-                        this.paginationData.current_page = response.data.urls.current_page;
-                        this.paginationData.total = response.data.urls.total;
+                        this.paginationData.total = response.data.products.recordTotal;
                     }
                 }).catch(error => {
                     this.isLoadingProducts = false;
@@ -236,15 +232,14 @@
                     this.orderByData.direction = 'asc'
                 }
 
-                this.loadProducts(this.firstPageUrl);
+                this.loadProducts();
             },
             onFilterChanged(){
                 if (this.filterDelayData.promise !== null) {
                     clearTimeout(this.filterDelayData.promise);
                 }
                 this.filterDelayData.promise = setTimeout(() => {
-                    this.paginationData.current_page = 1;
-                    this.loadProducts(this.currentPageUrl);
+                    this.loadProducts();
                 }, this.filterDelayData.delay);
             },
             exportPositioningView(){
@@ -259,86 +254,66 @@
                     + '&brand=' + this.brand
                     + '&supplier=' + this.supplier;
             },
+            onClickFirstPage(){
+                this.paginationData.start = 0;
+                this.loadProducts();
+            },
+            onClickPreviousPage(){
+                if (this.paginationData.start - this.paginationData.length <= 0) {
+                    this.paginationData.start = 0;
+                } else {
+                    this.paginationData.start = this.paginationData.start - this.paginationData.length;
+                }
+                this.loadProducts();
+            },
+            onClickNextPage(){
+                if (this.paginationData.total < this.paginationData.start + this.paginationData.length) {
+                    this.paginationData.start = 0;
+                } else {
+                    this.paginationData.start = this.paginationData.start + this.paginationData.length;
+                }
+                this.loadProducts();
+            },
+            onClickLastPage(){
+                if (this.paginationData.total > this.paginationData.length) {
+                    let remainer = this.paginationData.total % this.paginationData.length;
+                    this.paginationData.start = this.paginationData.total - remainer;
+                }
+                this.loadProducts();
+            }
         },
         computed: {
             user(){
                 return this.$store.getters.user;
             },
-            currentPageUrl: function () {
-                return '/positioning?page=' + this.paginationData.current_page
-                    + '&orderBy=' + this.orderByData.column
-                    + '&direction=' + this.orderByData.direction
-                    + '&per_page=' + this.paginationData.per_page
-                    + '&key=' + this.filterText
-                    + '&reference=' + this.reference
-                    + '&position=' + this.position
-                    + '&category=' + this.category
-                    + '&exclude=' + this.exclude
-                    + '&brand=' + this.brand
-                    + '&supplier=' + this.supplier;
-            },
-            nextPageUrl: function () {
-                if (this.paginationData.next_page === null) {
-                    return null;
-                } else {
-                    return '/positioning?page=' + this.paginationData.next_page
-                        + '&orderBy=' + this.orderByData.column
-                        + '&direction=' + this.orderByData.direction
-                        + '&per_page=' + this.paginationData.per_page
-                        + '&key=' + this.filterText
-                        + '&reference=' + this.reference
-                        + '&position=' + this.position
-                        + '&category=' + this.category
-                        + '&exclude=' + this.exclude
-                        + '&brand=' + this.brand
-                        + '&supplier=' + this.supplier;
+            positioningRequestData(){
+                return {
+                    params: {
+                        start: this.paginationData.start,
+                        length: this.paginationData.length,
+                        orderBy: this.orderByData.column,
+                        direction: this.orderByData.direction,
+                        key: this.filterText,
+                        reference: this.reference,
+                        position: this.position,
+                        category: this.category,
+                        exclude: this.exclude,
+                        brand: this.brand,
+                        supplier: this.supplier,
+                    }
                 }
             },
-            prevPageUrl: function () {
-                if (this.paginationData.prev_page === null) {
-                    return null;
-                } else {
-                    return '/positioning?page=' + this.paginationData.prev_page
-                        + '&orderBy=' + this.orderByData.column
-                        + '&direction=' + this.orderByData.direction
-                        + '&per_page=' + this.paginationData.per_page
-                        + '&key=' + this.filterText
-                        + '&reference=' + this.reference
-                        + '&position=' + this.position
-                        + '&category=' + this.category
-                        + '&exclude=' + this.exclude
-                        + '&brand=' + this.brand
-                        + '&supplier=' + this.supplier;
-                }
+            firstPageDisabled(){
+                return this.paginationData.total === null || this.paginationData.start === 0;
             },
-            firstPageUrl: function () {
-                return '/positioning?page=1&orderBy=' + this.orderByData.column
-                    + '&direction=' + this.orderByData.direction
-                    + '&per_page=' + this.paginationData.per_page
-                    + '&key=' + this.filterText
-                    + '&reference=' + this.reference
-                    + '&position=' + this.position
-                    + '&category=' + this.category
-                    + '&exclude=' + this.exclude
-                    + '&brand=' + this.brand
-                    + '&supplier=' + this.supplier;
+            prevPageDisabled(){
+                return this.paginationData.total === null || this.paginationData.start === 0;
             },
-            lastPageUrl: function () {
-                if (this.this.paginationData.last_page === null) {
-                    return null;
-                } else {
-                    return '/positioning?page=' + this.paginationData.last_page
-                        + '&orderBy=' + this.orderByData.column
-                        + '&direction=' + this.orderByData.direction
-                        + '&per_page=' + this.paginationData.per_page
-                        + '&key=' + this.filterText
-                        + '&reference=' + this.reference
-                        + '&position=' + this.position
-                        + '&category=' + this.category
-                        + '&exclude=' + this.exclude
-                        + '&brand=' + this.brand
-                        + '&supplier=' + this.supplier;
-                }
+            nextPageDisabled(){
+                return this.paginationData.total === null || this.paginationData.total < this.paginationData.start + this.paginationData.length;
+            },
+            lastPageDisabled(){
+                return this.paginationData.total === null || this.paginationData.total < this.paginationData.start + this.paginationData.length;
             },
         }
     }
