@@ -455,8 +455,17 @@
             userDomains(){
                 return this.$store.getters.userDomains;
             },
+            cheapestSellerUsername(){
+                if (this.cheapestSite !== null && this.cheapestSite.item !== null) {
+                    return this.cheapestSite.item.sellerUsername;
+                }
+                return null;
+            },
             cheapestDisplayName(){
                 /*TODO need to add ebay site store name before the following validations*/
+                if (this.cheapestSellerUsername !== null) {
+                    return "eBay: " + this.cheapestSellerUsername;
+                }
 
                 let siteDomain = this.$options.filters.domain(this.cheapestSite.siteUrl);
 

@@ -90,6 +90,7 @@ mix
     .sass('resources/assets/sass/auth.scss', 'public/css')
 
     .copy('resources/assets/images', 'public/images')
+    .copy('resources/assets/csvs', 'public/csvs')
 
     .sourceMaps()
     .version();
