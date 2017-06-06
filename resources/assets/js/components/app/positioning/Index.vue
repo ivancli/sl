@@ -82,7 +82,7 @@
                     <div class="col-sm-6">
                         Show
                         &nbsp;&nbsp;
-                        <select class="form-control sl-form-control input-sm" v-model="paginationData.per_page" @change="loadProducts(currentPageUrl)">
+                        <select class="form-control sl-form-control input-sm" v-model="paginationData.length" @change="loadProducts(currentPageUrl)">
                             <option value="10">10</option>
                             <option value="25">25</option>
                             <option value="50">50</option>
@@ -156,17 +156,12 @@
                 products: [],
                 emptyTableMsg: 'Click "SHOW PRODUCTS" button to load products.',
                 paginationData: {
-                    current_page: 1,
-                    from: null,
-                    last_page: null,
-                    next_page: null,
-                    per_page: 25,
-                    prev_page: null,
-                    to: null,
+                    start: 0,
+                    length: 25,
                     total: null,
                 },
                 orderByData: {
-                    column: 'id',
+                    column: 'products.id',
                     direction: 'asc'
                 },
                 filterText: '',
@@ -219,11 +214,6 @@
                     if (response.data.status === true) {
                         this.products = response.data.products.data;
                         this.paginationData.current_page = response.data.urls.current_page;
-                        this.paginationData.last_page = response.data.urls.last_page;
-                        this.paginationData.next_page = response.data.urls.next_page;
-                        this.paginationData.per_page = response.data.urls.per_page;
-                        this.paginationData.prev_page = response.data.urls.prev_page;
-                        this.paginationData.to = response.data.urls.to;
                         this.paginationData.total = response.data.urls.total;
                     }
                 }).catch(error => {

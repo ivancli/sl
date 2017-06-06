@@ -25,16 +25,16 @@ class PositioningService
 
     public function load(array $data = [])
     {
+        DB::enableQueryLog();
         $user = auth()->user();
         $productBuilder = DB::table('products')->where('products.user_id', '=', $user->getKey());
-
         $select = [
             'products.*',
             'categories.*',
         ];
 
         #region category
-        if (array_has($data, 'category')) {
+        if (array_has($data, 'category') && !is_null(array_get($data, 'category'))) {
             $category_id = array_get($data, 'category');
             $productBuilder->join('categories', function ($join) use ($category_id) {
                 $join->on('products.category_id', '=', 'categories.id')->where('categories.id', $category_id);
@@ -60,35 +60,36 @@ class PositioningService
 
         #region reference
 
-        if ($this->request->has('reference')) {
-            $referenceDomain = $this->request->get('reference');
-            if (strpos($referenceDomain, 'eBay: ') !== false) {
-                $ebayUsername = str_replace('eBay: ', '', $referenceDomain);
-                $referenceQuery = DB::raw('(SELECT sites.*, ebay_items.seller_username FROM ebay_items JOIN sites USING(site_id) WHERE seller_username LIKE "%' . addslashes(urlencode($ebayUsername)) . '%") AS reference');
-                $productBuilder->leftJoin($referenceQuery, function ($join) {
-                    $join->on('reference.product_id', '=', 'products.product_id');
-                });
-            } else {
-                $referenceQuery = DB::raw('(SELECT * FROM sites WHERE site_url LIKE "%' . addslashes(urlencode($referenceDomain)) . '%") AS reference');
-
-                $productBuilder->leftJoin($referenceQuery, function ($join) {
-                    $join->on('reference.product_id', '=', 'products.product_id');
-                });
-            }
+        if (array_has($data, 'reference') && !is_null(array_get($data, 'reference'))) {
+            $reference = array_get($data, 'reference');
+            $referenceQuery = DB::raw('
+            (
+                SELECT sites.*, ebays.value, urls.full_path AS site_url, prices.value AS recent_price
+                FROM sites 
+                LEFT JOIN items ON(sites.item_id=items.id)
+                LEFT JOIN item_metas ebays ON(items.id=ebays.id AND ebays.element="SELLER_USERNAME")
+                LEFT JOIN urls ON(sites.url_id=urls.id)
+                LEFT JOIN item_metas prices ON(items.id=prices.item_id AND prices.element="PRICE")
+                WHERE ebays.value LIKE "%' . addslashes(urlencode($reference)) . '%"
+                OR urls.full_path LIKE "%' . addslashes(urlencode($reference)) . '%"
+            ) AS reference
+            ');
+            $productBuilder->leftJoin($referenceQuery, function ($join) {
+                $join->on('reference.product_id', '=', 'products.id');
+            });
             $select[] = 'reference.site_url as reference_site_url';
             $select[] = 'reference.recent_price as reference_recent_price';
-            $select[] = DB::raw('ABS(reference.recent_price - cheapestSite.recent_price) as diff_cheapest');
-            $select[] = DB::raw('ABS(reference.recent_price - cheapestSite.recent_price)/reference.recent_price as percent_diff_cheapest');
-            $select[] = DB::raw('ABS(reference.recent_price - expensiveSite.recent_price) as diff_expensive');
-            $select[] = DB::raw('ABS(reference.recent_price - expensiveSite.recent_price)/reference.recent_price as percent_diff_expensive');
-            $select[] = DB::raw('ABS(reference.recent_price - secondCheapestSite.recent_price) as diff_second_cheapest');
-            $select[] = DB::raw('ABS(reference.recent_price - secondCheapestSite.recent_price)/reference.recent_price as percent_diff_second_cheapest');
-            $select[] = DB::raw('IF((reference.recent_price - cheapestSite.recent_price) = 0, secondCheapestSite.recent_price - reference.recent_price, cheapestSite.recent_price - reference.recent_price) as dynamic_diff_price');
-            $select[] = DB::raw('IF((reference.recent_price - cheapestSite.recent_price) = 0, (secondCheapestSite.recent_price - reference.recent_price)/reference.recent_price, (cheapestSite.recent_price - reference.recent_price)/reference.recent_price) as percent_dynamic_diff_price');
+            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6))) as diff_cheapest');
+            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6)) as percent_diff_cheapest');
+            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(expensiveSites.recent_price AS DECIMAL(10, 6))) as diff_expensive');
+            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(expensiveSites.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6)) as percent_diff_expensive');
+            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 6))) as diff_second_cheapest');
+            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6)) as percent_diff_second_cheapest');
+            $select[] = DB::raw('IF((CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6))) = 0, CAST(secondCheapestSites.recent_price AS DECIMAL(10, 6)) - CAST(reference.recent_price AS DECIMAL(10, 6)), CAST(cheapestSites.recent_price AS DECIMAL(10, 6)) - CAST(reference.recent_price AS DECIMAL(10, 6))) as dynamic_diff_price');
+            $select[] = DB::raw('IF((CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6))) = 0, (CAST(secondCheapestSites.recent_price AS DECIMAL(10, 6)) - CAST(reference.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6)), (CAST(cheapestSites.recent_price AS DECIMAL(10, 6)) - CAST(reference.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6))) as percent_dynamic_diff_price');
         }
 
         #endregion
-
 
 
         #region cheapest site query
@@ -111,9 +112,9 @@ class PositioningService
             ) cheapestPrices
             
             LEFT JOIN sites ON (sites.product_id=cheapestPrices.product_id)
-            LEFT JOIN urls ON (sites.url_id=urls.id)
-            LEFT JOIN items ON (sites.item_id=items.id)
-            LEFT JOIN item_metas prices ON (items.id=prices.item_id AND prices.element=\'PRICE\' AND prices.value=cheapestPrices.recent_price)
+            JOIN urls ON (sites.url_id=urls.id)
+            JOIN items ON (sites.item_id=items.id)
+            JOIN item_metas prices ON (items.id=prices.item_id AND prices.element=\'PRICE\' AND prices.value=cheapestPrices.recent_price)
             LEFT JOIN item_metas ebays ON(ebays.item_id=items.id AND ebays.element=\'SELLER_USERNAME\')
             
             GROUP BY cheapestPrices.product_id
@@ -126,7 +127,7 @@ class PositioningService
 
         #region expensive site query
         $select[] = 'expensiveSites.site_urls as expensive_site_url';
-        $select[] = 'expensiveSite.recent_price as expensive_recent_price';
+        $select[] = 'expensiveSites.recent_price as expensive_recent_price';
 
         $expensiveSiteQuery = DB::raw('
         (
@@ -143,14 +144,14 @@ class PositioningService
             ) cheapestPrices
             
             LEFT JOIN sites ON (sites.product_id=cheapestPrices.product_id)
-            LEFT JOIN urls ON (sites.url_id=urls.id)
-            LEFT JOIN items ON (sites.item_id=items.id)
-            LEFT JOIN item_metas prices ON (items.id=prices.item_id AND prices.element=\'PRICE\' AND prices.value=cheapestPrices.recent_price)
+            JOIN urls ON (sites.url_id=urls.id)
+            JOIN items ON (sites.item_id=items.id)
+            JOIN item_metas prices ON (items.id=prices.item_id AND prices.element=\'PRICE\' AND prices.value=cheapestPrices.recent_price)
             LEFT JOIN item_metas ebays ON(ebays.item_id=items.id AND ebays.element=\'SELLER_USERNAME\')
             
             GROUP BY cheapestPrices.product_id
             
-            ) expensiveSites
+        ) expensiveSites
         ');
         #endregion
 
@@ -159,13 +160,17 @@ class PositioningService
         });
 
         #region second cheapest
+        $select[] = 'secondCheapestSites.site_urls as second_cheapest_site_url';
+        $select[] = 'secondCheapestSites.recent_price as second_cheapest_recent_price';
+
         $secondCheapestSiteQuery = DB::raw('
         (
-            SELECT    sites.product_id, MIN(CAST(prices.value AS DECIMAL(10, 6))) recent_price 
+            SELECT    sites.product_id, group_concat(concat(urls.full_path, \'$#$\', ifnull(concat(\'eBay: \', ebays.value), \'\')) separator \'$ $\') site_urls, MIN(CAST(prices.value AS DECIMAL(10, 6))) recent_price 
             FROM      sites 
-            LEFT JOIN items ON(sites.item_id=items.id)
-            LEFT JOIN item_metas prices ON(items.id=prices.item_id AND prices.element=\'PRICE\')
+            JOIN items ON(sites.item_id=items.id)
+            JOIN item_metas prices ON(items.id=prices.item_id AND prices.element=\'PRICE\')
             LEFT JOIN item_metas ebays ON(items.id=ebays.item_id AND ebays.element=\'SELLER_USERNAME\')
+            JOIN urls ON(sites.url_id=urls.id)
             LEFT JOIN (
             
                 select product_id, MIN(CAST(item_metas.value AS DECIMAL(10, 6))) recent_price
@@ -178,7 +183,7 @@ class PositioningService
             WHERE     prices.value != a.recent_price 
             AND       sites.is_active = \'y\' 
             GROUP BY  product_id
-            ) secondCheapestSites
+        ) secondCheapestSites
         ');
         $productBuilder->leftJoin($secondCheapestSiteQuery, function ($join) {
             $join->on('secondCheapestSites.product_id', '=', 'products.id');
@@ -186,24 +191,91 @@ class PositioningService
         #endregion
 
         #region search
-        if (array_has($data, 'search')) {
+        if (array_has($data, 'search') && !is_null(array_get($data, 'search'))) {
             $keyword = array_get($data, 'search');
             $productBuilder->where(function ($query) use ($keyword, $data) {
-                $query->where('product_name', 'LIKE', "%{$keyword}%")
-                    ->orWhere('category_name', 'LIKE', "%{$keyword}%");
+                $query->where('product_name', 'LIKE', " %{$keyword} % ")
+                    ->orWhere('category_name', 'LIKE', " %{
+                $keyword}%");
                 if (array_has($data, 'reference')) {
-                    $query->orWhere('reference.recent_price', 'LIKE', "%{$keyword}%");
-                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6)))'), 'LIKE', "%{$keyword}%");
-                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6))'), 'LIKE', "%{$keyword}%");
-                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 6)))'), 'LIKE', "%{$keyword}%");
-                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6))'), 'LIKE', "%{$keyword}%");
+                    $query->orWhere('reference.recent_price', 'LIKE', " %{
+                $keyword}%");
+                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6)))'), 'LIKE', " %{
+                $keyword}%");
+                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6))'), 'LIKE', " %{
+                $keyword}%");
+                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 6)))'), 'LIKE', " %{
+                $keyword}%");
+                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6))'), 'LIKE', " %{
+                $keyword}%");
                 }
-                $query->orWhere('cheapestSite.site_urls', 'LIKE', "%{$keyword}%")
-                    ->orWhere('cheapestSite.recent_price', 'LIKE', "%{$keyword}%")
-                    ->orWhere('cheapestSite.recent_price', 'LIKE', "%{$keyword}%");
+                $query->orWhere('cheapestSites.site_urls', 'LIKE', " %{
+                $keyword}%")
+                    ->orWhere('cheapestSites.recent_price', 'LIKE', " %{
+                $keyword}%")
+                    ->orWhere('cheapestSites.recent_price', 'LIKE', " %{
+                $keyword}%");
             });
         }
         #endregion
+
+        #region position
+        if (array_has($data, 'position') && !is_null(array_get($data, 'position'))) {
+            switch (array_get($data, 'position')) {
+                case "not_cheapest":
+                    $productBuilder->where(function ($query) {
+                        $query->where(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6)))'), '!=', 0)
+                            ->orWhereNull(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6)))'));
+                    });
+                    break;
+                case "most_expensive":
+                    $productBuilder->where(DB::raw('ABS(CAST(expensiveSites.recent_price AS DECIMAL(10, 6)) - CAST(reference.recent_price AS DECIMAL(10, 6)))'), '==', 0);
+                    break;
+                case "cheapest":
+                    $productBuilder->where(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6)))'), '=', 0);
+                    break;
+                default:
+            }
+        }
+        #endregion
+
+        $productBuilder->select($select);
+        $recordTotal = $user->products()->count();
+        $recordsFiltered = $productBuilder->count();
+
+
+        $orderColumn = array_get($data, 'orderBy', 'products.id');
+        $orderSequence = array_get($data, 'direction', 'asc');
+
+        if ($orderColumn) {
+            if ($orderColumn == 'diff_ref_cheapest') {
+                if (array_has($data, 'reference') && !is_null(array_get($data, 'reference'))) {
+                    $productBuilder = $productBuilder->orderBy('dynamic_diff_price', $orderSequence);
+                } else {
+                    $productBuilder = $productBuilder->orderBy('categories.category_name', $orderSequence);
+                }
+            } elseif ($orderColumn == 'percent_diff_ref_cheapest') {
+                if (array_has($data, 'reference') && !is_null(array_get($data, 'reference'))) {
+                    $productBuilder = $productBuilder->orderBy('percent_dynamic_diff_price', $orderSequence);
+                } else {
+                    $productBuilder = $productBuilder->orderBy('categories.category_name', $orderSequence);
+                }
+            } else {
+                $productBuilder = $productBuilder->orderBy($orderColumn, $orderSequence);
+            }
+        }
+
+        if (array_has($data, 'start') && !is_null(array_get($data, 'start'))) {
+            $productBuilder = $productBuilder->skip(array_get($data, 'start'));
+        }
+        if (array_has($data, 'length') && !is_null(array_get($data, 'length'))) {
+            $productBuilder = $productBuilder->take(array_get($data, 'length'));
+        }
+
+        $products = $productBuilder->get();
+
+        $data = $products;
+        return compact(['data', 'recordTotal', 'recordsFiltered']);
     }
 
 //    public function load(array $data = [])

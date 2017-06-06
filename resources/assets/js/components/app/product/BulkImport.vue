@@ -4,7 +4,7 @@
             <div class="backdrop"></div>
             <div class="loading-core"></div>
             <div class="loading-text">
-                <p>We're impmorting the data into your account and this may take a while. We'll let you know once it's done.</p>
+                <p>We're importing the data into your account and this may take a while. We'll let you know once it's done.</p>
                 <p>Meanwhile, you can continue using SpotLite</p>
             </div>
         </div>

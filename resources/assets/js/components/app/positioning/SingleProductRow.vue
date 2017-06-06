@@ -1,6 +1,6 @@
 <template>
     <tr>
-        <td :class="rowClass">{{ product.category.category_name }}</td>
+        <td :class="rowClass">{{ product.category_name }}</td>
         <td :class="rowClass">{{ product.product_name }}</td>
         <td :class="rowClass">
             <div v-if="referencePrice != null">
@@ -10,9 +10,8 @@
         </td>
         <td :class="rowClass">
             <div v-for="cheapestSite in cheapestSites">
-                <a :href="cheapestSite.siteUrl" :class="rowClass">
-                    <span v-if="cheapestSite.item != null && cheapestSite.item.sellerUsername != null">eBay: {{ cheapestSite.item.sellerUsername }}</span>
-                    <span v-else>{{ siteNameOrDomain(cheapestSite.siteUrl) }}</span>
+                <a :href="cheapestSite.site_url" :class="rowClass" target="_blank">
+                    {{ cheapestSite.display_name }}
                 </a>
             </div>
         </td>
@@ -98,21 +97,60 @@
                 return this.currentProduct;
             },
             referencePrice(){
-                return this.product.referencePrice;
+                if (typeof this.product.reference_recent_price !== 'undefined') {
+                    return parseFloat(this.product.reference_recent_price);
+                } else {
+                    return null;
+                }
             },
             cheapestSites(){
+                if (this.product.cheapest_site_url !== null) {
+                    let sites = this.product.cheapest_site_url.split('$ $');
+                    let output = [];
+                    sites.forEach(site => {
+                        let siteInfo = site.split('$#$');
+                        let site_url = siteInfo[0];
+                        let displayName = null;
+                        if (typeof siteInfo[1] !== 'undefined' && siteInfo[1] !== '') {
+                            displayName = siteInfo[1];
+                        } else {
+                            let matchedDomains = this.userDomains.filter(domain => {
+                                return site_url.indexOf(domain.domain) > 0
+                            });
+                            if (matchedDomains.length > 0 && matchedDomains[0].alias !== null) {
+                                displayName = matchedDomains[0].alias;
+                            } else {
+                                displayName = this.$options.filters.domain(site_url);
+                            }
+                        }
+
+                        output.push({
+                            site_url: site_url,
+                            display_name: displayName,
+                        })
+                    });
+                    return output;
+                }
                 return this.product.cheapestSites;
             },
             cheapestPrice(){
-                return this.product.cheapestPrice;
+                if (typeof this.product.cheapest_recent_price !== 'undefined') {
+                    return parseFloat(this.product.cheapest_recent_price);
+                } else {
+                    return null;
+                }
             },
             secondCheapestPrice(){
-                return this.product.secondCheapestPrice;
+                if (typeof this.product.second_cheapest_recent_price !== 'undefined') {
+                    return parseFloat(this.product.second_cheapest_recent_price);
+                } else {
+                    return null;
+                }
             },
             diffPrice(){
                 if (this.cheapestPrice !== null && this.referencePrice !== null) {
                     if (this.cheapestPrice === this.referencePrice) {
-                        if (this.cheapestSites.length > 0) {
+                        if (this.cheapestSites.length > 1) {
                             return 0;
                         } else {
                             return this.secondCheapestPrice - this.referencePrice;
@@ -120,27 +158,26 @@
                     } else {
                         return this.cheapestPrice - this.referencePrice
                     }
-                } else {
-                    return null;
                 }
+                return null;
             },
             diffPercent(){
                 if (this.cheapestPrice !== null && this.referencePrice !== null) {
                     if (this.cheapestPrice === this.referencePrice) {
-                        if (this.cheapestSites.length > 0) {
+                        if (this.cheapestSites.length > 1) {
                             return 0;
                         } else {
                             return ((this.secondCheapestPrice - this.referencePrice) / this.referencePrice * 100).toFixed(2);
                         }
                     } else {
-                        return ((this.cheapestPrice - this.referencePrice) / this.referencePrice * 100).toFixed(2);
+                        return ((this.referencePrice - this.cheapestPrice) / this.referencePrice * 100).toFixed(2);
                     }
                 } else {
                     return null;
                 }
             },
             rowClass(){
-                if (this.product.referencePrice === this.product.cheapestPrice) {
+                if (parseFloat(this.referencePrice) === parseFloat(this.cheapestPrice)) {
                     return 'text-tiffany';
                 }
                 return '';
