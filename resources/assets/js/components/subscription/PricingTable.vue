@@ -1,6 +1,6 @@
 <template>
     <div class="row p-t-50">
-        <single-subscription-plan class="col-md-4 plan" v-for="productFamily in productFamilies" :single-product="productFamily.product" :preview="productFamily.preview" @select-subscription-plan="emitSelectedSubscriptionPlan" :login-user="user">
+        <single-subscription-plan class="col-md-4 plan" v-for="productFamily in productFamilies" :single-product="productFamily.product" :preview="productFamily.preview" @select-subscription-plan="emitSelectedSubscriptionPlan">
         </single-subscription-plan>
     </div>
 </template>
@@ -9,9 +9,6 @@
     import singleSubscriptionPlan from './SingleSubscriptionPlan.vue';
 
     export default {
-        props: [
-            'loginUser'
-        ],
         components: {
             singleSubscriptionPlan
         },
@@ -40,10 +37,5 @@
             console.log('Pricing Table component mounted.');
             this.loadProducts();
         },
-        computed: {
-            user(){
-                return this.loginUser;
-            }
-        }
     }
 </script>

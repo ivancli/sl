@@ -3,8 +3,7 @@
         <div class="col-sm-12">
             <div class="row m-b-20 p-10" v-show="migratingSubscriptionPlan">
                 <div class="col-sm-12">
-                    <pricing-table @select-subscription-plan="selectSubscriptionPlan"
-                                   :login-user="user"></pricing-table>
+                    <pricing-table @select-subscription-plan="selectSubscriptionPlan" :login-user="user"></pricing-table>
                 </div>
                 <div class="col-sm-12 text-center">
                     <button class="btn btn-default btn-flat" @click.prevent="cancelMigratingSubscriptionPlan">BACK
@@ -170,16 +169,19 @@
             },
             selectSubscriptionPlan: function (subscriptionPlan) {
                 /*TODO show confirmation popup and migrate*/
-                if (subscriptionPlan.price_in_cents > this.subscriptionPlan.price_in_cents) {
-                    this.confirmMigrateTitle = "Upgrade Subscription";
-                    this.confirmMigrateContent = "By upgrading your subscription you will be immediately charged the pro-rata amount for the rest of the month at the new subscription fee. <br><br>Are you sure you want to change your subscription?";
-                } else if (subscriptionPlan.price_in_cents < this.subscriptionPlan.price_in_cents) {
-                    this.confirmMigrateTitle = "Downgrade Subscription";
-                    this.confirmMigrateContent = "By downgrading your subscription you will receive a credit for the pro-rata amount for the rest of the month at the next subscription fee. This credit will be offset against future subscription charges. <br><br>Are you sure you want to change your subscription?"
+                if (this.isActive) {
+                    if (subscriptionPlan.price_in_cents > this.subscriptionPlan.price_in_cents) {
+                        this.confirmMigrateTitle = "Upgrade Subscription";
+                        this.confirmMigrateContent = "By upgrading your subscription you will be immediately charged the pro-rata amount for the rest of the month at the new subscription fee. <br><br>Are you sure you want to change your subscription?";
+                    } else if (subscriptionPlan.price_in_cents < this.subscriptionPlan.price_in_cents) {
+                        this.confirmMigrateTitle = "Downgrade Subscription";
+                        this.confirmMigrateContent = "By downgrading your subscription you will receive a credit for the pro-rata amount for the rest of the month at the next subscription fee. This credit will be offset against future subscription charges. <br><br>Are you sure you want to change your subscription?"
+                    }
                 } else {
-                    this.confirmMigrateTitle = "";
-                    this.confirmMigrateContent = ""
+                    this.migrateSubscription();
                 }
+                this.confirmMigrateTitle = "";
+                this.confirmMigrateContent = ""
                 /*TODO if popup cancelled, reset selected subscription plan*/
             },
             resetSelectedSubscriptionPlan: function () {
@@ -261,6 +263,12 @@
                     return this.user.subscription.apiSubscription;
                 }
                 return null;
+            },
+            isTrialing(){
+                return this.subscription !== null && this.subscription.state === 'trialing';
+            },
+            isActive(){
+                return this.subscription !== null && this.subscription.state === 'active';
             },
             filteredTransactions(){
                 /*TODO need to filter these transactions*/
