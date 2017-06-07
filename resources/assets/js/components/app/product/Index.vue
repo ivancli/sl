@@ -232,8 +232,9 @@
             },
             addedCategory(category){
                 this.loadUser();
-//                this.reloadCategories()
-                this.categories.push(category);
+                if (this.categoriesLessThanLength === true) {
+                    this.categories.push(category);
+                }
             }
         },
         computed: {
