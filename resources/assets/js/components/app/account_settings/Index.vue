@@ -35,7 +35,7 @@
                 <div class="tab-pane" id="edit-profile" :class="setTabActiveClass('edit-profile')">
                     <edit-profile></edit-profile>
                 </div>
-                <div class="tab-pane" id="bulk-import" :class="setTabActiveClass('bulk-import')">
+                <div class="tab-pane" id="bulk-import" :class="setTabActiveClass('bulk-import')" v-if="subscriptionIsValid">
                     <bulk-import></bulk-import>
                 </div>
                 <div class="tab-pane" id="site-names" :class="setTabActiveClass('site-names')">
