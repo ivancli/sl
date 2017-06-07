@@ -125,5 +125,11 @@ class Kernel extends ConsoleKernel
         /*TODO add time checker in app preference*/
 
         #endregion
+
+        #region BulkJob.php
+        $schedule->command('bulk-job')
+            ->withoutOverlapping()
+            ->everyMinute();
+        #endregion
     }
 }
