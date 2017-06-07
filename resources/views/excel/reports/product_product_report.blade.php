@@ -53,7 +53,7 @@
                 @endif
             </td>
             <td>
-                @if(!is_null($site->item->lastChangedAt))
+                @if(!is_null($site->item) && !is_null($site->item->lastChangedAt))
                     {{$site->item->lastChangedAt}}
                 @else
                     -

@@ -77,7 +77,7 @@ class HistoricalAlertRepository implements HistoricalAlertContract
         if (!is_null($alertable)) {
             $alertable->historicalAlerts()->save($historicalAlert);
         }
-        
+
         return $historicalAlert;
     }
 }
