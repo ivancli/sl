@@ -76,7 +76,7 @@
                         <tr>
                             <th class="sortable" @click.prevent="sortSitesBy('site')" :class="sortSiteClass('site')">Site</th>
                             <th class="sortable text-right" @click.prevent="sortSitesBy('recent_price')" :class="sortSiteClass('recent_price')">Current Price</th>
-                            <th class="sortable hidden-xs hidden-sm text-center" :class="sortSiteClass('availability')" @click.prevent="sortSitesBy('availability')">Available</th>
+                            <!--<th class="sortable hidden-xs hidden-sm text-center" :class="sortSiteClass('availability')" @click.prevent="sortSitesBy('availability')">Available</th>-->
                             <th class="sortable hidden-xs hidden-sm text-right" :class="sortSiteClass('previous_price')" @click.prevent="sortSitesBy('previous_price')">Previous Price</th>
                             <th class="sortable text-right hidden-xs hidden-sm" :class="sortSiteClass('price_change')" @click.prevent="sortSitesBy('price_change')">Change</th>
                             <th class="sortable hidden-xs hidden-sm" @click.prevent="sortSitesBy('last_changed_at')" :class="sortSiteClass('last_changed_at')" style="padding-left: 20px;">Last Changed</th>

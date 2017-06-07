@@ -21,16 +21,16 @@
                 </div>
             </div>
         </td>
-        <td class="vertical-align-middle" :class="mySiteClass">
-            <div class="text-center">
-                <div v-if="item != null && item.availability != null">
-                    {{ item.availability == true ? 'Yes' : 'No' }}
-                </div>
-                <div v-else>
-                    <strong><i class="fa fa-minus"></i></strong>
-                </div>
-            </div>
-        </td>
+        <!--<td class="vertical-align-middle" :class="mySiteClass">-->
+            <!--<div class="text-center">-->
+                <!--<div v-if="item != null && item.availability != null">-->
+                    <!--{{ item.availability == true ? 'Yes' : 'No' }}-->
+                <!--</div>-->
+                <!--<div v-else>-->
+                    <!--<strong><i class="fa fa-minus"></i></strong>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</td>-->
         <td class="vertical-align-middle hidden-xs hidden-sm col-previous-price" :class="mySiteClass">
             <div class="text-right">
                 <div v-if="item != null && item.previousPrice != null">

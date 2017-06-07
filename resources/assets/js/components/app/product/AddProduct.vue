@@ -158,10 +158,13 @@
                 return this.user.numberOfProducts;
             },
             maxNumberOfProducts(){
-                return this.user.maxNumberOfProducts;
+                if (this.subscriptionCriteria !== null && typeof this.subscriptionCriteria.product !== 'undefined' && this.subscriptionCriteria.product !== 0) {
+                    return this.subscriptionCriteria.product;
+                }
+                return null;
             },
             reachedProductLimit(){
-                if (this.maxNumberOfProducts != null && this.numberOfProducts >= this.maxNumberOfProducts) {
+                if (this.maxNumberOfProducts !== null && this.numberOfProducts >= this.maxNumberOfProducts) {
                     return true;
                 } else {
                     return false;
@@ -170,19 +173,24 @@
             subscription(){
                 if (this.user.hasOwnProperty('subscription')) {
                     return this.user.subscription
-                } else {
-                    return null;
                 }
+                return null;
+            },
+            subscriptionCriteria(){
+                if (this.subscription !== null && typeof this.subscription.subscriptionCriteria !== 'undefined') {
+                    return this.subscription.subscriptionCriteria;
+                }
+                return null;
             },
             subscriptionPlan(){
-                if (this.subscription != null) {
+                if (this.subscription !== null) {
                     return this.subscription.subscriptionPlan
                 } else {
                     return null;
                 }
             },
             subscriptionPlanName(){
-                if (this.subscriptionPlan != null) {
+                if (this.subscriptionPlan !== null) {
                     return this.subscriptionPlan.name;
                 } else {
                     return null;
@@ -201,7 +209,7 @@
         color: #777;
         font-weight: bold;
         cursor: pointer;
-        width: 415px;
+        width: 430px;
         max-width: 100%;
     }
 
