@@ -112,12 +112,17 @@
                                     <th :class="orderByClass('diff_percent')" @click.prevent="setOrdering('diff_percent')">Difference %</th>
                                 </tr>
                                 </thead>
-                                <tbody v-if="products.length > 0">
+                                <tbody v-if="products != null && products.length > 0">
                                 <single-product-row v-if="product.cheapest_site_url !== null" v-for="product in products" :current-product="product"></single-product-row>
                                 </tbody>
-                                <tbody v-else>
+                                <tbody v-if="products != null && products.length == 0">
                                 <tr>
                                     <td colspan="7" class="text-center" v-text="emptyTableMsg"></td>
+                                </tr>
+                                </tbody>
+                                <tbody v-if="products == null">
+                                <tr>
+                                    <td colspan="7" class="text-center" v-text="initialTableMsg"></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -153,8 +158,9 @@
             return {
                 isLoadingProducts: false,
                 isLoadingFilters: false,
-                products: [],
-                emptyTableMsg: 'Click "SHOW PRODUCTS" button to load products.',
+                products: null,
+                initialTableMsg: 'Click "SHOW PRODUCTS" button to load products.',
+                emptyTableMsg: 'No products available in this view.',
                 paginationData: {
                     start: 0,
                     length: 25,

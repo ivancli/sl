@@ -51,7 +51,7 @@
                     0
                 </div>
             </div>
-            <div class="text-center f-w-bold" v-else>
+            <div class="text-center" v-else>
                 n/a
             </div>
         </td>
