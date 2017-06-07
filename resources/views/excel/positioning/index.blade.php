@@ -57,7 +57,7 @@
                 @endif
             </td>
             <td>
-                @if(!is_null($product->reference_recent_price))
+                @if(isset($product->reference_recent_price) && !is_null($product->reference_recent_price))
                     @if(floatval($product->reference_recent_price) - floatval($product->cheapest_recent_price) == 0)
                         @if(count(explode('$ $',$product->cheapest_site_url)) > 1)
                             0
@@ -76,7 +76,7 @@
                 @endif
             </td>
             <td>
-                @if(!is_null($product->reference_recent_price))
+                @if(isset($product->reference_recent_price) && !is_null($product->reference_recent_price))
                     @if(floatval($product->cheapest_recent_price) - floatval($product->reference_recent_price) == 0)
                         @if(count(explode('$ $',$product->cheapest_site_url)) > 1)
                             0

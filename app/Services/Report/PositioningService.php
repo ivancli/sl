@@ -140,6 +140,9 @@ class PositioningService
         $productBuilder->leftJoin($cheapestSiteQuery, function ($join) {
             $join->on('cheapestSites.product_id', '=', 'products.id');
         });
+
+        $productBuilder->whereNotNull('cheapestSites.recent_price');
+
         #endregion
 
         #region expensive site query
@@ -233,26 +236,17 @@ class PositioningService
             $keyword = array_get($data, 'search');
             $productBuilder->where(function ($query) use ($keyword, $data) {
                 $query->where('product_name', 'LIKE', " %{$keyword} % ")
-                    ->orWhere('category_name', 'LIKE', " %{
-                $keyword}%");
+                    ->orWhere('category_name', 'LIKE', " %{$keyword}%");
                 if (array_has($data, 'reference')) {
-                    $query->orWhere('reference.recent_price', 'LIKE', " %{
-                $keyword}%");
-                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4)))'), 'LIKE', " %{
-                $keyword}%");
-                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4)))/CAST(reference.recent_price AS DECIMAL(10, 4))'), 'LIKE', " %{
-                $keyword}%");
-                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 4)))'), 'LIKE', " %{
-                $keyword}%");
-                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 4)))/CAST(reference.recent_price AS DECIMAL(10, 4))'), 'LIKE', " %{
-                $keyword}%");
+                    $query->orWhere('reference.recent_price', 'LIKE', " %{$keyword}%");
+                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4)))'), 'LIKE', " %{$keyword}%");
+                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4)))/CAST(reference.recent_price AS DECIMAL(10, 4))'), 'LIKE', " %{$keyword}%");
+                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 4)))'), 'LIKE', " %{$keyword}%");
+                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 4)))/CAST(reference.recent_price AS DECIMAL(10, 4))'), 'LIKE', " %{$keyword}%");
                 }
-                $query->orWhere('cheapestSites.site_urls', 'LIKE', " %{
-                $keyword}%")
-                    ->orWhere('cheapestSites.recent_price', 'LIKE', " %{
-                $keyword}%")
-                    ->orWhere('cheapestSites.recent_price', 'LIKE', " %{
-                $keyword}%");
+                $query->orWhere('cheapestSites.site_urls', 'LIKE', " %{$keyword}%")
+                    ->orWhere('cheapestSites.recent_price', 'LIKE', " %{$keyword}%")
+                    ->orWhere('cheapestSites.recent_price', 'LIKE', " %{$keyword}%");
             });
         }
         #endregion
@@ -278,8 +272,7 @@ class PositioningService
         #endregion
 
         $productBuilder->select($select);
-        $recordTotal = $user->products()->count();
-        $recordsFiltered = $productBuilder->count();
+        $recordTotal = $productBuilder->count();
 
 
         $orderColumn = array_get($data, 'orderBy', 'products.id');
@@ -449,6 +442,9 @@ class PositioningService
         $productBuilder->leftJoin($cheapestSiteQuery, function ($join) {
             $join->on('cheapestSites.product_id', '=', 'products.id');
         });
+
+        $productBuilder->whereNotNull('cheapestSites.recent_price');
+        
         #endregion
 
         #region expensive site query
