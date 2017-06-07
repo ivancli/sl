@@ -79,14 +79,14 @@ class PositioningService
             });
             $select[] = 'reference.site_url as reference_site_url';
             $select[] = 'reference.recent_price as reference_recent_price';
-            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6))) as diff_cheapest');
-            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6)) as percent_diff_cheapest');
-            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(expensiveSites.recent_price AS DECIMAL(10, 6))) as diff_expensive');
-            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(expensiveSites.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6)) as percent_diff_expensive');
-            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 6))) as diff_second_cheapest');
-            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6)) as percent_diff_second_cheapest');
-            $select[] = DB::raw('IF((CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6))) = 0, CAST(secondCheapestSites.recent_price AS DECIMAL(10, 6)) - CAST(reference.recent_price AS DECIMAL(10, 6)), CAST(cheapestSites.recent_price AS DECIMAL(10, 6)) - CAST(reference.recent_price AS DECIMAL(10, 6))) as dynamic_diff_price');
-            $select[] = DB::raw('IF((CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6))) = 0, (CAST(secondCheapestSites.recent_price AS DECIMAL(10, 6)) - CAST(reference.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6)), (CAST(cheapestSites.recent_price AS DECIMAL(10, 6)) - CAST(reference.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6))) as percent_dynamic_diff_price');
+            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4))) as diff_cheapest');
+            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4)))/CAST(reference.recent_price AS DECIMAL(10, 4)) as percent_diff_cheapest');
+            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(expensiveSites.recent_price AS DECIMAL(10, 4))) as diff_expensive');
+            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(expensiveSites.recent_price AS DECIMAL(10, 4)))/CAST(reference.recent_price AS DECIMAL(10, 4)) as percent_diff_expensive');
+            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 4))) as diff_second_cheapest');
+            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 4)))/CAST(reference.recent_price AS DECIMAL(10, 4)) as percent_diff_second_cheapest');
+            $select[] = DB::raw('IF((CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4))) = 0, CAST(secondCheapestSites.recent_price AS DECIMAL(10, 4)) - CAST(reference.recent_price AS DECIMAL(10, 4)), CAST(cheapestSites.recent_price AS DECIMAL(10, 4)) - CAST(reference.recent_price AS DECIMAL(10, 4))) as dynamic_diff_price');
+            $select[] = DB::raw('IF((CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4))) = 0, (CAST(secondCheapestSites.recent_price AS DECIMAL(10, 4)) - CAST(reference.recent_price AS DECIMAL(10, 4)))/CAST(reference.recent_price AS DECIMAL(10, 4)), (CAST(cheapestSites.recent_price AS DECIMAL(10, 4)) - CAST(reference.recent_price AS DECIMAL(10, 4)))/CAST(reference.recent_price AS DECIMAL(10, 4))) as percent_dynamic_diff_price');
         }
 
         #endregion
@@ -117,7 +117,7 @@ class PositioningService
         (
             SELECT cheapestPrices.*, group_concat(concat(urls.full_path, \'$#$\', ifnull(concat(\'eBay: \', ebays.value), \'\')) separator \'$ $\') site_urls FROM 
             (
-                SELECT product_id, MIN(CAST(priceMeta.value AS DECIMAL(10, 6))) recent_price
+                SELECT product_id, MIN(CAST(priceMeta.value AS DECIMAL(10, 4))) recent_price
             
                 FROM sites 
                 JOIN urls ON (sites.url_id=urls.id)
@@ -150,7 +150,7 @@ class PositioningService
         (
             SELECT cheapestPrices.*, group_concat(concat(urls.full_path, \'$#$\', ifnull(concat(\'eBay: \', ebays.value), \'\')) separator \'$ $\') site_urls FROM 
             (
-                SELECT product_id, MAX(CAST(priceMeta.value AS DECIMAL(10, 6))) recent_price
+                SELECT product_id, MAX(CAST(priceMeta.value AS DECIMAL(10, 4))) recent_price
             
                 FROM sites 
                 JOIN urls ON (sites.url_id=urls.id)
@@ -199,7 +199,7 @@ class PositioningService
 
         $secondCheapestSiteQuery = DB::raw('
         (
-            SELECT    sites.product_id, group_concat(concat(urls.full_path, \'$#$\', ifnull(concat(\'eBay: \', ebays.value), \'\')) separator \'$ $\') site_urls, MIN(CAST(prices.value AS DECIMAL(10, 6))) recent_price 
+            SELECT    sites.product_id, group_concat(concat(urls.full_path, \'$#$\', ifnull(concat(\'eBay: \', ebays.value), \'\')) separator \'$ $\') site_urls, MIN(CAST(prices.value AS DECIMAL(10, 4))) recent_price 
             FROM      sites
             JOIN urls ON (sites.url_id=urls.id)
             JOIN items ON(sites.item_id=items.id)
@@ -207,7 +207,7 @@ class PositioningService
             LEFT JOIN item_metas ebays ON(items.id=ebays.item_id AND ebays.element=\'SELLER_USERNAME\')
             LEFT JOIN (
             
-                select product_id, MIN(CAST(prices.value AS DECIMAL(10, 6))) recent_price
+                select product_id, MIN(CAST(prices.value AS DECIMAL(10, 4))) recent_price
                 FROM sites
                 JOIN urls ON (sites.url_id=urls.id)
                 JOIN items ON(sites.item_id=items.id)
@@ -238,13 +238,13 @@ class PositioningService
                 if (array_has($data, 'reference')) {
                     $query->orWhere('reference.recent_price', 'LIKE', " %{
                 $keyword}%");
-                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6)))'), 'LIKE', " %{
+                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4)))'), 'LIKE', " %{
                 $keyword}%");
-                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6))'), 'LIKE', " %{
+                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4)))/CAST(reference.recent_price AS DECIMAL(10, 4))'), 'LIKE', " %{
                 $keyword}%");
-                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 6)))'), 'LIKE', " %{
+                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 4)))'), 'LIKE', " %{
                 $keyword}%");
-                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6))'), 'LIKE', " %{
+                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 4)))/CAST(reference.recent_price AS DECIMAL(10, 4))'), 'LIKE', " %{
                 $keyword}%");
                 }
                 $query->orWhere('cheapestSites.site_urls', 'LIKE', " %{
@@ -262,15 +262,15 @@ class PositioningService
             switch (array_get($data, 'position')) {
                 case "not_cheapest":
                     $productBuilder->where(function ($query) {
-                        $query->where(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6)))'), '!=', 0)
-                            ->orWhereNull(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6)))'));
+                        $query->where(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4)))'), '!=', 0)
+                            ->orWhereNull(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4)))'));
                     });
                     break;
                 case "most_expensive":
-                    $productBuilder->where(DB::raw('ABS(CAST(expensiveSites.recent_price AS DECIMAL(10, 6)) - CAST(reference.recent_price AS DECIMAL(10, 6)))'), '==', 0);
+                    $productBuilder->where(DB::raw('ABS(CAST(expensiveSites.recent_price AS DECIMAL(10, 4)) - CAST(reference.recent_price AS DECIMAL(10, 4)))'), '==', 0);
                     break;
                 case "cheapest":
-                    $productBuilder->where(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6)))'), '=', 0);
+                    $productBuilder->where(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4)))'), '=', 0);
                     break;
                 default:
             }
@@ -388,14 +388,14 @@ class PositioningService
             });
             $select[] = 'reference.site_url as reference_site_url';
             $select[] = 'reference.recent_price as reference_recent_price';
-            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6))) as diff_cheapest');
-            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6)) as percent_diff_cheapest');
-            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(expensiveSites.recent_price AS DECIMAL(10, 6))) as diff_expensive');
-            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(expensiveSites.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6)) as percent_diff_expensive');
-            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 6))) as diff_second_cheapest');
-            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6)) as percent_diff_second_cheapest');
-            $select[] = DB::raw('IF((CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6))) = 0, CAST(secondCheapestSites.recent_price AS DECIMAL(10, 6)) - CAST(reference.recent_price AS DECIMAL(10, 6)), CAST(cheapestSites.recent_price AS DECIMAL(10, 6)) - CAST(reference.recent_price AS DECIMAL(10, 6))) as dynamic_diff_price');
-            $select[] = DB::raw('IF((CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6))) = 0, (CAST(secondCheapestSites.recent_price AS DECIMAL(10, 6)) - CAST(reference.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6)), (CAST(cheapestSites.recent_price AS DECIMAL(10, 6)) - CAST(reference.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6))) as percent_dynamic_diff_price');
+            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4))) as diff_cheapest');
+            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4)))/CAST(reference.recent_price AS DECIMAL(10, 4)) as percent_diff_cheapest');
+            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(expensiveSites.recent_price AS DECIMAL(10, 4))) as diff_expensive');
+            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(expensiveSites.recent_price AS DECIMAL(10, 4)))/CAST(reference.recent_price AS DECIMAL(10, 4)) as percent_diff_expensive');
+            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 4))) as diff_second_cheapest');
+            $select[] = DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 4)))/CAST(reference.recent_price AS DECIMAL(10, 4)) as percent_diff_second_cheapest');
+            $select[] = DB::raw('IF((CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4))) = 0, CAST(secondCheapestSites.recent_price AS DECIMAL(10, 4)) - CAST(reference.recent_price AS DECIMAL(10, 4)), CAST(cheapestSites.recent_price AS DECIMAL(10, 4)) - CAST(reference.recent_price AS DECIMAL(10, 4))) as dynamic_diff_price');
+            $select[] = DB::raw('IF((CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4))) = 0, (CAST(secondCheapestSites.recent_price AS DECIMAL(10, 4)) - CAST(reference.recent_price AS DECIMAL(10, 4)))/CAST(reference.recent_price AS DECIMAL(10, 4)), (CAST(cheapestSites.recent_price AS DECIMAL(10, 4)) - CAST(reference.recent_price AS DECIMAL(10, 4)))/CAST(reference.recent_price AS DECIMAL(10, 4))) as percent_dynamic_diff_price');
         }
 
         #endregion
@@ -426,7 +426,7 @@ class PositioningService
         (
             SELECT cheapestPrices.*, group_concat(concat(urls.full_path, \'$#$\', ifnull(concat(\'eBay: \', ebays.value), \'\')) separator \'$ $\') site_urls FROM 
             (
-                SELECT product_id, MIN(CAST(priceMeta.value AS DECIMAL(10, 6))) recent_price
+                SELECT product_id, MIN(CAST(priceMeta.value AS DECIMAL(10, 4))) recent_price
             
                 FROM sites 
                 JOIN urls ON (sites.url_id=urls.id)
@@ -459,7 +459,7 @@ class PositioningService
         (
             SELECT cheapestPrices.*, group_concat(concat(urls.full_path, \'$#$\', ifnull(concat(\'eBay: \', ebays.value), \'\')) separator \'$ $\') site_urls FROM 
             (
-                SELECT product_id, MAX(CAST(priceMeta.value AS DECIMAL(10, 6))) recent_price
+                SELECT product_id, MAX(CAST(priceMeta.value AS DECIMAL(10, 4))) recent_price
             
                 FROM sites 
                 JOIN urls ON (sites.url_id=urls.id)
@@ -508,7 +508,7 @@ class PositioningService
 
         $secondCheapestSiteQuery = DB::raw('
         (
-            SELECT    sites.product_id, group_concat(concat(urls.full_path, \'$#$\', ifnull(concat(\'eBay: \', ebays.value), \'\')) separator \'$ $\') site_urls, MIN(CAST(prices.value AS DECIMAL(10, 6))) recent_price 
+            SELECT    sites.product_id, group_concat(concat(urls.full_path, \'$#$\', ifnull(concat(\'eBay: \', ebays.value), \'\')) separator \'$ $\') site_urls, MIN(CAST(prices.value AS DECIMAL(10, 4))) recent_price 
             FROM      sites
             JOIN urls ON (sites.url_id=urls.id)
             JOIN items ON(sites.item_id=items.id)
@@ -516,7 +516,7 @@ class PositioningService
             LEFT JOIN item_metas ebays ON(items.id=ebays.item_id AND ebays.element=\'SELLER_USERNAME\')
             LEFT JOIN (
             
-                select product_id, MIN(CAST(prices.value AS DECIMAL(10, 6))) recent_price
+                select product_id, MIN(CAST(prices.value AS DECIMAL(10, 4))) recent_price
                 FROM sites
                 JOIN urls ON (sites.url_id=urls.id)
                 JOIN items ON(sites.item_id=items.id)
@@ -547,13 +547,13 @@ class PositioningService
                 if (array_has($data, 'reference')) {
                     $query->orWhere('reference.recent_price', 'LIKE', " %{
                 $keyword}%");
-                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6)))'), 'LIKE', " %{
+                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4)))'), 'LIKE', " %{
                 $keyword}%");
-                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6))'), 'LIKE', " %{
+                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4)))/CAST(reference.recent_price AS DECIMAL(10, 4))'), 'LIKE', " %{
                 $keyword}%");
-                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 6)))'), 'LIKE', " %{
+                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 4)))'), 'LIKE', " %{
                 $keyword}%");
-                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 6)))/CAST(reference.recent_price AS DECIMAL(10, 6))'), 'LIKE', " %{
+                    $query->orWhere(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(secondCheapestSites.recent_price AS DECIMAL(10, 4)))/CAST(reference.recent_price AS DECIMAL(10, 4))'), 'LIKE', " %{
                 $keyword}%");
                 }
                 $query->orWhere('cheapestSites.site_urls', 'LIKE', " %{
@@ -571,15 +571,15 @@ class PositioningService
             switch (array_get($data, 'position')) {
                 case "not_cheapest":
                     $productBuilder->where(function ($query) {
-                        $query->where(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6)))'), '!=', 0)
-                            ->orWhereNull(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6)))'));
+                        $query->where(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4)))'), '!=', 0)
+                            ->orWhereNull(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4)))'));
                     });
                     break;
                 case "most_expensive":
-                    $productBuilder->where(DB::raw('ABS(CAST(expensiveSites.recent_price AS DECIMAL(10, 6)) - CAST(reference.recent_price AS DECIMAL(10, 6)))'), '==', 0);
+                    $productBuilder->where(DB::raw('ABS(CAST(expensiveSites.recent_price AS DECIMAL(10, 4)) - CAST(reference.recent_price AS DECIMAL(10, 4)))'), '==', 0);
                     break;
                 case "cheapest":
-                    $productBuilder->where(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 6)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 6)))'), '=', 0);
+                    $productBuilder->where(DB::raw('ABS(CAST(reference.recent_price AS DECIMAL(10, 4)) - CAST(cheapestSites.recent_price AS DECIMAL(10, 4)))'), '=', 0);
                     break;
                 default:
             }
