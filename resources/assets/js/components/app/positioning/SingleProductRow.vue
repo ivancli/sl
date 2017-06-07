@@ -97,7 +97,7 @@
                 return this.currentProduct;
             },
             referencePrice(){
-                if (typeof this.product.reference_recent_price !== 'undefined') {
+                if (typeof this.product.reference_recent_price !== 'undefined' && this.product.reference_recent_price !== null) {
                     return parseFloat(this.product.reference_recent_price);
                 } else {
                     return null;
