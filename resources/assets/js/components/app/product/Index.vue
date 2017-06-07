@@ -42,13 +42,9 @@
                                         <h3>OH NO! YOUR SUBSCRIPTION IS CANCELLED!</h3>
                                         <p>Please reactivate to continue using SpotLite.</p>
                                     </td>
-                                    <td class="shrink invalid-subscription-button" v-if="subscription.apiSubscription.credit_card_id !== null">
-                                        <a href="#" class="btn btn-primary btn-lg btn-flat" @click.prevent="onReactivateSubscription">REACTIVATE</a>
+                                    <td class="shrink invalid-subscription-button">
+                                        <a href="#" class="btn btn-primary btn-lg btn-flat" @click.prevent="onClickReactivate">REACTIVATE</a>
                                     </td>
-                                    <td class="shrink invalid-subscription-button" v-else>
-                                        <a :href="updatePaymentLink" class="btn btn-primary btn-lg btn-flat">REACTIVATE</a>
-                                    </td>
-
                                 </tr>
                             </table>
                         </div>
@@ -78,7 +74,7 @@
                 </div>
             </div>
         </div>
-        <loading v-if="isSearchingCategories"></loading>
+        <loading v-if="isSearchingCategories || isReactivating"></loading>
         <create-password v-if="!hasSetPassword" @set-password="loadUser"></create-password>
         <welcome v-if="hasSetPassword && !hasSetSamples" @set-welcome="setWelcome"></welcome>
     </section>
@@ -109,7 +105,8 @@
         data() {
             return {
                 categories: [],
-                isSearchingCategories: false
+                isSearchingCategories: false,
+                isReactivating: false,
             }
         },
         mounted() {
@@ -187,13 +184,28 @@
             loadUpdatePaymentLink(){
                 this.$store.dispatch(LOAD_UPDATE_PAYMENT_LINK);
             },
-            onReactivateSubscription(){
-
-            },
             setWelcome(){
                 this.loadUser();
                 this.loadCategories();
             },
+            onClickReactivate(){
+                this.isReactivating = true;
+                if (this.apiSubscription.credit_card_id === null) {
+                    window.location.href = this.updatePaymentLink;
+                } else {
+                    axios.post(this.subscription.urls.reactivate).then(response => {
+                        if (response.data.status === true) {
+                            this.isReactivating = false;
+                            window.location.href = '/account-settings#manage-subscription';
+                        }
+                    }).catch(error => {
+                        this.isReactivating = false;
+                        if (error.response && error.response.status === 422 && error.response.data) {
+                            this.errors = error.response.data;
+                        }
+                    });
+                }
+            }
         },
         computed: {
             allCollapseStatus(){
@@ -226,6 +238,11 @@
                     return this.user.subscription;
                 }
                 return null;
+            },
+            apiSubscription(){
+                if(this.subscription !== null){
+                    return this.subscription.apiSubscription;
+                }
             },
             subscriptionIsValid(){
                 if (this.subscription !== null) {

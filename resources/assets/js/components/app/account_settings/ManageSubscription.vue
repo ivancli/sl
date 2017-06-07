@@ -169,7 +169,7 @@
             },
             selectSubscriptionPlan: function (subscriptionPlan) {
                 /*TODO show confirmation popup and migrate*/
-                if (this.isActive) {
+                if (this.isActive === true) {
                     if (subscriptionPlan.price_in_cents > this.subscriptionPlan.price_in_cents) {
                         this.confirmMigrateTitle = "Upgrade Subscription";
                         this.confirmMigrateContent = "By upgrading your subscription you will be immediately charged the pro-rata amount for the rest of the month at the new subscription fee. <br><br>Are you sure you want to change your subscription?";
