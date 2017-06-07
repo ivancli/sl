@@ -179,9 +179,9 @@
                     }
                 } else {
                     this.migrateSubscription();
+                    this.confirmMigrateTitle = "";
+                    this.confirmMigrateContent = ""
                 }
-                this.confirmMigrateTitle = "";
-                this.confirmMigrateContent = ""
                 /*TODO if popup cancelled, reset selected subscription plan*/
             },
             resetSelectedSubscriptionPlan: function () {
