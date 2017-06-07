@@ -1,5 +1,5 @@
 <template>
-    <form class="navbar-form navbar-left" role="search">
+    <form class="navbar-form navbar-left" role="search" @submit.prevent="setProductSearchTerm">
         <div class="form-group">
             <input type="text" class="form-control general-search-input" placeholder="SEARCH"
                    @input.prevent="setProductSearchTerm" v-model="productSearchTerm" ref="txt_search_product">
