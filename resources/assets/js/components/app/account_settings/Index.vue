@@ -10,7 +10,7 @@
                         Edit Profile
                     </a>
                 </li>
-                <li :class="setTabActiveClass('bulk-import')">
+                <li :class="setTabActiveClass('bulk-import')" v-if="subscriptionIsValid">
                     <a href="#bulk-import" @click.prevent="setActiveTab('bulk-import')">
                         Bulk Import
                     </a>
@@ -119,7 +119,19 @@
             },
             hasSubscription(){
                 return !this.user.isStaffMember && this.user.subscription && this.user.subscription.apiSubscription;
-            }
+            },
+            subscription(){
+                if (typeof this.user.subscription !== 'undefined' && this.user.subscription !== null) {
+                    return this.user.subscription;
+                }
+                return null;
+            },
+            subscriptionIsValid(){
+                if (this.subscription !== null) {
+                    return this.subscription.isValid;
+                }
+                return true;
+            },
         }
     }
 </script>
