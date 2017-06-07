@@ -21,8 +21,8 @@ class StoreValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return [
-            'name' => 'required|max:255|unique:groups',
-            'display_name' => 'required|max:255',
+            'name' => 'required|max:191|unique:groups',
+            'display_name' => 'required|max:191',
             'description' => 'max:500',
         ];
     }

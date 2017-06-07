@@ -23,9 +23,9 @@ class UpdateValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return [
-            'metas.*.element' => 'required|max:255',
-            'metas.*.format_type' => 'max:255',
-            'metas.*.historical_type' => 'max:255',
+            'metas.*.element' => 'required|max:191',
+            'metas.*.format_type' => 'max:191',
+            'metas.*.historical_type' => 'max:191',
         ];
     }
 }

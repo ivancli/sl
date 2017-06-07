@@ -36,7 +36,7 @@ class StoreValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return [
-            'category_name' => 'required|max:255|unique_per_user'
+            'category_name' => 'required|max:191|unique_per_user'
         ];
     }
 }

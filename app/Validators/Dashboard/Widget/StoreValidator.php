@@ -27,7 +27,7 @@ class StoreValidator extends ValidatorAbstract
             'id' => 'required',
             'timespan' => 'required',
             'resolution' => 'required',
-            'name' => 'required',
+            'name' => 'required|max:191',
         ];
     }
 }

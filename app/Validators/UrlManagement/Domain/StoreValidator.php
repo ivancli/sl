@@ -22,7 +22,7 @@ class StoreValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return [
-            'name' => "required|max:255",
+            'name' => "required|max:191",
             'full_path' => "required|url|unique:domains,full_path"
         ];
     }

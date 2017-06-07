@@ -22,8 +22,8 @@ class UpdateValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return [
-            'confs.*.element' => 'required|max:255',
-            'confs.*.value' => 'required|max:255',
+            'confs.*.element' => 'required|max:191',
+            'confs.*.value' => 'required|max:191',
         ];
     }
 }

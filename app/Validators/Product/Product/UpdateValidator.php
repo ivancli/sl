@@ -56,10 +56,10 @@ class UpdateValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return [
-            'product_name' => "required|max:255|unique_per_category:{$id}",
-            'meta.brand' => 'max:255',
-            'meta.supplier' => 'max:255',
-            'meta.sku' => 'max:255',
+            'product_name' => "required|max:191|unique_per_category:{$id}",
+            'meta.brand' => 'max:191',
+            'meta.supplier' => 'max:191',
+            'meta.sku' => 'max:191',
             'meta.cost_price' => 'numeric|nullable',
         ];
     }

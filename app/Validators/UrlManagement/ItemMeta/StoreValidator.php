@@ -23,8 +23,8 @@ class StoreValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return [
-            'element' => 'required|max:255',
-            'value' => 'max:255'
+            'element' => 'required|max:191',
+            'value' => 'max:191'
         ];
     }
 }

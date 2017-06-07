@@ -23,8 +23,8 @@ class StoreValidator extends ValidatorAbstract
     {
         return [
             'item_meta_id' => 'required',
-            'confs.*.element' => 'required|max:255',
-            'confs.*.value' => 'required|max:255',
+            'confs.*.element' => 'required|max:191',
+            'confs.*.value' => 'required|max:191',
         ];
     }
 }
