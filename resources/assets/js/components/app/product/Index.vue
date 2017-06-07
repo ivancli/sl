@@ -52,7 +52,7 @@
                 </div>
                 <div class="row m-b-10">
                     <div class="col-sm-8">
-                        <add-category @added-category="reloadCategories" v-if="subscriptionIsValid"></add-category>
+                        <add-category @added-category="addedCategory" v-if="subscriptionIsValid"></add-category>
                     </div>
                     <div class="col-sm-4 text-right" v-if="hasCategories">
                         <div class="collapse-container">
@@ -70,7 +70,7 @@
                         <dotdotdot></dotdotdot>
                     </div>
                 </div>
-                <div class="row" v-if="!isLoadingCategories && moreCategoriesToLoad">
+                <div class="row" v-if="!isLoadingCategories && !categoriesLessThanLength">
                     <div class="col-sm-12 text-center">
                         <button class="btn btn-default btn-flat" @click.prevent="loadCategories">LOAD MORE CATEGORIES</button>
                     </div>
@@ -121,6 +121,7 @@
                 isReactivating: false,
                 categoryLength: 5,
                 isLoadingCategories: false,
+                categoriesLessThanLength: false,
             }
         },
         mounted() {
@@ -137,7 +138,7 @@
                 let categoryPromise = setTimeout(() => {
                     this.isSearchingCategories = true;
                     this.txtSearchProductReference.blur();
-                    this.loadCategories(() => {
+                    this.reloadCategories(() => {
                         this.isSearchingCategories = false;
                         this.txtSearchProductReference.focus();
                         this.$store.dispatch(CLEAR_CATEGORY_SEARCH_PROMISE);
@@ -160,6 +161,10 @@
                     this.isLoadingCategories = false;
                     if (response.data.status === true) {
                         this.categories = this.categories.concat(response.data.categories);
+                        /*TODO everytime when users add new categories, it's manually added to the array and it still yet to be loaded in load more*/
+                        if (response.data.categories.length < this.categoryLength) {
+                            this.categoriesLessThanLength = true;
+                        }
                         if (typeof callback === 'function') {
                             callback();
                         }
@@ -185,8 +190,10 @@
                 let index = this.categories.findIndex(category => category.id === newCategory.id);
                 Vue.set(this.categories, index, newCategory);
             },
-            reloadCategories() {
-                this.loadCategories();
+            reloadCategories(callback) {
+                this.categoriesLessThanLength = false;
+                this.categories = [];
+                this.loadCategories(callback);
                 this.loadUser();
             },
             toggleAllCategories() {
@@ -222,6 +229,11 @@
                         }
                     });
                 }
+            },
+            addedCategory(category){
+                this.loadUser();
+//                this.reloadCategories()
+                this.categories.push(category);
             }
         },
         computed: {

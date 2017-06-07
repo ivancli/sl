@@ -79,9 +79,9 @@
                     this.isAddingCategory = false;
                     if (response.data.status === true) {
                         this.addingCategory = false;
+                        this.clearNewCategoryname();
+                        this.$emit('added-category', response.data.category);
                     }
-                    this.clearNewCategoryname();
-                    this.$emit('added-category');
                 }).catch(error => {
                     this.isAddingCategory = false;
                     if (error.response && error.response.status === 422 && error.response.data) {
