@@ -114,6 +114,66 @@ class DomainSeeder extends Seeder
             'value' => 'seller.username',
             'order' => 0
         ]));
+
+        unset($domain);
+        unset($priceMeta);
+        #endregion
+
+        #region ebay au
+
+
+        $domain = $this->domainRepo->store([
+            'name' => 'eBay',
+            'full_path' => 'http://www.ebay.com.au',
+        ]);
+
+        $domain->confs()->save(new DomainConf([
+            'element' => 'CUSTOM_ITEM_GENERATOR',
+            'value' => 'EBAY\MultipleItemGenerator'
+        ]));
+
+        $domain->confs()->save(new DomainConf([
+            'element' => 'CUSTOM_CRAWLER',
+            'value' => 'EBAY\APICrawler'
+        ]));
+
+        $domain->confs()->save(new DomainConf([
+            'element' => 'CUSTOM_PARSER',
+            'value' => 'EBAY\MultipleItemParser'
+        ]));
+
+        $priceMeta = $domain->metas()->save(new DomainMeta([
+            'element' => 'PRICE',
+            'format_type' => 'decimal',
+            'historical_type' => 'price',
+            'multi' => 'n'
+        ]));
+
+        $priceMeta->confs()->save(new DomainMetaConf([
+            'element' => 'ARRAY',
+            'value' => 'price.value',
+            'order' => 0
+        ]));
+
+        $priceMeta->confs()->save(new DomainMetaConf([
+            'element' => 'ARRAY',
+            'value' => 'currentBidPrice.value',
+            'order' => 1
+        ]));
+
+        $priceMeta = $domain->metas()->save(new DomainMeta([
+            'element' => 'SELLER_USERNAME',
+            'multi' => 'n'
+        ]));
+
+        $priceMeta->confs()->save(new DomainMetaConf([
+            'element' => 'ARRAY',
+            'value' => 'seller.username',
+            'order' => 0
+        ]));
+
+        unset($domain);
+        unset($priceMeta);
         #endregion
     }
 }
