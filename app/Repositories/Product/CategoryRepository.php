@@ -57,6 +57,14 @@ class CategoryRepository implements CategoryContract
             $builder->with(array_get($data, 'with'));
         }
 
+        if (array_has($data, 'offset') && !empty(array_get($data, 'offset'))) {
+            $builder->skip(array_get($data, 'offset'));
+        }
+
+        if (array_has($data, 'length') && !empty(array_get($data, 'length'))) {
+            $builder->limit(array_get($data, 'length'));
+        }
+
         $categories = $builder->get();
 
         return $categories;

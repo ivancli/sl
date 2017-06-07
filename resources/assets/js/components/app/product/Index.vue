@@ -65,13 +65,23 @@
                         <single-category v-for="single_category in categories" :current-category="single_category" @reload-category="updateCategory" @reload-categories="reloadCategories"></single-category>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-12" v-for="category in categories">
-                        <div v-for="product in category.products">
-                            {{product.id}}
-                        </div>
+                <div class="row" v-if="isLoadingCategories">
+                    <div class="col-sm-12 text-center">
+                        <dotdotdot></dotdotdot>
                     </div>
                 </div>
+                <div class="row" v-if="!isLoadingCategories && moreCategoriesToLoad">
+                    <div class="col-sm-12 text-center">
+                        <button class="btn btn-default btn-flat" @click.prevent="loadCategories">LOAD MORE CATEGORIES</button>
+                    </div>
+                </div>
+                <!--<div class="row">-->
+                <!--<div class="col-sm-12" v-for="category in categories">-->
+                <!--<div v-for="product in category.products">-->
+                <!--{{product.id}}-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--</div>-->
             </div>
         </div>
         <loading v-if="isSearchingCategories || isReactivating"></loading>
@@ -88,6 +98,7 @@
 
     import addCategory from './AddCategory.vue';
     import singleCategory from './SingleCategory.vue';
+    import dotdotdot from '../../fragments/loading/DotDotDot.vue';
     import loading from '../../fragments/loading/Loading.vue';
 
     import {
@@ -100,6 +111,7 @@
             welcome,
             addCategory,
             singleCategory,
+            dotdotdot,
             loading
         },
         data() {
@@ -107,6 +119,8 @@
                 categories: [],
                 isSearchingCategories: false,
                 isReactivating: false,
+                categoryLength: 5,
+                isLoadingCategories: false,
             }
         },
         mounted() {
@@ -141,14 +155,17 @@
         },
         methods: {
             loadCategories(callback) {
+                this.isLoadingCategories = true;
                 axios.get('/category', this.loadCategoriesRequestData).then(response => {
+                    this.isLoadingCategories = false;
                     if (response.data.status === true) {
-                        this.categories = response.data.categories;
+                        this.categories = this.categories.concat(response.data.categories);
                         if (typeof callback === 'function') {
                             callback();
                         }
                     }
                 }).catch(error => {
+                    this.isLoadingCategories = false;
                     console.info(error.response);
                 })
             },
@@ -240,7 +257,7 @@
                 return null;
             },
             apiSubscription(){
-                if(this.subscription !== null){
+                if (this.subscription !== null) {
                     return this.subscription.apiSubscription;
                 }
             },
@@ -278,6 +295,9 @@
                 }
                 return null;
             },
+            moreCategoriesToLoad(){
+                return this.categories.length < this.user.numberOfCategories;
+            },
             productUsagePercentage(){
                 if (this.maxNumberOfProducts !== null) {
                     return this.numberOfProducts / this.maxNumberOfProducts * 100;
@@ -299,6 +319,8 @@
             loadCategoriesRequestData(){
                 return {
                     params: {
+                        offset: this.categories.length,
+                        length: this.categoryLength,
                         key: this.$store.getters.productSearchTerm,
                     }
                 }
