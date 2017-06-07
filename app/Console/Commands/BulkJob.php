@@ -51,9 +51,15 @@ class BulkJob extends Command
         ]);
 
         $bulkJobs->each(function ($bulkJob) {
+            if ($bulkJob->completed >= $bulkJob->chunks) {
+                $bulkJob->statusNull();
+                $bulkJob->archive();
+                return true;
+            }
+
             $type = $bulkJob->type;
             $chunks = $bulkJob->chunks;
-
+            $bulkJob->statusProcessing();
             switch ($type) {
                 case 'product':
                     for ($i = 1; $i <= $chunks; $i++) {

@@ -29,6 +29,12 @@ class BulkJob extends Model
         $this->save();
     }
 
+    public function statusProcessing()
+    {
+        $this->status = 'processing';
+        $this->save();
+    }
+
     public function statusFailed()
     {
         $this->status = 'failed';
