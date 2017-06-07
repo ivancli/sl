@@ -444,7 +444,7 @@ class PositioningService
         });
 
         $productBuilder->whereNotNull('cheapestSites.recent_price');
-        
+
         #endregion
 
         #region expensive site query
