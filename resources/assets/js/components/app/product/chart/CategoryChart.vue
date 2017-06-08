@@ -4,6 +4,7 @@
         <div class="modal-card">
             <header class="modal-card-head">
                 {{ category.category_name }}
+                <a class="close" @click.prevent="hideModal">&times;</a>
             </header>
             <section class="modal-card-body">
                 <div class="row">
@@ -64,6 +65,7 @@
                             </div>
                             <div class="col-sm-12">
                                 <a class="btn btn-primary btn-flat" href="#" @click.prevent="addWidget">ADD CHART</a>
+                                <a class="btn btn-default btn-flat" href="#" @click.prevent="hideAddToDashboardOptions">CANCEL</a>
                             </div>
                         </div>
                         <div class="row" v-if="!showAddToDashboardOptions">
@@ -174,6 +176,9 @@
             },
             hideLoading(){
                 this.$refs.lineCharts.hideLoading();
+            },
+            hideAddToDashboardOptions(){
+                this.showAddToDashboardOptions = false;
             },
             hideModal(){
                 this.emitHideModal();
@@ -306,6 +311,10 @@
 </script>
 
 <style>
+    header.modal-card-head .close {
+        margin-left: auto;
+    }
+
     @media screen and (min-width: 1201px) {
         .chart-modal .modal-content,
         .chart-modal .modal-card {
