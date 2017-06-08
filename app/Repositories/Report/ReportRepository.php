@@ -178,10 +178,10 @@ class ReportRepository implements ReportContract
             $excel->sheet($product->product_name, function ($sheet) use ($product) {
                 $sheet->loadview('excel.reports.product_product_report', compact(['product']));
                 $sheet->setColumnFormat(array(
-                    'D' => \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
-                    'E' => \PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2,
-                    'F' => \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
-                    'G' => \PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2,
+                    'E' => \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
+                    'F' => \PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2,
+                    'G' => \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
+                    'H' => \PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2,
                 ));
                 $sheet->setWidth('A', 30);
                 $sheet->setWidth('B', 30);
@@ -190,6 +190,7 @@ class ReportRepository implements ReportContract
                 $sheet->setWidth('E', 20);
                 $sheet->setWidth('F', 20);
                 $sheet->setWidth('G', 20);
+                $sheet->setWidth('H', 20);
             });
         });
         $excelFileContent = $excel->string('xlsx');
@@ -231,10 +232,10 @@ class ReportRepository implements ReportContract
             $excel->sheet($category->category_name, function ($sheet) use ($category) {
                 $sheet->loadview('excel.reports.product_category_report', compact(['category']));
                 $sheet->setColumnFormat(array(
-                    'D' => \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
-                    'E' => \PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2,
-                    'F' => \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
-                    'G' => \PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2,
+                    'E' => \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
+                    'F' => \PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2,
+                    'G' => \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
+                    'H' => \PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2,
                 ));
                 $sheet->setWidth('A', 30);
                 $sheet->setWidth('B', 30);
@@ -243,6 +244,7 @@ class ReportRepository implements ReportContract
                 $sheet->setWidth('E', 20);
                 $sheet->setWidth('F', 20);
                 $sheet->setWidth('G', 20);
+                $sheet->setWidth('H', 20);
             });
         });
         $excelFileContent = $excel->string('xlsx');
