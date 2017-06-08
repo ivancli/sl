@@ -145,7 +145,7 @@
                     </div>
                 </div>
             </div>
-            <loading v-if="isLoadingJobs || isImporting"></loading>
+            <loading v-if="(isLoadingJobs || isImporting) && !(productBulkJobs.length > 0 || urlBulkJobs.length > 0)"></loading>
         </div>
     </div>
 </template>
@@ -169,12 +169,24 @@
                 step_two_file: null,
                 noNewCategories: false,
                 noNewProducts: false,
+                bulkJobsCheckerPromise: null,
             };
         },
         mounted(){
             console.info('BulkImport component mounted.');
             this.loadBulkImportJobs();
             this.loadLastBulkImportJob();
+        },
+        watch: {
+            bulkJobs(bulkJobs){
+                if (bulkJobs.length > 0) {
+                    this.bulkJobsCheckerPromise = setTimeout(() => {
+                        this.loadBulkImportJobs();
+                    }, 5000);
+                } else {
+                    this.loadLastBulkImportJob();
+                }
+            }
         },
         methods: {
             loadBulkImportJobs(){

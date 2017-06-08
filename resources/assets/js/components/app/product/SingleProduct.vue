@@ -18,7 +18,7 @@
                             <div v-if="product.meta.brand != null"><strong>Brand</strong>: {{product.meta.brand}}</div>
                             <div v-if="product.meta.supplier != null"><strong>Supplier</strong>: {{product.meta.supplier}}</div>
                             <div v-if="product.meta.sku != null"><strong>SKU</strong>: {{product.meta.sku}}</div>
-                            <div v-if="product.meta.cost_price != null"><strong>Cost price</strong>: {{product.meta.cost_price | currency }}</div>
+                            <div v-if="product.meta.cost_price != null"><strong>Cost price</strong>: ${{product.meta.cost_price | currency }}</div>
                             Created by <strong class="text-muted"><i>{{user.fullName}}</i></strong> on {{product.created_at | formatDateTime(dateFormat)}}
                         </div>
                     </div>
