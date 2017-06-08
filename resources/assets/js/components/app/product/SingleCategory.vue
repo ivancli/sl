@@ -256,7 +256,8 @@
                     this.isDeletingCategory = false;
                     if (response.data.status === true) {
                         this.loadUser();
-                        this.emitReloadCategories();
+                        this.emitDeletedCategory();
+//                        this.emitReloadCategories();
                     }
                 }).catch(error => {
                     this.isDeletingCategory = false;
@@ -281,6 +282,9 @@
             },
             onClickEditCategory() {
                 this.editingCategoryName = true;
+            },
+            emitDeletedCategory(){
+                this.$emit('deleted-category', this.category);
             },
             emitReloadCategory() {
                 this.$emit('reload-category', this.category);

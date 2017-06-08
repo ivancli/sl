@@ -62,7 +62,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        <single-category v-for="single_category in categories" :current-category="single_category" @reload-category="updateCategory" @reload-categories="reloadCategories"></single-category>
+                        <single-category v-for="single_category in categories" :current-category="single_category" @reload-category="updateCategory" @reload-categories="reloadCategories" @deleted-category="deletedCategory"></single-category>
                     </div>
                 </div>
                 <div class="row" v-if="isLoadingCategories">
@@ -235,7 +235,17 @@
                 if (this.categoriesLessThanLength === true) {
                     this.categories.push(category);
                 }
-            }
+            },
+            deletedCategory(category){
+                console.info("deleted-category", category);
+                this.spliceCategory(category);
+                this.loadUser();
+            },
+            spliceCategory(deletedCategory){
+                let index = this.categories.findIndex(category => deletedCategory.id === category.id);
+                console.info("index", index);
+                this.categories.splice(index, 1);
+            },
         },
         computed: {
             allCollapseStatus(){
