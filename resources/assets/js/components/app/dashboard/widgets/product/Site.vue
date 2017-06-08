@@ -285,5 +285,13 @@
 </script>
 
 <style>
-
+    .box-header > .fa, .box-header > .glyphicon, .box-header > .ion, .box-header .box-title {
+        display: inline-block;
+        font-size: 18px;
+        margin: 0;
+        line-height: 1;
+        word-wrap: break-word;
+        word-break: break-word;
+        padding-right: 25px;
+    }
 </style>

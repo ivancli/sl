@@ -143,7 +143,7 @@
             },
             loadAlerts(callback){
                 this.isLoadingAlerts = true;
-                axios.get('/alert').then(response => {
+                axios.get('/alert?').then(response => {
                     this.isLoadingAlerts = false;
                     if (response.data.status === true) {
                         this.alerts = response.data.alerts;
