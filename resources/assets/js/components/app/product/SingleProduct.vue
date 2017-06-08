@@ -11,7 +11,18 @@
                 <a class="text-muted product-name-link" href="#" v-text="product.product_name" v-show="!editingProduct"></a>
                 <edit-product :editing-product="product" :going-to-edit-product="editingProduct" @edited-product="editedProduct" @cancel-edit-product-name="cancelEditProduct"></edit-product>
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <i class="fa fa-info-circle text-muted" v-show="!editingProduct"></i>
+                <link-popover v-show="!editingProduct">
+                    <i class="fa fa-info-circle text-muted"></i>
+                    <div slot="content">
+                        <div class="text-muted">
+                            <div v-if="product.meta.brand != null"><strong>Brand</strong>: {{product.meta.brand}}</div>
+                            <div v-if="product.meta.supplier != null"><strong>Supplier</strong>: {{product.meta.supplier}}</div>
+                            <div v-if="product.meta.sku != null"><strong>SKU</strong>: {{product.meta.sku}}</div>
+                            <div v-if="product.meta.cost_price != null"><strong>Cost price</strong>: {{product.meta.cost_price | currency }}</div>
+                            Created by <strong class="text-muted"><i>{{user.fullName}}</i></strong> on {{product.created_at | formatDateTime(dateFormat)}}
+                        </div>
+                    </div>
+                </link-popover>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <span v-show="!editingProduct" v-if="cheapestSite != null" class="hidden-xs hidden-sm f-w-normal text-muted f-s-11">
                     <span>
@@ -59,14 +70,14 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td></td>
-            <td colspan="3">
-                <div class="text-light">
-                    Created on {{product.created_at | formatDateTime(dateFormat)}} <strong class="text-muted"><i>by {{user.fullName}}</i></strong>
-                </div>
-            </td>
-        </tr>
+        <!--<tr>-->
+            <!--<td></td>-->
+            <!--<td colspan="3">-->
+                <!--<div class="text-light">-->
+                    <!--Created on {{product.created_at | formatDateTime(dateFormat)}} <strong class="text-muted"><i>by {{user.fullName}}</i></strong>-->
+                <!--</div>-->
+            <!--</td>-->
+        <!--</tr>-->
         <tr>
             <td></td>
             <td colspan="3" class="table-container">
@@ -142,12 +153,16 @@
     import productChart from './chart/ProductChart.vue';
     import productReportPopup from '../report/popups/Product.vue';
 
+    import linkPopover from 'vue-link-popover';
+
     import domain from '../../../filters/domain';
     import currency from '../../../filters/currency';
     import formatDateTime from '../../../filters/formatDateTime';
 
     import dotdotdot from '../../fragments/loading/DotDotDot.vue';
     import deleteConfirmation from '../../fragments/modals/DeleteConfirmation.vue';
+
+
 
     import {
         LOAD_USER, CLEAR_PRODUCT_SEARCH_PROMISE
@@ -160,6 +175,7 @@
             editProduct,
             productReportPopup,
             productChart,
+            linkPopover,
             dotdotdot,
             deleteConfirmation,
         },
