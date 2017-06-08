@@ -204,6 +204,7 @@
             storeImportCategoriesAndProducts()
             {
                 this.isImporting = true;
+                this.lastBulkJob = null;
                 axios.post('/bulk-import', this.storeImportCategoriesAndProductsRequestData, {
                     'content-type': 'multipart/form-data',
                 }).then(response => {
@@ -220,6 +221,7 @@
             },
             storeImportUrls(){
                 this.isImporting = true;
+                this.lastBulkJob = null;
                 axios.post('/bulk-import', this.storeImportUrlsRequestData).then(response => {
                     this.isImporting = false;
                     if (response.data.status === true) {
@@ -258,7 +260,7 @@
                 let data = new FormData();
                 data.append('type', 'url');
                 data.append('file', this.step_two_file);
-                data.append('no_new_cateogries', this.noNewCategories);
+                data.append('no_new_categories', this.noNewCategories);
                 data.append('no_new_products', this.noNewProducts);
                 return data;
             },

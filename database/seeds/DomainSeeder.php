@@ -57,6 +57,12 @@ class DomainSeeder extends Seeder
             'order' => 0
         ]));
 
+        $priceMeta->confs()->save(new DomainMetaConf([
+            'element' => 'PARSER_CLASS',
+            'value' => 'XPathParser',
+            'order' => 0
+        ]));
+
         unset($domain);
         unset($priceMeta);
 

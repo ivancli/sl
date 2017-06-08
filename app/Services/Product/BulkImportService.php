@@ -116,16 +116,49 @@ class BulkImportService
             }
         }
 
-        $collectedProduct = collect($products);
-
-        $numberOfImportProducts = $collectedProduct->pluck('product')->unique()->count();
-
-        /*TODO validation need to be enhance here*/
-
         if (!is_null($user->subscription) && !is_null($user->subscription->subscriptionCriteria)) {
             $criteria = $user->subscription->subscriptionCriteria;
             if (isset($criteria->product) && $criteria->product != 0) {
-                $totalProductsAfterImport = $numberOfImportProducts + $user->numberOfProducts;
+
+
+                $categoryProductNamesCombinations = $user->categories->mapWithKeys(function ($category) {
+                    $output = [];
+                    foreach ($category->products as $product) {
+                        array_push($output, $category->category_name . "$#$" . $product->product_name);
+                    }
+                    return $output;
+                });
+
+                $collectedProducts = collect($products);
+
+                $importingCategoryProductNameCombinations = $collectedProducts->map(function ($product) {
+                    return array_get($product, 'category') . "$#$" . array_get($product, 'product');
+                });
+
+                $newItems = $importingCategoryProductNameCombinations->diff($categoryProductNamesCombinations);
+
+                if (array_has($data, 'no_new_categories') && array_get($data, 'no_new_categories') == "true") {
+                    $uniqueCategories = $user->categories->pluck('category_name')->unique();
+                    $importingUniqueCategories = $collectedProducts->pluck('category')->unique();
+                    $diffCategory = $importingUniqueCategories->diff($uniqueCategories);
+                    if ($diffCategory->count() > 0) {
+                        $errors->push('Categories: ' . $diffCategory->implode(', ') . " are not in your account.");
+                    }
+                }
+
+                if (array_has($data, 'no_new_products') && array_get($data, 'no_new_products') == "true") {
+                    $newProductsString = $newItems->map(function ($collectedString) {
+                        list($category, $product) = explode('$#$', $collectedString);
+                        return "Product-{$product} in Category-{$category}, ";
+                    });
+                    if ($newItems->count() > 0) {
+                        $errorMsg = $newProductsString->implode(', ');
+                        $errorMsg = strlen($errorMsg) > 50 ? substr($errorMsg, 0, 50) . "..." : $errorMsg;
+                        $errors->push($errorMsg . " are not in your account.");
+                    }
+                }
+
+                $totalProductsAfterImport = $newItems->count() + $user->numberOfProducts;
                 if ($totalProductsAfterImport > $criteria->product) {
                     $errors->push('Number of products exceeds your subscription limitation. Please upgrade to import more products.');
                 }
@@ -137,14 +170,13 @@ class BulkImportService
     protected function validateUrl(array $data = [])
     {
 
-        /*TODO improve validation here*/
 
         $user = auth()->user();
 
         $file = array_get($data, 'file');
         $urls = $this->loadExcelFile($file);
 
-        $errors = collect();
+        $errors = $this->validateProduct($data);
 
         if (is_null($urls) || !is_array($urls)) {
             $errors->push('Excel file is not in a correct format.');
@@ -162,16 +194,40 @@ class BulkImportService
             }
         }
 
-        $collectedProduct = collect($urls);
-
-        $numberOfImportProducts = $collectedProduct->pluck('product')->unique()->count();
-
         if (!is_null($user->subscription) && !is_null($user->subscription->subscriptionCriteria)) {
             $criteria = $user->subscription->subscriptionCriteria;
-            if (isset($criteria->product) && $criteria->product != 0) {
-                $totalProductsAfterImport = $numberOfImportProducts + $user->numberOfProducts;
-                if ($totalProductsAfterImport > $criteria->product) {
-                    $errors->push('Number of products exceeds your subscription limitation. Please upgrade to import more products.');
+            if (isset($criteria->site) && $criteria->site != 0) {
+
+                $categoryProductSiteCombinations = $user->categories->mapWithKeys(function ($category) {
+                    $keyedProducts = $category->products->mapWithKeys(function ($product) {
+                        return [$product->product_name => $product->sites->pluck('siteUrl')];
+                    });
+                    $output = [];
+                    foreach ($keyedProducts as $product_name => $sites) {
+                        array_set($output, $category->category_name . "$#$" . $product_name, $sites);
+                    }
+                    return $output;
+                });
+                foreach ($urls as $url) {
+                    $category_name = array_get($url, 'category');
+                    $product_name = array_get($url, 'product');
+                    $site_url = array_get($url, 'url');
+                    $key = "{$category_name}\$#\${$product_name}";
+                    if ($categoryProductSiteCombinations->has($key)) {
+                        $categoryProductSiteCombinations->get($key)->push($site_url);
+                        $categoryProductSiteCombinations->put($key, $categoryProductSiteCombinations->get($key)->unique());
+                    } else {
+                        $categoryProductSiteCombinations->put($key, collect([
+                            $site_url
+                        ]));
+                    }
+                }
+
+                foreach ($categoryProductSiteCombinations as $categoryProductSiteCombination => $sites) {
+                    if ($sites->count() > $criteria->site) {
+                        list($category_name, $product_name) = explode('$#$', $categoryProductSiteCombination);
+                        $errors->push("Number of URLs exceeds your subscription limitation in Category {$category_name}, Product {$product_name}. Please upgrade to import more URLs.");
+                    }
                 }
             }
         }
