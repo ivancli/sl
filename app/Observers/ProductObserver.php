@@ -50,6 +50,7 @@ class ProductObserver
         $product->alert()->delete();
         $product->historicalAlerts()->delete();
         $product->report()->delete();
+        $product->widgets()->delete();
     }
 
     public function deleted()

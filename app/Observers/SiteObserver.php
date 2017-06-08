@@ -36,7 +36,7 @@ class SiteObserver
 
     public function created(Site $site)
     {
-        
+
     }
 
     public function saving()
@@ -75,7 +75,7 @@ class SiteObserver
 
     public function deleting(Site $site)
     {
-
+        $site->widgets()->delete();
     }
 
     public function deleted()

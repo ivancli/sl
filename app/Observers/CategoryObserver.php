@@ -50,6 +50,7 @@ class CategoryObserver
         $category->alert()->delete();
         $category->historicalAlerts()->delete();
         $category->report()->delete();
+        $category->widgets()->delete();
     }
 
     public function deleted()
