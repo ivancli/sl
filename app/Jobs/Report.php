@@ -62,12 +62,12 @@ class Report implements ShouldQueue
         if (!$this->_validateSubscription($this->report)) {
             return;
         }
-        if (is_null($this->reportable)) {
-            return;
-        }
 
         switch ($this->report->report_type) {
             case 'product':
+                if (is_null($this->reportable)) {
+                    return;
+                }
                 $this->processProductReport();
                 break;
             case 'digest':
