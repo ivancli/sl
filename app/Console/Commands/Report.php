@@ -78,6 +78,6 @@ class Report extends Command
 
     protected function pushToQueue(ReportModel $report)
     {
-        dispatch((new ReportJob($report))->onQueue("report"));
+        dispatch((new ReportJob($report))->onQueue("report")->onConnection('sync'));
     }
 }
