@@ -47,7 +47,9 @@ class AuthenticationEventSubscriber
         $user->save();
 
         if (!is_null($user->subscription)) {
-            Cache::forget("{$user->subscription->location}.chargify.subscriptions.{$user->subscription->api_subscription_id}");
+            $apiDomain = config("chargify.{$user->subscription->location}.api_domain");
+
+            Cache::forget("{$apiDomain}.chargify.subscriptions.{$user->subscription->api_subscription_id}");
         }
 
         $activity = "User -- {$user->fullName} -- Signed In";

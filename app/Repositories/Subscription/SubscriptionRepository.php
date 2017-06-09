@@ -145,7 +145,8 @@ class SubscriptionRepository implements SubscriptionContract
         Chargify::subscription($subscription->location)->cancel($apiSubscription->id);
         $updatedSubscription = Chargify::subscription($subscription->location)->get($apiSubscription->id);
         if (!isset($updatedSubscription->errors)) {
-            Cache::forget("{}.chargify.subscriptions.{$subscription->api_subscription_id}");
+            $apiDomain = config("chargify.{$subscription->location}.api_domain");
+            Cache::forget("{$apiDomain}.chargify.subscriptions.{$subscription->api_subscription_id}");
 
             /*TODO campaign monitor update*/
 
@@ -165,9 +166,10 @@ class SubscriptionRepository implements SubscriptionContract
      */
     public function reactivateSubscription(Subscription $subscription, array $data = [])
     {
-        Cache::forget("{$subscription->location}.chargify.subscriptions.{$subscription->api_subscription_id}");
+        $apiDomain = config("chargify.{$subscription->location}.api_domain");
+        Cache::forget("{$apiDomain}.chargify.subscriptions.{$subscription->api_subscription_id}");
         $result = Chargify::subscription($subscription->location)->reactivate($subscription->api_subscription_id);
-        Cache::forget("{$subscription->location}.chargify.subscriptions.{$subscription->api_subscription_id}");
+        Cache::forget("{$apiDomain}.chargify.subscriptions.{$subscription->api_subscription_id}");
 
         return $result;
     }
