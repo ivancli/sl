@@ -500,60 +500,111 @@ class Alert implements ShouldQueue
      */
     private function _processBasicMyPrice()
     {
-        $products = $this->user->products;
+        $products = $this->user->products()->with('sites.item.metas')->get();
 
+        $userDomains = $this->user->domains->pluck('alias', 'domain')->all();
         $alertProducts = collect();
         foreach ($products as $product) {
+            dump(round(microtime(true) * 1000));
             $sites = $product->sites;
+
             $mySites = $sites->filter(function ($site) {
                 return $this->_isMySite($site);
             });
-            $notMySites = $sites->filter(function ($site) {
-                return !$this->_isMySite($site);
-            });
-            if ($mySites->count() == 0 || $notMySites->count() == 0) {
+            if ($mySites->count() == 0) {
                 continue;
             }
-            $beatenBySites = collect();
-            foreach ($mySites as $mySite) {
 
-                $mySiteItem = $mySite->item;
+            $notMySites = $sites->diff($mySites);
+            if ($notMySites->count() == 0) {
+                continue;
+            }
 
-                if (is_null($mySiteItem)) {
-                    continue;
+            dump(round(microtime(true) * 1000));
+
+            $mySites = $mySites->each(function ($mySite) {
+                if (!is_null($mySite->item) && !is_null($mySite->item->lastChangedAt)) {
+                    $mySite->setAttribute('price_last_changed_at', Carbon::parse($mySite->item->lastChangedAt));
+                } else {
+                    $mySite->setAttribute('price_last_changed_at', null);
                 }
-                $lastChangedAt = null;
-                if (!is_null($mySiteItem->lastChangedAt)) {
-                    $lastChangedAt = Carbon::parse($mySiteItem->lastChangedAt);
+            });
+
+            $beatenBySites = $notMySites->filter(function ($notMySite) use ($mySites) {
+                $notMySiteItem = $notMySite->item;
+                if (is_null($notMySiteItem)) {
+                    return false;
                 }
-                foreach ($notMySites as $notMySite) {
-                    $notMySiteItem = $notMySite->item;
+                $notMySiteLastChangedAt = null;
+                if (!is_null($notMySiteItem->lastChangedAt)) {
+                    $notMySiteLastChangedAt = Carbon::parse($notMySiteItem->lastChangedAt);
+                }
 
-                    if (is_null($notMySiteItem)) {
-                        continue;
-                    }
+                $comparedDateTime = !is_null($this->lastActiveAt) ? $this->lastActiveAt : $this->alertCreatedAt;
 
-                    $notMySiteLastChangedAt = null;
-                    if (!is_null($notMySiteItem->lastChangedAt)) {
-                        $notMySiteLastChangedAt = Carbon::parse($notMySiteItem->lastChangedAt);
-                    }
-
-                    $comparedDateTime = !is_null($this->lastActiveAt) ? $this->lastActiveAt : $this->alertCreatedAt;
-
-                    /* either my site or not my site has changed price */
-                    if ((!is_null($lastChangedAt) && $lastChangedAt > $comparedDateTime) || (!is_null($notMySiteLastChangedAt) && $notMySiteLastChangedAt > $comparedDateTime)) {
-                        /* both my site and not my site have recent prices */
-                        if (!is_null($mySiteItem->recentPrice) && !is_null($notMySiteItem->recentPrice)) {
-                            if (floatval($notMySiteItem->recentPrice) < floatval($mySiteItem->recentPrice)) {
-                                $beatenBySites->push($notMySite);
+                foreach ($mySites as $mySite) {
+                    if ((!is_null($mySite->price_last_changed_at) && $mySite->price_last_changed_at > $comparedDateTime) || (!is_null($notMySiteLastChangedAt) && $notMySiteLastChangedAt > $comparedDateTime)) {
+                        if (!is_null($mySite->item->recentPrice) && !is_null($notMySiteItem->recentPrice)) {
+                            if (floatval($notMySiteItem->recentPrice) < floatval($mySite->item->recentPrice)) {
+                                return true;
                             }
                         }
                     }
                 }
-            }
+                return false;
+            });
+
+            $beatenBySites = $beatenBySites->each(function ($beatenBySite) use ($userDomains) {
+                $siteDomain = domain($beatenBySite->siteUrl);
+                if (!is_null($beatenBySite->item) && !is_null($beatenBySite->item->sellerUsername)) {
+                    $beatenBySite->setAttribute('displayName', "eBay: {$beatenBySite->item->sellerUsername}");
+                } elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
+                    $beatenBySite->setAttribute('displayName', array_get($userDomains, $siteDomain));
+                } else {
+                    $beatenBySite->setAttribute('displayName', $beatenBySite->url->domainFullPath);
+                }
+            });
+
+
+//            foreach ($mySites as $mySite) {
+//                $mySiteItem = $mySite->item;
+//
+//                if (is_null($mySiteItem)) {
+//                    continue;
+//                }
+//                $lastChangedAt = null;
+//                if (!is_null($mySiteItem->lastChangedAt)) {
+//                    $lastChangedAt = Carbon::parse($mySiteItem->lastChangedAt);
+//                }
+//                foreach ($notMySites as $notMySite) {
+//                    $notMySiteItem = $notMySite->item;
+//
+//                    if (is_null($notMySiteItem)) {
+//                        continue;
+//                    }
+//
+//                    $notMySiteLastChangedAt = null;
+//                    if (!is_null($notMySiteItem->lastChangedAt)) {
+//                        $notMySiteLastChangedAt = Carbon::parse($notMySiteItem->lastChangedAt);
+//                    }
+//
+//                    $comparedDateTime = !is_null($this->lastActiveAt) ? $this->lastActiveAt : $this->alertCreatedAt;
+//
+//                    /* either my site or not my site has changed price */
+//                    if ((!is_null($lastChangedAt) && $lastChangedAt > $comparedDateTime) || (!is_null($notMySiteLastChangedAt) && $notMySiteLastChangedAt > $comparedDateTime)) {
+//                        /* both my site and not my site have recent prices */
+//                        if (!is_null($mySiteItem->recentPrice) && !is_null($notMySiteItem->recentPrice)) {
+//                            if (floatval($notMySiteItem->recentPrice) < floatval($mySiteItem->recentPrice)) {
+//                                $beatenBySites->push($notMySite);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
             if ($beatenBySites->count() > 0) {
                 $alertProducts->push($product);
             }
+            dd(round(microtime(true) * 1000));
         }
 
         if ($alertProducts->count() > 0) {
@@ -633,19 +684,19 @@ class Alert implements ShouldQueue
         /*company url checking*/
         if (!is_null($companyUrl)) {
             $urlSegments = parse_url($companyUrl);
-            $companyDomain = isset($urlSegments['host']) ? $urlSegments['host'] : '';
+            $companyDomain = array_get($urlSegments, 'host', '');
 
             if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $companyDomain, $regs)) {
-                $companyDomain = $regs['domain'];
+                $companyDomain = array_get($regs, 'domain');
             } else {
                 return false;
             }
 
             $siteDomainSegments = parse_url($site->url->domainFullPath);
-            $siteDomain = isset($siteDomainSegments['host']) ? $siteDomainSegments['host'] : '';
+            $siteDomain = array_get($siteDomainSegments, 'host', '');
 
             if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $siteDomain, $regs)) {
-                $siteDomain = $regs['domain'];
+                $siteDomain = array_get($regs, 'domain');
             } else {
                 return false;
             }
