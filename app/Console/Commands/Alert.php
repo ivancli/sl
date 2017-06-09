@@ -80,6 +80,6 @@ class Alert extends Command
 
     protected function pushToQueue(AlertModel $alert)
     {
-        dispatch((new AlertJob($alert))->onQueue("alert"));
+        dispatch((new AlertJob($alert))->onQueue("alert")->onConnection("sync"));
     }
 }
