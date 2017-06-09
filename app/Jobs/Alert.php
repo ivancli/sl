@@ -43,10 +43,10 @@ class Alert implements ShouldQueue
         $this->alert = $alert;
         $this->user = $alert->user;
         if (!is_null($this->alert->last_active_at)) {
-            $this->lastActiveAt = Carbon::createFromFormat('Y-m-d H:i:s', $this->alert->last_active_at);
+            $this->lastActiveAt = Carbon::parse($this->alert->last_active_at);
         }
         if (!is_null($this->alert->created_at)) {
-            $this->alertCreatedAt = Carbon::createFromFormat('Y-m-d H:i:s', $this->alert->created_at);
+            $this->alertCreatedAt = Carbon::parse($this->alert->created_at);
         }
         $this->historicalAlertRepo = app(HistoricalAlertContract::class);
     }
@@ -155,7 +155,7 @@ class Alert implements ShouldQueue
             }
             $lastChangedAt = null;
             if (!is_null($mySiteItem->lastChangedAt)) {
-                $lastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $mySiteItem->lastChangedAt);
+                $lastChangedAt = Carbon::parse($mySiteItem->lastChangedAt);
             }
             foreach ($notMySites as $notMySite) {
                 if ($this->_siteHasPriceChange($notMySite) || $mySitePriceHasChanged) {
@@ -168,7 +168,7 @@ class Alert implements ShouldQueue
 
                     $notMySiteLastChangedAt = null;
                     if (!is_null($notMySiteItem->lastChangedAt)) {
-                        $notMySiteLastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $notMySiteItem->lastChangedAt);
+                        $notMySiteLastChangedAt = Carbon::parse($notMySiteItem->lastChangedAt);
                     }
 
                     $comparedDateTime = !is_null($this->lastActiveAt) ? $this->lastActiveAt : $this->alertCreatedAt;
@@ -287,7 +287,7 @@ class Alert implements ShouldQueue
 
                 $siteLastChangedAt = null;
                 if (!is_null($siteItem->lastChangedAt)) {
-                    $siteLastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $siteItem->lastChangedAt);
+                    $siteLastChangedAt = Carbon::parse($siteItem->lastChangedAt);
                 }
 
                 $comparedDateTime = !is_null($this->lastActiveAt) ? $this->lastActiveAt : $this->alertCreatedAt;
@@ -353,7 +353,7 @@ class Alert implements ShouldQueue
      */
     private function _processAdvancedCategoryMyPrice()
     {
-        $category = $this->alert->alertable;
+        $category = $this->alert->alertable()->with('products', 'products.sites', 'products.sites.item')->first();
 
         if (is_null($category)) {
             return false;
@@ -387,7 +387,7 @@ class Alert implements ShouldQueue
                 }
                 $lastChangedAt = null;
                 if (!is_null($mySiteItem->lastChangedAt)) {
-                    $lastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $mySiteItem->lastChangedAt);
+                    $lastChangedAt = Carbon::parse($mySiteItem->lastChangedAt);
                 }
                 foreach ($notMySites as $notMySite) {
 
@@ -400,7 +400,7 @@ class Alert implements ShouldQueue
 
                         $notMySiteLastChangedAt = null;
                         if (!is_null($notMySiteItem->lastChangedAt)) {
-                            $notMySiteLastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $notMySiteItem->lastChangedAt);
+                            $notMySiteLastChangedAt = Carbon::parse($notMySiteItem->lastChangedAt);
                         }
 
                         $comparedDateTime = !is_null($this->lastActiveAt) ? $this->lastActiveAt : $this->alertCreatedAt;
@@ -524,7 +524,7 @@ class Alert implements ShouldQueue
                 }
                 $lastChangedAt = null;
                 if (!is_null($mySiteItem->lastChangedAt)) {
-                    $lastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $mySiteItem->lastChangedAt);
+                    $lastChangedAt = Carbon::parse($mySiteItem->lastChangedAt);
                 }
                 foreach ($notMySites as $notMySite) {
                     $notMySiteItem = $notMySite->item;
@@ -535,7 +535,7 @@ class Alert implements ShouldQueue
 
                     $notMySiteLastChangedAt = null;
                     if (!is_null($notMySiteItem->lastChangedAt)) {
-                        $notMySiteLastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $notMySiteItem->lastChangedAt);
+                        $notMySiteLastChangedAt = Carbon::parse($notMySiteItem->lastChangedAt);
                     }
 
                     $comparedDateTime = !is_null($this->lastActiveAt) ? $this->lastActiveAt : $this->alertCreatedAt;
@@ -665,7 +665,7 @@ class Alert implements ShouldQueue
         $item = $site->item;
         if (!is_null($item)) {
             if (!is_null($item->lastChangedAt)) {
-                $lastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $item->lastChangedAt);
+                $lastChangedAt = Carbon::parse($item->lastChangedAt);
                 if (!is_null($this->lastActiveAt)) {
                     if ($lastChangedAt > $this->lastActiveAt) {
                         return true;

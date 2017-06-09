@@ -3,7 +3,13 @@
         <div class="modal-background"></div>
         <div class="modal-card">
             <section class="modal-card-body">
-                <div class="row">
+                <div class="row" v-if="numberOfItemsWithPrice == 0">
+                    <div class="col-sm-12">
+                        <p>This price will be updated soon.</p>
+                        <p>Note: If it doesn't come up in up to 48 hours, please contact us.</p>
+                    </div>
+                </div>
+                <div class="row" v-else>
                     <div class="col-sm-12">
                         <p>Please select the price you want to track from the following options:</p>
                         <div class="row">
@@ -26,9 +32,7 @@
             </section>
             <footer class="modal-card-foot">
                 <div class="text-right">
-                    <button class="btn btn-primary btn-flat" href="#" @click.prevent="updateSite"
-                            :disabled="selectedItem == null">CONFIRM
-                    </button>
+                    <button class="btn btn-primary btn-flat" href="#" @click.prevent="updateSite" :disabled="selectedItem == null" v-if="numberOfItemsWithPrice > 0">CONFIRM</button>
                     <a class="btn btn-default btn-flat" href="#" @click.prevent="hideModal">CANCEL</a>
                 </div>
             </footer>
@@ -104,6 +108,11 @@
                 return {
                     item_id: this.selectedItem.id
                 };
+            },
+            numberOfItemsWithPrice(){
+                return this.items.filter(item => {
+                    return item.recentPrice !== null;
+                }).length;
             }
         }
     }
