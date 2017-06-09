@@ -92,9 +92,10 @@ class SubscriptionController extends Controller
         $user = auth()->user();
         $subscription = $user->subscription;
         if (!is_null($subscription)) {
-            Cache::forget("{$subscription->location}.chargify.subscriptions.{$subscription->api_subscription_id}");
+            $apiDomain = config("chargify.{$subscription->location}.api_domain");
+            Cache::forget("{$apiDomain}.chargify.subscriptions.{$subscription->api_subscription_id}");
             $result = Chargify::subscription($subscription->location)->reactivate($subscription->apiSubscription->id);
-            Cache::forget("{$subscription->location}.chargify.subscriptions.{$subscription->api_subscription_id}");
+            Cache::forget("{$apiDomain}.chargify.subscriptions.{$subscription->api_subscription_id}");
 
             $this->mailingAgentService->syncUser($user);
         }
@@ -138,7 +139,8 @@ class SubscriptionController extends Controller
         $resultData = $this->subscriptionService->update($subscription, $this->request->all());
         $resultData = array_set($resultData, 'status', true);
 
-        Cache::forget("{$subscription->location}.chargify.subscriptions.{$subscription->api_subscription_id}");
+        $apiDomain = config("chargify.{$subscription->location}.api_domain");
+        Cache::forget("{$apiDomain}.chargify.subscriptions.{$subscription->api_subscription_id}");
 
         $this->mailingAgentService->syncUser($subscription->user);
 

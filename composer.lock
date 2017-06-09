@@ -501,12 +501,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ketchol/chargify.git",
-                "reference": "dcf84c9d44fb18677b327bd02ae35867ce4231be"
+                "reference": "60a4c5f36993802cb22e2f94b099b712d39b1e53"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ketchol/chargify/zipball/dcf84c9d44fb18677b327bd02ae35867ce4231be",
-                "reference": "dcf84c9d44fb18677b327bd02ae35867ce4231be",
+                "url": "https://api.github.com/repos/ketchol/chargify/zipball/60a4c5f36993802cb22e2f94b099b712d39b1e53",
+                "reference": "60a4c5f36993802cb22e2f94b099b712d39b1e53",
                 "shasum": ""
             },
             "require": {
@@ -541,7 +541,7 @@
                 "source": "https://github.com/ketchol/chargify/tree/master",
                 "issues": "https://github.com/ketchol/chargify/issues"
             },
-            "time": "2017-05-30T02:30:29+00:00"
+            "time": "2017-06-09T04:25:53+00:00"
         },
         {
             "name": "ivancli/crawler",
