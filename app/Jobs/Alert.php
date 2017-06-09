@@ -577,7 +577,7 @@ class Alert implements ShouldQueue
      */
     private function _processBasicPriceChange()
     {
-        $sites = $this->user->sites;
+        $sites = $this->user->sites()->with('item', 'item.metas');
 
         $userDomains = $this->user->domains->pluck('alias', 'domain')->all();
 
