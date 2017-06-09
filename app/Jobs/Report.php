@@ -23,6 +23,8 @@ class Report implements ShouldQueue
 
     protected $reportRepo;
 
+    protected $reportable;
+
     protected $user;
     protected $lastActiveAt;
     protected $now;
@@ -36,7 +38,11 @@ class Report implements ShouldQueue
     public function __construct(ReportModel $report)
     {
         $this->report = $report;
+
+        $this->reportable = $report->reportable;
+
         $this->user = $report->user;
+
         if (!is_null($this->report->last_active_at)) {
             $this->lastActiveAt = Carbon::parse($this->report->last_active_at)->minute(0)->second(0);
         }
@@ -54,6 +60,9 @@ class Report implements ShouldQueue
     public function handle()
     {
         if (!$this->_validateSubscription($this->report)) {
+            return;
+        }
+        if (is_null($this->reportable)) {
             return;
         }
 
