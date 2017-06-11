@@ -620,6 +620,7 @@ class Alert implements ShouldQueue
                 });
         });
         $query->where(DB::raw('CAST(site_item_metas.value AS DECIMAL(10, 4))'), '<', DB::raw('CAST(my_item_metas.value AS DECIMAL(10, 4))'));
+        $query->where('products.user_id', $this->user->getKey());
         $query->groupBy('products.id');
 
         $alertProducts = $query->get();

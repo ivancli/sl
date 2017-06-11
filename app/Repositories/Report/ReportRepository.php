@@ -14,6 +14,7 @@ use App\Contracts\Repositories\Report\ReportContract;
 use App\Models\Report;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReportRepository implements ReportContract
@@ -164,9 +165,9 @@ class ReportRepository implements ReportContract
         $product->sites->each(function ($site) use ($userDomains) {
             $siteDomain = domain($site->siteUrl);
 
-            if(!is_null($site->item) && !is_null($site->item->sellerUsername)){
+            if (!is_null($site->item) && !is_null($site->item->sellerUsername)) {
                 $site->setAttribute('displayName', "eBay: {$site->item->sellerUsername}");
-            }elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
+            } elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
                 $site->setAttribute('displayName', array_get($userDomains, $siteDomain));
             } else {
                 $site->setAttribute('displayName', $site->url->domainFullPath);
@@ -217,9 +218,9 @@ class ReportRepository implements ReportContract
             $product->sites->each(function ($site) use ($userDomains) {
                 $siteDomain = domain($site->siteUrl);
 
-                if(!is_null($site->item) && !is_null($site->item->sellerUsername)){
+                if (!is_null($site->item) && !is_null($site->item->sellerUsername)) {
                     $site->setAttribute('displayName', "eBay: {$site->item->sellerUsername}");
-                }elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
+                } elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
                     $site->setAttribute('displayName', array_get($userDomains, $siteDomain));
                 } else {
                     $site->setAttribute('displayName', $site->url->domainFullPath);
@@ -263,114 +264,148 @@ class ReportRepository implements ReportContract
 
     private function _generateDigestReport(Report $report)
     {
+
         $user = $report->user;
         $userDomains = $user->domains->pluck('alias', 'domain')->all();
         $frequency = $report->frequency;
         $now = Carbon::now();
+        $cancelled_at = null;
+        $type = "enterprise";
 
-        $products = $user->products()->with(['sites', 'sites.item', 'sites.url'])->get();
-
-        $displayProducts = collect();
-
-        foreach ($products as $product) {
-            $sites = $product->sites;
-
-            $cheapestPrice = $sites->min('item.recentPrice');
-            $mostExpensivePrice = $sites->max('item.recentPrice');
-
-            foreach ($sites as $site) {
-                $item = $site->item;
-                $siteDomain = domain($site->siteUrl);
-                if (is_null($item)) {
-                    continue;
-                }
-                if(!is_null($item->sellerUsername)){
-                    $site->setAttribute('displayName', "eBay: {$item->sellerUsername}");
-                }elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
-                    $site->setAttribute('displayName', array_get($userDomains, $siteDomain));
-                } else {
-                    $site->setAttribute('displayName', $site->url->domainFullPath);
-                }
-                $recentPrice = $item->recentPrice;
-
-                #region check cheapest price
-                $isCheapest = $recentPrice == $cheapestPrice;
-                $site->setAttribute('is_cheapest', $isCheapest);
-                #endregion
-
-                #region check most expensive price
-                $isMostExpensive = $recentPrice == $mostExpensivePrice;
-                $site->setAttribute('is_most_expensive', $isMostExpensive);
-                #endregion
-
-                #region check crawler failed
-                /*TODO need to enhance the definition of crawler failed*/
-                /*TODO because there are many situation causing item meta not fetchable*/
-                /*TODO such as product unavailability, product URL change, incorrect xpath etc*/
-                $isCrawlFailed = $site->url->status == 'crawl_failed';
-                $site->setAttribute('is_crawl_failed', $isCrawlFailed);
-                #endregion
-
-                #region check my site
-                $isMySite = false;
-                if (!is_null($user->metas) && !is_null($user->metas->company_url)) {
-                    $isMySite = sameDomain($user->metas->company_url, $site->siteUrl);
-                    /*TODO add ebay later on*/
-                }
-                $site->setAttribute('is_my_site', $isMySite);
-                #endregion
-
-                #region check price has change within frequency period
-                $hasPriceChange = false;
-                if (!is_null($item->lastChangedAt)) {
-                    $lastChangedAt = Carbon::createFromFormat('Y-m-d H:i:s', $item->lastChangedAt);
-                    switch ($frequency) {
-                        case 'day':
-                            $hasPriceChange = $lastChangedAt->isSameDay($now);
-                            break;
-                        case 'week':
-                            $hasPriceChange = $lastChangedAt->weekOfYear == $now->weekOfYear;
-                            break;
-                    }
-                }
-                $site->setAttribute('has_price_change', $hasPriceChange);
-                #endregion
+        if (!is_null($user->subscription)) {
+            if (!is_null($user->subscription->cancelled_at)) {
+                $cancelled_at = $user->subscription->cancelled_at;
             }
-
-            $displayProducts->push($product);
+            if (!is_null($user->subscription->subscriptionPlan)) {
+                $type = $user->subscription->subscriptionPlan->handle;
+            }
         }
 
-        #region summarise results
+        $products = $user->products;
 
-        //cheapest product count
-        $cheapestProductCount = $products->filter(function ($product) {
-            $cheapestSiteCount = $product->sites->filter(function ($site) {
-                return $site->is_cheapest == true && $site->is_my_site == true;
-            })->count();
-            return $cheapestSiteCount > 0;
-        })->count();
+        $totalProducts = $user->products()->count();
+        $cheapestProduct = DB::table('my_sites')
+            ->join('products', 'products.id', 'my_sites.product_id')
+            ->join('cheapest_sites', 'my_sites.id', 'cheapest_sites.id')
+            ->where('products.user_id', $user->getKey())
+            ->select('my_sites.*');
+        $mostExpensiveProducts = DB::table('my_sites')
+            ->join('products', 'products.id', 'my_sites.product_id')
+            ->join('most_expensive_sites', 'my_sites.id', 'most_expensive_sites.id')
+            ->where('products.user_id', $user->getKey())
+            ->select('my_sites.*');
+        $failedCrawlSites = DB::table('failed_crawl_sites')
+            ->join('products', 'failed_crawl_sites.product_id', 'products.id')
+            ->where('products.user_id', $user->getKey());
+        $cheapestProductCount = $cheapestProduct->count();
+        $mostExpensiveProductCount = $mostExpensiveProducts->count();
+        $crawlFailCount = $failedCrawlSites->count();
 
-        //most expensive product count
-        $mostExpensiveProductCount = $products->filter(function ($product) {
-            $cheapestSiteCount = $product->sites->filter(function ($site) {
-                return $site->is_most_expensive == true && $site->is_my_site == true;
-            })->count();
-            return $cheapestSiteCount > 0;
-        })->count();
+        /*
+         SELECT
+products.product_name,
+categories.category_name,
+price.value AS recent_price,
+previous_prices.amount AS previous_price,
+urls.full_path,
+SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(urls.full_path,'http://',''),'https://',''),'www.',''),'/',1) AS domain,
+IFNULL(ebay.value, IFNULL(user_domains.alias, SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(urls.full_path,'http://',''),'https://',''),'www.',''),'/',1))) AS display_name,
+DATE_FORMAT(STR_TO_DATE(previous_price_changes.created_at, '%Y-%m-%d %H:%i:%s'), '%u') week_of_year
+FROM sites
+JOIN urls ON(urls.id=sites.url_id)
+JOIN products ON(sites.product_id=products.id)
+JOIN categories ON(products.category_id=categories.id)
+JOIN users ON(products.user_id=users.id)
+JOIN user_domains ON(user_domains.user_id=users.id)
+JOIN items ON(sites.item_id=items.id)
+JOIN item_metas price ON(price.item_id=items.id AND price.element='PRICE')
+LEFT JOIN item_metas ebay ON(ebay.item_id=items.id AND ebay.element='SELLER_USERNAME')
+JOIN previous_prices_professional previous_prices ON(previous_prices.item_meta_id=price.id)
+JOIN previous_price_changes_professional previous_price_changes ON(previous_price_changes.item_meta_id=price.id)
 
-        $sites = $products->pluck('sites')->flatten();
+         * */
+        $query = DB::table('sites')
+            ->join('urls', 'urls.id', 'sites.url_id')
+            ->join('products', 'sites.product_id', 'products.id')
+            ->join('categories', 'products.category_id', 'categories.id')
+            ->join('users', 'products.user_id', 'users.id')
+            ->join('user_domains', function ($join) {
+                $join->on('user_domains.user_id', 'users.id')
+                    ->where('urls.full_path', 'LIKE', DB::raw("CONCAT('%', user_domains.domain, '%')"));
+            })
+            ->join('items', 'sites.item_id', 'items.id')
+            ->join('item_metas AS price', function ($join) {
+                $join->on('price.item_id', 'items.id')
+                    ->where('price.element', 'PRICE');
+            })
+            ->leftJoin('item_metas AS ebay', function ($join) {
+                $join->on('ebay.item_id', 'items.id')
+                    ->where('ebay.element', 'SELLER_USERNAME');
+            })
+            ->leftJoin('my_sites', 'sites.id', 'my_sites.id');
 
-        //fail crawler count
-        $crawlFailCount = $sites->filter(function ($site) {
-            return $site->is_crawl_failed == true;
-        })->count();
+        switch ($frequency) {
+            case 'day':
+                $query->where("previous_price_changes.created_at", '>=', Carbon::now()->subHours(24)->format('Y-m-d H:i:s'));
+                break;
+            case 'week':
+                $query->where("previous_price_changes.created_at", '>=', Carbon::now()->subDays(7)->format('Y-m-d H:i:s'));
+                break;
+        }
 
-        //price change count
-        $priceChangeCount = $sites->filter(function ($site) {
-            return $site->has_price_change == true;
-        })->count();
+        switch ($type) {
+            case 'professional':
+                $query->leftJoin('previous_price_changes_professional AS previous_price_changes', 'previous_price_changes.item_meta_id', 'price.id');
+                $query->leftJoin('previous_prices_professional AS previous_price', 'previous_price.item_meta_id', 'price.id');
+                break;
+            case 'business':
+                $query->leftJoin('previous_price_changes_business AS previous_price_changes', 'previous_price_changes.item_meta_id', 'price.id');
+                $query->leftJoin('previous_prices_business AS previous_price', 'previous_price.item_meta_id', 'price.id');
+                break;
+            case 'enterprise':
+            default:
+                $query->leftJoin('previous_price_changes_enterprise AS previous_price_changes', 'previous_price_changes.item_meta_id', 'price.id');
+                $query->leftJoin('previous_prices_enterprise AS previous_price', 'previous_price.item_meta_id', 'price.id');
+        }
+        $query->where('users.id', $user->getKey());
 
-        #endregion
+        if (!is_null($cancelled_at)) {
+            $query->where('previous_price_changes.created_at', '<', $cancelled_at);
+            $query->where('previous_price.created_at', '<', $cancelled_at);
+        }
+
+        $query->select([
+            "products.product_name",
+            "categories.category_name",
+            "price.value AS recent_price",
+            "previous_price.amount AS previous_price",
+            "urls.full_path",
+            "urls.status",
+            "previous_price_changes.created_at AS price_changed_at",
+            DB::raw("my_sites.id IS NOT NULL AS is_my_site"),
+            DB::raw("SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(urls.full_path,'http://',''),'https://',''),'www.',''),'/',1) AS domain"),
+            DB::raw("IFNULL(ebay.value, IFNULL(user_domains.alias, SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(urls.full_path,'http://',''),'https://',''),'www.',''),'/',1))) AS display_name"),
+        ]);
+
+        $countQuery = $query;
+        $countQuery->where(function ($query) {
+            $query->whereNotNull('previous_price.amount');
+        });
+        $priceChangeCount = $countQuery->count();
+
+        if ($report->show_all == 'n') {
+            $query->where(function ($query) {
+                $query->where('urls.status', 'crawl_failed')
+                    ->orWhere(function ($query) {
+                        $query->whereNotNull('previous_price.amount');
+                    });
+            });
+        }
+
+
+        $displayProducts = $query->get();
+
+        $displayProducts = $displayProducts->unique();
 
         $reportDetail = collect();
 
