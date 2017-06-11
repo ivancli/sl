@@ -57,10 +57,10 @@ class Product implements ShouldQueue
         $this->products->each(function ($productData) {
             $category_name = $productData->category;
             $product_name = $productData->product;
-            $sku = $productData->sku;
-            $supplier = $productData->supplier;
-            $brand = $productData->brand;
-            $cost_price = $productData->cost_price;
+            $sku = isset($productData->sku) ? $productData->sku : null;
+            $supplier = isset($productData->supplier) ? $productData->supplier : null;
+            $brand = isset($productData->brand) ? $productData->brand : null;
+            $cost_price = isset($productData->cost_price) ? $productData->cost_price : null;
 
             if (is_null($category_name) || is_null($product_name)) {
                 return false;

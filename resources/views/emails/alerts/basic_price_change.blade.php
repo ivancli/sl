@@ -9,10 +9,22 @@ The price for the following product URLs are found to have changed.
 @component('mail::table')
 |Category   |Product    |Product Page URL    |
 |-----------|-----------|--------------------|
-@foreach($sites as $site)
-|{{$site->product->category->category_name}}|{{$site->product->product_name}}|@component('mail::link', ['url' => $site->siteUrl]){{$site->displayName}}@endcomponent|
+@foreach($sites as $index=>$site)
+|{{$site->category_name}}|{{$site->product_name}}|@component('mail::link', ['url' => $site->url]){{$site->display_name}}@endcomponent|
+@if($index>500)
+@break
+@endif
 @endforeach
 @endcomponent
+@endif
+@if($sites->count() > 500)
+
+......
+
+...
+
+This email cannot display all Product Page URLs.
+
 @endif
 
 You can also view this information through your Products page:

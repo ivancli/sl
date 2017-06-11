@@ -46,6 +46,8 @@
         <td class="vertical-align-middle hidden-xs hidden-sm col-price-change" :class="mySiteClass">
             <div class="text-right">
                 <div v-if="item != null && item.priceChange != null">
+                    <i class="fa fa-caret-up text-success" v-if="item.priceChange > 0"></i>
+                    <i class="fa fa-caret-down text-danger" v-if="item.priceChange < 0"></i>
                     ${{ item.priceChange | currency }}
                 </div>
                 <div v-else>

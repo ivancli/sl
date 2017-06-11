@@ -19,6 +19,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class Alert implements ShouldQueue
@@ -500,112 +501,100 @@ class Alert implements ShouldQueue
      */
     private function _processBasicMyPrice()
     {
-        $products = $this->user->products()->with('sites.item.metas')->get();
+        DB::enableQueryLog();
 
-        $userDomains = $this->user->domains->pluck('alias', 'domain')->all();
-        $alertProducts = collect();
-        foreach ($products as $product) {
-            dump(round(microtime(true) * 1000));
-            $sites = $product->sites;
+        $comparedDateTime = !is_null($this->lastActiveAt) ? $this->lastActiveAt : $this->alertCreatedAt;
+        $cancelled_at = null;
+        $type = "enterprise";
 
-            $mySites = $sites->filter(function ($site) {
-                return $this->_isMySite($site);
-            });
-            if ($mySites->count() == 0) {
-                continue;
+        if (!is_null($this->user->subscription)) {
+            if (!is_null($this->user->subscription->cancelled_at)) {
+                $cancelled_at = $this->user->subscription->cancelled_at;
             }
-
-            $notMySites = $sites->diff($mySites);
-            if ($notMySites->count() == 0) {
-                continue;
+            if (!is_null($this->user->subscription->subscriptionPlan)) {
+                $type = $this->user->subscription->subscriptionPlan->handle;
             }
-
-            dump(round(microtime(true) * 1000));
-
-            $mySites = $mySites->each(function ($mySite) {
-                if (!is_null($mySite->item) && !is_null($mySite->item->lastChangedAt)) {
-                    $mySite->setAttribute('price_last_changed_at', Carbon::parse($mySite->item->lastChangedAt));
-                } else {
-                    $mySite->setAttribute('price_last_changed_at', null);
-                }
-            });
-
-            $beatenBySites = $notMySites->filter(function ($notMySite) use ($mySites) {
-                $notMySiteItem = $notMySite->item;
-                if (is_null($notMySiteItem)) {
-                    return false;
-                }
-                $notMySiteLastChangedAt = null;
-                if (!is_null($notMySiteItem->lastChangedAt)) {
-                    $notMySiteLastChangedAt = Carbon::parse($notMySiteItem->lastChangedAt);
-                }
-
-                $comparedDateTime = !is_null($this->lastActiveAt) ? $this->lastActiveAt : $this->alertCreatedAt;
-
-                foreach ($mySites as $mySite) {
-                    if ((!is_null($mySite->price_last_changed_at) && $mySite->price_last_changed_at > $comparedDateTime) || (!is_null($notMySiteLastChangedAt) && $notMySiteLastChangedAt > $comparedDateTime)) {
-                        if (!is_null($mySite->item->recentPrice) && !is_null($notMySiteItem->recentPrice)) {
-                            if (floatval($notMySiteItem->recentPrice) < floatval($mySite->item->recentPrice)) {
-                                return true;
-                            }
-                        }
-                    }
-                }
-                return false;
-            });
-
-            $beatenBySites = $beatenBySites->each(function ($beatenBySite) use ($userDomains) {
-                $siteDomain = domain($beatenBySite->siteUrl);
-                if (!is_null($beatenBySite->item) && !is_null($beatenBySite->item->sellerUsername)) {
-                    $beatenBySite->setAttribute('displayName', "eBay: {$beatenBySite->item->sellerUsername}");
-                } elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
-                    $beatenBySite->setAttribute('displayName', array_get($userDomains, $siteDomain));
-                } else {
-                    $beatenBySite->setAttribute('displayName', $beatenBySite->url->domainFullPath);
-                }
-            });
-
-
-//            foreach ($mySites as $mySite) {
-//                $mySiteItem = $mySite->item;
-//
-//                if (is_null($mySiteItem)) {
-//                    continue;
-//                }
-//                $lastChangedAt = null;
-//                if (!is_null($mySiteItem->lastChangedAt)) {
-//                    $lastChangedAt = Carbon::parse($mySiteItem->lastChangedAt);
-//                }
-//                foreach ($notMySites as $notMySite) {
-//                    $notMySiteItem = $notMySite->item;
-//
-//                    if (is_null($notMySiteItem)) {
-//                        continue;
-//                    }
-//
-//                    $notMySiteLastChangedAt = null;
-//                    if (!is_null($notMySiteItem->lastChangedAt)) {
-//                        $notMySiteLastChangedAt = Carbon::parse($notMySiteItem->lastChangedAt);
-//                    }
-//
-//                    $comparedDateTime = !is_null($this->lastActiveAt) ? $this->lastActiveAt : $this->alertCreatedAt;
-//
-//                    /* either my site or not my site has changed price */
-//                    if ((!is_null($lastChangedAt) && $lastChangedAt > $comparedDateTime) || (!is_null($notMySiteLastChangedAt) && $notMySiteLastChangedAt > $comparedDateTime)) {
-//                        /* both my site and not my site have recent prices */
-//                        if (!is_null($mySiteItem->recentPrice) && !is_null($notMySiteItem->recentPrice)) {
-//                            if (floatval($notMySiteItem->recentPrice) < floatval($mySiteItem->recentPrice)) {
-//                                $beatenBySites->push($notMySite);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-            if ($beatenBySites->count() > 0) {
-                $alertProducts->push($product);
-            }
-            dd(round(microtime(true) * 1000));
         }
+
+        /*
+         * SELECT products.*, my_item_metas.value, site_item_metas.value FROM products
+JOIN my_sites ON(products.id=my_sites.product_id)
+JOIN items my_items ON(my_sites.item_id=my_items.id)
+JOIN item_metas my_item_metas ON(my_item_metas.item_id=my_items.id AND my_item_metas.element='PRICE')
+LEFT JOIN previous_price_changes_professional my_previous_price_changes ON(my_item_metas.id=my_previous_price_changes.item_meta_id)
+JOIN sites ON(products.id=sites.product_id AND my_sites.id != sites.id)
+JOIN items site_items ON(site_items.id=sites.item_id)
+JOIN item_metas site_item_metas ON(site_item_metas.item_id=site_items.id AND site_item_metas.element='PRICE')
+LEFT JOIN previous_price_changes_professional site_previous_price_changes ON(site_item_metas.id=site_previous_price_changes.item_meta_id)
+WHERE
+(
+	(my_previous_price_changes.created_at IS NOT NULL AND my_previous_price_changes.created_at > '2017-06-06 00:00:00')
+	OR
+	(site_previous_price_changes.created_at IS NOT NULL AND site_previous_price_changes.created_at > '2017-06-06 00:00:00')
+)
+AND
+CAST(my_item_metas.value AS DECIMAL(10, 4)) > CAST(site_item_metas.value AS DECIMAL(10, 4))
+
+*/
+        $query = DB::table('products')
+            ->join('categories', 'categories.id', 'products.category_id')
+            ->join('my_sites', 'products.id', 'my_sites.product_id')
+            ->join('items AS my_items', 'my_sites.item_id', 'my_items.id')
+            ->join('item_metas AS my_item_metas', function ($join) {
+                $join->on('my_item_metas.item_id', 'my_items.id')
+                    ->where('my_item_metas.element', 'PRICE');
+            })
+            ->join('sites', function ($join) {
+                $join->on('products.id', 'sites.product_id')
+                    ->on('my_sites.id', '!=', 'sites.id');
+            })
+            ->join('items AS site_items', 'site_items.id', 'sites.item_id')
+            ->join('item_metas AS site_item_metas', function ($join) {
+                $join->on('site_item_metas.item_id', 'site_items.id')
+                    ->where('site_item_metas.element', 'PRICE');
+            });
+
+        switch ($type) {
+            case 'professional':
+                $query->leftJoin('previous_price_changes_professional AS my_previous_price_changes', 'my_previous_price_changes.item_meta_id', 'my_item_metas.id');
+                $query->leftJoin('previous_price_changes_professional AS sites_previous_price_changes', 'sites_previous_price_changes.item_meta_id', 'site_item_metas.id');
+                break;
+            case 'business':
+                $query->leftJoin('previous_price_changes_business AS my_previous_price_changes', 'my_previous_price_changes.item_meta_id', 'my_item_metas.id');
+                $query->leftJoin('previous_price_changes_business AS sites_previous_price_changes', 'sites_previous_price_changes.item_meta_id', 'site_item_metas.id');
+                break;
+            case 'enterprise':
+            default:
+                $query->leftJoin('previous_price_changes_enterprise AS my_previous_price_changes', 'my_previous_price_changes.item_meta_id', 'my_item_metas.id');
+                $query->leftJoin('previous_price_changes_enterprise AS sites_previous_price_changes', 'sites_previous_price_changes.item_meta_id', 'site_item_metas.id');
+        }
+
+
+        $query->select([
+            'products.*',
+            'products.product_name',
+            'categories.category_name',
+        ]);
+        $query->where(function ($query) use ($comparedDateTime, $cancelled_at) {
+            $query->where(function ($query) use ($comparedDateTime, $cancelled_at) {
+                $query->whereNotNull('sites_previous_price_changes.created_at')
+                    ->where('sites_previous_price_changes.created_at', '>', $comparedDateTime->format('Y-m-d H:i:s'));
+                if (!is_null($cancelled_at)) {
+                    $query->where('sites_previous_price_changes.created_at', '<', $cancelled_at);
+                }
+            })
+                ->orWhere(function ($query) use ($comparedDateTime, $cancelled_at) {
+                    $query->whereNotNull('my_previous_price_changes.created_at')
+                        ->where('my_previous_price_changes.created_at', '>', $comparedDateTime->format('Y-m-d H:i:s'));
+                    if (!is_null($cancelled_at)) {
+                        $query->where('my_previous_price_changes.created_at', '<', $cancelled_at);
+                    }
+                });
+        });
+        $query->where(DB::raw('CAST(site_item_metas.value AS DECIMAL(10, 4))'), '<', DB::raw('CAST(my_item_metas.value AS DECIMAL(10, 4))'));
+        $query->groupBy('products.id');
+
+        $alertProducts = $query->get();
 
         if ($alertProducts->count() > 0) {
             $this->alert->setLastActiveAt();
@@ -628,27 +617,73 @@ class Alert implements ShouldQueue
      */
     private function _processBasicPriceChange()
     {
-        $sites = $this->user->sites()->with('item', 'item.metas');
+        $comparedDateTime = !is_null($this->lastActiveAt) ? $this->lastActiveAt : $this->alertCreatedAt;
+        $cancelled_at = null;
+        $type = "enterprise";
 
-        $userDomains = $this->user->domains->pluck('alias', 'domain')->all();
-
-        $alertSites = collect();
-        foreach ($sites as $site) {
-            if ($this->_siteHasPriceChange($site)) {
-
-                $siteDomain = domain($site->siteUrl);
-
-                if (!is_null($site->item) && !is_null($site->item->sellerUsername)) {
-                    $site->setAttribute('displayName', "eBay: {$site->item->sellerUsername}");
-                } elseif (array_has($userDomains, $siteDomain) && !is_null(array_get($userDomains, $siteDomain))) {
-                    $site->setAttribute('displayName', array_get($userDomains, $siteDomain));
-                } else {
-                    $site->setAttribute('displayName', $site->url->domainFullPath);
-                }
-
-                $alertSites->push($site);
+        if (!is_null($this->user->subscription)) {
+            if (!is_null($this->user->subscription->cancelled_at)) {
+                $cancelled_at = $this->user->subscription->cancelled_at;
+            }
+            if (!is_null($this->user->subscription->subscriptionPlan)) {
+                $type = $this->user->subscription->subscriptionPlan->handle;
             }
         }
+
+        $query = DB::table('sites')
+            ->join('products', 'sites.product_id', 'products.id')
+            ->join('categories', 'products.category_id', 'categories.id')
+            ->join('users', 'users.id', 'products.user_id')
+            ->join('items', 'sites.item_id', 'items.id')
+            ->join('urls', 'urls.id', 'sites.url_id')
+            ->join('item_metas AS price', function ($join) {
+                $join->on('price.item_id', 'items.id')
+                    ->where('price.element', 'PRICE');
+            })
+            ->leftJoin('item_metas AS ebay', function ($join) {
+                $join->on('ebay.item_id', 'items.id')
+                    ->where('ebay.element', 'SELLER_USERNAME');
+            })
+            ->leftJoin('user_domains', function ($join) {
+                $join->on('users.id', 'user_domains.user_id')
+                    ->where('user_domains.domain', 'LIKE', DB::raw('CONCAT("%", urls.full_path, "%")'));
+            })
+            ->where('products.user_id', $this->user->getKey());
+
+        switch ($type) {
+            case 'professional':
+                $query->join('previous_price_changes_professional AS previous_price_changes', 'previous_price_changes.item_meta_id', 'price.id');
+                $query->join('previous_prices_professional AS previous_price', 'previous_price.item_meta_id', 'price.id');
+                break;
+            case 'business':
+                $query->join('previous_price_changes_business AS previous_price_changes', 'previous_price_changes.item_meta_id', 'price.id');
+                $query->join('previous_prices_business AS previous_price', 'previous_price.item_meta_id', 'price.id');
+                break;
+            case 'enterprise':
+            default:
+                $query->join('previous_price_changes_enterprise AS previous_price_changes', 'previous_price_changes.item_meta_id', 'price.id');
+                $query->join('previous_prices_enterprise AS previous_price', 'previous_price.item_meta_id', 'price.id');
+        }
+
+        $query->select([
+            'sites.*',
+            'price.value AS recent_price',
+            'previous_price.amount AS previous_price',
+            'previous_price_changes.created_at AS previous_price_changed_at',
+            'ebay.value AS ebay_username',
+            'user_domains.alias AS site_name',
+            'urls.full_path AS url',
+            'products.product_name',
+            'categories.category_name',
+            DB::raw("SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(urls.full_path,'http://',''),'https://',''),'www.',''),'/',1) AS domain"),
+            DB::raw("IFNULL(ebay.value, IFNULL(user_domains.alias, SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(urls.full_path,'http://',''),'https://',''),'www.',''),'/',1))) AS display_name")
+        ]);
+
+        if (!is_null($cancelled_at)) {
+            $query->where('previous_price_changes.created_at', '<', $cancelled_at);
+        }
+        $query->where('previous_price_changes.created_at', '>', $comparedDateTime->format('Y-m-d H:i:s'));
+        $alertSites = $query->get();
         if ($alertSites->count() > 0) {
             $this->alert->setLastActiveAt();
 
@@ -656,7 +691,6 @@ class Alert implements ShouldQueue
 
             $this->historicalAlertRepo->store($this->alert, compact(['email']));
 
-            /* TODO dispatch mail job with $alertSites */
             Mail::to($email)
                 ->send(new BasicPriceChange($this->user, $alertSites));
         }

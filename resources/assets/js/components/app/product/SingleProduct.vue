@@ -41,8 +41,14 @@
                     &nbsp;&nbsp;
                     <span>
                         Price Change:
-                        <strong v-if="cheapestSite.item.priceChange != null">{{ cheapestSite.item.priceChange < 0 ? '-' : '' }} ${{ cheapestSite.item.priceChange | currency }}</strong>
-                        <strong v-else><i class="fa fa-minus"></i></strong>
+                        <strong v-if="cheapestSite.item.priceChange != null">
+                            <i class="fa fa-caret-up text-success" v-if="cheapestSite.item.priceChange > 0"></i>
+                            <i class="fa fa-caret-down text-danger" v-if="cheapestSite.item.priceChange < 0"></i>
+                            {{ cheapestSite.item.priceChange < 0 ? '-' : '' }} ${{ cheapestSite.item.priceChange | currency }}
+                        </strong>
+                        <strong v-else>
+                            <i class="fa fa-minus"></i>
+                        </strong>
                     </span>
                 </span>
             </th>
@@ -71,12 +77,12 @@
         </thead>
         <tbody>
         <!--<tr>-->
-            <!--<td></td>-->
-            <!--<td colspan="3">-->
-                <!--<div class="text-light">-->
-                    <!--Created on {{product.created_at | formatDateTime(dateFormat)}} <strong class="text-muted"><i>by {{user.fullName}}</i></strong>-->
-                <!--</div>-->
-            <!--</td>-->
+        <!--<td></td>-->
+        <!--<td colspan="3">-->
+        <!--<div class="text-light">-->
+        <!--Created on {{product.created_at | formatDateTime(dateFormat)}} <strong class="text-muted"><i>by {{user.fullName}}</i></strong>-->
+        <!--</div>-->
+        <!--</td>-->
         <!--</tr>-->
         <tr>
             <td></td>
@@ -161,7 +167,6 @@
 
     import dotdotdot from '../../fragments/loading/DotDotDot.vue';
     import deleteConfirmation from '../../fragments/modals/DeleteConfirmation.vue';
-
 
 
     import {
