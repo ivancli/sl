@@ -20,14 +20,7 @@ class CreateViewCheapestSites extends Migration
                 FROM sites
                 JOIN items ON(sites.item_id=items.id)
                 JOIN item_metas ON(items.id=item_metas.item_id AND item_metas.element=\'PRICE\')
-                JOIN
-                (
-                    SELECT product_id, MIN(CAST(item_metas.value AS DECIMAL(10, 4))) price
-                    FROM sites 
-                    JOIN items ON(sites.item_id=items.id)
-                    JOIN item_metas ON(items.id=item_metas.item_id AND item_metas.element=\'PRICE\')
-                    GROUP BY sites.product_id
-                ) cheapest_prices ON(sites.product_id=cheapest_prices.product_id AND item_metas.value=cheapest_prices.price)
+                JOIN cheapest_sites_product_id_price cheapest_prices ON(sites.product_id=cheapest_prices.product_id AND item_metas.value=cheapest_prices.price)
             )
         ');
     }

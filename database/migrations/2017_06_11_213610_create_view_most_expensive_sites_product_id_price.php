@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateViewMostExpensiveSites extends Migration
+class CreateViewMostExpensiveSitesProductIdPrice extends Migration
 {
     /**
      * Run the migrations.
@@ -15,12 +15,12 @@ class CreateViewMostExpensiveSites extends Migration
     public function up()
     {
         DB::statement('
-            CREATE VIEW most_expensive_sites AS (
-                SELECT sites.*
-                FROM sites
+            CREATE VIEW most_expensive_sites_product_id_price AS (
+                SELECT product_id, MAX(CAST(item_metas.value AS DECIMAL(10, 4))) price
+                FROM sites 
                 JOIN items ON(sites.item_id=items.id)
                 JOIN item_metas ON(items.id=item_metas.item_id AND item_metas.element="PRICE")
-                JOIN most_expensive_sites_product_id_price most_expensive_prices ON(sites.product_id=most_expensive_prices.product_id AND item_metas.value=most_expensive_prices.price)
+                GROUP BY sites.product_id
             )
         ');
     }
@@ -33,7 +33,7 @@ class CreateViewMostExpensiveSites extends Migration
     public function down()
     {
         DB::statement('
-            DROP VIEW most_expensive_sites
+            DROP VIEW most_expensive_sites_product_id_price
         ');
     }
 }
