@@ -131,7 +131,7 @@
 
     import loading from '../../../fragments/loading/Loading.vue';
     import domain from '../../../../filters/domain';
-    
+
     export default{
         components: {
             loading,

@@ -18,13 +18,7 @@ class CreateViewPreviousPriceChangesBusiness extends Migration
             CREATE VIEW previous_price_changes_business AS (
                 SELECT historical_prices_business.* 
                 FROM historical_prices_business
-                JOIN (
-                    SELECT hp.item_meta_id, MIN(hp.id) id
-                    FROM historical_prices_business hp 
-                    JOIN previous_prices_business pp ON(pp.item_meta_id=hp.item_meta_id)
-                    WHERE hp.created_at > pp.created_at
-                    GROUP BY hp.item_meta_id  
-                ) price_changes ON (price_changes.id=historical_prices_business.id)     
+                JOIN previous_price_changes_id_business price_changes ON (price_changes.id=historical_prices_business.id)     
             )
         ');
     }
