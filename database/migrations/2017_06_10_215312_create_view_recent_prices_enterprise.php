@@ -20,12 +20,7 @@ class CreateViewRecentPricesEnterprise extends Migration
                 SELECT historical_prices.* 
                 FROM historical_prices 
                 JOIN historical_prices_enterprise formatted_prices ON(formatted_prices.id=historical_prices.id)
-                JOIN (
-                    SELECT historical_prices.item_meta_id, MAX(historical_prices.created_at) created_at
-                    FROM historical_prices 
-                    JOIN historical_prices_enterprise formatted_prices ON(formatted_prices.id=historical_prices.id)
-                    GROUP BY historical_prices.item_meta_id
-                ) latest_created_at 
+                JOIN recent_prices_created_at_enterprise latest_created_at 
                 ON (latest_created_at.item_meta_id=historical_prices.item_meta_id 
                 AND latest_created_at.created_at=historical_prices.created_at)
             )

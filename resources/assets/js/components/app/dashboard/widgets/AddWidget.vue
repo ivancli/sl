@@ -30,7 +30,7 @@
                                     Chart type
                                 </label>
                                 <div class="col-md-8">
-                                    <select id="sel-chart-type" class="form-control" v-model="type">
+                                    <select id="sel-chart-type" class="form-control" v-model="type" @change.prevent="onChangeType">
                                         <option value="category">Category</option>
                                         <option value="product">Product</option>
                                         <option value="site">Product Page URL</option>
@@ -42,7 +42,7 @@
                                     Category
                                 </label>
                                 <div class="col-md-8">
-                                    <select id="sel-category" class="form-control" v-model="selectedCategory">
+                                    <select id="sel-category" class="form-control" v-model="selectedCategory" @change.prevent="onCategoryChange">
                                         <option value="">-- select category --</option>
                                         <option v-for="category in categories" :value="category.id">{{ category.category_name }}</option>
                                     </select>
@@ -53,7 +53,7 @@
                                     Product
                                 </label>
                                 <div class="col-md-8">
-                                    <select id="sel-product" class="form-control" v-model="selectedProduct">
+                                    <select id="sel-product" class="form-control" v-model="selectedProduct" @change.prevent="onProductChange">
                                         <option value="">-- select product --</option>
                                         <option v-for="product in products" :value="product.id">{{ product.product_name }}</option>
                                     </select>
@@ -66,7 +66,7 @@
                                 <div class="col-md-8">
                                     <select id="sel-site" class="form-control" v-model="selectedSite">
                                         <option value="">-- select product page URL --</option>
-                                        <option v-for="site in sites" :value="site.id">{{ site.url.domainFullPath }}</option>
+                                        <option v-for="site in sites" :value="site.id">{{ displayName(site) }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -119,13 +119,19 @@
                 </div>
             </footer>
         </div>
-        <loading v-if="isLoadingCategories || isAddingNewWidget"></loading>
+        <loading v-if="isLoadingCategories || isLoadingProducts || isLoadingSites || isAddingNewWidget"></loading>
     </div>
 </template>
 
 <script>
-    import loading from '../../../fragments/loading/Loading.vue';
 
+    import {
+        LOAD_USER_DOMAINS
+    } from '../../../../actions/action-types';
+
+    import loading from '../../../fragments/loading/Loading.vue';
+    import domain from '../../../../filters/domain';
+    
     export default{
         components: {
             loading,
@@ -133,6 +139,8 @@
         data(){
             return {
                 categories: [],
+                products: [],
+                sites: [],
                 selectedCategory: '',
                 selectedProduct: '',
                 selectedSite: '',
@@ -141,15 +149,59 @@
                 type: 'category',
                 name: '',
                 isLoadingCategories: false,
+                isLoadingProducts: false,
+                isLoadingSites: false,
                 isAddingNewWidget: false,
                 errors: {},
             }
         },
         mounted(){
             console.info('AddWidget component mounted.');
+            this.loadUserDomains();
             this.loadCategories();
         },
         methods: {
+            onChangeType(){
+                switch (this.type) {
+                    case 'category':
+                        this.products = [];
+                        this.sites = [];
+                        this.selectedProduct = '';
+                        this.selectedSite = '';
+                        break;
+                    case 'product':
+                        if (this.selectedCategory != '' && this.products.length == 0) {
+                            this.loadProducts();
+                            this.selectedProduct = '';
+                        }
+                        this.sites = [];
+                        this.selectedSite = '';
+                        break;
+                    case 'site':
+                        if (this.selectedCategory != '' && this.products.length == 0) {
+                            this.loadProducts();
+                            this.selectedProduct = '';
+                        }
+                        if (this.selectedCategory !== '' && this.selectedProduct !== '' && this.sites.length === 0) {
+                            this.loadSites();
+                            this.selectedSite = '';
+                        }
+                        break;
+                }
+            },
+            onCategoryChange(){
+                if (this.type == 'product') {
+                    this.loadProducts();
+                }
+                this.selectedProduct = '';
+                this.selectedSite = '';
+            },
+            onProductChange(){
+                if (this.type == 'site') {
+                    this.loadSites();
+                }
+                this.selectedSite = '';
+            },
             addNewWidget(){
                 this.isAddingNewWidget = true;
                 axios.post('dashboard/widget', this.addNewWidgetRequestData).then(response => {
@@ -178,18 +230,79 @@
                     }
                 })
             },
+            loadProducts(){
+                this.isLoadingProducts = true;
+                axios.get('/product', this.loadProductsRequestData).then(response => {
+                    this.isLoadingProducts = false;
+                    if (response.data.status === true) {
+                        this.products = response.data.products;
+                    }
+                }).catch(error => {
+                    this.isLoadingProducts = false;
+                    if (error.response && error.response.status === 422 && error.response.data) {
+                        this.errors = error.response.data;
+                    }
+                })
+            },
+            loadSites(){
+                this.isLoadingSites = true;
+                axios.get('/site', this.loadSitesRequestData).then(response => {
+                    this.isLoadingSites = false;
+                    if (response.data.status === true) {
+                        this.sites = response.data.sites;
+                    }
+                }).catch(error => {
+                    this.isLoadingSites = false;
+                    if (error.response && error.response.status === 422 && error.response.data) {
+                        this.errors = error.response.data;
+                    }
+                })
+            },
+            loadUserDomains(){
+                this.$store.dispatch(LOAD_USER_DOMAINS);
+            },
             emitAddedNewWidget(){
                 this.$emit('added-widget');
             },
             hideModal(){
                 this.$emit('hide-modal');
             },
+            displayName(site){
+                /*TODO need to add ebay site store name before the following validations*/
+                if (site.item.sellerUsername !== null) {
+                    return "eBay: " + site.item.sellerUsername;
+                }
+                let siteDomain = this.$options.filters.domain(site.siteUrl);
+                let userDomains = this.userDomains.filter(userDomain => {
+                    let domain = this.$options.filters.domain(userDomain.domain);
+                    return siteDomain.indexOf(domain) > -1;
+                });
+                if (userDomains.length > 0) {
+                    let userDomain = userDomains[0];
+                    if (userDomain.alias !== null && userDomain.alias.length > 0) {
+                        return userDomain.alias;
+                    }
+                }
+                return siteDomain;
+            },
         },
         computed: {
             loadCategoriesRequestData(){
                 return {
+                    params: {}
+                }
+            },
+            loadProductsRequestData(){
+                return {
                     params: {
-                        with: ['products', 'products.sites']
+                        category_id: this.selectedCategory,
+                    }
+                }
+            },
+            loadSitesRequestData(){
+                return {
+                    params: {
+                        product_id: this.selectedProduct,
                     }
                 }
             },
@@ -224,37 +337,40 @@
                 }
                 return {};
             },
-            products(){
-                if (this.selectedCategory !== null && this.selectedCategory !== '') {
-                    let selectedCategory = this.categories.filter(category => {
-                        return this.selectedCategory === category.id;
-                    });
-                    console.info('selectedCategory', selectedCategory);
-                    if (selectedCategory.length > 0) {
-                        selectedCategory = selectedCategory[0];
-                        return selectedCategory.products;
-                    }
-                }
-                return [];
-            },
-            sites(){
-                if (this.products.length > 0 && this.selectedProduct !== null && this.selectedProduct !== '') {
-                    let selectedProduct = this.products.filter(product => {
-                        return this.selectedProduct === product.id;
-                    });
-                    if (selectedProduct.length > 0) {
-                        selectedProduct = selectedProduct[0];
-                        return selectedProduct.sites;
-                    }
-                }
-                return [];
-            },
+//            products(){
+//                if (this.selectedCategory !== null && this.selectedCategory !== '') {
+//                    let selectedCategory = this.categories.filter(category => {
+//                        return this.selectedCategory === category.id;
+//                    });
+//                    console.info('selectedCategory', selectedCategory);
+//                    if (selectedCategory.length > 0) {
+//                        selectedCategory = selectedCategory[0];
+//                        return selectedCategory.products;
+//                    }
+//                }
+//                return [];
+//            },
+//            sites(){
+//                if (this.products.length > 0 && this.selectedProduct !== null && this.selectedProduct !== '') {
+//                    let selectedProduct = this.products.filter(product => {
+//                        return this.selectedProduct === product.id;
+//                    });
+//                    if (selectedProduct.length > 0) {
+//                        selectedProduct = selectedProduct[0];
+//                        return selectedProduct.sites;
+//                    }
+//                }
+//                return [];
+//            },
             showProductControl(){
                 return this.products.length > 0 && this.selectedCategory !== '' && (this.type === 'product' || this.type === 'site');
             },
             showSiteControl(){
                 return this.products.length > 0 && this.selectedCategory !== '' && this.selectedProduct !== '' && this.type === 'site';
-            }
+            },
+            userDomains(){
+                return this.$store.getters.userDomains;
+            },
         }
     }
 </script>

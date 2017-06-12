@@ -19,13 +19,7 @@ class CreateViewHistoricalPricesProfessional extends Migration
             AS (
                 SELECT historical_prices.* 
                 FROM historical_prices 
-                JOIN (
-                    SELECT historical_prices.item_meta_id, MAX(id) id
-                    FROM historical_prices 
-                    WHERE 
-                    created_at > (NOW() - INTERVAL 12 MONTH)
-                    GROUP BY historical_prices.item_meta_id, CEIL(UNIX_TIMESTAMP(created_at)/(12 * 60 * 60))
-                ) formatted_prices ON(formatted_prices.id=historical_prices.id)
+                JOIN historical_prices_id_professional formatted_prices ON(formatted_prices.id=historical_prices.id)
             )
         ');
     }
