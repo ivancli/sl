@@ -314,9 +314,22 @@ class PositioningService
         $user = auth()->user();
         $domainModels = $user->domains;
         $domains = $domainModels->pluck('domain');
-        $sites = $user->sites()->with('item')->get();
-        $items = $sites->pluck('item');
-        $ebaySellerUsernames = $items->pluck('sellerUsername')->filter()->unique();
+
+        /*SELECT seller_usernames.*
+FROM seller_usernames
+JOIN items ON(items.id=seller_usernames.item_id)
+JOIN sites ON(sites.item_id=items.id)
+JOIN products ON(sites.product_id=products.id)*/
+        $query = DB::table('seller_usernames')
+            ->join('items', 'items.id', 'seller_usernames.item_id')
+            ->join('sites', 'sites.item_id', 'items.id')
+            ->join('products', 'sites.product_id', 'products.id')
+            ->where('products.user_id', $user->getKey());
+        $query->select([
+            DB::raw('DISTINCT seller_usernames.value')
+        ]);
+        $ebaySellerUsernames = $query->get()->pluck('value');
+
         $categories = $user->categories;
 
         $metas = $user->products->pluck('meta');
