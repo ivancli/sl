@@ -269,7 +269,7 @@
             },
             displayName(site){
                 /*TODO need to add ebay site store name before the following validations*/
-                if (site.item.sellerUsername !== null) {
+                if (site.item !== null && site.item.sellerUsername !== null) {
                     return "eBay: " + site.item.sellerUsername;
                 }
                 let siteDomain = this.$options.filters.domain(site.siteUrl);
