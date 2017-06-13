@@ -478,6 +478,7 @@ JOIN previous_price_changes_professional previous_price_changes ON(previous_pric
         $ebayUsername = $user->metas->ebay_username;
         $companyUrl = $user->metas->company_url;
 
+
         $displayProducts->each(function ($product) use ($ebayUsername, $companyUrl, $userDomains) {
             if (!is_null($product->ebay_username)) {
                 $product->display_name = $product->ebay_username;
@@ -501,7 +502,7 @@ JOIN previous_price_changes_professional previous_price_changes ON(previous_pric
                     return true;
                 }
             }
-            return false;
+            $product->is_my_site = false;
         });
 
 
