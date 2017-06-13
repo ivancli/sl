@@ -1,6 +1,6 @@
 {
   "/js/app/product/index.js": "/js/app/product/index.3d467d193f3364030c86.js",
-  "/js/app/account_settings/index.js": "/js/app/account_settings/index.c34506250c8c85dd3dfd.js",
+  "/js/app/account_settings/index.js": "/js/app/account_settings/index.6d78e1ab7b2b9f156b50.js",
   "/js/app/dashboard/index.js": "/js/app/dashboard/index.9daf7df0b197497ae702.js",
   "/js/app/report/index.js": "/js/app/report/index.12ce0b1d6239ca41d970.js",
   "/js/app/item_meta/index.js": "/js/app/item_meta/index.308c71443d910bdeb666.js",
@@ -38,6 +38,6 @@
   "/js/auth/forgot.js": "/js/auth/forgot.098657f190f17d80b9eb.js",
   "/js/auth/login.js": "/js/auth/login.a704daf8af7d84092926.js",
   "/js/app.js": "/js/app.d704065cff50b8972b47.js",
-  "/css/app.css": "/css/app.7303300134952341d590.css",
-  "/css/auth.css": "/css/auth.7303300134952341d590.css"
+  "/css/app.css": "/css/app.9fcebffc7574a08404ad.css",
+  "/css/auth.css": "/css/auth.9fcebffc7574a08404ad.css"
 }
