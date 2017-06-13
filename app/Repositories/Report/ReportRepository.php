@@ -284,19 +284,58 @@ class ReportRepository implements ReportContract
         $products = $user->products;
 
         $totalProducts = $user->products()->count();
-        $cheapestProduct = DB::table('my_sites')
-            ->join('products', 'products.id', 'my_sites.product_id')
-            ->join('cheapest_sites', 'my_sites.id', 'cheapest_sites.id')
+
+
+        $cheapestProduct = DB::table('cheapest_sites')
+            ->join('products', 'products.id', 'cheapest_sites.product_id')
+            ->join('urls', 'urls.id', 'cheapest_sites.url_id')
+            ->join('items', 'cheapest_sites.item_id', 'items.id')
+            ->join('item_metas', function ($join) {
+                $join->on('item_metas.item_id', 'items.id')
+                    ->where('item_metas.element', 'SELLER_USERNAME');
+            })
+            ->join('users', 'users.id', 'products.user_id')
+            ->join('user_metas', 'user_metas.user_id', 'users.id')
             ->where('products.user_id', $user->getKey())
-            ->select('my_sites.*');
-        $mostExpensiveProducts = DB::table('my_sites')
-            ->join('products', 'products.id', 'my_sites.product_id')
-            ->join('most_expensive_sites', 'my_sites.id', 'most_expensive_sites.id')
+            ->where(function ($query) {
+                $query->where(function ($query) {
+                    $query->whereNotNull('item_metas.value')
+                        ->where('user_metas.ebay_username', 'item_metas.value');
+                })->orWhere(function ($query) {
+                    $query->whereNotNull('user_metas.company_url')
+                        ->where('urls.full_path', 'LIKE', DB::raw('CONCAT("%", user_metas.company_url, "%")'));
+                });
+            })
+            ->select('cheapest_sites.*');
+
+
+        $mostExpensiveProducts = DB::table('most_expensive_sites')
+            ->join('products', 'products.id', 'most_expensive_sites.product_id')
+            ->join('urls', 'urls.id', 'most_expensive_sites.url_id')
+            ->join('items', 'most_expensive_sites.item_id', 'items.id')
+            ->join('item_metas', function ($join) {
+                $join->on('item_metas.item_id', 'items.id')
+                    ->where('item_metas.element', 'SELLER_USERNAME');
+            })
+            ->join('users', 'users.id', 'products.user_id')
+            ->join('user_metas', 'user_metas.user_id', 'users.id')
             ->where('products.user_id', $user->getKey())
-            ->select('my_sites.*');
+            ->where(function ($query) {
+                $query->where(function ($query) {
+                    $query->whereNotNull('item_metas.value')
+                        ->where('user_metas.ebay_username', 'item_metas.value');
+                })->orWhere(function ($query) {
+                    $query->whereNotNull('user_metas.company_url')
+                        ->where('urls.full_path', 'LIKE', DB::raw('CONCAT("%", user_metas.company_url, "%")'));
+                });
+            })
+            ->select('most_expensive_sites.*');
+
+
         $failedCrawlSites = DB::table('failed_crawl_sites')
             ->join('products', 'failed_crawl_sites.product_id', 'products.id')
             ->where('products.user_id', $user->getKey());
+        
         $cheapestProductCount = $cheapestProduct->count();
         $mostExpensiveProductCount = $mostExpensiveProducts->count();
         $crawlFailCount = $failedCrawlSites->count();
