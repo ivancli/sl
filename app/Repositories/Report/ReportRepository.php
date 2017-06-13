@@ -480,11 +480,11 @@ JOIN previous_price_changes_professional previous_price_changes ON(previous_pric
 
         $displayProducts->each(function ($product) use ($ebayUsername, $companyUrl, $userDomains) {
             if (!is_null($product->ebay_username)) {
-                $product->put('display_name', $product->ebay_username);
+                $product->display_name = $product->ebay_username;
             } elseif (!is_null(array_get($userDomains, domain($product->full_path)))) {
-                $product->put('display_name', array_get($userDomains, domain($product->full_path)));
+                $product->display_name = array_get($userDomains, domain($product->full_path));
             } else {
-                $product->put('display_name', domain($product->full_path));
+                $product->display_name = domain($product->full_path);
             }
 
 
