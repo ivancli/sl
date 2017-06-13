@@ -18,7 +18,7 @@ class CreateViewRecentPricesIdEnterprise extends Migration
             CREATE VIEW recent_prices_id_enterprise
             AS (
                 SELECT MAX(historical_prices.id) id
-                FROM historical_prices_enterprise
+                FROM historical_prices_enterprise historical_prices
                 GROUP BY historical_prices.item_meta_id
             )
         ');
