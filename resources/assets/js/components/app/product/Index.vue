@@ -126,7 +126,14 @@
         },
         mounted() {
             console.info('Index component is mounted');
-            this.loadCategories();
+            this.loadCategories(() => {
+                if (this.user.viewed_tour === 'n' && typeof startTour === 'function') {
+                    setTimeout(() => {
+                        startTour();
+                    }, 1000);
+                    this.setViewedTour();
+                }
+            });
             this.loadUserDomains();
             this.loadUpdatePaymentLink();
         },
@@ -246,6 +253,17 @@
                 console.info("index", index);
                 this.categories.splice(index, 1);
             },
+            setViewedTour(){
+                axios.put(this.user.profileUrls.tour).then(response => {
+                    if (response.data.status === true) {
+                        this.loadUser();
+                    }
+                }).catch(error => {
+                    if (error.response && error.response.status === 422 && error.response.data) {
+                        this.errors = error.response.data;
+                    }
+                });
+            }
         },
         computed: {
             allCollapseStatus(){
@@ -254,7 +272,7 @@
             shouldExpandAll(){
                 let shouldExpand = true;
                 for (let categoryCollapseStatus in this.allCollapseStatus) {
-                    if (this.allCollapseStatus.hasOwnProperty(categoryCollapseStatus) && this.allCollapseStatus[categoryCollapseStatus] === false) {
+                    if (this.allCollapseStatus.hasOwnProperty(categoryCollapseStatus) && this.allCollapseStatus[categoryCollapseStatus] === true) {
                         shouldExpand = false;
                         break;
                     }

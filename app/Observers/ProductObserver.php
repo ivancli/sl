@@ -47,10 +47,11 @@ class ProductObserver
     public function deleting(Product $product)
     {
         /*manually remove corresponding alert when a product is deleted*/
+        $product->widgets()->delete();
         $product->alert()->delete();
         $product->historicalAlerts()->delete();
         $product->report()->delete();
-        $product->widgets()->delete();
+        $product->sites()->delete();
     }
 
     public function deleted()

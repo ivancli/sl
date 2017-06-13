@@ -4,6 +4,7 @@
 
 @section('links')
     <link rel="stylesheet" href="{{mix('/css/app.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.5.0/introjs.css">
 @stop
 
 @section('body')
@@ -22,4 +23,6 @@
 
 @section('scripts')
     <script src="{{mix('/js/app/dashboard/index.js')}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.5.0/intro.js"></script>
+    <script src="{{asset('/js/plugins/dashboard_intro.js')}}"></script>
 @stop

@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->char('set_password', 1)->default('n');
             $table->char('set_samples', 1)->default('n');
             $table->char('set_conversion', 1)->default('n');
+            $table->char('viewed_tour', 1)->default('n');
             $table->timestamps();
         });
     }

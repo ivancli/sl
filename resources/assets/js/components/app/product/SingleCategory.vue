@@ -317,7 +317,7 @@
                 return this.dateFormat + ' ' + this.timeFormat;
             },
             isCollapsed(){
-                return this.$store.getters.categoriesCollapsed[this.category.id];
+                return !this.$store.getters.categoriesCollapsed[this.category.id];
             },
             productSearchTerm(){
                 return this.$store.getters.productSearchTerm;

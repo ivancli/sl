@@ -85,6 +85,11 @@ mix
     .js('resources/assets/js/app/user_management/permission/edit.js', 'public/js/app/permission')
     .js('resources/assets/js/app/user_management/permission/show.js', 'public/js/app/permission')
 
+    /* custom scripts */
+    //dashboard intro.js
+    .copy('resources/assets/js/plugins/dashboard_intro.js', 'public/js/plugins')
+    //products intro.js
+    .copy('resources/assets/js/plugins/products_intro.js', 'public/js/plugins')
 
     .sass('resources/assets/sass/app.scss', 'public/css')
     .sass('resources/assets/sass/auth.scss', 'public/css')

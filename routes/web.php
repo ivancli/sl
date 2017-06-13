@@ -51,6 +51,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('account-settings', 'Account\AccountSettingsController');
     Route::resource('user/profile', 'Account\ProfileController');
     Route::put('user/profile/password/{user_id}', 'Account\ProfileController@password')->name('profile.password');
+    Route::put('user/profile/tour/{user_id}', 'Account\ProfileController@tour')->name('profile.tour');
     Route::resource('user/preference', 'Account\PreferenceController');
     Route::resource('user/user-domain', 'Account\UserDomainController');
     Route::get('user/sample-account', 'Account\SampleAccountController@index')->name('sample-account.index');

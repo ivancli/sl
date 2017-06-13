@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'title', 'first_name', 'last_name', 'email', 'password', 'status', 'set_password', 'set_conversion'
+        'title', 'first_name', 'last_name', 'email', 'password', 'status', 'set_password', 'set_conversion', 'viewed_tour'
     ];
 
     /**
@@ -252,6 +252,7 @@ class User extends Authenticatable
         return array(
             'update' => route('profile.update', $this->getKey()),
             'password' => route('profile.password', $this->getKey()),
+            'tour' => route('profile.tour', $this->getKey()),
         );
     }
 
@@ -325,6 +326,12 @@ class User extends Authenticatable
     public function setConversionTracked()
     {
         $this->set_conversion = 'y';
+        $this->save();
+    }
+
+    public function setViewedTour()
+    {
+        $this->viewed_tour = 'y';
         $this->save();
     }
 }

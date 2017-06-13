@@ -18,7 +18,7 @@
                         </a>
                     </li>
                     <li class="">
-                        <a href="/product">
+                        <a href="/product" id="btn-head-products">
                             <i class="fa fa-tag"></i>&nbsp;PRODUCTS
                         </a>
                     </li>
@@ -156,13 +156,12 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle lnk-drop-down-need-help" data-toggle="dropdown"
-                           aria-expanded="false">
+                        <a href="#" class="dropdown-toggle lnk-drop-down-need-help" data-toggle="dropdown" id="btn-help" aria-expanded="false">
                             <i class="fa fa-question-circle"></i>
                             <span class="hidden-xs">&nbsp;&nbsp;<i class="fa fa-caret-down"></i></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">SpotLite Tour</a></li>
+                            <li><a href="#" @click.prevent="startTour">SpotLite Tour</a></li>
                             <li><a href="https://spotlitehelp.zendesk.com/hc/en-us/categories/204682247-Video-Tutorials" target="_blank">Video Tutorials</a></li>
                             <li><a href="https://spotlitehelp.zendesk.com/hc/en-us/categories/204664368-FAQ" target="_blank">FAQ</a></li>
                             <li><a href="https://spotlitehelp.zendesk.com/hc/en-us/categories/204682187-Step-by-Step-Guide" target="_blank">Step by Step Guide</a></li>
@@ -192,7 +191,13 @@
         data(){
             return {}
         },
-        methods: {},
+        methods: {
+            startTour(){
+                if (typeof startTour === 'function') {
+                    startTour();
+                }
+            }
+        },
         computed: {
             isProductPage(){
                 if (typeof currentRouteName !== 'undefined') {

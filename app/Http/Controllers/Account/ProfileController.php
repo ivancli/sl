@@ -79,4 +79,13 @@ class ProfileController extends Controller
 
         return compact(['status']);
     }
+
+    public function tour($user_id){
+        $user = $this->profileService->getUserById($user_id);
+
+        $this->profileService->setViewedTour($user);
+        $status = true;
+
+        return compact(['status']);
+    }
 }

@@ -7,7 +7,9 @@
                     <small>
                         Created on the {{ user.created_at | formatDateTime(dateFormat) }} <strong><i> by {{ user.fullName }}</i></strong>
                         &vert;
-                        <a href="#" class="text-muted" @click.prevent="onClickAddChartToDashboard">Add Chart to Dashboard <i class="fa fa-cog"></i></a>
+                        <a href="#" id="btn-add-chart" class="text-muted" @click.prevent="onClickAddChartToDashboard">
+                            Add Chart to Dashboard <i class="fa fa-cog"></i>
+                        </a>
                     </small>
                 </p>
                 <p class="text-muted f-s-17 m-b-20">
@@ -102,6 +104,11 @@
         mounted(){
             console.info('Index component mounted.');
             this.loadWidgets();
+            if (this.user.viewed_tour === 'n' && typeof startTour === 'function') {
+                setTimeout(() => {
+                    startTour();
+                }, 1000);
+            }
         },
         data(){
             return {

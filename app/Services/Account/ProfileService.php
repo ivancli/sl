@@ -111,4 +111,13 @@ class ProfileService
         $user->set_password = 'y';
         $user->save();
     }
+
+    /**
+     * set viewed tour
+     * @param User $user
+     */
+    public function setViewedTour(User $user)
+    {
+        $user->setViewedTour();
+    }
 }
