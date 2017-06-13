@@ -499,16 +499,13 @@ class Alert implements ShouldQueue
 
         switch ($type) {
             case 'professional':
-                $query->join('previous_price_changes_professional AS previous_price_changes', 'previous_price_changes.item_meta_id', 'price.id');
                 $query->join('previous_prices_professional AS previous_price', 'previous_price.item_meta_id', 'price.id');
                 break;
             case 'business':
-                $query->join('previous_price_changes_business AS previous_price_changes', 'previous_price_changes.item_meta_id', 'price.id');
                 $query->join('previous_prices_business AS previous_price', 'previous_price.item_meta_id', 'price.id');
                 break;
             case 'enterprise':
             default:
-                $query->join('previous_price_changes_enterprise AS previous_price_changes', 'previous_price_changes.item_meta_id', 'price.id');
                 $query->join('previous_prices_enterprise AS previous_price', 'previous_price.item_meta_id', 'price.id');
         }
 

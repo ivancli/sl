@@ -340,29 +340,6 @@ class ReportRepository implements ReportContract
         $mostExpensiveProductCount = $mostExpensiveProducts->count();
         $crawlFailCount = $failedCrawlSites->count();
 
-        /*
-         SELECT
-products.product_name,
-categories.category_name,
-price.value AS recent_price,
-previous_prices.amount AS previous_price,
-urls.full_path,
-SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(urls.full_path,'http://',''),'https://',''),'www.',''),'/',1) AS domain,
-IFNULL(ebay.value, IFNULL(user_domains.alias, SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(urls.full_path,'http://',''),'https://',''),'www.',''),'/',1))) AS display_name,
-DATE_FORMAT(STR_TO_DATE(previous_price_changes.created_at, '%Y-%m-%d %H:%i:%s'), '%u') week_of_year
-FROM sites
-JOIN urls ON(urls.id=sites.url_id)
-JOIN products ON(sites.product_id=products.id)
-JOIN categories ON(products.category_id=categories.id)
-JOIN users ON(products.user_id=users.id)
-JOIN user_domains ON(user_domains.user_id=users.id)
-JOIN items ON(sites.item_id=items.id)
-JOIN item_metas price ON(price.item_id=items.id AND price.element='PRICE')
-LEFT JOIN item_metas ebay ON(ebay.item_id=items.id AND ebay.element='SELLER_USERNAME')
-JOIN previous_prices_professional previous_prices ON(previous_prices.item_meta_id=price.id)
-JOIN previous_price_changes_professional previous_price_changes ON(previous_price_changes.item_meta_id=price.id)
-
-         * */
         $query = DB::table('sites')
             ->join('urls', 'urls.id', 'sites.url_id')
             ->join('products', 'sites.product_id', 'products.id')
@@ -472,8 +449,6 @@ JOIN previous_price_changes_professional previous_price_changes ON(previous_pric
 
 
         $displayProducts = $query->get();
-
-        $displayProducts = $displayProducts->unique();
 
         $ebayUsername = $user->metas->ebay_username;
         $companyUrl = $user->metas->company_url;
