@@ -190,7 +190,7 @@
                 }
             },
             onCategoryChange(){
-                if (this.type == 'product') {
+                if (this.type == 'product' || this.type == 'site') {
                     this.loadProducts();
                 }
                 this.selectedProduct = '';
