@@ -383,33 +383,30 @@ JOIN previous_price_changes_professional previous_price_changes ON(previous_pric
             })
             ->leftJoin('my_sites', 'sites.id', 'my_sites.id');
 
-        switch ($frequency) {
-            case 'day':
-                $query->where("previous_price_changes.created_at", '>=', Carbon::now()->subHours(24)->format('Y-m-d H:i:s'));
-                break;
-            case 'week':
-                $query->where("previous_price_changes.created_at", '>=', Carbon::now()->subDays(7)->format('Y-m-d H:i:s'));
-                break;
-        }
-
         switch ($type) {
             case 'professional':
-                $query->leftJoin('previous_price_changes_professional AS previous_price_changes', 'previous_price_changes.item_meta_id', 'price.id');
                 $query->leftJoin('previous_prices_professional AS previous_price', 'previous_price.item_meta_id', 'price.id');
                 break;
             case 'business':
-                $query->leftJoin('previous_price_changes_business AS previous_price_changes', 'previous_price_changes.item_meta_id', 'price.id');
                 $query->leftJoin('previous_prices_business AS previous_price', 'previous_price.item_meta_id', 'price.id');
                 break;
             case 'enterprise':
             default:
-                $query->leftJoin('previous_price_changes_enterprise AS previous_price_changes', 'previous_price_changes.item_meta_id', 'price.id');
                 $query->leftJoin('previous_prices_enterprise AS previous_price', 'previous_price.item_meta_id', 'price.id');
         }
+
+        switch ($frequency) {
+            case 'day':
+                $query->where("previous_price.created_at", '>=', Carbon::now()->subHours(24)->format('Y-m-d H:i:s'));
+                break;
+            case 'week':
+                $query->where("previous_price.created_at", '>=', Carbon::now()->subDays(7)->format('Y-m-d H:i:s'));
+                break;
+        }
+
         $query->where('users.id', $user->getKey());
 
         if (!is_null($cancelled_at)) {
-            $query->where('previous_price_changes.created_at', '<', $cancelled_at);
             $query->where('previous_price.created_at', '<', $cancelled_at);
         }
 
@@ -420,17 +417,18 @@ JOIN previous_price_changes_professional previous_price_changes ON(previous_pric
             "previous_price.amount AS previous_price",
             "urls.full_path",
             "urls.status",
-            "previous_price_changes.created_at AS price_changed_at",
-            DB::raw("my_sites.id IS NOT NULL AS is_my_site"),
-            DB::raw("SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(urls.full_path,'http://',''),'https://',''),'www.',''),'/',1) AS domain"),
-            DB::raw("IFNULL(ebay.value, IFNULL(user_domains.alias, SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(urls.full_path,'http://',''),'https://',''),'www.',''),'/',1))) AS display_name"),
+            DB::raw("DATE_ADD(previous_price.created_at, INTERVAL +1 HOUR) AS price_changed_at")
+//            DB::raw("my_sites.id IS NOT NULL AS is_my_site"),
+//            DB::raw("SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(urls.full_path,'http://',''),'https://',''),'www.',''),'/',1) AS domain"),
+//            DB::raw("IFNULL(ebay.value, IFNULL(user_domains.alias, SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(urls.full_path,'http://',''),'https://',''),'www.',''),'/',1))) AS display_name"),
         ]);
 
         $countQuery = $query;
         $countQuery->where(function ($query) {
-            $query->whereNotNull('previous_price.amount');
+            $query->whereNotNull('previous_price.id');
         });
         $priceChangeCount = $countQuery->count();
+        dd("called");
 
         if ($report->show_all == 'n') {
             $query->where(function ($query) {
