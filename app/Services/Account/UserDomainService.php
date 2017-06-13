@@ -27,6 +27,25 @@ class UserDomainService
     {
         $user = auth()->user();
         $userDomains = $user->domains;
+        $siteUrls = $user->sites->pluck('siteUrl');
+        $domains = collect();
+        foreach ($siteUrls as $siteUrl) {
+            $domains->push(domain($siteUrl));
+        }
+        $domains = $domains->unique();
+
+        $domains->each(function ($domain) use (&$userDomains) {
+            $exist = $userDomains->filter(function ($userDomain) use ($domain) {
+                return $userDomain->domain == $domain;
+            })->count();
+            if ($exist == false) {
+                $newUserDomain = new \stdClass();
+                $newUserDomain->domain = $domain;
+                $newUserDomain->alias = null;
+                $userDomains->push($newUserDomain);
+            }
+        });
+
         return $userDomains;
     }
 
