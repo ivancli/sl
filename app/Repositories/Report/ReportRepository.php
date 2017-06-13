@@ -445,6 +445,7 @@ JOIN previous_price_changes_professional previous_price_changes ON(previous_pric
             "products.product_name",
             "categories.category_name",
             "price.value AS recent_price",
+            "ebay.value AS ebay_username",
             "previous_price.amount AS previous_price",
             "urls.full_path",
             "urls.status",
@@ -454,7 +455,7 @@ JOIN previous_price_changes_professional previous_price_changes ON(previous_pric
 //            DB::raw("IFNULL(ebay.value, IFNULL(user_domains.alias, SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(urls.full_path,'http://',''),'https://',''),'www.',''),'/',1))) AS display_name"),
         ]);
 
-        $countQuery = $query;
+        $countQuery = clone $query;
         $countQuery->where(function ($query) {
             $query->whereNotNull('previous_price.id');
         });
@@ -473,6 +474,36 @@ JOIN previous_price_changes_professional previous_price_changes ON(previous_pric
         $displayProducts = $query->get();
 
         $displayProducts = $displayProducts->unique();
+
+        $ebayUsername = $user->metas->ebay_username;
+        $companyUrl = $user->metas->company_url;
+
+        $displayProducts->each(function ($product) use ($ebayUsername, $companyUrl, $userDomains) {
+            if (!is_null($product->ebay_username)) {
+                $product->put('display_name', $product->ebay_username);
+            } elseif (!is_null(array_get($userDomains, domain($product->full_path)))) {
+                $product->put('display_name', array_get($userDomains, domain($product->full_path)));
+            } else {
+                $product->put('display_name', domain($product->full_path));
+            }
+
+
+            if (!is_null($ebayUsername)) {
+                if ($ebayUsername == $product->ebay_username) {
+                    $product->put('is_my_site', true);
+                    return true;
+                }
+            }
+
+            if (!is_null($companyUrl)) {
+                if (str_contains($product->full_path, $companyUrl)) {
+                    $product->put('is_my_site', true);
+                    return true;
+                }
+            }
+            return false;
+        });
+
 
         $reportDetail = collect();
 
