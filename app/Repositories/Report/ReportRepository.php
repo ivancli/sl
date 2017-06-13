@@ -335,7 +335,7 @@ class ReportRepository implements ReportContract
         $failedCrawlSites = DB::table('failed_crawl_sites')
             ->join('products', 'failed_crawl_sites.product_id', 'products.id')
             ->where('products.user_id', $user->getKey());
-        
+
         $cheapestProductCount = $cheapestProduct->count();
         $mostExpensiveProductCount = $mostExpensiveProducts->count();
         $crawlFailCount = $failedCrawlSites->count();
@@ -385,30 +385,61 @@ JOIN previous_price_changes_professional previous_price_changes ON(previous_pric
 
         switch ($type) {
             case 'professional':
-                $query->leftJoin('previous_prices_professional AS previous_price', 'previous_price.item_meta_id', 'price.id');
+                $query->leftJoin('previous_prices_professional AS previous_price', function ($join) use ($frequency, $cancelled_at) {
+                    $join->on('previous_price.item_meta_id', 'price.id');
+
+                    switch ($frequency) {
+                        case 'day':
+                            $join->where("previous_price.created_at", '>=', Carbon::now()->subHours(24)->format('Y-m-d H:i:s'));
+                            break;
+                        case 'week':
+                            $join->where("previous_price.created_at", '>=', Carbon::now()->subDays(7)->format('Y-m-d H:i:s'));
+                            break;
+                    }
+
+                    if (!is_null($cancelled_at)) {
+                        $join->where('previous_price.created_at', '<', $cancelled_at);
+                    }
+                });
                 break;
             case 'business':
-                $query->leftJoin('previous_prices_business AS previous_price', 'previous_price.item_meta_id', 'price.id');
+                $query->leftJoin('previous_prices_business AS previous_price', function ($join) use ($frequency, $cancelled_at) {
+                    $join->on('previous_price.item_meta_id', 'price.id');
+
+                    switch ($frequency) {
+                        case 'day':
+                            $join->where("previous_price.created_at", '>=', Carbon::now()->subHours(24)->format('Y-m-d H:i:s'));
+                            break;
+                        case 'week':
+                            $join->where("previous_price.created_at", '>=', Carbon::now()->subDays(7)->format('Y-m-d H:i:s'));
+                            break;
+                    }
+
+                    if (!is_null($cancelled_at)) {
+                        $join->where('previous_price.created_at', '<', $cancelled_at);
+                    }
+                });
                 break;
             case 'enterprise':
             default:
-                $query->leftJoin('previous_prices_enterprise AS previous_price', 'previous_price.item_meta_id', 'price.id');
-        }
+                $query->leftJoin('previous_prices_enterprise AS previous_price', function ($join) use ($frequency, $cancelled_at) {
+                    $join->on('previous_price.item_meta_id', 'price.id');
+                    switch ($frequency) {
+                        case 'day':
+                            $join->where("previous_price.created_at", '>=', Carbon::now()->subHours(24)->format('Y-m-d H:i:s'));
+                            break;
+                        case 'week':
+                            $join->where("previous_price.created_at", '>=', Carbon::now()->subDays(7)->format('Y-m-d H:i:s'));
+                            break;
+                    }
 
-        switch ($frequency) {
-            case 'day':
-                $query->where("previous_price.created_at", '>=', Carbon::now()->subHours(24)->format('Y-m-d H:i:s'));
-                break;
-            case 'week':
-                $query->where("previous_price.created_at", '>=', Carbon::now()->subDays(7)->format('Y-m-d H:i:s'));
-                break;
+                    if (!is_null($cancelled_at)) {
+                        $join->where('previous_price.created_at', '<', $cancelled_at);
+                    }
+                });
         }
 
         $query->where('users.id', $user->getKey());
-
-        if (!is_null($cancelled_at)) {
-            $query->where('previous_price.created_at', '<', $cancelled_at);
-        }
 
         $query->select([
             "products.product_name",
@@ -428,7 +459,6 @@ JOIN previous_price_changes_professional previous_price_changes ON(previous_pric
             $query->whereNotNull('previous_price.id');
         });
         $priceChangeCount = $countQuery->count();
-        dd("called");
 
         if ($report->show_all == 'n') {
             $query->where(function ($query) {
