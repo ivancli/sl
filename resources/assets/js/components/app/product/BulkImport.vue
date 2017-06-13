@@ -248,6 +248,8 @@
             },
             updateStepOneFile(){
                 this.step_one_errors = {};
+                this.step_two_errors = {};
+
                 if (document.getElementById('category-product-file').files.length > 0) {
                     this.step_one_file = document.getElementById('category-product-file').files[0];
                 } else {
@@ -255,7 +257,9 @@
                 }
             },
             updateStepTwoFile(){
+                this.step_one_errors = {};
                 this.step_two_errors = {};
+
                 if (document.getElementById('url-file').files.length > 0) {
                     this.step_two_file = document.getElementById('url-file').files[0];
                 } else {
