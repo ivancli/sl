@@ -359,9 +359,10 @@ class ReportRepository implements ReportContract
                     ->where('ebay.element', 'SELLER_USERNAME');
             })
             ->leftJoin('my_sites', 'sites.id', 'my_sites.id');
-
+        $addHour = 1;
         switch ($type) {
             case 'professional':
+                $addHour = 12;
                 $query->leftJoin('previous_prices_professional AS previous_price', function ($join) use ($frequency, $cancelled_at) {
                     $join->on('previous_price.item_meta_id', 'price.id');
 
@@ -380,6 +381,7 @@ class ReportRepository implements ReportContract
                 });
                 break;
             case 'business':
+                $addHour = 4;
                 $query->leftJoin('previous_prices_business AS previous_price', function ($join) use ($frequency, $cancelled_at) {
                     $join->on('previous_price.item_meta_id', 'price.id');
 
@@ -426,7 +428,7 @@ class ReportRepository implements ReportContract
             "previous_price.amount AS previous_price",
             "urls.full_path",
             "urls.status",
-            DB::raw("DATE_ADD(previous_price.created_at, INTERVAL +1 HOUR) AS price_changed_at")
+            DB::raw("DATE_ADD(previous_price.created_at, INTERVAL +{$addHour} HOUR) AS price_changed_at")
 //            DB::raw("my_sites.id IS NOT NULL AS is_my_site"),
 //            DB::raw("SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(urls.full_path,'http://',''),'https://',''),'www.',''),'/',1) AS domain"),
 //            DB::raw("IFNULL(ebay.value, IFNULL(user_domains.alias, SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(urls.full_path,'http://',''),'https://',''),'www.',''),'/',1))) AS display_name"),

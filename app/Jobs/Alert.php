@@ -390,20 +390,22 @@ class Alert implements ShouldQueue
                 $join->on('site_item_metas.item_id', 'site_items.id')
                     ->where('site_item_metas.element', 'PRICE');
             });
-
+        $addHour = 1;
         switch ($type) {
             case 'professional':
-                $query->leftJoin('previous_price_changes_professional AS my_previous_price_changes', 'my_previous_price_changes.item_meta_id', 'my_item_metas.id');
-                $query->leftJoin('previous_price_changes_professional AS sites_previous_price_changes', 'sites_previous_price_changes.item_meta_id', 'site_item_metas.id');
+                $addHour = 12;
+                $query->leftJoin('previous_price_professional AS my_previous_price', 'my_previous_price.item_meta_id', 'my_item_metas.id');
+                $query->leftJoin('previous_price_professional AS sites_previous_price', 'sites_previous_price.item_meta_id', 'site_item_metas.id');
                 break;
             case 'business':
-                $query->leftJoin('previous_price_changes_business AS my_previous_price_changes', 'my_previous_price_changes.item_meta_id', 'my_item_metas.id');
-                $query->leftJoin('previous_price_changes_business AS sites_previous_price_changes', 'sites_previous_price_changes.item_meta_id', 'site_item_metas.id');
+                $addHour = 4;
+                $query->leftJoin('previous_price_business AS my_previous_price', 'my_previous_price.item_meta_id', 'my_item_metas.id');
+                $query->leftJoin('previous_price_business AS sites_previous_price', 'sites_previous_price.item_meta_id', 'site_item_metas.id');
                 break;
             case 'enterprise':
             default:
-                $query->leftJoin('previous_price_changes_enterprise AS my_previous_price_changes', 'my_previous_price_changes.item_meta_id', 'my_item_metas.id');
-                $query->leftJoin('previous_price_changes_enterprise AS sites_previous_price_changes', 'sites_previous_price_changes.item_meta_id', 'site_item_metas.id');
+                $query->leftJoin('previous_price_enterprise AS my_previous_price', 'my_previous_price.item_meta_id', 'my_item_metas.id');
+                $query->leftJoin('previous_price_enterprise AS sites_previous_price', 'sites_previous_price.item_meta_id', 'site_item_metas.id');
         }
 
 
@@ -413,19 +415,19 @@ class Alert implements ShouldQueue
             'categories.category_name',
         ]);
         $query->where('products.category_id', $category->getKey());
-        $query->where(function ($query) use ($comparedDateTime, $cancelled_at) {
-            $query->where(function ($query) use ($comparedDateTime, $cancelled_at) {
-                $query->whereNotNull('sites_previous_price_changes.created_at')
-                    ->where('sites_previous_price_changes.created_at', '>', $comparedDateTime->format('Y-m-d H:i:s'));
+        $query->where(function ($query) use ($comparedDateTime, $cancelled_at, $addHour) {
+            $query->where(function ($query) use ($comparedDateTime, $cancelled_at, $addHour) {
+                $query->whereNotNull('sites_previous_price.created_at')
+                    ->where("DATE_ADD(sites_previous_price.created_at, INTERVAL +{$addHour} HOUR)", '>', $comparedDateTime->format('Y-m-d H:i:s'));
                 if (!is_null($cancelled_at)) {
-                    $query->where('sites_previous_price_changes.created_at', '<', $cancelled_at);
+                    $query->where("DATE_ADD(sites_previous_price.created_at, INTERVAL +{$addHour} HOUR)", '<', $cancelled_at);
                 }
             })
-                ->orWhere(function ($query) use ($comparedDateTime, $cancelled_at) {
-                    $query->whereNotNull('my_previous_price_changes.created_at')
-                        ->where('my_previous_price_changes.created_at', '>', $comparedDateTime->format('Y-m-d H:i:s'));
+                ->orWhere(function ($query) use ($comparedDateTime, $cancelled_at, $addHour) {
+                    $query->whereNotNull('my_previous_price.created_at')
+                        ->where("DATE_ADD(my_previous_price.created_at, INTERVAL +{$addHour} HOUR)", '>', $comparedDateTime->format('Y-m-d H:i:s'));
                     if (!is_null($cancelled_at)) {
-                        $query->where('my_previous_price_changes.created_at', '<', $cancelled_at);
+                        $query->where("DATE_ADD(my_previous_price.created_at, INTERVAL +{$addHour} HOUR)", '<', $cancelled_at);
                     }
                 });
         });
@@ -578,20 +580,22 @@ class Alert implements ShouldQueue
                 $join->on('site_item_metas.item_id', 'site_items.id')
                     ->where('site_item_metas.element', 'PRICE');
             });
-
+        $addHour = 1;
         switch ($type) {
             case 'professional':
-                $query->leftJoin('previous_price_changes_professional AS my_previous_price_changes', 'my_previous_price_changes.item_meta_id', 'my_item_metas.id');
-                $query->leftJoin('previous_price_changes_professional AS sites_previous_price_changes', 'sites_previous_price_changes.item_meta_id', 'site_item_metas.id');
+                $addHour = 12;
+                $query->leftJoin('previous_price_professional AS my_previous_price', 'my_previous_price.item_meta_id', 'my_item_metas.id');
+                $query->leftJoin('previous_price_professional AS sites_previous_price', 'sites_previous_price.item_meta_id', 'site_item_metas.id');
                 break;
             case 'business':
-                $query->leftJoin('previous_price_changes_business AS my_previous_price_changes', 'my_previous_price_changes.item_meta_id', 'my_item_metas.id');
-                $query->leftJoin('previous_price_changes_business AS sites_previous_price_changes', 'sites_previous_price_changes.item_meta_id', 'site_item_metas.id');
+                $addHour = 4;
+                $query->leftJoin('previous_price_business AS my_previous_price', 'my_previous_price.item_meta_id', 'my_item_metas.id');
+                $query->leftJoin('previous_price_business AS sites_previous_price', 'sites_previous_price.item_meta_id', 'site_item_metas.id');
                 break;
             case 'enterprise':
             default:
-                $query->leftJoin('previous_price_changes_enterprise AS my_previous_price_changes', 'my_previous_price_changes.item_meta_id', 'my_item_metas.id');
-                $query->leftJoin('previous_price_changes_enterprise AS sites_previous_price_changes', 'sites_previous_price_changes.item_meta_id', 'site_item_metas.id');
+                $query->leftJoin('previous_price_enterprise AS my_previous_price', 'my_previous_price.item_meta_id', 'my_item_metas.id');
+                $query->leftJoin('previous_price_enterprise AS sites_previous_price', 'sites_previous_price.item_meta_id', 'site_item_metas.id');
         }
 
 
@@ -600,19 +604,19 @@ class Alert implements ShouldQueue
             'products.product_name',
             'categories.category_name',
         ]);
-        $query->where(function ($query) use ($comparedDateTime, $cancelled_at) {
-            $query->where(function ($query) use ($comparedDateTime, $cancelled_at) {
-                $query->whereNotNull('sites_previous_price_changes.created_at')
-                    ->where('sites_previous_price_changes.created_at', '>', $comparedDateTime->format('Y-m-d H:i:s'));
+        $query->where(function ($query) use ($comparedDateTime, $cancelled_at, $addHour) {
+            $query->where(function ($query) use ($comparedDateTime, $cancelled_at, $addHour) {
+                $query->whereNotNull('sites_previous_price.created_at')
+                    ->where("DATE_ADD(sites_previous_price.created_at, INTERVAL +{$addHour} HOUR)", '>', $comparedDateTime->format('Y-m-d H:i:s'));
                 if (!is_null($cancelled_at)) {
-                    $query->where('sites_previous_price_changes.created_at', '<', $cancelled_at);
+                    $query->where("DATE_ADD(sites_previous_price.created_at, INTERVAL +{$addHour} HOUR)", '<', $cancelled_at);
                 }
             })
-                ->orWhere(function ($query) use ($comparedDateTime, $cancelled_at) {
-                    $query->whereNotNull('my_previous_price_changes.created_at')
-                        ->where('my_previous_price_changes.created_at', '>', $comparedDateTime->format('Y-m-d H:i:s'));
+                ->orWhere(function ($query) use ($comparedDateTime, $cancelled_at, $addHour) {
+                    $query->whereNotNull('my_previous_price.created_at')
+                        ->where("DATE_ADD(my_previous_price.created_at, INTERVAL +{$addHour} HOUR)", '>', $comparedDateTime->format('Y-m-d H:i:s'));
                     if (!is_null($cancelled_at)) {
-                        $query->where('my_previous_price_changes.created_at', '<', $cancelled_at);
+                        $query->where("DATE_ADD(my_previous_price.created_at, INTERVAL +{$addHour} HOUR)", '<', $cancelled_at);
                     }
                 });
         });
@@ -676,39 +680,48 @@ class Alert implements ShouldQueue
             })
             ->where('products.user_id', $this->user->getKey());
 
+        $addHour = 1;
         switch ($type) {
             case 'professional':
-                $query->join('previous_price_changes_professional AS previous_price_changes', 'previous_price_changes.item_meta_id', 'price.id');
-                $query->join('previous_prices_professional AS previous_price', 'previous_price.item_meta_id', 'price.id');
+                $addHour = 12;
+                $query->join('previous_prices_professional AS previous_price', function ($join) use ($cancelled_at) {
+                    $join->on('previous_price.item_meta_id', 'price.id');
+                    if (!is_null($cancelled_at)) {
+                        $join->where('previous_price_changes.created_at', '<', $cancelled_at);
+                    }
+                });
                 break;
             case 'business':
-                $query->join('previous_price_changes_business AS previous_price_changes', 'previous_price_changes.item_meta_id', 'price.id');
-                $query->join('previous_prices_business AS previous_price', 'previous_price.item_meta_id', 'price.id');
+                $addHour = 4;
+                $query->join('previous_prices_business AS previous_price', function ($join) use ($cancelled_at) {
+                    $join->on('previous_price.item_meta_id', 'price.id');
+                    if (!is_null($cancelled_at)) {
+                        $join->where('previous_price_changes.created_at', '<', $cancelled_at);
+                    }
+                });
                 break;
             case 'enterprise':
             default:
-                $query->join('previous_price_changes_enterprise AS previous_price_changes', 'previous_price_changes.item_meta_id', 'price.id');
-                $query->join('previous_prices_enterprise AS previous_price', 'previous_price.item_meta_id', 'price.id');
+                $query->join('previous_prices_enterprise AS previous_price', function ($join) use ($cancelled_at) {
+                    $join->on('previous_price.item_meta_id', 'price.id');
+                    if (!is_null($cancelled_at)) {
+                        $join->where('previous_price_changes.created_at', '<', $cancelled_at);
+                    }
+                });
         }
 
         $query->select([
             'sites.*',
             'price.value AS recent_price',
             'previous_price.amount AS previous_price',
-            'previous_price_changes.created_at AS previous_price_changed_at',
             'ebay.value AS ebay_username',
             'user_domains.alias AS site_name',
             'urls.full_path AS url',
             'products.product_name',
             'categories.category_name',
-            DB::raw("SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(urls.full_path,'http://',''),'https://',''),'www.',''),'/',1) AS domain"),
-            DB::raw("IFNULL(ebay.value, IFNULL(user_domains.alias, SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(urls.full_path,'http://',''),'https://',''),'www.',''),'/',1))) AS display_name")
+            DB::raw("DATE_ADD(previous_price.created_at, INTERVAL +{$addHour} HOUR) AS previous_price_changed_at")
         ]);
-
-        if (!is_null($cancelled_at)) {
-            $query->where('previous_price_changes.created_at', '<', $cancelled_at);
-        }
-        $query->where('previous_price_changes.created_at', '>', $comparedDateTime->format('Y-m-d H:i:s'));
+        $query->where("DATE_ADD(previous_price.created_at, INTERVAL +{$addHour} HOUR)", '>', $comparedDateTime->format('Y-m-d H:i:s'));
         $alertSites = $query->get();
         if ($alertSites->count() > 0) {
             $this->alert->setLastActiveAt();
