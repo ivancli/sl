@@ -490,14 +490,14 @@ JOIN previous_price_changes_professional previous_price_changes ON(previous_pric
 
             if (!is_null($ebayUsername)) {
                 if ($ebayUsername == $product->ebay_username) {
-                    $product->put('is_my_site', true);
+                    $product->is_my_site = true;
                     return true;
                 }
             }
 
             if (!is_null($companyUrl)) {
                 if (str_contains($product->full_path, $companyUrl)) {
-                    $product->put('is_my_site', true);
+                    $product->is_my_site = true;
                     return true;
                 }
             }
