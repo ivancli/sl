@@ -447,6 +447,8 @@ class ReportRepository implements ReportContract
             });
         }
 
+        $query->orderBy('products.id', 'sites.id');
+
 
         $displayProducts = $query->get();
 
