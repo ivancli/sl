@@ -47,7 +47,6 @@ class CategoryObserver
     public function deleting(Category $category)
     {
         $user_id = $category->user_id;
-        $category->products()->delete();
 
         /* delete all reports */
         DB::statement("
@@ -88,6 +87,7 @@ class CategoryObserver
             WHERE (temp_products.category_id=' . $category->getKey() . ' OR products.category_id=' . $category->getKey() . ' OR categories.id=' . $category->getKey() . ') AND ((sites.id IS NOT NULL and temp_products.id IS NOT NULL) OR products.id IS NOT NULL OR categories.id IS NOT NULL)
         ');
 
+        $category->products()->delete();
 
     }
 

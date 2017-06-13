@@ -48,8 +48,6 @@ class ProductObserver
     public function deleting(Product $product)
     {
         $user_id = $product->user_id;
-        /*manually remove corresponding alert when a product is deleted*/
-        $product->sites()->delete();
 
         /* delete all reports */
         DB::statement("
@@ -85,6 +83,8 @@ class ProductObserver
             WHERE (temp_products.id=' . $product->getKey() . ' OR products.id=' . $product->getKey() . ') AND ((sites.id IS NOT NULL and temp_products.id IS NOT NULL) OR products.id IS NOT NULL)
         ');
 
+        /*manually remove corresponding alert when a product is deleted*/
+        $product->sites()->delete();
 
 
 
