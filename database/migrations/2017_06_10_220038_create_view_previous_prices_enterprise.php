@@ -26,12 +26,10 @@ class CreateViewPreviousPricesEnterprise extends Migration
                 from
                     historical_prices
                 join
-                    previous_prices_created_at_enterprise previous_created_at
+                    previous_prices_id_enterprise previous_id
                 on
                 (
-                    historical_prices.item_meta_id = previous_created_at.item_meta_id
-                    and
-                    previous_created_at.created_at = historical_prices.created_at
+                    previous_id.id = historical_prices.id
                 )
             )
         ');
