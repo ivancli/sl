@@ -29,7 +29,7 @@ class CreateViewPreviousPricesBusiness extends Migration
                     previous_prices_id_professional previous_id
                 on
                 (
-                    previous_id.created_at = historical_prices.id
+                    previous_id.id = historical_prices.id
                 )
             )
         ');
