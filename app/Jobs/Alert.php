@@ -529,9 +529,9 @@ class Alert implements ShouldQueue
         ]);
 
         if (!is_null($cancelled_at)) {
-            $query->where(DB::raw("DATE_ADD(previous_price.created_at, INTERVAL +{$addHour} HOUR) AS price_changed_at"), '<', $cancelled_at);
+            $query->where(DB::raw("DATE_ADD(previous_price.created_at, INTERVAL +{$addHour} HOUR)"), '<', $cancelled_at);
         }
-        $query->where(DB::raw("DATE_ADD(previous_price.created_at, INTERVAL +{$addHour} HOUR) AS price_changed_at"), '>', $comparedDateTime->format('Y-m-d H:i:s'));
+        $query->where(DB::raw("DATE_ADD(previous_price.created_at, INTERVAL +{$addHour} HOUR)"), '>', $comparedDateTime->format('Y-m-d H:i:s'));
         $alertSites = $query->get();
         if ($alertSites->count() > 0) {
             $this->alert->setLastActiveAt();
