@@ -19,10 +19,8 @@ class CreateViewRecentPricesBusiness extends Migration
             AS (
                 SELECT historical_prices.* 
                 FROM historical_prices 
-                JOIN historical_prices_business formatted_prices ON(formatted_prices.id=historical_prices.id)
-                JOIN recent_prices_created_at_business latest_created_at 
-                ON (latest_created_at.item_meta_id=historical_prices.item_meta_id 
-                AND latest_created_at.created_at=historical_prices.created_at)
+                JOIN recent_prices_id_business latest_id 
+                ON (historical_prices.id=latest_id.id)
             )
         ');
     }

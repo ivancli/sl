@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateViewRecentPricesCreatedAtBusiness extends Migration
+class CreateViewRecentPricesIdEnterprise extends Migration
 {
     /**
      * Run the migrations.
@@ -15,11 +15,10 @@ class CreateViewRecentPricesCreatedAtBusiness extends Migration
     public function up()
     {
         DB::statement('
-            CREATE VIEW recent_prices_created_at_business
+            CREATE VIEW recent_prices_id_enterprise
             AS (
-                SELECT historical_prices.item_meta_id, MAX(historical_prices.created_at) created_at
-                FROM historical_prices 
-                JOIN historical_prices_business formatted_prices ON(formatted_prices.id=historical_prices.id)
+                SELECT MAX(historical_prices.id) id
+                FROM historical_prices_enterprise
                 GROUP BY historical_prices.item_meta_id
             )
         ');
@@ -32,6 +31,6 @@ class CreateViewRecentPricesCreatedAtBusiness extends Migration
      */
     public function down()
     {
-        DB::statement('DROP VIEW recent_prices_created_at_business');
+        DB::statement('DROP VIEW recent_prices_id_enterprise');
     }
 }
