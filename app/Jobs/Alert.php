@@ -499,11 +499,14 @@ class Alert implements ShouldQueue
             })
             ->where('products.category_id', $category->getKey());
 
+        $addHour = 1;
         switch ($type) {
             case 'professional':
+                $addHour = 12;
                 $query->join('previous_prices_professional AS previous_price', 'previous_price.item_meta_id', 'price.id');
                 break;
             case 'business':
+                $addHour = 4;
                 $query->join('previous_prices_business AS previous_price', 'previous_price.item_meta_id', 'price.id');
                 break;
             case 'enterprise':
@@ -515,7 +518,7 @@ class Alert implements ShouldQueue
             'sites.*',
             'price.value AS recent_price',
             'previous_price.amount AS previous_price',
-            'previous_price_changes.created_at AS previous_price_changed_at',
+            DB::raw("DATE_ADD(previous_price.created_at, INTERVAL +{$addHour} HOUR) AS price_changed_at"),
             'ebay.value AS ebay_username',
             'user_domains.alias AS site_name',
             'urls.full_path AS url',
@@ -526,9 +529,9 @@ class Alert implements ShouldQueue
         ]);
 
         if (!is_null($cancelled_at)) {
-            $query->where('previous_price_changes.created_at', '<', $cancelled_at);
+            $query->where(DB::raw("DATE_ADD(previous_price.created_at, INTERVAL +{$addHour} HOUR) AS price_changed_at"), '<', $cancelled_at);
         }
-        $query->where('previous_price_changes.created_at', '>', $comparedDateTime->format('Y-m-d H:i:s'));
+        $query->where(DB::raw("DATE_ADD(previous_price.created_at, INTERVAL +{$addHour} HOUR) AS price_changed_at"), '>', $comparedDateTime->format('Y-m-d H:i:s'));
         $alertSites = $query->get();
         if ($alertSites->count() > 0) {
             $this->alert->setLastActiveAt();
@@ -607,16 +610,16 @@ class Alert implements ShouldQueue
         $query->where(function ($query) use ($comparedDateTime, $cancelled_at, $addHour) {
             $query->where(function ($query) use ($comparedDateTime, $cancelled_at, $addHour) {
                 $query->whereNotNull('sites_previous_price.created_at')
-                    ->where("DATE_ADD(sites_previous_price.created_at, INTERVAL +{$addHour} HOUR)", '>', $comparedDateTime->format('Y-m-d H:i:s'));
+                    ->where(DB::raw("DATE_ADD(sites_previous_price.created_at, INTERVAL +{$addHour} HOUR)"), '>', $comparedDateTime->format('Y-m-d H:i:s'));
                 if (!is_null($cancelled_at)) {
-                    $query->where("DATE_ADD(sites_previous_price.created_at, INTERVAL +{$addHour} HOUR)", '<', $cancelled_at);
+                    $query->where(DB::raw("DATE_ADD(sites_previous_price.created_at, INTERVAL +{$addHour} HOUR)"), '<', $cancelled_at);
                 }
             })
                 ->orWhere(function ($query) use ($comparedDateTime, $cancelled_at, $addHour) {
                     $query->whereNotNull('my_previous_price.created_at')
-                        ->where("DATE_ADD(my_previous_price.created_at, INTERVAL +{$addHour} HOUR)", '>', $comparedDateTime->format('Y-m-d H:i:s'));
+                        ->where(DB::raw("DATE_ADD(my_previous_price.created_at, INTERVAL +{$addHour} HOUR)"), '>', $comparedDateTime->format('Y-m-d H:i:s'));
                     if (!is_null($cancelled_at)) {
-                        $query->where("DATE_ADD(my_previous_price.created_at, INTERVAL +{$addHour} HOUR)", '<', $cancelled_at);
+                        $query->where(DB::raw("DATE_ADD(my_previous_price.created_at, INTERVAL +{$addHour} HOUR)"), '<', $cancelled_at);
                     }
                 });
         });
@@ -721,7 +724,7 @@ class Alert implements ShouldQueue
             'categories.category_name',
             DB::raw("DATE_ADD(previous_price.created_at, INTERVAL +{$addHour} HOUR) AS previous_price_changed_at")
         ]);
-        $query->where("DATE_ADD(previous_price.created_at, INTERVAL +{$addHour} HOUR)", '>', $comparedDateTime->format('Y-m-d H:i:s'));
+        $query->where(DB::raw("DATE_ADD(previous_price.created_at, INTERVAL +{$addHour} HOUR)"), '>', $comparedDateTime->format('Y-m-d H:i:s'));
         $alertSites = $query->get();
         if ($alertSites->count() > 0) {
             $this->alert->setLastActiveAt();
